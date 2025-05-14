@@ -253,12 +253,3 @@ gradle-app.setting
 *.hprof
 
 # End of https://www.toptal.com/developers/gitignore/api/windows,macos,intellij+all,git,java,maven,gradle,visualstudiocode
-
-### IntelliJ IDEA ###
-.idea
-*.iws
-*.iml
-*.ipr
-application.yml
-application-test.yml
-application-prod.yml
