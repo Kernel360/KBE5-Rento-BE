@@ -16,27 +16,31 @@ public class EmulatorController {
 
     private final EmulatorService emulatorService;
 
-    @PostMapping("/start")
-    public void emulatorEventOn() {
+    @PostMapping("/on")
+    public void emulatorOnEvent() {
         //이벤트 정보를 수신합니다
 
     }
 
     @PostMapping("/off")
-    public void emulatorEventEnd() {
+    public void emulatorOffEvent() {
 
     }
 
     //주기정보 전달
-    @PostMapping("/send")
-    public void emulatorEventSend() {
+    @PostMapping("/control-info")
+    public void emulatorControlInfo() {
 
     }
 
     //주기 리스트
-    @GetMapping
-    public void emulatorEventList() {
+    @PostMapping("/control-info/confirm")
+    public void emulatorControlInfoConfirm() {
 
     }
 
+    @PostMapping("/token")
+    public void emulatorToken() {
+
+    }
 }
