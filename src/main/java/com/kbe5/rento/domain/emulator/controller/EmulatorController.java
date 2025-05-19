@@ -1,0 +1,42 @@
+package com.kbe5.rento.domain.emulator.controller;
+
+import com.kbe5.rento.domain.emulator.service.EmulatorService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@Slf4j
+@RestController
+@RequiredArgsConstructor
+@RequestMapping("/api/emulators")
+public class EmulatorController {
+
+    private final EmulatorService emulatorService;
+
+    @PostMapping("/start")
+    public void emulatorEventOn() {
+        //이벤트 정보를 수신합니다
+
+    }
+
+    @PostMapping("/off")
+    public void emulatorEventEnd() {
+
+    }
+
+    //주기정보 전달
+    @PostMapping("/send")
+    public void emulatorEventSend() {
+
+    }
+
+    //주기 리스트
+    @GetMapping
+    public void emulatorEventList() {
+
+    }
+
+}
