@@ -1,4 +1,4 @@
-package com.keb5.rento;
+package com.kbe5.rento;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

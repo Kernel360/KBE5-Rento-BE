@@ -1,4 +1,4 @@
-package com.keb5.rento.common;
+package com.kbe5.rento.common;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
