@@ -6,8 +6,6 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Entity
-public class Emulator extends BaseEntity
-{
-
+public class Emulator extends BaseEntity {
 
 }
