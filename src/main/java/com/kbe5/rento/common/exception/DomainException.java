@@ -1,4 +1,4 @@
-package com.kbe5.rento.common;
+package com.kbe5.rento.common.exception;
 
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
@@ -6,16 +6,15 @@ import org.springframework.http.HttpStatus;
 @Getter
 public class DomainException extends RuntimeException {
 
+  private final String resultCode;
   private final String message;
-  private final HttpStatus status;
 
   public DomainException(ErrorType errorType) {
+    this.resultCode = errorType.getCode();
     this.message = errorType.getMessage();
-    this.status = errorType.getHttpStatus();
   }
 
   public ExceptionResponse toResponse() {
-    return new ExceptionResponse(message);
+    return new ExceptionResponse(resultCode, message);
   }
-
 }

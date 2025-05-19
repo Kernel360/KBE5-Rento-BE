@@ -1,4 +1,4 @@
-package com.kbe5.rento.common;
+package com.kbe5.rento.common.exception;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -14,36 +14,32 @@ import java.util.Map;
 @Slf4j
 @RestControllerAdvice
 public class ExceptionController {
-    private static final String UNKNOWN_ERROR = "알 수 없는 에러";
-
     @ExceptionHandler(DomainException.class)
     public ResponseEntity<ExceptionResponse> customExceptionHandler(DomainException e) {
-        log.warn(e.getMessage());
-        return ResponseEntity.status(e.getStatus())
-                .body(e.toResponse());
+        log.warn("DomainException code: {}, message: {}", e.getResultCode(), e.getMessage());
+        //항상 200 ok로 응답
+        return ResponseEntity.ok(e.toResponse());
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ExceptionResponse> exceptionHandler(Exception e) {
-        log.error(e.getMessage());
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(new ExceptionResponse(e.getMessage()));
+        log.error("[UnhandledException] {}", e.getMessage());
+        return ResponseEntity.ok(
+                new ExceptionResponse(
+                        ErrorType.UNDEFINED_ERROR.getCode(),
+                        ErrorType.UNDEFINED_ERROR.getMessage()
+                )
+        );
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ExceptionResponse> methodArgumentNotValidExceptionHandler(MethodArgumentNotValidException e) {
-        Map<String, String> errors = new HashMap<>();
+        log.warn("ValidationException: {}", e.getMessage());
 
-        /**todo: 생각 정리
-         * todo: 안녕
-         **/
-        e.getBindingResult().getAllErrors().forEach((error) -> {
-            String fieldName = ((FieldError) error).getField();
-            String errorMessage = error.getDefaultMessage();
-            errors.put(fieldName, errorMessage);
-        });
-        log.error("Validation 오류: {}", errors);
-
-        return ResponseEntity.badRequest().body(new ExceptionResponse(ErrorType.VALIDATION_ERROR.getMessage()));
+        return ResponseEntity.ok(
+                new ExceptionResponse(
+                        ErrorType.REQUIRED_PARAMETER_ERROR.getCode(), ErrorType.REQUIRED_PARAMETER_ERROR.getMessage()
+                )
+        );
     }
 }
