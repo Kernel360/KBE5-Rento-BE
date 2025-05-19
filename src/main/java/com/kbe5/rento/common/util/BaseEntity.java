@@ -1,4 +1,4 @@
-package com.kbe5.rento.util;
+package com.kbe5.rento.common.util;
 
 import jakarta.persistence.*;
 import lombok.Getter;
