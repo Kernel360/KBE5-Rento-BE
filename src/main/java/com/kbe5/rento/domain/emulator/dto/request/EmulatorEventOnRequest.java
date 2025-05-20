@@ -1,9 +1,13 @@
 package com.kbe5.rento.domain.emulator.dto.request;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.constraints.DecimalMax;
+import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
+import java.math.BigDecimal;
 
 public record EmulatorEventOnRequest(
     @NotBlank
@@ -31,11 +35,17 @@ public record EmulatorEventOnRequest(
     @JsonProperty("gcd")
     String gpsConditionDescription, // GPS 상태
     @NotBlank
+    @DecimalMin("-90.0")
+    @DecimalMax("90.0")
     @JsonProperty("lat")
-    Double latitude,
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "#.######") // 소수점 6자리
+    BigDecimal latitude,
     @NotBlank
+    @DecimalMin("-180.0")
+    @DecimalMax("180.0")
     @JsonProperty("lon")
-    Double longitude,
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "#.######") // 소수점 6자리
+    BigDecimal longitude,
     @Min(0)
     @Max(365)
     @NotBlank

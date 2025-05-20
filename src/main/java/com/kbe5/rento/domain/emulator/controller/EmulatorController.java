@@ -1,5 +1,6 @@
 package com.kbe5.rento.domain.emulator.controller;
 
+import com.kbe5.rento.domain.emulator.dto.request.EmulatorEventOnRequest;
 import com.kbe5.rento.domain.emulator.service.EmulatorService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,7 +18,7 @@ public class EmulatorController {
     private final EmulatorService emulatorService;
 
     @PostMapping("/on")
-    public void emulatorOnEvent() {
+    public void emulatorOnEvent(EmulatorEventOnRequest requestDto) {
         //이벤트 정보를 수신합니다
 
     }
