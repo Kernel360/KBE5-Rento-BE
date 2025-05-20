@@ -1,4 +1,4 @@
-package com.kbe5.rento.domain.emulator.service;
+package com.kbe5.rento.domain.device.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -7,6 +7,6 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class EmulatorService {
+public class DeviceService {
 
 }

@@ -1,4 +1,4 @@
-package com.kbe5.rento.domain.emulator.dto.request;
+package com.kbe5.rento.domain.device.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -9,7 +9,7 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import java.math.BigDecimal;
 
-public record EmulatorEventOnRequest(
+public record DeviceEventOnRequest(
     @NotBlank
     @JsonProperty("mdn")
     String mobileDeviceNumber, //차량 번호
