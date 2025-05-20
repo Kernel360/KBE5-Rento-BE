@@ -1,4 +1,4 @@
-package com.kbe5.rento.domain.emulator.enums;
+package com.kbe5.rento.domain.device.enums;
 
 import lombok.Getter;
 

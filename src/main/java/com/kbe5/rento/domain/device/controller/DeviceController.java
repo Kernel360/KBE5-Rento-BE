@@ -1,10 +1,9 @@
-package com.kbe5.rento.domain.emulator.controller;
+package com.kbe5.rento.domain.device.controller;
 
-import com.kbe5.rento.domain.emulator.dto.request.EmulatorEventOnRequest;
-import com.kbe5.rento.domain.emulator.service.EmulatorService;
+import com.kbe5.rento.domain.device.dto.request.DeviceEventOnRequest;
+import com.kbe5.rento.domain.device.service.DeviceService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -13,12 +12,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/emulators")
-public class EmulatorController {
+public class DeviceController {
 
-    private final EmulatorService emulatorService;
+    private final DeviceService deviceService;
 
     @PostMapping("/on")
-    public void emulatorOnEvent(EmulatorEventOnRequest requestDto) {
+    public void emulatorOnEvent(DeviceEventOnRequest requestDto) {
         //이벤트 정보를 수신합니다
 
     }
