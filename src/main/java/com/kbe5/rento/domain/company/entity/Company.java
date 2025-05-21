@@ -4,14 +4,13 @@ import com.kbe5.rento.common.util.BaseEntity;
 import com.kbe5.rento.domain.company.dto.request.CompanyUpdateRequest;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import jakarta.persistence.Table;
+import lombok.*;
 
 @Getter
 @Entity
-@NoArgsConstructor
+@Table(name = "companys")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Company extends BaseEntity {
 
     @Column(length = 50)
@@ -20,7 +19,6 @@ public class Company extends BaseEntity {
     @Column(length = 30)
     private String name;
 
-    @Setter
     @Column(length = 30)
     private String companyCode;
 
@@ -33,5 +31,9 @@ public class Company extends BaseEntity {
     public void toUpdate(CompanyUpdateRequest request) {
         this.bizNumber = request.bizNumber();
         this.name = request.name();
+    }
+
+    public void assignCompanyCode(String code) {
+        this.companyCode = code;
     }
 }

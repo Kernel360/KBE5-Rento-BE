@@ -2,24 +2,24 @@ package com.kbe5.rento.domain.company.service;
 
 import com.kbe5.rento.common.exception.DomainException;
 import com.kbe5.rento.common.exception.ErrorType;
-import com.kbe5.rento.domain.company.dto.request.CompanyDeleteRequest;
 import com.kbe5.rento.domain.company.dto.request.CompanyRegisterRequest;
 import com.kbe5.rento.domain.company.dto.request.CompanyUpdateRequest;
 import com.kbe5.rento.domain.company.dto.response.*;
 import com.kbe5.rento.domain.company.entity.Company;
 import com.kbe5.rento.domain.company.repository.CompanyRepository;
-import com.kbe5.rento.domain.manager.entity.Manager;
-import com.kbe5.rento.domain.manager.service.ManagerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class CompanyService {
 
     private final CompanyRepository companyRepository;
+
 
     public CompanyRegisterResponse register(CompanyRegisterRequest request) {
 
@@ -32,48 +32,50 @@ public class CompanyService {
 
         makeCompanyCode(company);
 
-        return new CompanyRegisterResponse(company.getName(), company.getCompanyCode());
+        return CompanyRegisterResponse.from(company);
     }
 
+    //추후에 사용 될 함수입니다.
     public Company findByBizNumber(int bizNumber) {
         return companyRepository.findByBizNumber(bizNumber).orElseThrow(() -> new DomainException(ErrorType.NO_SEARCH_RESULTS));
     }
 
+    @Transactional(readOnly = true)
     public Company findByCompanyCode(String code) {
         return companyRepository.findByCompanyCode(code).orElseThrow(() -> new DomainException(ErrorType.NO_SEARCH_RESULTS));
     }
 
     private void makeCompanyCode(Company company) {
-        company.setCompanyCode("C" + company.getId());
+        company.assignCompanyCode("C" + company.getId());
         companyRepository.save(company);
     }
 
-    public CompanyUpdateResponse update(CompanyUpdateRequest request) {
+    public CompanyUpdateResponse update(Long id, CompanyUpdateRequest request) {
 
-        Company updatedCompany = companyRepository.findById(request.id()).orElseThrow(() -> new DomainException(ErrorType.NO_SEARCH_RESULTS));
+        Company company = companyRepository.findById(id).orElseThrow(() -> new DomainException(ErrorType.NO_SEARCH_RESULTS));
 
-        updatedCompany.toUpdate(request);
+        company.toUpdate(request);
 
-        companyRepository.save(updatedCompany);
-
-        return new CompanyUpdateResponse(request.id(), updatedCompany.getBizNumber(), updatedCompany.getName());
+        return CompanyUpdateResponse.from(company);
     }
 
     public void delete(Company company) {
         companyRepository.delete(company);
     }
 
-    public CompanyListResponse getCompanyList() {
+    @Transactional(readOnly = true)
+    public List<CompanyResponse> getCompanyList() {
 
         List<Company> companies = companyRepository.findAll();
 
-        return new CompanyListResponse(companies);
+        return companies.stream().map(CompanyResponse::from).toList();
     }
 
-    public CompanyDetailResponse getCompanyDetail(Long id) {
+    @Transactional(readOnly = true)
+    public CompanyResponse getCompanyDetail(Long id) {
 
-        Company company = companyRepository.findById(id).orElseThrow();
+        Company company = companyRepository.findById(id).orElseThrow(() -> new DomainException(ErrorType.NO_SEARCH_RESULTS));
 
-        return new CompanyDetailResponse(company.getId(), company.getName(), company.getBizNumber(), company.getCompanyCode());
+        return CompanyResponse.from(company);
     }
 }
