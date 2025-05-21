@@ -1,13 +1,18 @@
 package com.kbe5.rento.domain.manager.dto.response;
 
 import com.kbe5.rento.domain.company.entity.Company;
+import com.kbe5.rento.domain.manager.entity.Manager;
 
 public record ManagerUpdateResponse(
         Long id,
-        Company companyId,
+        Long companyId,
         String name,
         String phone,
         String email,
-        String managerId
+        String loginId
 ) {
+    public static ManagerUpdateResponse from(Manager manager) {
+        return new ManagerUpdateResponse(manager.getId(), manager.getCompanyId().getId(), manager.getName(),
+                manager.getPhone(), manager.getEmail(), manager.getLoginId());
+    }
 }
