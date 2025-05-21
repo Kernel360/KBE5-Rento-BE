@@ -12,10 +12,12 @@ import com.kbe5.rento.domain.manager.entity.Manager;
 import com.kbe5.rento.domain.manager.respository.ManagerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class ManagerService {
 
@@ -27,7 +29,7 @@ public class ManagerService {
         Company company = companyService.findByCompanyCode(request.companyCode());
 
         Manager manager = Manager.builder()
-                .managerId(request.managerId())
+                .loginId(request.loginId())
                 .password(request.password())
                 .email(request.email())
                 .name(request.name())
@@ -35,39 +37,39 @@ public class ManagerService {
                 .companyId(company)
                 .build();
 
-        Manager newManger = managerRepository.save(manager);
+        manager = managerRepository.save(manager);
 
-        return new ManagerSignUpResponse(newManger.getId(), newManger.getManagerId(), company.getCompanyCode());
+        return ManagerSignUpResponse.from(manager, company.getCompanyCode());
     }
 
-    public Manager findByManagerId(String managerId) {
-        return managerRepository.findByManagerId(managerId).orElseThrow(() -> new DomainException(ErrorType.NO_SEARCH_RESULTS));
+    //추후에 사용 될 함수입니다.
+    public Manager findByLoginId(String loginId) {
+        return managerRepository.findByLoginId(loginId).orElseThrow(() -> new DomainException(ErrorType.NO_SEARCH_RESULTS));
     }
 
-    public ManagerDetailResponse getManagerDetail(Long id) {
+    @Transactional(readOnly = true)
+    public ManagerResponse getManagerDetail(Long id) {
 
         Manager manager = managerRepository.findById(id).orElseThrow(() -> new DomainException(ErrorType.NO_SEARCH_RESULTS));
 
-        return new ManagerDetailResponse(manager.getId(), manager.getCompanyId(), manager.getName(),
-                manager.getPhone(), manager.getEmail(), manager.getManagerId());
+        return ManagerResponse.from(manager);
     }
 
-    public ManagerListResponse getManagerList() {
+    @Transactional(readOnly = true)
+    public List<ManagerResponse> getManagerList() {
 
         List<Manager> manager = managerRepository.findAll();
 
-        return new ManagerListResponse(manager);
+        return ManagerResponse.from(manager);
     }
 
     public ManagerUpdateResponse update(ManagerUpdateRequest request) {
 
         Manager manager = managerRepository.findById(request.id()).orElseThrow(() -> new DomainException(ErrorType.NO_SEARCH_RESULTS));
 
-        Manager updatedManager = manager.toUpdate(request);
-        managerRepository.save(updatedManager);
+        manager.toUpdate(request);
 
-        return new ManagerUpdateResponse(updatedManager.getId(), updatedManager.getCompanyId(), updatedManager.getName(),
-                updatedManager.getPhone(), updatedManager.getEmail(), updatedManager.getManagerId());
+        return ManagerUpdateResponse.from(manager);
     }
 
     public ManagerDeleteResponse delete(ManagerDeleteRequest request) {

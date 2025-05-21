@@ -3,9 +3,7 @@ package com.kbe5.rento.domain.manager.entity;
 import com.kbe5.rento.domain.company.entity.Company;
 import com.kbe5.rento.common.util.BaseEntity;
 import com.kbe5.rento.domain.manager.dto.request.ManagerUpdateRequest;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,9 +11,11 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor
+@Table(name = "managers")
 public class Manager extends BaseEntity {
 
     @ManyToOne
+    @JoinColumn(nullable = false)
     private Company companyId;
 
     @Column(length = 30)
@@ -28,26 +28,24 @@ public class Manager extends BaseEntity {
     private String email;
 
     @Column(length = 30)
-    private String managerId;
+    private String loginId;
 
     @Column(length = 30)
     private String password;
 
     @Builder
-    private Manager(Company companyId, String name, String phone, String email, String managerId, String password) {
+    private Manager(Company companyId, String name, String phone, String email, String loginId, String password) {
         this.companyId = companyId;
         this.name = name;
         this.phone = phone;
         this.email = email;
-        this.managerId = managerId;
+        this.loginId = loginId;
         this.password = password;
     }
 
-    public Manager toUpdate(ManagerUpdateRequest request) {
+    public void toUpdate(ManagerUpdateRequest request) {
         this.name = request.name();
         this.phone = request.phone();
         this.email = request.email();
-
-        return this;
     }
 }

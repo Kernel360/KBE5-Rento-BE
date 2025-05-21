@@ -8,6 +8,6 @@ import java.util.Optional;
 
 public interface ManagerRepository extends JpaRepository<Manager, Long> {
 
-    Optional<Manager> findByManagerId(String managerId);
+    Optional<Manager> findByLoginId(String managerId);
     boolean existsByCompanyId(Company companyId);
 }
