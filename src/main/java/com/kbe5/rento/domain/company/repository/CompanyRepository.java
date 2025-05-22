@@ -9,4 +9,6 @@ public interface CompanyRepository extends JpaRepository<Company, Long> {
 
     Optional<Company> findByBizNumber(int bizNumber);
     Optional<Company> findByCompanyCode(String code);
+
+    Boolean existsByBizNumber(int bizNumber);
 }
