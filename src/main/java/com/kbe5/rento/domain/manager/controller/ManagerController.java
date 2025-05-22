@@ -27,9 +27,9 @@ public class ManagerController {
         return ResponseEntity.ok(managerService.getManagerDetail(id));
     }
 
-    @GetMapping
-    public ResponseEntity<List<ManagerResponse>> getManagerList() {
-        return ResponseEntity.ok(managerService.getManagerList());
+    @GetMapping("/{companyCode}")
+    public ResponseEntity<List<ManagerResponse>> getManagerList(@PathVariable String companyCode) {
+        return ResponseEntity.ok(managerService.getManagerList(companyCode));
     }
 
     @PutMapping
@@ -40,5 +40,15 @@ public class ManagerController {
     @DeleteMapping
     public ResponseEntity<ManagerDeleteResponse> delete(@RequestBody @Valid ManagerDeleteRequest request) {
         return ResponseEntity.ok(managerService.delete(request));
+    }
+
+    @GetMapping("/{loginId}")
+    public ResponseEntity<Boolean> checkAvailableLoginId(@PathVariable String loginId) {
+        return ResponseEntity.ok(!managerService.isExistsLoginId(loginId));
+    }
+
+    @GetMapping("/{email}")
+    public ResponseEntity<Boolean> checkAvailableEmail(@PathVariable String email) {
+        return ResponseEntity.ok(!managerService.isExistsEmail(email));
     }
 }
