@@ -37,12 +37,14 @@ public class CompanyService {
 
     //추후에 사용 될 함수입니다.
     public Company findByBizNumber(int bizNumber) {
-        return companyRepository.findByBizNumber(bizNumber).orElseThrow(() -> new DomainException(ErrorType.NO_SEARCH_RESULTS));
+        return companyRepository.findByBizNumber(bizNumber)
+                .orElseThrow(() -> new DomainException(ErrorType.NO_SEARCH_RESULTS));
     }
 
     @Transactional(readOnly = true)
     public Company findByCompanyCode(String code) {
-        return companyRepository.findByCompanyCode(code).orElseThrow(() -> new DomainException(ErrorType.NO_SEARCH_RESULTS));
+        return companyRepository.findByCompanyCode(code)
+                .orElseThrow(() -> new DomainException(ErrorType.NO_SEARCH_RESULTS));
     }
 
     private void makeCompanyCode(Company company) {
@@ -52,7 +54,8 @@ public class CompanyService {
 
     public CompanyUpdateResponse update(Long id, CompanyUpdateRequest request) {
 
-        Company company = companyRepository.findById(id).orElseThrow(() -> new DomainException(ErrorType.NO_SEARCH_RESULTS));
+        Company company = companyRepository
+                .findById(id).orElseThrow(() -> new DomainException(ErrorType.NO_SEARCH_RESULTS));
 
         company.toUpdate(request);
 
@@ -74,8 +77,13 @@ public class CompanyService {
     @Transactional(readOnly = true)
     public CompanyResponse getCompanyDetail(Long id) {
 
-        Company company = companyRepository.findById(id).orElseThrow(() -> new DomainException(ErrorType.NO_SEARCH_RESULTS));
+        Company company = companyRepository.findById(id)
+                .orElseThrow(() -> new DomainException(ErrorType.NO_SEARCH_RESULTS));
 
         return CompanyResponse.from(company);
+    }
+
+    public Boolean isExistsBizNumber(int bizNumber) {
+        return companyRepository.existsByBizNumber(bizNumber);
     }
 }
