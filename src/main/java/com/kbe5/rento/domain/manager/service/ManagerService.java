@@ -35,6 +35,7 @@ public class ManagerService {
                 .name(request.name())
                 .phone(request.phone())
                 .companyId(company)
+                .companyCode(request.companyCode())
                 .build();
 
         manager = managerRepository.save(manager);
@@ -44,28 +45,32 @@ public class ManagerService {
 
     //추후에 사용 될 함수입니다.
     public Manager findByLoginId(String loginId) {
-        return managerRepository.findByLoginId(loginId).orElseThrow(() -> new DomainException(ErrorType.NO_SEARCH_RESULTS));
+        return managerRepository.findByLoginId(loginId)
+                .orElseThrow(() -> new DomainException(ErrorType.NO_SEARCH_RESULTS));
     }
 
     @Transactional(readOnly = true)
     public ManagerResponse getManagerDetail(Long id) {
 
-        Manager manager = managerRepository.findById(id).orElseThrow(() -> new DomainException(ErrorType.NO_SEARCH_RESULTS));
+        Manager manager = managerRepository.findById(id)
+                .orElseThrow(() -> new DomainException(ErrorType.NO_SEARCH_RESULTS));
 
         return ManagerResponse.from(manager);
     }
 
     @Transactional(readOnly = true)
-    public List<ManagerResponse> getManagerList() {
+    public List<ManagerResponse> getManagerList(String companyCode) {
 
-        List<Manager> manager = managerRepository.findAll();
+        List<Manager> manager = managerRepository.findByCompanyCode(companyCode)
+                .orElseThrow(() -> new DomainException(ErrorType.NO_SEARCH_RESULTS));
 
         return ManagerResponse.from(manager);
     }
 
     public ManagerUpdateResponse update(ManagerUpdateRequest request) {
 
-        Manager manager = managerRepository.findById(request.id()).orElseThrow(() -> new DomainException(ErrorType.NO_SEARCH_RESULTS));
+        Manager manager = managerRepository.findById(request.id())
+                .orElseThrow(() -> new DomainException(ErrorType.NO_SEARCH_RESULTS));
 
         manager.toUpdate(request);
 
@@ -74,7 +79,8 @@ public class ManagerService {
 
     public ManagerDeleteResponse delete(ManagerDeleteRequest request) {
 
-        Manager manager = managerRepository.findById(request.id()).orElseThrow(() -> new DomainException(ErrorType.NO_SEARCH_RESULTS));
+        Manager manager = managerRepository.findById(request.id())
+                .orElseThrow(() -> new DomainException(ErrorType.NO_SEARCH_RESULTS));
 
         if (!manager.getPassword().equals(request.password())) {
             return new ManagerDeleteResponse(false);
@@ -87,5 +93,13 @@ public class ManagerService {
         }
 
         return new ManagerDeleteResponse(true);
+    }
+
+    public boolean isExistsLoginId(String loginId) {
+        return managerRepository.existsByLoginId(loginId);
+    }
+
+    public boolean isExistsEmail(String email) {
+        return managerRepository.existsByEmail(email);
     }
 }
