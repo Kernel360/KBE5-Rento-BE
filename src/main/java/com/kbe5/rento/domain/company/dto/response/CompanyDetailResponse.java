@@ -9,6 +9,7 @@ public record CompanyDetailResponse(
         String companyCode
 ) {
     public static CompanyDetailResponse from(Company company) {
-        return new CompanyDetailResponse(company.getId(), company.getName(), company.getBizNumber(), company.getCompanyCode());
+        return new CompanyDetailResponse(company.getId(), company.getName(),
+                company.getBizNumber(), company.getCompanyCode());
     }
 }
