@@ -9,7 +9,7 @@ import lombok.*;
 
 @Getter
 @Entity
-@Table(name = "companys")
+@Table(name = "companies")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Company extends BaseEntity {
 
