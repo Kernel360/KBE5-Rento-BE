@@ -33,14 +33,19 @@ public class Manager extends BaseEntity {
     @Column(length = 30)
     private String password;
 
+    @Column(length = 30)
+    private String companyCode;
+
     @Builder
-    private Manager(Company companyId, String name, String phone, String email, String loginId, String password) {
+    private Manager(Company companyId, String name, String phone, String email, String loginId, String password,
+                    String companyCode) {
         this.companyId = companyId;
         this.name = name;
         this.phone = phone;
         this.email = email;
         this.loginId = loginId;
         this.password = password;
+        this.companyCode = companyCode;
     }
 
     public void toUpdate(ManagerUpdateRequest request) {
