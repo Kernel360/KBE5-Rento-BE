@@ -35,7 +35,13 @@ public class CompanyController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CompanyUpdateResponse> updateCompanyInfo(@PathVariable Long id, @RequestBody @Valid CompanyUpdateRequest request) {
+    public ResponseEntity<CompanyUpdateResponse> updateCompanyInfo(@PathVariable Long id,
+                                                                   @RequestBody @Valid CompanyUpdateRequest request) {
         return ResponseEntity.ok(companyService.update(id, request));
+    }
+
+    @GetMapping("/{bizNumber}")
+    public ResponseEntity<Boolean> checkAvailableBizNumber(@PathVariable int bizNumber) {
+        return ResponseEntity.ok(!companyService.isExistsBizNumber(bizNumber));
     }
 }
