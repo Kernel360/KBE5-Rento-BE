@@ -2,8 +2,6 @@ package com.kbe5.rento.domain.company.dto.response;
 
 import com.kbe5.rento.domain.company.entity.Company;
 
-import java.util.List;
-
 public record CompanyResponse(
         Long id,
         String name,
