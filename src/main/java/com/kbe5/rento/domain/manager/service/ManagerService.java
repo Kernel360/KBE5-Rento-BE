@@ -61,7 +61,7 @@ public class ManagerService {
     @Transactional(readOnly = true)
     public List<ManagerResponse> getManagerList(String companyCode) {
 
-        List<Manager> manager = managerRepository.findByCompanyCode(companyCode)
+        List<Manager> manager = managerRepository.findAllByCompanyCode(companyCode)
                 .orElseThrow(() -> new DomainException(ErrorType.NO_SEARCH_RESULTS));
 
         return ManagerResponse.from(manager);
