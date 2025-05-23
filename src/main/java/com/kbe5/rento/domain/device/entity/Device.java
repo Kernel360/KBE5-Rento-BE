@@ -1,28 +1,52 @@
 package com.kbe5.rento.domain.device.entity;
 
 import com.kbe5.rento.common.util.BaseEntity;
-import com.kbe5.rento.domain.vehicle.entity.Vehicle;
+import com.kbe5.rento.domain.device.dto.request.DeviceRegisterRequest;
 import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
-import java.time.LocalDateTime;
+import jakarta.persistence.Table;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+@Getter
 @Slf4j
 @Entity
+@Table(name = "devices")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Device extends BaseEntity {
-    @OneToOne
-    @JoinColumn(name = "vehicle_id") // 또는 mappedBy 설정
-    private Vehicle vehicle;
+    private Long mobileDeviceNumber;
 
     private String terminalId;
 
-    private Integer makerId;
+    private Integer manufacturerId;
 
     private Integer packetVersion;
 
     private Integer deviceId;
 
-    //얘는 어떻게할지 일단 고민할것
     private String deviceFirmWareVersion;
+
+    @Builder
+    public Device(Long mobileDeviceNumber, String terminalId, Integer manufacturerId, Integer packetVersion,
+        Integer deviceId, String deviceFirmWareVersion) {
+        this.mobileDeviceNumber = mobileDeviceNumber;
+        this.terminalId = terminalId;
+        this.manufacturerId = manufacturerId;
+        this.packetVersion = packetVersion;
+        this.deviceId = deviceId;
+        this.deviceFirmWareVersion = deviceFirmWareVersion;
+    }
+
+    public static Device from(DeviceRegisterRequest request) {
+        return Device.builder()
+            .mobileDeviceNumber(request.mobileDeviceNumber())
+            .terminalId(request.terminalId())
+            .manufacturerId(request.manufacturerId())
+            .packetVersion(request.packetVersion())
+            .deviceId(request.deviceId())
+            .deviceFirmWareVersion("LTE 1.2")
+            .build();
+    }
 }
