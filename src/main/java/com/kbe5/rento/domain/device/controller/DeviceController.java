@@ -1,46 +1,37 @@
 package com.kbe5.rento.domain.device.controller;
 
-import com.kbe5.rento.domain.device.dto.request.DeviceEventOnRequest;
+import com.kbe5.rento.domain.device.dto.request.OnEventRequest;
+import com.kbe5.rento.domain.device.dto.request.DeviceRegisterRequest;
+import com.kbe5.rento.domain.device.dto.resonse.OnEventResponse;
+import com.kbe5.rento.domain.device.service.DeviceEventService;
 import com.kbe5.rento.domain.device.service.DeviceService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/emulators")
+@RequestMapping("/api/devices")
 public class DeviceController {
 
     private final DeviceService deviceService;
+    private final DeviceEventService deviceEventService;
+
+    @PostMapping
+    public void registerDevice(@RequestBody @Validated DeviceRegisterRequest request) {
+        deviceService.registerDevice(request);
+    }
 
     @PostMapping("/on")
-    public void emulatorOnEvent(DeviceEventOnRequest requestDto) {
-        //이벤트 정보를 수신합니다
+    public ResponseEntity<OnEventResponse> onEvent(@RequestBody @Validated OnEventRequest request) {
 
+        return ResponseEntity.ok(deviceEventService.ignitionOnEvent(request));
     }
 
-    @PostMapping("/off")
-    public void emulatorOffEvent() {
-
-    }
-
-    //주기정보 전달
-    @PostMapping("/control-info")
-    public void emulatorControlInfo() {
-
-    }
-
-    //주기 리스트
-    @PostMapping("/control-info/confirm")
-    public void emulatorControlInfoConfirm() {
-
-    }
-
-    @PostMapping("/token")
-    public void emulatorToken() {
-
-    }
 }

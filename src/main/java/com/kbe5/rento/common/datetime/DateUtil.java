@@ -25,6 +25,16 @@ public class DateUtil {
         return LocalDateTime.parse(text, FORMATTER);
     }
 
+    public static LocalDateTime toOnOffEventLocalDateTime(String text) {
+        if (text == null) {
+            throw new IllegalArgumentException("시간 문자열이 null 입니다.");
+        }
+        if (text.trim().equals("")) {
+            return null;
+        }
+        return LocalDateTime.parse(text, FORMATTER);
+    }
+
     public static boolean isBlank(String str) {
         return str == null || str.trim().isEmpty();
     }
