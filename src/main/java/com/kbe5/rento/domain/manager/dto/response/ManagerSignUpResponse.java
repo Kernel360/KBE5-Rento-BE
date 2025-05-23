@@ -4,7 +4,7 @@ import com.kbe5.rento.domain.manager.entity.Manager;
 
 public record ManagerSignUpResponse(
         Long id,
-        String managerId,
+        String loginId,
         String companyCode
 ) {
     public static ManagerSignUpResponse from(Manager manager, String companyCode) {

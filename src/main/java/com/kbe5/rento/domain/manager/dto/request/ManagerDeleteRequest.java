@@ -9,7 +9,7 @@ public record ManagerDeleteRequest(
         Long id,
 
         @NotBlank
-        String managerId,
+        String loginId,
 
         @NotBlank
         String password

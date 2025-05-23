@@ -10,7 +10,7 @@ public record ManagerResponse(
         String name,
         String phone,
         String email,
-        String managerId
+        String loginId
 ) {
     public static ManagerResponse from(Manager manager) {
         return new ManagerResponse(manager.getId(), manager.getCompanyId().getId(), manager.getName(),
