@@ -12,7 +12,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/managerㄴ")
+@RequestMapping("/api/managers")
 public class ManagerController {
 
     private final ManagerService managerService;
@@ -22,12 +22,12 @@ public class ManagerController {
         return ResponseEntity.ok(managerService.signUp(request));
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/detail/{id}")
     public ResponseEntity<ManagerResponse> getManagerDetail(@PathVariable Long id) {
         return ResponseEntity.ok(managerService.getManagerDetail(id));
     }
 
-    @GetMapping("/{companyCode}")
+    @GetMapping("/list/{companyCode}")
     public ResponseEntity<List<ManagerResponse>> getManagerList(@PathVariable String companyCode) {
         return ResponseEntity.ok(managerService.getManagerList(companyCode));
     }
