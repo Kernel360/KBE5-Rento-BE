@@ -16,30 +16,23 @@ import java.util.Map;
 public class ExceptionController {
     @ExceptionHandler(DomainException.class)
     public ResponseEntity<ExceptionResponse> customExceptionHandler(DomainException e) {
-        log.warn("DomainException code: {}, message: {}", e.getResultCode(), e.getMessage());
-        //항상 200 ok로 응답
-        return ResponseEntity.ok(e.toResponse());
+        log.warn("DomainException code: {}, message: {}", e.getStatus(), e.getMessage());
+        return ResponseEntity.status(e.getStatus())
+                .body(e.toResponse());
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ExceptionResponse> exceptionHandler(Exception e) {
         log.error("[UnhandledException] {}", e.getMessage());
-        return ResponseEntity.ok(
-                new ExceptionResponse(
-                        ErrorType.UNDEFINED_ERROR.getCode(),
-                        ErrorType.UNDEFINED_ERROR.getMessage()
-                )
-        );
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(new ExceptionResponse(e.getMessage()));
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ExceptionResponse> methodArgumentNotValidExceptionHandler(MethodArgumentNotValidException e) {
         log.warn("ValidationException: {}", e.getMessage());
 
-        return ResponseEntity.ok(
-                new ExceptionResponse(
-                        ErrorType.REQUIRED_PARAMETER_ERROR.getCode(), ErrorType.REQUIRED_PARAMETER_ERROR.getMessage()
-                )
-        );
+        return ResponseEntity.badRequest().body(new ExceptionResponse(ErrorType.VALIDATION_ERROR.getMessage()));
+
     }
 }
