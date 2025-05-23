@@ -1,22 +1,21 @@
 package com.kbe5.rento.domain.vehicle.dto.response;
 
-import com.kbe5.rento.domain.manager.entity.Department;
+import com.kbe5.rento.domain.vehicle.entity.FuelType;
 import com.kbe5.rento.domain.vehicle.entity.Vehicle;
+import com.kbe5.rento.domain.vehicle.entity.VehicleType;
 
 public record VehicleDetailResponse(
-        Department department,
         String vehicleNumber,
         String brand,
         String modelName,
-        String vehicleType,
-        String fuelType,
+        VehicleType vehicleType,
+        FuelType fuelType,
         Long totalDistanceKm,
         String batteryVoltage
 ) {
-    public VehicleDetailResponse(Department department, String vehicleNumber, String brand,
-                                 String modelName, String vehicleType, String fuelType,
+    public VehicleDetailResponse(String vehicleNumber, String brand,
+                                 String modelName, VehicleType vehicleType, FuelType fuelType,
                                  Long totalDistanceKm, String batteryVoltage) {
-        this.department = department;
         this.vehicleNumber = vehicleNumber;
         this.brand = brand;
         this.modelName = modelName;
@@ -27,7 +26,7 @@ public record VehicleDetailResponse(
     }
 
     public static VehicleDetailResponse fromEntity(Vehicle vehicle) {
-        return new VehicleDetailResponse(vehicle.getDepartment(), vehicle.getVehicleNumber(),
+        return new VehicleDetailResponse(vehicle.getVehicleNumber(),
                 vehicle.getBrand(), vehicle.getModelName(), vehicle.getVehicleType(),
                 vehicle.getFuelType(), vehicle.getTotalDistanceKm(), vehicle.getBatteryVoltage());
     }

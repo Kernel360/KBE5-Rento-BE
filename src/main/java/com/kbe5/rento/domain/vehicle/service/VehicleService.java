@@ -1,5 +1,7 @@
 package com.kbe5.rento.domain.vehicle.service;
 
+import com.kbe5.rento.domain.manager.entity.Manager;
+import com.kbe5.rento.domain.manager.entity.ManagerRepository;
 import com.kbe5.rento.domain.vehicle.dto.request.VehicleAddRequest;
 import com.kbe5.rento.domain.vehicle.dto.request.VehicleUpdateRequest;
 import com.kbe5.rento.domain.vehicle.dto.response.VehicleDetailResponse;
@@ -17,27 +19,29 @@ import java.util.List;
 public class VehicleService {
 
     private final VehicleRepository vehicleRepository;
+    // test
+    private final ManagerRepository managerRepository;
 
-    // 차량 등록
-    public void addVehicle(VehicleAddRequest request) {
+    public VehicleResponse addVehicle(VehicleAddRequest request) {
 
-        Vehicle vehicle = VehicleAddRequest.toEntity(request);
+        Manager manager = managerRepository.findById(1L).orElseThrow();
+        // 테스트용 manager 생성
+        Vehicle vehicle = VehicleAddRequest.toEntity(manager, request);
+
         vehicleRepository.save(vehicle);
+
+        return VehicleResponse.fromEntity(vehicle);
     }
 
-    // 차량 목록 조회
-    // todo: 업체, 부서 쿼리 작성 해야할듯(페이징)
-    public List<VehicleResponse> getVehicleList(String companyCode){
+    public List<VehicleResponse> getVehicleList(Manager manager) {
+        // test
+        Manager manager1 = managerRepository.findById(1L).orElseThrow();
 
-        List<Vehicle> vehicleList = vehicleRepository.findByCompanyCode(companyCode);
+        List<Vehicle> vehicleList = vehicleRepository.findByCompanyCode(manager1.getComponyCode());
 
-        List<VehicleResponse> responses = vehicleList.stream()
-                .map(VehicleResponse::fromEntity).toList();
-
-        return responses;
+        return vehicleList.stream().map(VehicleResponse::fromEntity).toList();
     }
 
-    // 차량 상세 조회
     public VehicleDetailResponse getVehicle(Long vehicleId){
         Vehicle vehicle = vehicleRepository.findById(vehicleId).orElseThrow(
                 () -> new IllegalArgumentException("해당 차량 없음"));
@@ -45,19 +49,23 @@ public class VehicleService {
         return VehicleDetailResponse.fromEntity(vehicle);
     }
 
-
-    // 차량 정보 수정
     @Transactional
     public void updateVehicle(Long vehicleId, VehicleUpdateRequest request) {
-
         Vehicle vehicle = vehicleRepository.findById(vehicleId).orElseThrow(
                 () -> new IllegalArgumentException("해당 차량 없음"));
+
         vehicle.update(request);
     }
 
-
-    // 차량 등록 해제
     public void deleteVehicle(Long vehicleId){
         vehicleRepository.deleteById(vehicleId);
+    }
+
+    public VehicleResponse getVehicleSearch(String vehicleNumber){
+        Vehicle vehicle = vehicleRepository.findByVehicleNumber(vehicleNumber).orElseThrow(
+                () -> new IllegalArgumentException("존재하는 차량이 없습니다")
+        );
+
+        return VehicleResponse.fromEntity(vehicle);
     }
 }

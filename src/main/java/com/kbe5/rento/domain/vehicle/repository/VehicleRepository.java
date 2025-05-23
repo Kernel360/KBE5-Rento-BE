@@ -6,15 +6,10 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface VehicleRepository extends JpaRepository<Vehicle, Long> {
 
-
-        @Query(value = """
-    SELECT v FROM Vehicle v
-     JOIN v.company c
-     WHERE c.companyCode = :code
-  """, nativeQuery = true)
         List<Vehicle> findByCompanyCode(@Param("code") String code);
-
+        Optional<Vehicle> findByVehicleNumber(String vehicleNumber);
 }

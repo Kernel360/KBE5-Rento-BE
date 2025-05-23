@@ -1,12 +1,14 @@
 package com.kbe5.rento.domain.vehicle.controller;
 
 
+import com.kbe5.rento.domain.manager.entity.Manager;
 import com.kbe5.rento.domain.vehicle.dto.request.VehicleAddRequest;
 import com.kbe5.rento.domain.vehicle.dto.request.VehicleUpdateRequest;
 import com.kbe5.rento.domain.vehicle.dto.response.VehicleDetailResponse;
 import com.kbe5.rento.domain.vehicle.dto.response.VehicleResponse;
 import com.kbe5.rento.domain.vehicle.service.VehicleService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,14 +22,15 @@ public class VehicleControllerImpl implements VehicleController{
 
     @Override
     @PostMapping()
-    public void addVehicle(@RequestBody VehicleAddRequest request) {
-        vehicleService.addVehicle(request);
+    public VehicleResponse addVehicle(Manager manager, @RequestBody @Validated VehicleAddRequest request) {
+        // test
+        return vehicleService.addVehicle(/*manager, */request);
     }
 
     @Override
-    @PutMapping()
+    @PutMapping("/{vehicleId}")
     public void updateVehicle(@PathVariable Long vehicleId,
-                              @RequestBody VehicleUpdateRequest request) {
+                              @RequestBody @Validated VehicleUpdateRequest request) {
         vehicleService.updateVehicle(vehicleId, request);
     }
 
@@ -40,13 +43,13 @@ public class VehicleControllerImpl implements VehicleController{
     // todo: 부서별 필터 기능 적용및 페이징
     @Override
     @GetMapping()
-    public List<VehicleResponse> getVehicleList(String vehicleCode) {
-        return vehicleService.getVehicleList(vehicleCode);
+    public List<VehicleResponse> getVehicleList(Manager manager) {
+        return vehicleService.getVehicleList(manager);
     }
 
     @Override
-    @GetMapping("/detail")
-    public VehicleDetailResponse getVehicle(Long vehicleId) {
+    @GetMapping("/{vehicleId}")
+    public VehicleDetailResponse getVehicle(@PathVariable Long vehicleId) {
         return vehicleService.getVehicle(vehicleId);
     }
 }
