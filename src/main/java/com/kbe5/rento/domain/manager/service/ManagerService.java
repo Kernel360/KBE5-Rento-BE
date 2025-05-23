@@ -88,10 +88,6 @@ public class ManagerService {
 
         managerRepository.delete(manager);
 
-        if (!managerRepository.existsByCompanyId(manager.getCompanyId())) {
-            companyService.delete(manager.getCompanyId());
-        }
-
         return new ManagerDeleteResponse(true);
     }
 
