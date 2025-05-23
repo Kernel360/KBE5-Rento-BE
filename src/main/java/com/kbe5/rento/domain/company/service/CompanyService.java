@@ -8,6 +8,7 @@ import com.kbe5.rento.domain.company.dto.response.*;
 import com.kbe5.rento.domain.company.entity.Company;
 import com.kbe5.rento.domain.company.repository.CompanyRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -62,8 +63,13 @@ public class CompanyService {
         return CompanyUpdateResponse.from(company);
     }
 
-    public void delete(Company company) {
-        companyRepository.delete(company);
+    public CompanyDeleteResponse delete(Long id) {
+        Company company = companyRepository.findById(id)
+                .orElseThrow(() -> new DomainException(ErrorType.NO_SEARCH_RESULTS));
+
+        companyRepository.delete(company); // 에러 방식 수정 후 리펙토링 예정입니다.
+
+        return new CompanyDeleteResponse(company.getId(), true);
     }
 
     @Transactional(readOnly = true)

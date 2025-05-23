@@ -44,4 +44,9 @@ public class CompanyController {
     public ResponseEntity<Boolean> checkAvailableBizNumber(@PathVariable int bizNumber) {
         return ResponseEntity.ok(!companyService.isExistsBizNumber(bizNumber));
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<CompanyDeleteResponse> companyDelete(@PathVariable Long id) {
+        return ResponseEntity.ok(companyService.delete(id));
+    }
 }
