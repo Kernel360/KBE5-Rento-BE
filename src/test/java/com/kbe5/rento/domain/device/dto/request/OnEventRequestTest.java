@@ -1,7 +1,6 @@
 package com.kbe5.rento.domain.device.dto.request;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kbe5.rento.domain.device.enums.GpsCondition;
