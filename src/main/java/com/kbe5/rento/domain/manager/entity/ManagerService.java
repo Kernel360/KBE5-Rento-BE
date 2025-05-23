@@ -10,10 +10,10 @@ public class ManagerService {
     private final ManagerRepository managerRepository;
 
 
-    public void saveManager(String CompangCode){
+    public void saveManager(String CompanyCode){
 
         Manager manager = Manager.builder()
-                .componyCode(CompangCode)
+                .componyCode(CompanyCode)
                 .build();
 
         managerRepository.save(manager);
