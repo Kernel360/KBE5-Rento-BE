@@ -2,6 +2,7 @@ package com.kbe5.rento.domain.manager.dto.details;
 
 import com.kbe5.rento.domain.manager.entity.Manager;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -11,13 +12,10 @@ import java.util.List;
 
 
 @Getter
+@RequiredArgsConstructor
 public class CustomManagerDetails implements UserDetails {
 
     private final Manager manager;
-
-    public CustomManagerDetails(Manager manager) {
-        this.manager = manager;
-    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
