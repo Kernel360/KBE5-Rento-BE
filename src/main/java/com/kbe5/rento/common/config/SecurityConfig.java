@@ -1,6 +1,11 @@
 package com.kbe5.rento.common.config;
 
+import com.kbe5.rento.common.jwt.JwtFilter;
+import com.kbe5.rento.common.jwt.JwtUtil;
+import com.kbe5.rento.common.securityFilter.LoginAuthenticationFilter;
 import com.kbe5.rento.common.util.SecurityPermissionApiList;
+import com.kbe5.rento.domain.manager.respository.ManagerRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -11,6 +16,7 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -19,13 +25,12 @@ import java.util.Collections;
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final AuthenticationConfiguration authenticationConfiguration; // 추 후 로그인 필터를 위해서 필요
-
-    public SecurityConfig(AuthenticationConfiguration authenticationConfiguration) {
-        this.authenticationConfiguration = authenticationConfiguration;
-    }
+    private final AuthenticationConfiguration authenticationConfiguration;
+    private final JwtUtil jwtUtil;
+    private final ManagerRepository managerRepository;
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
@@ -58,6 +63,11 @@ public class SecurityConfig {
                 .requestMatchers(SecurityPermissionApiList.PUBLIC_URLS).permitAll()
                 .requestMatchers("/admin").hasRole("ADMIN") // 추 후 시스템 관리자 구현 및 권한 설정 시 사용
                 .anyRequest().authenticated());
+
+        // LoginFilter 추가
+        http.addFilterBefore(new JwtFilter(jwtUtil, managerRepository), LoginAuthenticationFilter.class);
+        http.addFilterAt(new LoginAuthenticationFilter(authenticationManager(authenticationConfiguration), jwtUtil),
+                UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

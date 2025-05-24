@@ -9,12 +9,15 @@ import com.kbe5.rento.domain.manager.dto.request.ManagerSignUpRequest;
 import com.kbe5.rento.domain.manager.dto.request.ManagerUpdateRequest;
 import com.kbe5.rento.domain.manager.dto.response.*;
 import com.kbe5.rento.domain.manager.entity.Manager;
+import com.kbe5.rento.domain.manager.enums.ManagerRole;
 import com.kbe5.rento.domain.manager.respository.ManagerRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -23,6 +26,7 @@ public class ManagerService {
 
     private final ManagerRepository managerRepository;
     private final CompanyService companyService;
+    private final BCryptPasswordEncoder encoder;
 
     public ManagerSignUpResponse signUp(ManagerSignUpRequest request) {
 
@@ -30,12 +34,13 @@ public class ManagerService {
 
         Manager manager = Manager.builder()
                 .loginId(request.loginId())
-                .password(request.password())
+                .password(encoder.encode(request.password()))
                 .email(request.email())
                 .name(request.name())
                 .phone(request.phone())
                 .companyId(company)
                 .companyCode(request.companyCode())
+                .role(ManagerRole.ROLE_MANAGER)
                 .build();
 
         manager = managerRepository.save(manager);
@@ -43,17 +48,16 @@ public class ManagerService {
         return ManagerSignUpResponse.from(manager, company.getCompanyCode());
     }
 
-    //추후에 사용 될 함수입니다.
     public Manager findByLoginId(String loginId) {
         return managerRepository.findByLoginId(loginId)
-                .orElseThrow(() -> new DomainException(ErrorType.NO_SEARCH_RESULTS));
+                .orElseThrow(() -> new DomainException(ErrorType.MANAGER_NOT_FOUND));
     }
 
     @Transactional(readOnly = true)
     public ManagerResponse getManagerDetail(Long id) {
 
         Manager manager = managerRepository.findById(id)
-                .orElseThrow(() -> new DomainException(ErrorType.NO_SEARCH_RESULTS));
+                .orElseThrow(() -> new DomainException(ErrorType.MANAGER_NOT_FOUND));
 
         return ManagerResponse.from(manager);
     }
@@ -61,16 +65,19 @@ public class ManagerService {
     @Transactional(readOnly = true)
     public List<ManagerResponse> getManagerList(String companyCode) {
 
-        List<Manager> manager = managerRepository.findAllByCompanyCode(companyCode)
-                .orElseThrow(() -> new DomainException(ErrorType.NO_SEARCH_RESULTS));
+        Optional<List<Manager>> optionalManagerList = managerRepository.findAllByCompanyCode(companyCode);
 
-        return ManagerResponse.from(manager);
+        if (optionalManagerList.map(List::isEmpty).orElse(true)) {
+            throw new DomainException(ErrorType.MANAGER_NOT_FOUND);
+        }
+
+        return ManagerResponse.from(optionalManagerList.get());
     }
 
     public ManagerUpdateResponse update(ManagerUpdateRequest request) {
 
         Manager manager = managerRepository.findById(request.id())
-                .orElseThrow(() -> new DomainException(ErrorType.NO_SEARCH_RESULTS));
+                .orElseThrow(() -> new DomainException(ErrorType.MANAGER_NOT_FOUND));
 
         manager.toUpdate(request);
 
@@ -80,7 +87,7 @@ public class ManagerService {
     public ManagerDeleteResponse delete(ManagerDeleteRequest request) {
 
         Manager manager = managerRepository.findById(request.id())
-                .orElseThrow(() -> new DomainException(ErrorType.NO_SEARCH_RESULTS));
+                .orElseThrow(() -> new DomainException(ErrorType.MANAGER_NOT_FOUND));
 
         if (!manager.getPassword().equals(request.password())) {
             return new ManagerDeleteResponse(false);
