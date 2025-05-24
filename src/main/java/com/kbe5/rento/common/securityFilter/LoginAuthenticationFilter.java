@@ -1,7 +1,14 @@
 package com.kbe5.rento.common.securityFilter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kbe5.rento.common.exception.DomainException;
+import com.kbe5.rento.common.exception.ErrorType;
+import com.kbe5.rento.common.jwt.JwtProperties;
+import com.kbe5.rento.common.jwt.JwtUtil;
+import com.kbe5.rento.domain.manager.dto.details.CustomManagerDetails;
 import com.kbe5.rento.domain.manager.dto.request.ManagerLoginRequest;
+import com.kbe5.rento.domain.manager.dto.response.ManagerLoginResponse;
+import com.kbe5.rento.domain.manager.entity.Manager;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -10,16 +17,22 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.io.IOException;
+import java.util.Collection;
+import java.util.Iterator;
 
 public class LoginAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     private final AuthenticationManager authenticationManager;
+    private final JwtUtil jwtUtil;
 
-    public LoginAuthenticationFilter(AuthenticationManager authenticationManager) {
+    public LoginAuthenticationFilter(AuthenticationManager authenticationManager, JwtUtil jwtUtil) {
         this.authenticationManager = authenticationManager;
+        this.jwtUtil = jwtUtil;
+        this.setFilterProcessesUrl("/api/managers/login");
     }
 
     @Override
@@ -43,11 +56,39 @@ public class LoginAuthenticationFilter extends UsernamePasswordAuthenticationFil
 
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
-        // jwt Toket 구현 후 적용 예졍
+        CustomManagerDetails customManagerDetails = (CustomManagerDetails) authResult.getPrincipal();
+
+        String loginId = customManagerDetails.getUsername();
+
+        Collection<? extends GrantedAuthority> authorities = authResult.getAuthorities();
+        Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
+        GrantedAuthority auth = iterator.next();
+
+        String role = auth.getAuthority();
+        String accessToken = jwtUtil.createJwt("access", loginId, role, JwtProperties.ACCESS_EXPIRED_TIME);
+
+        response.addHeader("Authorization","Bearer " + accessToken);
+        response.setContentType("application/json;charset=UTF-8");
+
+        Manager manager = customManagerDetails.getManager();
+
+        ManagerLoginResponse loginResponse = ManagerLoginResponse.from(manager);
+
+        String body = new ObjectMapper().writeValueAsString(loginResponse);
+
+        response.getWriter().write(body);
     }
 
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
-        // 에러코드 적용 후 구현 예졍
+
+        DomainException domainException = new DomainException(ErrorType.FAILED_LOGIN);
+        response.setContentType("application/json;charset=UTF-8");
+
+        response.setStatus(domainException.getStatus().value());
+
+        String body = new ObjectMapper().writeValueAsString(domainException.toResponse());
+
+        response.getWriter().write(body);
     }
 }
