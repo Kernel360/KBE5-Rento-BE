@@ -39,13 +39,13 @@ public class CompanyService {
     //추후에 사용 될 함수입니다.
     public Company findByBizNumber(int bizNumber) {
         return companyRepository.findByBizNumber(bizNumber)
-                .orElseThrow(() -> new DomainException(ErrorType.NO_SEARCH_RESULTS));
+                .orElseThrow(() -> new DomainException(ErrorType.COMPANY_NOT_FOUND));
     }
 
     @Transactional(readOnly = true)
     public Company findByCompanyCode(String code) {
         return companyRepository.findByCompanyCode(code)
-                .orElseThrow(() -> new DomainException(ErrorType.NO_SEARCH_RESULTS));
+                .orElseThrow(() -> new DomainException(ErrorType.COMPANY_NOT_FOUND));
     }
 
     private void makeCompanyCode(Company company) {
@@ -56,7 +56,7 @@ public class CompanyService {
     public CompanyUpdateResponse update(Long id, CompanyUpdateRequest request) {
 
         Company company = companyRepository
-                .findById(id).orElseThrow(() -> new DomainException(ErrorType.NO_SEARCH_RESULTS));
+                .findById(id).orElseThrow(() -> new DomainException(ErrorType.COMPANY_NOT_FOUND));
 
         company.toUpdate(request);
 
@@ -65,7 +65,7 @@ public class CompanyService {
 
     public CompanyDeleteResponse delete(Long id) {
         Company company = companyRepository.findById(id)
-                .orElseThrow(() -> new DomainException(ErrorType.NO_SEARCH_RESULTS));
+                .orElseThrow(() -> new DomainException(ErrorType.COMPANY_NOT_FOUND));
 
         companyRepository.delete(company); // 에러 방식 수정 후 리펙토링 예정입니다.
 
@@ -84,7 +84,7 @@ public class CompanyService {
     public CompanyResponse getCompanyDetail(Long id) {
 
         Company company = companyRepository.findById(id)
-                .orElseThrow(() -> new DomainException(ErrorType.NO_SEARCH_RESULTS));
+                .orElseThrow(() -> new DomainException(ErrorType.COMPANY_NOT_FOUND));
 
         return CompanyResponse.from(company);
     }
