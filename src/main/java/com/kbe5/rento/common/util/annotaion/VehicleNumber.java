@@ -1,6 +1,7 @@
 package com.kbe5.rento.common.util.annotaion;
 
 import jakarta.validation.Constraint;
+import jakarta.validation.Payload;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
@@ -15,4 +16,8 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Constraint(validatedBy = VehicleNumberValidator.class)
 @Target({METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE})
 public @interface VehicleNumber {
+
+    String message() default "올바른 차량 번호 형식이 아닙니다";
+    Class<?>[] groups() default {};
+    Class<? extends Payload>[] payload() default {};
 }

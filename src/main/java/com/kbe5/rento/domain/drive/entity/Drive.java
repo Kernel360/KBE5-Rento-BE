@@ -36,18 +36,15 @@ public class Drive extends BaseEntity {
     private String endLocation;
     private boolean isStart;
 
-    private String companyCode;
-
     @Builder
     public Drive(Member member, Vehicle vehicle, DriveType dirveType, String startLocation,
-                 String endLocation, String companyCode) {
+                 String endLocation) {
         this.member = member;
         this.vehicle = vehicle;
         this.dirveType = dirveType;
         this.startLocation = startLocation;
         this.endLocation = endLocation;
         this.isStart = false;
-        this.companyCode = companyCode;
     }
 
     public void driveStart(){

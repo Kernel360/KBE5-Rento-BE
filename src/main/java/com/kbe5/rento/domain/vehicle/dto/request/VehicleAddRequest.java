@@ -7,10 +7,12 @@ import com.kbe5.rento.domain.vehicle.entity.FuelType;
 import com.kbe5.rento.domain.vehicle.entity.Vehicle;
 import com.kbe5.rento.domain.vehicle.entity.VehicleType;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 
 public record VehicleAddRequest(
-
+        @NotBlank
+        String companyCode,
         @NotBlank
         @VehicleNumber
         String vehicleNumber,
@@ -18,18 +20,18 @@ public record VehicleAddRequest(
         String brand,
         @NotBlank
         String modelName,
-        @NotBlank
+        @NotNull
         VehicleType vehicleType,
-        @NotBlank
+        @NotNull
         FuelType fuelType,
-        @NotBlank
+        @NotNull
         Long totalDistanceKm,
         @NotBlank
         String batteryVoltage
 ) {
     public static Vehicle toEntity(Manager manager, VehicleAddRequest request) {
         return Vehicle.builder()
-                .companyCode(manager.getComponyCode())
+                .company(manager.getCompany())
                 .vehicleNumber(request.vehicleNumber)
                 .brand(request.brand)
                 .modelName(request.modelName)

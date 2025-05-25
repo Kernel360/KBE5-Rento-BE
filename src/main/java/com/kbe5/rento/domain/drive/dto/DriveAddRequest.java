@@ -5,20 +5,19 @@ import com.kbe5.rento.domain.drive.entity.DriveType;
 import com.kbe5.rento.domain.member.entity.Member;
 import com.kbe5.rento.domain.vehicle.entity.Vehicle;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 public record DriveAddRequest(
-        @NotBlank
+        @NotNull
         Member member,
-        @NotBlank
+        @NotNull
         Vehicle vehicle,
-        @NotBlank
+        @NotNull
         DriveType driveType,
         @NotBlank
         String startLocation,
         @NotBlank
-        String endLocation,
-        @NotBlank
-        String companyCode
+        String endLocation
 ) {
     public static Drive toEntity(DriveAddRequest request) {
         return Drive.builder()
@@ -27,9 +26,6 @@ public record DriveAddRequest(
                 .dirveType(request.driveType())
                 .startLocation(request.startLocation())
                 .endLocation(request.endLocation())
-                .companyCode(request.companyCode())
                 .build();
     }
-
-
 }

@@ -12,10 +12,11 @@ public record DriveResponse(
         LocalDateTime startDate,
         LocalDateTime endDate,
         String startLocation,
-        String endLocation
+        String endLocation,
+        boolean isStart
 ) {
     public static DriveResponse fromEntity(Drive drive){
         return new DriveResponse(drive.getMember(), drive.getVehicle(), drive.getStartDate(),
-                drive.getEndDate(), drive.getStartLocation(), drive.getEndLocation());
+                drive.getEndDate(), drive.getStartLocation(), drive.getEndLocation(), drive.isStart());
     }
 }

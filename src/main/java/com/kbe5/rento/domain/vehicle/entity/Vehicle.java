@@ -2,6 +2,7 @@ package com.kbe5.rento.domain.vehicle.entity;
 
 
 import com.kbe5.rento.common.util.BaseEntity;
+import com.kbe5.rento.domain.company.Company;
 import com.kbe5.rento.domain.vehicle.dto.request.VehicleUpdateRequest;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -15,11 +16,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access= AccessLevel.PROTECTED)
 public class Vehicle extends BaseEntity {
 
-    // todo: 연관관계 매핑 끊어보기 5.21
-    /*@ManyToOne
+    @ManyToOne
     @JoinColumn(name = "company_id")
-    private Company company;*/
-    private String companyCode;
+    private Company company;
+
+    // todo: 부서 추가 5.25
+
+    // todo:
 
     private String vehicleNumber;
     private String brand;
@@ -38,12 +41,10 @@ public class Vehicle extends BaseEntity {
 
     private String batteryVoltage;
 
-    // todo: 운행 시작한지 어떻게 알지? -> 운행을 만들기
-
     @Builder
-    public Vehicle(String companyCode, String vehicleNumber, String brand, String modelName,
+    public Vehicle(Company company, String vehicleNumber, String brand, String modelName,
                    VehicleType vehicleType, FuelType fuelType, Long totalDistanceKm, String batteryVoltage) {
-        this.companyCode = companyCode;
+        this.company = company;
         this.vehicleNumber = vehicleNumber;
         this.brand = brand;
         this.modelName = modelName;

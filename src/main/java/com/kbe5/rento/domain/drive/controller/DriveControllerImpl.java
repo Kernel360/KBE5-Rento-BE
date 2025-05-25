@@ -4,6 +4,7 @@ import com.kbe5.rento.domain.drive.dto.DriveAddRequest;
 import com.kbe5.rento.domain.drive.dto.DriveDetailResponse;
 import com.kbe5.rento.domain.drive.dto.DriveResponse;
 import com.kbe5.rento.domain.drive.service.DriveService;
+import com.kbe5.rento.domain.manager.entity.Manager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -43,8 +44,8 @@ public class DriveControllerImpl implements DriveController {
 
     @Override
     @GetMapping
-    public List<DriveResponse> getDriveList(String companyCode) {
-        return driveService.getDriveList(companyCode);
+    public List<DriveResponse> getDriveList(Manager manager) {
+        return driveService.getDriveList(manager);
     }
 
     @Override

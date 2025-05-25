@@ -9,7 +9,6 @@ public class ManagerService {
 
     private final ManagerRepository managerRepository;
 
-
     public void saveManager(String CompanyCode){
 
         Manager manager = Manager.builder()

@@ -1,5 +1,7 @@
 package com.kbe5.rento.domain.vehicle.service;
 
+import com.kbe5.rento.common.DomainException;
+import com.kbe5.rento.common.ErrorType;
 import com.kbe5.rento.domain.manager.entity.Manager;
 import com.kbe5.rento.domain.manager.entity.ManagerRepository;
 import com.kbe5.rento.domain.vehicle.dto.request.VehicleAddRequest;
@@ -24,10 +26,16 @@ public class VehicleService {
 
     public VehicleResponse addVehicle(VehicleAddRequest request) {
 
-        Manager manager = managerRepository.findById(1L).orElseThrow();
         // 테스트용 manager 생성
-        Vehicle vehicle = VehicleAddRequest.toEntity(manager, request);
+        Manager manager = managerRepository.findById(1L).orElseThrow();
 
+        // 같은 번호는 에러 처리해줍니다
+        vehicleRepository.findByVehicleNumber(request.vehicleNumber())
+                .ifPresent((__) -> {
+                    throw new DomainException(ErrorType.VALIDATION_ERROR);
+                });
+
+        Vehicle vehicle = VehicleAddRequest.toEntity(manager, request);
         vehicleRepository.save(vehicle);
 
         return VehicleResponse.fromEntity(vehicle);
@@ -37,7 +45,7 @@ public class VehicleService {
         // test
         Manager manager1 = managerRepository.findById(1L).orElseThrow();
 
-        List<Vehicle> vehicleList = vehicleRepository.findByCompanyCode(manager1.getComponyCode());
+        List<Vehicle> vehicleList = vehicleRepository.findByCompany(manager1.getCompany());
 
         return vehicleList.stream().map(VehicleResponse::fromEntity).toList();
     }
@@ -61,11 +69,6 @@ public class VehicleService {
         vehicleRepository.deleteById(vehicleId);
     }
 
-    public VehicleResponse getVehicleSearch(String vehicleNumber){
-        Vehicle vehicle = vehicleRepository.findByVehicleNumber(vehicleNumber).orElseThrow(
-                () -> new IllegalArgumentException("존재하는 차량이 없습니다")
-        );
+    // todo: 자동차 번호로 검색 기능 -> 해당 업체의 자동차가 아니면 검색으로 안나와야함 5.23
 
-        return VehicleResponse.fromEntity(vehicle);
-    }
 }
