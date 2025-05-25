@@ -1,10 +1,10 @@
 package com.kbe5.rento.domain.drive.service;
 
-import com.kbe5.rento.common.DomainException;
+import com.kbe5.rento.common.exception.DomainException;
 import com.kbe5.rento.domain.drive.dto.DriveAddRequest;
 import com.kbe5.rento.domain.drive.entity.DriveType;
-import com.kbe5.rento.domain.manager.entity.ManagerRepository;
-import com.kbe5.rento.domain.manager.entity.ManagerService;
+import com.kbe5.rento.domain.manager.dto.request.ManagerSignUpRequest;
+import com.kbe5.rento.domain.manager.service.ManagerService;
 import com.kbe5.rento.domain.member.entity.Member;
 import com.kbe5.rento.domain.member.repository.MemberRepository;
 import com.kbe5.rento.domain.member.service.MemberService;
@@ -45,10 +45,23 @@ class DriveServiceTest {
     @Autowired
     private VehicleRepository vehicleRepository;
 
+
+    void setManager(){
+        ManagerSignUpRequest managerSignUpRequest = new ManagerSignUpRequest(
+                "aaaa",
+                "aaaa",
+                "test",
+                "11111",
+                "eeee",
+                "J110"
+        );
+
+        managerService.signUp(managerSignUpRequest);
+    }
+
     @BeforeEach
     void setMember(){
-        String code = "test";
-        managerService.saveManager(code);
+        setManager();
 
         String companyCode = "J100";
         memberService.save(companyCode);
@@ -56,8 +69,7 @@ class DriveServiceTest {
 
     @BeforeEach
     void setVehicle(){
-        String code = "test1";
-        managerService.saveManager(code);
+        setManager();
 
         VehicleAddRequest request = new VehicleAddRequest(
                 "J100",

@@ -1,6 +1,8 @@
 package com.kbe5.rento.domain.vehicle.service;
 
-import com.kbe5.rento.domain.manager.entity.ManagerService;
+import com.kbe5.rento.domain.company.entity.Company;
+import com.kbe5.rento.domain.manager.dto.request.ManagerSignUpRequest;
+import com.kbe5.rento.domain.manager.service.ManagerService;
 import com.kbe5.rento.domain.vehicle.dto.request.VehicleAddRequest;
 import com.kbe5.rento.domain.vehicle.dto.response.VehicleResponse;
 import com.kbe5.rento.domain.vehicle.entity.Vehicle;
@@ -43,15 +45,25 @@ class VehicleServiceTest {
 
     @BeforeEach
     void setManager(){
-        String code = "test";
-        managerService.saveManager(code);
+        Company company = new Company();
+
+        ManagerSignUpRequest managerSignUpRequest = new ManagerSignUpRequest(
+                "aaaa",
+                "aaaa",
+                "test",
+                "11111",
+                "eeee",
+                "J110"
+        );
+
+        managerService.signUp(managerSignUpRequest);
     }
 
     @Test
     void 자동차_등록_테스트(){
         //given
         VehicleAddRequest request = new VehicleAddRequest(
-                "J100",
+                "J101",
                 "123가 1234",
                 "벤츠",
                 "아반떼",
