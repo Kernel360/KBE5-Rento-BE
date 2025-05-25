@@ -1,6 +1,5 @@
 package com.kbe5.rento.common.jwt;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kbe5.rento.common.exception.DomainException;
 import com.kbe5.rento.common.exception.ErrorType;
 import com.kbe5.rento.domain.manager.dto.details.CustomManagerDetails;
@@ -17,7 +16,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.Map;
 
 public class JwtFilter extends OncePerRequestFilter {
 

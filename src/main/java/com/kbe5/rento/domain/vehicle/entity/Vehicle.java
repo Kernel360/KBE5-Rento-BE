@@ -2,7 +2,7 @@ package com.kbe5.rento.domain.vehicle.entity;
 
 
 import com.kbe5.rento.common.util.BaseEntity;
-import com.kbe5.rento.domain.company.Company;
+import com.kbe5.rento.domain.company.entity.Company;
 import com.kbe5.rento.domain.vehicle.dto.request.VehicleUpdateRequest;
 import jakarta.persistence.*;
 import lombok.AccessLevel;

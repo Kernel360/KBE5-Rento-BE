@@ -1,14 +1,14 @@
 package com.kbe5.rento.domain.drive.service;
 
-import com.kbe5.rento.common.DomainException;
-import com.kbe5.rento.common.ErrorType;
+import com.kbe5.rento.common.exception.DomainException;
+import com.kbe5.rento.common.exception.ErrorType;
 import com.kbe5.rento.domain.drive.dto.DriveAddRequest;
 import com.kbe5.rento.domain.drive.dto.DriveDetailResponse;
 import com.kbe5.rento.domain.drive.dto.DriveResponse;
 import com.kbe5.rento.domain.drive.entity.Drive;
 import com.kbe5.rento.domain.drive.repository.DriveRepository;
 import com.kbe5.rento.domain.manager.entity.Manager;
-import com.kbe5.rento.domain.manager.entity.ManagerRepository;
+import com.kbe5.rento.domain.manager.respository.ManagerRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -70,7 +70,7 @@ public class DriveService {
         // test
         Manager manager1 = managerRepository.findById(1L).orElseThrow();
 
-        List<Drive> driveList = driveRepository.findByMember_Company(manager1.getCompany());
+        List<Drive> driveList = driveRepository.findByMember_Company(manager1.getCompanyId());
 
         return driveList.stream().map(DriveResponse::fromEntity)
                 .toList();

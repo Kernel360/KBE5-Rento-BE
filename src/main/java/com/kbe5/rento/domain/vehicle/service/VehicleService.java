@@ -1,9 +1,9 @@
 package com.kbe5.rento.domain.vehicle.service;
 
-import com.kbe5.rento.common.DomainException;
-import com.kbe5.rento.common.ErrorType;
+import com.kbe5.rento.common.exception.DomainException;
+import com.kbe5.rento.common.exception.ErrorType;
 import com.kbe5.rento.domain.manager.entity.Manager;
-import com.kbe5.rento.domain.manager.entity.ManagerRepository;
+import com.kbe5.rento.domain.manager.respository.ManagerRepository;
 import com.kbe5.rento.domain.vehicle.dto.request.VehicleAddRequest;
 import com.kbe5.rento.domain.vehicle.dto.request.VehicleUpdateRequest;
 import com.kbe5.rento.domain.vehicle.dto.response.VehicleDetailResponse;
@@ -45,7 +45,7 @@ public class VehicleService {
         // test
         Manager manager1 = managerRepository.findById(1L).orElseThrow();
 
-        List<Vehicle> vehicleList = vehicleRepository.findByCompany(manager1.getCompany());
+        List<Vehicle> vehicleList = vehicleRepository.findByCompany(manager1.getCompanyId());
 
         return vehicleList.stream().map(VehicleResponse::fromEntity).toList();
     }

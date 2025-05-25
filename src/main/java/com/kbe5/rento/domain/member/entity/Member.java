@@ -1,7 +1,7 @@
 package com.kbe5.rento.domain.member.entity;
 
 import com.kbe5.rento.common.util.BaseEntity;
-import com.kbe5.rento.domain.company.Company;
+import com.kbe5.rento.domain.company.entity.Company;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;

@@ -31,7 +31,7 @@ public record VehicleAddRequest(
 ) {
     public static Vehicle toEntity(Manager manager, VehicleAddRequest request) {
         return Vehicle.builder()
-                .company(manager.getCompany())
+                .company(manager.getCompanyId())
                 .vehicleNumber(request.vehicleNumber)
                 .brand(request.brand)
                 .modelName(request.modelName)
