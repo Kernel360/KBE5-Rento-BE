@@ -52,8 +52,8 @@ jobs:
       - name: Deploy on EC2
         run: |
           ssh -o StrictHostKeyChecking=no -i ec2.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << EOF
-            docker stop rento-server || true
-            docker rm rento-server || true
-            docker pull ${{ secrets.ECR_REPOSITORY }}:latest
-            docker run -d --name rento-server -p 8080:8080 ${{ secrets.ECR_REPOSITORY }}:latest
+            sudo docker stop rento-server || true
+            sudo docker rm rento-server || true
+            sudo docker pull ${{ secrets.ECR_REPOSITORY }}:latest
+            sudo docker run -d --name rento-server -p 8080:8080 ${{ secrets.ECR_REPOSITORY }}:latest
           EOF
