@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class DateUtil {
+
     public static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
 
     private DateUtil() {
@@ -21,6 +22,16 @@ public class DateUtil {
     public static LocalDateTime toLocalDateTime(String text) {
         if (isBlank(text)) {
             throw new IllegalArgumentException("시간 문자열이 비어있거나 null 입니다.");
+        }
+        return LocalDateTime.parse(text, FORMATTER);
+    }
+
+    public static LocalDateTime toOnOffEventLocalDateTime(String text) {
+        if (text == null) {
+            throw new IllegalArgumentException("시간 문자열이 null 입니다.");
+        }
+        if (text.trim().equals("")) {
+            return null;
         }
         return LocalDateTime.parse(text, FORMATTER);
     }
