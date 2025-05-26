@@ -22,7 +22,7 @@ public class Department extends BaseEntity {
     private Company company;
 
     @Builder
-    public Department(String departmentName, Company company) {
+    private Department(String departmentName, Company company) {
         this.company = company;
         this.departmentName = departmentName;
     }

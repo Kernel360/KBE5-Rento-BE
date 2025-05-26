@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/members")
 @RequiredArgsConstructor
+@RequestMapping("/api/members")
 public class MemberControllerImpl implements MemberController {
 
     private final MemberService memberService;

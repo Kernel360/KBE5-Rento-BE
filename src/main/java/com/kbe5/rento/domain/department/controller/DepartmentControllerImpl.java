@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/departments")
-@RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 public class DepartmentControllerImpl implements DepartmentController {
 
     private final DepartmentService departmentService;
@@ -23,10 +23,12 @@ public class DepartmentControllerImpl implements DepartmentController {
     //부서 등록
     @Override
     @PostMapping
-    public ResponseEntity<String> registerDepartment(@RequestBody @Validated DepartmentRegisterRequest departmentRegisterRequest) {
-        String response = departmentService.register(departmentRegisterRequest);
+    public ResponseEntity<String> registerDepartment(
+            @RequestBody @Validated DepartmentRegisterRequest departmentRegisterRequest
+    ) {
+        departmentService.register(departmentRegisterRequest);
 
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok("성공적으로 등록되었습니다!");
     }
 
     //부서 목록 조회
@@ -41,7 +43,10 @@ public class DepartmentControllerImpl implements DepartmentController {
     //부서 수정
     @Override
     @PutMapping("/{departmentId}")
-    public ResponseEntity<DepartmentInfoResponse> updateDepartment(@PathVariable Long departmentId, @Validated @RequestBody DepartmentUpdateRequest departmentUpdateRequest) {
+    public ResponseEntity<DepartmentInfoResponse> updateDepartment(
+            @PathVariable Long departmentId,
+            @Validated @RequestBody DepartmentUpdateRequest departmentUpdateRequest
+    ) {
         DepartmentInfoResponse response = departmentService.updateDepartment(departmentId, departmentUpdateRequest);
 
         return ResponseEntity.ok(response);
@@ -51,9 +56,9 @@ public class DepartmentControllerImpl implements DepartmentController {
     @Override
     @DeleteMapping("/{departmentId}")
     public ResponseEntity<String> deleteDepartment(@PathVariable Long departmentId) {
-        String response = departmentService.delete(departmentId);
+        departmentService.delete(departmentId);
 
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok().body("성공적으로 삭제되었습니다!");
     }
 
 }

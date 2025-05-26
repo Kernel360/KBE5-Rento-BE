@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import java.util.List;
 
 public interface MemberController {
+
     //사용자 추가
     void register(MemberRegisterRequest request);
     //사용자 수정

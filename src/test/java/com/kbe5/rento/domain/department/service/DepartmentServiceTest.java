@@ -74,7 +74,7 @@ class DepartmentServiceTest {
                 .thenReturn(false);
 
         // when
-        String result = departmentService.register(request);
+        departmentService.register(request);
 
         // then
         verify(companyRepository).findByCompanyCode("T1");
@@ -86,7 +86,6 @@ class DepartmentServiceTest {
         Department savedDepartment = captor.getValue();
         assertThat(savedDepartment.getDepartmentName()).isEqualTo("테스트 부서");
         assertThat(savedDepartment.getCompany()).isEqualTo(company);
-        assertThat(result).contains("테스트 부서").contains("저장되었습니다");
     }
 
     @Test
@@ -188,11 +187,10 @@ class DepartmentServiceTest {
         when(departmentRepository.findById(departmentId)).thenReturn(Optional.of(department));
 
         // when
-        String result = departmentService.delete(departmentId);
+        departmentService.delete(departmentId);
 
         // then
         verify(departmentRepository).delete(department);
-        assertThat(result).contains(departmentId.toString()).contains("삭제되었습니다");
     }
 
     @Test

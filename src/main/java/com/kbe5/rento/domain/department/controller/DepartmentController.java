@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import java.util.List;
 
 public interface DepartmentController {
+
     //부서 등록
     ResponseEntity<String> registerDepartment(DepartmentRegisterRequest departmentRegisterRequest);
     //부서 목록 조회
