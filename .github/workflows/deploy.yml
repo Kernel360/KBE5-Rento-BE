@@ -56,7 +56,7 @@ jobs:
       
             sudo docker stop rento-server || true
             sudo docker rm rento-server || true
-            sudo docker pull <계정>.dkr.ecr.ap-northeast-2.amazonaws.com/rento-server:latest
+            sudo docker pull 528782700548.dkr.ecr.ap-northeast-2.amazonaws.com/rento-server:latest
             sudo docker run -d --name rento-server -p 8080:8080 <계정>.dkr.ecr.ap-northeast-2.amazonaws.com/rento-server:latest
           EOF
 
