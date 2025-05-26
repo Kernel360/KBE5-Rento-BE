@@ -12,26 +12,26 @@ import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 public record OnEventRequest(
-    @NotBlank
     @JsonProperty("mdn")
+    @NotBlank(message = "mdn은 필수입니다.")
     Long mobileDeviceNumber, //차량 번호
 
-    @NotBlank
     @JsonProperty("tid")
+    @NotBlank
     String terminalId, // A001로 고정
 
-    @NotBlank
     @JsonProperty("mid")
+    @NotBlank
     String makerId, // 6으로 고정
 
     @Min(0)
     @Max(65535)
-    @NotBlank
     @JsonProperty("pv")
+    @NotNull
     Integer packetVersion, // 5로 고정
 
-    @NotBlank
     @JsonProperty("did")
+    @NotNull
     Integer deviceId, //1로 고정
 
     @NotNull
