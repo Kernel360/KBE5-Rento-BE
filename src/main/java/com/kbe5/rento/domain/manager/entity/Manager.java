@@ -31,7 +31,6 @@ public class Manager extends BaseEntity {
     @Column(length = 30)
     private String loginId;
 
-    @Column(length = 30)
     private String password;
 
     @Column(length = 30)
