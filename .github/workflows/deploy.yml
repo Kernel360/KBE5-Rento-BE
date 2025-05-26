@@ -1,4 +1,4 @@
-name: Gradle CI/CD
+name: Gradle CI/CD to AWS ECR
 
 on:
   push:
@@ -18,31 +18,42 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Grant execute permission for gradlew
+      - name: Grant permission to gradlew
         run: chmod +x ./gradlew
 
       - name: Build with Gradle
         run: ./gradlew clean build -x test
 
-      - name: Docker Hub Login
-        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-northeast-2
 
-      - name: Build Docker Image
-        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/rento-app .
+      - name: Login to Amazon ECR
+        run: |
+          aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS --password-stdin 528782700548.dkr.ecr.ap-northeast-2.amazonaws.com
 
-      - name: Push Docker Image
-        run: docker push ${{ secrets.DOCKER_USERNAME }}/rento-app
+      - name: Build Docker image
+        run: docker build -t rento-server .
 
-      - name: Setup SSH key
+      - name: Tag Docker image
+        run: docker tag rento-server:latest ${{ secrets.ECR_REPOSITORY }}:latest
+
+      - name: Push to Amazon ECR
+        run: docker push ${{ secrets.ECR_REPOSITORY }}:latest
+
+      - name: Setup EC2 SSH Key
         run: |
           echo "${{ secrets.EC2_KEY }}" | base64 -d > ec2.pem
           chmod 600 ec2.pem
 
       - name: Deploy on EC2
         run: |
-          ssh -o StrictHostKeyChecking=no -i ec2.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
-            docker stop rento-app || true
-            docker rm rento-app || true
-            docker pull ${{ secrets.DOCKER_USERNAME }}/rento-app
-            docker run -d --name rento-app -p 8080:8080 ${{ secrets.DOCKER_USERNAME }}/rento-app
+          ssh -o StrictHostKeyChecking=no -i ec2.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << EOF
+            docker stop rento-server || true
+            docker rm rento-server || true
+            docker pull ${{ secrets.ECR_REPOSITORY }}:latest
+            docker run -d --name rento-server -p 8080:8080 ${{ secrets.ECR_REPOSITORY }}:latest
           EOF
