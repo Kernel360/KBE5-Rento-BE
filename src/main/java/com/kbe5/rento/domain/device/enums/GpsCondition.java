@@ -6,9 +6,10 @@ import lombok.Getter;
 
 @Getter
 public enum GpsCondition {
+
     NORMAL('A',"정상"),
     ABNORMAL('V',"비정상"),
-    NOT_INSTALLED('P',"미장착");
+    NOT_INSTALLED('0',"미장착");
 
     private final Character status;
     private final String description;
@@ -22,6 +23,6 @@ public enum GpsCondition {
     public static GpsCondition fromValue(String value) {
 
         return Arrays.stream(GpsCondition.values()).filter(i -> i.status.toString()
-            .equals(value)).findAny().orElse(null);
+            .equals(value)).findAny().orElse(GpsCondition.ABNORMAL);
     }
 }

@@ -8,25 +8,25 @@ import jakarta.validation.constraints.NotNull;
 
 public record DeviceRegisterRequest(
     @JsonProperty("mdn")
-    @NotNull(message = "mdn은 필수입니다.")
+    @NotNull(message = "{device.mdn.notnull}")
     Long mobileDeviceNumber, //차량 번호
 
     @JsonProperty("tid")
-    @NotBlank(message = "tid는 필수입니다.")
+    @NotBlank(message = "{device.tid.notblank}")
     String terminalId, // A001로 고정
 
     @JsonProperty("mid")
-    @NotNull(message = "mid는 필수입니다.")
-    Integer manufacturerId, // 6으로 고정
+    @NotNull(message = "{device.mid.notnull}")
+    Integer makerId, // 6으로 고정
 
     @Min(0)
     @Max(65535)
     @JsonProperty("pv")
-    @NotNull(message = "pv는 필수입니다.")
+    @NotNull(message = "{device.pv.notnull}")
     Integer packetVersion, // 5로 고정
 
     @JsonProperty("did")
-    @NotNull(message = "did는 필수입니다.")
+    @NotNull(message = "{device.did.notnull}")
     Integer deviceId
 
 ) {

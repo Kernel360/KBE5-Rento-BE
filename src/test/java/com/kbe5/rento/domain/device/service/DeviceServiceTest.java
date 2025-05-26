@@ -11,7 +11,6 @@ import com.kbe5.rento.domain.device.dto.request.DeviceRegisterRequest;
 import com.kbe5.rento.domain.device.entity.Device;
 import com.kbe5.rento.domain.device.repository.DeviceRepository;
 import java.util.Optional;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

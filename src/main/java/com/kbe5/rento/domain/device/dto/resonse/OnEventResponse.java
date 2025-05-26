@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.kbe5.rento.domain.device.entity.event.OnOffEvent;
 
 public record OnEventResponse(
-
     @JsonProperty("mdn")
     Long mobileDeviceNumber//차량 번호
 ) {

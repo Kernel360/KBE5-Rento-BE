@@ -27,15 +27,14 @@ public class OnOffEvent extends DeviceEvent {
     public static OnOffEvent from(OnEventRequest request) {
         return OnOffEvent.builder()
             .mobileDeviceNumber(request.mobileDeviceNumber())
-            .eventType(EventType.ON_OFF)
             .gpsCondition(request.gpsCondition())
             .latitude(request.latitude())
             .longitude(request.longitude())
             .angle(request.angle())
             .speed(request.speed())
             .currentAccumulatedDistance(request.currentAccumulatedDistance())
-            .onTime(DateUtil.toOnOffEventLocalDateTime(request.onTime()))
-            .offTime(DateUtil.toOnOffEventLocalDateTime(request.offTime()))
+            .onTime(request.onTime())
+            .offTime(request.offTime())
             .build();
     }
 }

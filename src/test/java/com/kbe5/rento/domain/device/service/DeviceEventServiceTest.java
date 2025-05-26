@@ -6,6 +6,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.kbe5.rento.common.datetime.DateUtil;
 import com.kbe5.rento.domain.device.dto.request.OnEventRequest;
 import com.kbe5.rento.domain.device.dto.resonse.OnEventResponse;
 import com.kbe5.rento.domain.device.entity.event.OnOffEvent;
@@ -34,11 +35,11 @@ class DeviceEventServiceTest {
         OnEventRequest request = new OnEventRequest(
             12345678901L,
             "A001",
-            "6",
+            6,
             5,
             1,
-            "20240523120000",
-            "",
+            DateUtil.toOnOffEventLocalDateTime("20240523120000"),
+            DateUtil.toOnOffEventLocalDateTime(""),
             GpsCondition.NORMAL,
             new BigDecimal("37.123456"),
             new BigDecimal("127.123456"),

@@ -15,3 +15,7 @@ spring:
     properties:
       hibernate:
         format_sql: true
+
+  messages:
+    basename: messages
+    encoding: UTF-8

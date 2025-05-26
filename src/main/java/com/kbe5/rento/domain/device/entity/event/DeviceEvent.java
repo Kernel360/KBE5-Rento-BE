@@ -35,9 +35,6 @@ public abstract class DeviceEvent {
     Long mobileDeviceNumber;
 
     @Enumerated(EnumType.STRING)
-    private EventType eventType;
-
-    @Enumerated(EnumType.STRING)
     private GpsCondition gpsCondition;
 
     @Column(precision = 9, scale = 6)

@@ -16,11 +16,12 @@ import lombok.extern.slf4j.Slf4j;
 @Table(name = "devices")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Device extends BaseEntity {
+
     private Long mobileDeviceNumber;
 
     private String terminalId;
 
-    private Integer manufacturerId;
+    private Integer makerId;
 
     private Integer packetVersion;
 
@@ -29,11 +30,11 @@ public class Device extends BaseEntity {
     private String deviceFirmWareVersion;
 
     @Builder
-    public Device(Long mobileDeviceNumber, String terminalId, Integer manufacturerId, Integer packetVersion,
+    public Device(Long mobileDeviceNumber, String terminalId, Integer makerId, Integer packetVersion,
         Integer deviceId, String deviceFirmWareVersion) {
         this.mobileDeviceNumber = mobileDeviceNumber;
         this.terminalId = terminalId;
-        this.manufacturerId = manufacturerId;
+        this.makerId = makerId;
         this.packetVersion = packetVersion;
         this.deviceId = deviceId;
         this.deviceFirmWareVersion = deviceFirmWareVersion;
@@ -43,7 +44,7 @@ public class Device extends BaseEntity {
         return Device.builder()
             .mobileDeviceNumber(request.mobileDeviceNumber())
             .terminalId(request.terminalId())
-            .manufacturerId(request.manufacturerId())
+            .makerId(request.makerId())
             .packetVersion(request.packetVersion())
             .deviceId(request.deviceId())
             .deviceFirmWareVersion("LTE 1.2")
