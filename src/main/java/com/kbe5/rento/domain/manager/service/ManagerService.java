@@ -38,7 +38,7 @@ public class ManagerService {
                 .email(request.email())
                 .name(request.name())
                 .phone(request.phone())
-                .companyId(company)
+                .company(company)
                 .companyCode(request.companyCode())
                 .role(ManagerRole.ROLE_MANAGER)
                 .build();

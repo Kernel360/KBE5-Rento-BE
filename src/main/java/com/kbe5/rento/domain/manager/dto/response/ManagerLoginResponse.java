@@ -12,6 +12,6 @@ public record ManagerLoginResponse(
 ) {
     public static ManagerLoginResponse from(Manager manager) {
         return new ManagerLoginResponse(manager.getLoginId(), manager.getName(), manager.getPhone(),
-                manager.getEmail(), manager.getCompanyCode(), manager.getCompanyId().getId());
+                manager.getEmail(), manager.getCompanyCode(), manager.getCompany().getId());
     }
 }
