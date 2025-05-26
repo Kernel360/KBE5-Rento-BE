@@ -19,14 +19,15 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor(access = AccessLevel.PROTECTED)
+@RequiredArgsConstructor
 public class DepartmentService {
+
     private final DepartmentRepository departmentRepository;
     private final CompanyRepository companyRepository;
     private final MemberRepository memberRepository;
 
     @Transactional
-    public String register(DepartmentRegisterRequest departmentRegisterRequest) {
+    public void register(DepartmentRegisterRequest departmentRegisterRequest) {
         Company company = companyRepository.findByCompanyCode(departmentRegisterRequest.companyCode())
                 .orElseThrow(() -> new DomainException(ErrorType.NO_SEARCH_RESULTS));
 
@@ -35,13 +36,13 @@ public class DepartmentService {
         Department department = DepartmentRegisterRequest.toEntity(departmentRegisterRequest, company);
 
         departmentRepository.save(department);
-
-        return "성공적으로" + department.getDepartmentName() + "저장되었습니다";
     }
 
     @Transactional(readOnly = true)
     public List<DepartmentInfoResponse> getDepartments(String companyCode) {
-        Company company = companyRepository.findByCompanyCode(companyCode).orElseThrow(() -> new DomainException(ErrorType.NO_SEARCH_RESULTS));
+        Company company = companyRepository.findByCompanyCode(companyCode).orElseThrow(
+                () -> new DomainException(ErrorType.NO_SEARCH_RESULTS)
+        );
 
        return departmentRepository.findAllByCompanyId(company.getId()).stream()
                .map(this::convertToDepartmentDto)
@@ -64,7 +65,7 @@ public class DepartmentService {
     }
 
     @Transactional
-    public String delete(Long departmentId) {
+    public void delete(Long departmentId) {
         List<Member> members = memberRepository.findAllByDepartmentId(departmentId);
 
         if(!members.isEmpty()) {
@@ -74,9 +75,8 @@ public class DepartmentService {
         Department department = departmentRepository.findById(departmentId).orElseThrow(
                 () -> new DomainException(ErrorType.NO_SEARCH_RESULTS)
         );
-        departmentRepository.delete(department);
 
-        return departmentId + "< 삭제되었습니다.>";
+        departmentRepository.delete(department);
     }
 
     private void validateDuplicateDepartmentName(String departmentName, Long companyId) {

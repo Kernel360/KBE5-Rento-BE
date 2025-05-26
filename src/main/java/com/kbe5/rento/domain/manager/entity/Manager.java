@@ -15,8 +15,8 @@ import lombok.NoArgsConstructor;
 public class Manager extends BaseEntity {
 
     @ManyToOne
-    @JoinColumn(nullable = false)
-    private Company companyId;
+    @JoinColumn(name = "company_id", nullable = false)
+    private Company company;
 
     @Column(length = 30)
     private String name;
@@ -37,9 +37,9 @@ public class Manager extends BaseEntity {
     private String companyCode;
 
     @Builder
-    private Manager(Company companyId, String name, String phone, String email, String loginId, String password,
+    private Manager(Company company, String name, String phone, String email, String loginId, String password,
                     String companyCode) {
-        this.companyId = companyId;
+        this.company = company;
         this.name = name;
         this.phone = phone;
         this.email = email;

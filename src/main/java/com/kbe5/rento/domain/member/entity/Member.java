@@ -42,7 +42,7 @@ public class Member extends BaseEntity {
     private Company company;
 
     @Builder
-    public Member(String name, String email, Position position, String loginId,
+    private Member(String name, String email, Position position, String loginId,
                   String password, String phoneNumber, Department department, Company company) {
         this.name = name;
         this.email = email;

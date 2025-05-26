@@ -34,7 +34,7 @@ public class ManagerService {
                 .email(request.email())
                 .name(request.name())
                 .phone(request.phone())
-                .companyId(company)
+                .company(company)
                 .companyCode(request.companyCode())
                 .build();
 
@@ -88,8 +88,8 @@ public class ManagerService {
 
         managerRepository.delete(manager);
 
-        if (!managerRepository.existsByCompanyId(manager.getCompanyId())) {
-            companyService.delete(manager.getCompanyId());
+        if (!managerRepository.existsByCompanyId(manager.getCompany())) {
+            companyService.delete(manager.getCompany());
         }
 
         return new ManagerDeleteResponse(true);
