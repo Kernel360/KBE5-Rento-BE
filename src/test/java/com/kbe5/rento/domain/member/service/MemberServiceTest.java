@@ -131,7 +131,7 @@ class MemberServiceTest {
         });
 
         //then
-        assertThat(exception.getMessage()).isEqualTo(ErrorType.NO_SEARCH_RESULTS.getMessage());
+        assertThat(exception.getMessage()).isEqualTo(ErrorType.DEPARTMENT_NOT_FOUND.getMessage());
         verify(memberRepository, never()).save(any());
     }
 
@@ -195,7 +195,7 @@ class MemberServiceTest {
         });
 
         //then
-        assertThat(exception.getMessage()).isEqualTo(ErrorType.NO_SEARCH_RESULTS.getMessage());
+        assertThat(exception.getMessage()).isEqualTo(ErrorType.MEMBER_NOT_FOUND.getMessage());
     }
 
     @Test
@@ -227,7 +227,7 @@ class MemberServiceTest {
         });
 
         //then
-        assertThat(exception.getMessage()).isEqualTo(ErrorType.NO_SEARCH_RESULTS.getMessage());
+        assertThat(exception.getMessage()).isEqualTo(ErrorType.MEMBER_NOT_FOUND.getMessage());
     }
 
     @Test
@@ -290,7 +290,7 @@ class MemberServiceTest {
         });
 
         //then
-        assertThat(exception.getMessage()).isEqualTo(ErrorType.NO_SEARCH_RESULTS.getMessage());
+        assertThat(exception.getMessage()).isEqualTo(ErrorType.MEMBER_NOT_FOUND .getMessage());
         verify(memberRepository, never()).save(any());
     }
     private MemberRegisterRequest getMemberRegisterRequest() {

@@ -55,7 +55,7 @@ class ManagerServiceTest {
                 .password("1234")
                 .phone("010-1234-5678")
                 .email("test@test.com")
-                .companyId(company)
+                .company(company)
                 .companyCode(company.getCompanyCode())
                 .build();
     }
@@ -116,7 +116,7 @@ class ManagerServiceTest {
                 .email("user1@example.com")
                 .name("User One")
                 .phone("010-1111-1111")
-                .companyId(company)
+                .company(company)
                 .companyCode(company.getCompanyCode())
                 .build();
 
@@ -126,7 +126,7 @@ class ManagerServiceTest {
                 .email("user2@example.com")
                 .name("User Two")
                 .phone("010-2222-2222")
-                .companyId(company)
+                .company(company)
                 .companyCode(company.getCompanyCode())
                 .build();
 

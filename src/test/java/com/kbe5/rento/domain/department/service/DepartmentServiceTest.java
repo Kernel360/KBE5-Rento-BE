@@ -100,7 +100,7 @@ class DepartmentServiceTest {
 
         // when & then
         assertThatThrownBy(() -> departmentService.register(request))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(DomainException.class)
                 .hasMessage("이미 존재하는 부서 이름입니다.");
 
         verify(departmentRepository, never()).save(any());
@@ -172,7 +172,7 @@ class DepartmentServiceTest {
         });
 
         //then
-        assertThat(exception.getMessage()).isEqualTo(ErrorType.NO_SEARCH_RESULTS.getMessage());
+        assertThat(exception.getMessage()).isEqualTo(ErrorType.DEPARTMENT_NOT_FOUND.getMessage());
         verify(departmentRepository, never()).save(any());
     }
 
@@ -205,7 +205,7 @@ class DepartmentServiceTest {
 
         // when & then
         assertThatThrownBy(() -> departmentService.delete(departmentId))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(DomainException.class)
                 .hasMessage("해당 부서에 소속된 직원이 있어 삭제할 수 없습니다.");
 
         verify(departmentRepository, never()).deleteById(any());
