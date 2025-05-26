@@ -185,12 +185,13 @@ class DepartmentServiceTest {
         List<Member> emptyMembers = Collections.emptyList();
 
         when(memberRepository.findAllByDepartmentId(departmentId)).thenReturn(emptyMembers);
+        when(departmentRepository.findById(departmentId)).thenReturn(Optional.of(department));
 
         // when
         String result = departmentService.delete(departmentId);
 
         // then
-        verify(departmentRepository).deleteById(departmentId);
+        verify(departmentRepository).delete(department);
         assertThat(result).contains(departmentId.toString()).contains("삭제되었습니다");
     }
 
