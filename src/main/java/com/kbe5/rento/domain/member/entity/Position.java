@@ -2,6 +2,9 @@ package com.kbe5.rento.domain.member.entity;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.kbe5.rento.common.exception.DomainException;
+import com.kbe5.rento.common.exception.ErrorType;
+import org.springframework.http.HttpStatus;
 
 import java.util.Arrays;
 import java.util.List;
@@ -36,7 +39,7 @@ public enum Position {
                 return position;
             }
         }
-        throw new IllegalArgumentException(value + "올바르지 않은 직책입니다.");
+        throw new DomainException(ErrorType.INVALID_POSITION);
     }
 
     public static List<String> getPositions(){

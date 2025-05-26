@@ -30,10 +30,10 @@ public class MemberService {
     @Transactional
     public void register(MemberRegisterRequest request) {
         Department department = departmentRepository.findById(request.departmentId())
-                .orElseThrow(() -> new DomainException(ErrorType.NO_SEARCH_RESULTS));
+                .orElseThrow(() -> new DomainException(ErrorType.DEPARTMENT_NOT_FOUND));
 
         Company company = companyRepository.findByCompanyCode(request.companyCode())
-                .orElseThrow(() -> new DomainException(ErrorType.NO_SEARCH_RESULTS));
+                .orElseThrow(() -> new DomainException(ErrorType.COMPANY_NOT_FOUND));
 
         String password = passwordEncoder.encode(request.password());
 
@@ -47,10 +47,10 @@ public class MemberService {
     @Transactional
     public void update(MemberUpdateRequest request, Long memberId) {
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new DomainException(ErrorType.NO_SEARCH_RESULTS));
+                .orElseThrow(() -> new DomainException(ErrorType.MEMBER_NOT_FOUND));
 
         Department department = departmentRepository.findById(request.departmentId())
-                .orElseThrow(() -> new DomainException(ErrorType.NO_SEARCH_RESULTS));
+                .orElseThrow(() -> new DomainException(ErrorType.DEPARTMENT_NOT_FOUND));
 
         validateDuplicatePhoneNumber(request.phoneNumber(), request.companyCode());
 
@@ -60,7 +60,7 @@ public class MemberService {
     @Transactional
     public void delete(Long memberId) {
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new DomainException(ErrorType.NO_SEARCH_RESULTS));
+                .orElseThrow(() -> new DomainException(ErrorType.MEMBER_NOT_FOUND));
 
         memberRepository.delete(member);
     }
@@ -68,7 +68,7 @@ public class MemberService {
     @Transactional(readOnly = true)
     public List<MemberInfoResponse> getMemberList(String companyCode) {
         Company company = companyRepository.findByCompanyCode(companyCode)
-                .orElseThrow(() -> new DomainException(ErrorType.NO_SEARCH_RESULTS));
+                .orElseThrow(() -> new DomainException(ErrorType.COMPANY_NOT_FOUND));
 
         return memberRepository.findAllByCompanyId(company.getId()).stream()
                 .map(MemberInfoResponse::from)
@@ -78,18 +78,18 @@ public class MemberService {
     @Transactional(readOnly = true)
     public MemberInfoResponse getMember(Long memberId) {
         Member member =  memberRepository.findById(memberId)
-                .orElseThrow(() -> new DomainException(ErrorType.NO_SEARCH_RESULTS));
+                .orElseThrow(() -> new DomainException(ErrorType.MEMBER_NOT_FOUND));
 
         return MemberInfoResponse.from(member);
     }
 
     private void validateDuplicatePhoneNumber(String phoneNumber, String companyCode) {
         Company company = companyRepository.findByCompanyCode(companyCode).orElseThrow(
-                () -> new DomainException(ErrorType.NO_SEARCH_RESULTS)
+                () -> new DomainException(ErrorType.COMPANY_NOT_FOUND)
         );
 
         if(memberRepository.existsByPhoneNumberAndCompanyId(phoneNumber, company.getId())) {
-            throw new IllegalArgumentException("이미 존재하는 전화번호입니다.");
+            throw new DomainException(ErrorType.DUPLICATE_PHONE_NUMBER);
         }
     }
 

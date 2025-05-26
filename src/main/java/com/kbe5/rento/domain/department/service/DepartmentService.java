@@ -29,7 +29,7 @@ public class DepartmentService {
     @Transactional
     public void register(DepartmentRegisterRequest departmentRegisterRequest) {
         Company company = companyRepository.findByCompanyCode(departmentRegisterRequest.companyCode())
-                .orElseThrow(() -> new DomainException(ErrorType.NO_SEARCH_RESULTS));
+                .orElseThrow(() -> new DomainException(ErrorType.COMPANY_NOT_FOUND));
 
         validateDuplicateDepartmentName(departmentRegisterRequest.departmentName(), company.getId());
 
@@ -41,7 +41,7 @@ public class DepartmentService {
     @Transactional(readOnly = true)
     public List<DepartmentInfoResponse> getDepartments(String companyCode) {
         Company company = companyRepository.findByCompanyCode(companyCode).orElseThrow(
-                () -> new DomainException(ErrorType.NO_SEARCH_RESULTS)
+                () -> new DomainException(ErrorType.COMPANY_NOT_FOUND)
         );
 
        return departmentRepository.findAllByCompanyId(company.getId()).stream()
@@ -52,10 +52,10 @@ public class DepartmentService {
     @Transactional
     public DepartmentInfoResponse updateDepartment(Long departmentId, DepartmentUpdateRequest departmentUpdateRequest) {
         Department department = departmentRepository.findById(departmentId)
-                .orElseThrow(() -> new DomainException(ErrorType.NO_SEARCH_RESULTS));
+                .orElseThrow(() -> new DomainException(ErrorType.DEPARTMENT_NOT_FOUND));
 
         Company company = companyRepository.findByCompanyCode(departmentUpdateRequest.companyCode())
-                .orElseThrow(() -> new DomainException(ErrorType.NO_SEARCH_RESULTS));
+                .orElseThrow(() -> new DomainException(ErrorType.COMPANY_NOT_FOUND));
 
         validateDuplicateDepartmentName(departmentUpdateRequest.departmentName(), company.getId());
 
@@ -69,11 +69,11 @@ public class DepartmentService {
         List<Member> members = memberRepository.findAllByDepartmentId(departmentId);
 
         if(!members.isEmpty()) {
-            throw new IllegalArgumentException("해당 부서에 소속된 직원이 있어 삭제할 수 없습니다.");
+            throw new DomainException(ErrorType.ALREADY_MEMBER);
         }
 
         Department department = departmentRepository.findById(departmentId).orElseThrow(
-                () -> new DomainException(ErrorType.NO_SEARCH_RESULTS)
+                () -> new DomainException(ErrorType.DEPARTMENT_NOT_FOUND)
         );
 
         departmentRepository.delete(department);
@@ -81,7 +81,7 @@ public class DepartmentService {
 
     private void validateDuplicateDepartmentName(String departmentName, Long companyId) {
         if(departmentRepository.existsByDepartmentNameAndCompanyId(departmentName, companyId)) {
-            throw new IllegalArgumentException("이미 존재하는 부서 이름입니다.");
+            throw new DomainException(ErrorType.DUPLICATE_DEPARTMENT_NAME);
         }
     }
 
