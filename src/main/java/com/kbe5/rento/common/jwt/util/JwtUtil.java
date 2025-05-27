@@ -87,22 +87,14 @@ public class JwtUtil {
     public void getNewAccessToken(HttpServletRequest request, HttpServletResponse response) {
         String refresh = request.getHeader("RefreshToken");
 
-        DomainException domainException = new DomainException(ErrorType.INVALID_TOKEN);
-
-        String category;
+        String category = getCategory("category");
 
         if (refresh == null || refresh.isEmpty()) {
-            throw domainException;
-        }
-
-        try {
-            category = getCategory(refresh);
-        } catch (Exception e) {
-            throw domainException;
+            throw new DomainException(ErrorType.INVALID_TOKEN);
         }
 
         if (!category.equals("refresh") || !jwtRefreshRepository.existsByRefreshToken(refresh)) {
-            throw domainException;
+            throw new DomainException(ErrorType.INVALID_TOKEN);
         }
 
         if (isExpired(refresh)) {
