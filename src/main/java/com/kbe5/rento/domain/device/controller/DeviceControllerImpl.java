@@ -1,5 +1,7 @@
 package com.kbe5.rento.domain.device.controller;
 
+import com.kbe5.rento.domain.device.dto.request.DeviceTokenRequest;
+import com.kbe5.rento.domain.device.dto.resonse.DeviceTokenResponse;
 import com.kbe5.rento.domain.device.enums.DeviceResultCode;
 import com.kbe5.rento.domain.device.dto.request.OnEventRequest;
 import com.kbe5.rento.domain.device.dto.request.DeviceRegisterRequest;
@@ -38,6 +40,7 @@ public class DeviceControllerImpl implements DeviceController{
 
         return ResponseEntity.ok(response);
     }
+
 
     @PostMapping("/on")
     public ResponseEntity<OnEventResponse> onEvent(@RequestBody @Validated OnEventRequest request) {
