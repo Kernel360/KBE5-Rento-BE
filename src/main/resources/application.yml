@@ -12,4 +12,7 @@ spring:
       ddl-auto: update
     properties:
       hibernate:
-        show-sql: true
+        format_sql: true
+  messages:
+    basename: messages
+    encoding: UTF-8

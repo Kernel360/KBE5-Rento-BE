@@ -13,7 +13,7 @@ public record ManagerResponse(
         String loginId
 ) {
     public static ManagerResponse from(Manager manager) {
-        return new ManagerResponse(manager.getId(), manager.getCompanyId().getId(), manager.getName(),
+        return new ManagerResponse(manager.getId(), manager.getCompany().getId(), manager.getName(),
                 manager.getPhone(), manager.getEmail(), manager.getLoginId());
     }
 

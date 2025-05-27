@@ -10,6 +10,8 @@ import org.springframework.http.HttpStatus;
 public enum ErrorType {
     // DEPARTMENT
     DEPARTMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "부서를 찾을 수 없습니다"),
+    DUPLICATE_DEPARTMENT_NAME(HttpStatus.BAD_REQUEST, "이미 존재하는 부서 이름입니다."),
+    ALREADY_MEMBER(HttpStatus.BAD_REQUEST, "해당 부서에 소속된 직원이 있어 삭제할 수 없습니다."),
 
     // VALIDATION
     VALIDATION_ERROR(HttpStatus.BAD_REQUEST, "값을 잘못 입력했습니다."),
@@ -19,6 +21,12 @@ public enum ErrorType {
 
     // COMPANY
     COMPANY_NOT_FOUND(HttpStatus.NOT_FOUND, "업체를 찾을 수 없습니다."),
+
+    //MEMBER
+    MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "사용자를 찾을 수 없습니다."),
+    DUPLICATE_PHONE_NUMBER(HttpStatus.BAD_REQUEST, "이미 존재하는 전화번호입니다."),
+    INVALID_POSITION(HttpStatus.BAD_REQUEST, "존재하지 않은 직책입니다."),
+
 
     // SECURITY
     INVALID_TOKEN(HttpStatus.UNAUTHORIZED, "토큰이 없거나 잘못된 형식입니다."),
