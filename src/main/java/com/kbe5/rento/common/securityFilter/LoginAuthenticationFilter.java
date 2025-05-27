@@ -1,10 +1,9 @@
 package com.kbe5.rento.common.securityFilter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.kbe5.rento.common.exception.DomainException;
 import com.kbe5.rento.common.exception.ErrorType;
-import com.kbe5.rento.common.jwt.JwtProperties;
-import com.kbe5.rento.common.jwt.JwtUtil;
+import com.kbe5.rento.common.jwt.util.JwtProperties;
+import com.kbe5.rento.common.jwt.util.JwtUtil;
 import com.kbe5.rento.domain.manager.dto.details.CustomManagerDetails;
 import com.kbe5.rento.domain.manager.dto.request.ManagerLoginRequest;
 import com.kbe5.rento.domain.manager.dto.response.ManagerLoginResponse;
@@ -58,6 +57,8 @@ public class LoginAuthenticationFilter extends UsernamePasswordAuthenticationFil
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
         CustomManagerDetails customManagerDetails = (CustomManagerDetails) authResult.getPrincipal();
 
+        Manager manager = customManagerDetails.getManager();
+
         String loginId = customManagerDetails.getUsername();
 
         Collection<? extends GrantedAuthority> authorities = authResult.getAuthorities();
@@ -66,11 +67,13 @@ public class LoginAuthenticationFilter extends UsernamePasswordAuthenticationFil
 
         String role = auth.getAuthority();
         String accessToken = jwtUtil.createJwt("access", loginId, role, JwtProperties.ACCESS_EXPIRED_TIME);
+        String refreshToken = jwtUtil.createJwt("refresh", loginId, role, JwtProperties.REFRESH_EXPIRED_TIME);
 
-        response.addHeader("Authorization","Bearer " + accessToken);
+        jwtUtil.saveRefreshToken(refreshToken, manager, JwtProperties.REFRESH_EXPIRED_TIME);
+
+        response.addHeader("AccessToken",accessToken);
+        response.addHeader("RefreshToken", refreshToken);
         response.setContentType("application/json;charset=UTF-8");
-
-        Manager manager = customManagerDetails.getManager();
 
         ManagerLoginResponse loginResponse = ManagerLoginResponse.from(manager);
 
@@ -82,13 +85,6 @@ public class LoginAuthenticationFilter extends UsernamePasswordAuthenticationFil
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
 
-        DomainException domainException = new DomainException(ErrorType.FAILED_LOGIN);
-        response.setContentType("application/json;charset=UTF-8");
-
-        response.setStatus(domainException.getStatus().value());
-
-        String body = new ObjectMapper().writeValueAsString(domainException.toResponse());
-
-        response.getWriter().write(body);
+        jwtUtil.tokenErrorResponse(response, ErrorType.FAILED_LOGIN);
     }
 }

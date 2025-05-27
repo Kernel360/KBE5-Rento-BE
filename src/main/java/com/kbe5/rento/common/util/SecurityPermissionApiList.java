@@ -13,6 +13,7 @@ public class SecurityPermissionApiList {
 //            "/api/managers",
 //            "/api/managers/sign-up",
 //            "/api/managers/login",
+//            "/api/managers/refresh",
 //            "/api/managers/logout",
 //            "/api/managers/{email}",
 //            "/api/managers/{loginId}",
@@ -61,10 +62,6 @@ public class SecurityPermissionApiList {
 //            "/api/companies/{companyId}",
 
             // h2
-            "/h2-console/**",
-
-            // login && signUp
-            "/api/managers/login",
-            "/api/managers/sign-up"
+            "/h2-console/**"
     };
 }
