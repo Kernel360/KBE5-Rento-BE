@@ -53,12 +53,13 @@ public class DriveControllerImpl implements DriveController {
     @Override
     @GetMapping
     public ResponseEntity<List<DriveResponse>> getDriveList(@AuthenticationPrincipal Manager manager) {
-        return ResponseEntity.ok(driveService.getDriveList(manager));
+        return ResponseEntity.ok(driveService.getDriveList(manager).stream()
+                .map(DriveResponse::fromEntity).toList());
     }
 
     @Override
     @GetMapping("/{driveId}")
     public ResponseEntity<DriveDetailResponse> getDriveDetail(@PathVariable Long driveId) {
-        return ResponseEntity.ok(driveService.getDriveDetail(driveId));
+        return ResponseEntity.ok(DriveDetailResponse.fromEntity(driveService.getDriveDetail(driveId)));
     }
 }

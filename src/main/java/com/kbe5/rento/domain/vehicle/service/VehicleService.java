@@ -34,20 +34,17 @@ public class VehicleService {
         return vehicleRepository.save(vehicle);
     }
 
-    public List<VehicleResponse> getVehicleList(Manager manager) {
+    public List<Vehicle> getVehicleList(Manager manager) {
         // test
         Manager manager1 = managerRepository.findById(1L).orElseThrow();
 
-        List<Vehicle> vehicleList = vehicleRepository.findByCompany(manager1.getCompany());
-
-        return vehicleList.stream().map(VehicleResponse::fromEntity).toList();
+        return vehicleRepository.findByCompany(manager1.getCompany());
     }
 
-    public VehicleDetailResponse getVehicle(Long vehicleId){
-        Vehicle vehicle = vehicleRepository.findById(vehicleId).orElseThrow(
+    public Vehicle getVehicle(Long vehicleId){
+        return vehicleRepository.findById(vehicleId).orElseThrow(
                 () -> new DomainException(ErrorType.VEHICLE_NOT_FOUND) );
 
-        return VehicleDetailResponse.fromEntity(vehicle);
     }
 
     @Transactional

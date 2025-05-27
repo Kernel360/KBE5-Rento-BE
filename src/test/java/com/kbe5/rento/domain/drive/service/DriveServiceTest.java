@@ -45,7 +45,6 @@ class DriveServiceTest {
 
     private Member member;
     private Vehicle vehicle;
-    private DriveAddRequest request;
     private Drive drive;
 
     @BeforeEach
@@ -63,6 +62,7 @@ class DriveServiceTest {
                 .company(companyA)
                 .name("운행회원")
                 .build();
+
         vehicle = Vehicle.builder()
                 .company(companyB)
                 .vehicleType(SEDAN)
@@ -73,22 +73,17 @@ class DriveServiceTest {
         ReflectionTestUtils.setField(member, "id", 1L);
         ReflectionTestUtils.setField(vehicle, "id", 2L);
 
-        request = new DriveAddRequest(
-                member,
-                vehicle,
-                DriveType.BUSINESS,
-                "서울역",
-                "강남역"
-        );
+        drive = Drive.builder()
+                .member(member)
+                .vehicle(vehicle)
+                .dirveType(DriveType.BUSINESS)
+                .startLocation("부산역")
+                .endLocation("강남역")
+                .build();
     }
 
     @Test
-    void 운행사용자와_운행차량이_같은_업체가_아니면안됩니다() {
-        // stub 정의
-        given(memberRepository.findById(1L)).willReturn(Optional.of(member));
-        given(vehicleRepository.findById(2L)).willReturn(Optional.of(vehicle));
-
-        // 검증: 회사가 다르면 예외 발생
+    void 운행사용자와_운행차량이_같은_업체가_아니면_실패합니다() {
         assertThatThrownBy(() -> driveService.driveAdd(drive))
                 .isInstanceOf(DomainException.class);
     }

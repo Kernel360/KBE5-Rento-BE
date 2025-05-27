@@ -39,6 +39,7 @@ public class VehicleControllerImpl implements VehicleController{
     public ResponseEntity<String> updateVehicle(@PathVariable Long vehicleId,
                               @RequestBody @Validated VehicleUpdateRequest request) {
         vehicleService.updateVehicle(vehicleId, request);
+
         return ResponseEntity.ok("차량 정보 수정 완료");
     }
 
@@ -46,6 +47,7 @@ public class VehicleControllerImpl implements VehicleController{
     @DeleteMapping("/{vehicleId}")
     public ResponseEntity<String> deleteVehicle(@PathVariable Long vehicleId) {
         vehicleService.deleteVehicle(vehicleId);
+
         return ResponseEntity.ok("차량이 등록 해제되었습니다.");
     }
 
@@ -53,12 +55,14 @@ public class VehicleControllerImpl implements VehicleController{
     @Override
     @GetMapping()
     public ResponseEntity<List<VehicleResponse>> getVehicleList(@AuthenticationPrincipal Manager manager) {
-        return ResponseEntity.ok(vehicleService.getVehicleList(manager));
+
+        return ResponseEntity.ok(vehicleService.getVehicleList(manager).
+                stream().map(VehicleResponse::fromEntity).toList());
     }
 
     @Override
     @GetMapping("/{vehicleId}")
     public ResponseEntity<VehicleDetailResponse> getVehicle(@PathVariable Long vehicleId) {
-        return ResponseEntity.ok(vehicleService.getVehicle(vehicleId));
+        return ResponseEntity.ok(VehicleDetailResponse.fromEntity(vehicleService.getVehicle(vehicleId)));
     }
 }

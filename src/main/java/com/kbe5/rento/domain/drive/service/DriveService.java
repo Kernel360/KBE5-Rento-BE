@@ -65,21 +65,16 @@ public class DriveService {
 
     // 운행 목록 조회
     // todo: 운행 목록은 업체 기준으로 찾아준다 -> 업체 코드
-    public List<DriveResponse> getDriveList(Manager manager){
+    public List<Drive> getDriveList(Manager manager){
         // test
         Manager manager1 = managerRepository.findById(1L).orElseThrow();
-        List<Drive> driveList = driveRepository.findByMember_Company(manager1.getCompany());
-
-        return driveList.stream().map(DriveResponse::fromEntity)
-                .toList();
+        return driveRepository.findByMember_Company(manager1.getCompany());
     }
 
     // 운행 상세
-    public DriveDetailResponse getDriveDetail(Long driveId){
-        Drive drive = driveRepository.findById(driveId).orElseThrow(
+    public Drive getDriveDetail(Long driveId){
+        return driveRepository.findById(driveId).orElseThrow(
                 () -> new DomainException(ErrorType.USER_VEHICLE_COMPANY_MISMATCH)
         );
-
-        return DriveDetailResponse.fromEntity(drive);
     }
 }

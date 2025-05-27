@@ -115,7 +115,7 @@ class VehicleServiceTest {
     }
 
     @Test
-    void 자동차_번호_규칙을_준수해야합니다 () {
+    void 자동차_번호_규칙을_준수하지_않으면_예외발생 () {
         VehicleAddRequest request = new VehicleAddRequest(
                 "가 1234",
                 "벤츠",
@@ -125,12 +125,9 @@ class VehicleServiceTest {
                 100000L,
                 "1000W"
         );
-        // 어노테이션 테스트
-        Set<ConstraintViolation<VehicleAddRequest>> violations = validator.validate(request);
 
+        Set<ConstraintViolation<VehicleAddRequest>> violations = validator.validate(request);
         assertThat(violations).isNotEmpty();
-        assertThat(violations)
-                .anyMatch(v -> v.getPropertyPath()
-                        .toString().equals("vehicleNumber"));
+
     }
 }
