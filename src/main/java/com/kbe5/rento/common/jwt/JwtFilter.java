@@ -1,5 +1,6 @@
-package com.kbe5.rento.common.jwt.util;
+package com.kbe5.rento.common.jwt;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kbe5.rento.common.exception.DomainException;
 import com.kbe5.rento.common.exception.ErrorType;
 import com.kbe5.rento.domain.manager.dto.details.CustomManagerDetails;
@@ -16,6 +17,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Map;
 
 public class JwtFilter extends OncePerRequestFilter {
 
@@ -32,35 +34,41 @@ public class JwtFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request,@NonNull HttpServletResponse response,
                                     @NonNull FilterChain filterChain) throws ServletException, IOException {
 
-        String accessToken = request.getHeader("AccessToken");
+        String authorization = request.getHeader("Authorization");
 
-        if (accessToken == null) {
+        if (authorization == null || !authorization.startsWith("Bearer ")) {
+
             filterChain.doFilter(request, response);
+
             return;
         }
 
-        if (jwtUtil.isExpired(accessToken)) {
+        // "Bearer token..." 형식으로 약속되어있기 때문에 빈칸을 기준으로 split 하여 토큰을 얻어온다.
+        String token = authorization.split(" ")[1];
+
+        if (jwtUtil.isExpired(token)) {
+
+            filterChain.doFilter(request, response);
+
             return;
         }
 
-        String category = jwtUtil.getCategory(accessToken);
+        try {
+            String loginId = jwtUtil.getLoginId(token);
 
-        if (!category.equals("access")) {
-            jwtUtil.tokenErrorResponse(response, ErrorType.INVALID_TOKEN);
-            return;
+            Manager manager = managerRepository.findByLoginId(loginId)
+                    .orElseThrow(() -> new DomainException(ErrorType.MANAGER_NOT_FOUND));
+
+            CustomManagerDetails customManagerDetails = new CustomManagerDetails(manager);
+
+            Authentication authToken = new UsernamePasswordAuthenticationToken(
+                    customManagerDetails, null, customManagerDetails.getAuthorities());
+
+            SecurityContextHolder.getContext().setAuthentication(authToken);
+
+        } catch (Exception e) {
+            throw new DomainException(ErrorType.INVALID_TOKEN);
         }
-
-        String loginId = jwtUtil.getLoginId(accessToken);
-
-        Manager manager = managerRepository.findByLoginId(loginId)
-                .orElseThrow(() -> new DomainException(ErrorType.MANAGER_NOT_FOUND));
-
-        CustomManagerDetails customManagerDetails = new CustomManagerDetails(manager);
-
-        Authentication authToken = new UsernamePasswordAuthenticationToken(
-                customManagerDetails, null, customManagerDetails.getAuthorities());
-
-        SecurityContextHolder.getContext().setAuthentication(authToken);
 
         filterChain.doFilter(request, response);
     }
