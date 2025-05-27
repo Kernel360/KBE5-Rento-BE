@@ -1,7 +1,8 @@
 package com.kbe5.rento.domain.device.service;
 
-import com.kbe5.rento.domain.device.dto.request.DeviceRegisterRequest;
+import com.kbe5.rento.domain.device.enums.DeviceResultCode;
 import com.kbe5.rento.domain.device.entity.Device;
+import com.kbe5.rento.common.exception.DeviceException;
 import com.kbe5.rento.domain.device.repository.DeviceRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,18 +18,17 @@ public class DeviceService {
     private final DeviceRepository deviceRepository;
 
     @Transactional
-    public void registerDevice(DeviceRegisterRequest request) {
+    public Device registerDevice(Device device) {
 
-        validateDuplicateDevice(request);
+        validateDuplicateDevice(device.getMdn());
 
-        deviceRepository.save(Device.from(request));
+        return deviceRepository.save(device);
     }
 
-    private void validateDuplicateDevice(DeviceRegisterRequest request) {
-        deviceRepository.findByMobileDeviceNumber(request.mobileDeviceNumber())
+    private void validateDuplicateDevice(Long mdn) {
+        deviceRepository.findByMdn(mdn)
             .ifPresent(device -> {
-                throw new IllegalArgumentException("이미 등록된 디바이스입니다.");
+                throw new DeviceException(DeviceResultCode.MISMATCHED_MDN);
             });
     }
-
 }

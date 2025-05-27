@@ -1,8 +1,11 @@
 package com.kbe5.rento.domain.device.controller;
 
+import com.kbe5.rento.domain.device.enums.DeviceResultCode;
 import com.kbe5.rento.domain.device.dto.request.OnEventRequest;
 import com.kbe5.rento.domain.device.dto.request.DeviceRegisterRequest;
+import com.kbe5.rento.domain.device.dto.resonse.DeviceRegisterResponse;
 import com.kbe5.rento.domain.device.dto.resonse.OnEventResponse;
+import com.kbe5.rento.domain.device.entity.Device;
 import com.kbe5.rento.domain.device.service.DeviceEventService;
 import com.kbe5.rento.domain.device.service.DeviceService;
 import lombok.RequiredArgsConstructor;
@@ -24,8 +27,16 @@ public class DeviceControllerImpl implements DeviceController{
     private final DeviceEventService deviceEventService;
 
     @PostMapping
-    public void registerDevice(@RequestBody @Validated DeviceRegisterRequest request) {
-        deviceService.registerDevice(request);
+    public ResponseEntity<DeviceRegisterResponse> registerDevice(
+        @RequestBody @Validated DeviceRegisterRequest request) {
+
+        Device device = request.toDevice();
+
+        Device registerDevice = deviceService.registerDevice(device);
+
+        DeviceRegisterResponse response = DeviceRegisterResponse.of(DeviceResultCode.SUCCESS, registerDevice);
+
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/on")

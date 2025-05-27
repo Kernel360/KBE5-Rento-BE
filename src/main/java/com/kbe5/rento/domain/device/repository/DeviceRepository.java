@@ -6,5 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface DeviceRepository extends JpaRepository<Device, Long> {
 
-    Optional<Device> findByMobileDeviceNumber(Long mobileDeviceNumber);
+    Optional<Device> findByMdn(Long mdn);
 }
