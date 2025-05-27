@@ -38,7 +38,7 @@ public class Drive extends BaseEntity {
     private boolean isStart;
 
     @Builder
-    public Drive(Member member, Vehicle vehicle, DriveType dirveType, String startLocation,
+    private Drive(Member member, Vehicle vehicle, DriveType dirveType, String startLocation,
                  String endLocation) {
         this.member = member;
         this.vehicle = vehicle;

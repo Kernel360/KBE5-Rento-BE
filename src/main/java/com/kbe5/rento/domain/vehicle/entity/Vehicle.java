@@ -42,7 +42,7 @@ public class Vehicle extends BaseEntity {
     private String batteryVoltage;
 
     @Builder
-    public Vehicle(Company company, String vehicleNumber, String brand, String modelName,
+    private Vehicle(Company company, String vehicleNumber, String brand, String modelName,
                    VehicleType vehicleType, FuelType fuelType, Long totalDistanceKm, String batteryVoltage) {
         this.company = company;
         this.vehicleNumber = vehicleNumber;

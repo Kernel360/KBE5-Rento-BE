@@ -25,13 +25,12 @@ public class DriveService {
     private final ManagerRepository managerRepository;
 
     // 운행 등록
-    public void driveAdd(DriveAddRequest request){
+    public void driveAdd(Drive drive) {
         // 경우 1 같은 회사가 아니면 이어지지 않습니다 -> 같은 부서면 등록되게 해야하나?
-        if(request.vehicle().getCompany() != request.member().getCompany()){
-            throw new DomainException(ErrorType.VALIDATION_ERROR);
+        if(drive.getVehicle().getCompany() != drive.getMember().getCompany()){
+            throw new DomainException(ErrorType.USER_VEHICLE_COMPANY_MISMATCH);
         }
 
-        Drive drive = DriveAddRequest.toEntity(request);
         driveRepository.save(drive);
     }
 
@@ -39,7 +38,7 @@ public class DriveService {
     @Transactional
     public void driveStart(Long driveId){
         Drive drive = driveRepository.findById(driveId).orElseThrow(
-                () -> new IllegalArgumentException("운행이 존재하지 않습니다")
+                () -> new DomainException(ErrorType.USER_VEHICLE_COMPANY_MISMATCH)
         );
 
         drive.driveStart();
@@ -49,7 +48,7 @@ public class DriveService {
     @Transactional
     public void driveEnd(Long driveId){
         Drive drive = driveRepository.findById(driveId).orElseThrow(
-                () -> new IllegalArgumentException("운행이 존재하지 않습니다")
+                () -> new DomainException(ErrorType.USER_VEHICLE_COMPANY_MISMATCH)
         );
 
         drive.driveEnd();
@@ -58,7 +57,7 @@ public class DriveService {
     // 운행 취소
     public void driveCancel(Long driveId){
         Drive drive = driveRepository.findById(driveId).orElseThrow(
-                () -> new IllegalArgumentException("운행이 존재하지 않습니다")
+                () -> new DomainException(ErrorType.USER_VEHICLE_COMPANY_MISMATCH)
         );
 
         drive.delete();
@@ -69,8 +68,7 @@ public class DriveService {
     public List<DriveResponse> getDriveList(Manager manager){
         // test
         Manager manager1 = managerRepository.findById(1L).orElseThrow();
-
-        List<Drive> driveList = driveRepository.findByMember_Company(manager1.getCompanyId());
+        List<Drive> driveList = driveRepository.findByMember_Company(manager1.getCompany());
 
         return driveList.stream().map(DriveResponse::fromEntity)
                 .toList();
@@ -79,7 +77,7 @@ public class DriveService {
     // 운행 상세
     public DriveDetailResponse getDriveDetail(Long driveId){
         Drive drive = driveRepository.findById(driveId).orElseThrow(
-                () -> new IllegalArgumentException("존재하지 않는 운행입니다")
+                () -> new DomainException(ErrorType.USER_VEHICLE_COMPANY_MISMATCH)
         );
 
         return DriveDetailResponse.fromEntity(drive);

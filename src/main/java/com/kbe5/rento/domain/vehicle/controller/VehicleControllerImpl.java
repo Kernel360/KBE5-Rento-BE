@@ -6,9 +6,11 @@ import com.kbe5.rento.domain.vehicle.dto.request.VehicleAddRequest;
 import com.kbe5.rento.domain.vehicle.dto.request.VehicleUpdateRequest;
 import com.kbe5.rento.domain.vehicle.dto.response.VehicleDetailResponse;
 import com.kbe5.rento.domain.vehicle.dto.response.VehicleResponse;
+import com.kbe5.rento.domain.vehicle.entity.Vehicle;
 import com.kbe5.rento.domain.vehicle.service.VehicleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,8 +25,13 @@ public class VehicleControllerImpl implements VehicleController{
 
     @Override
     @PostMapping()
-    public ResponseEntity<VehicleResponse> addVehicle(Manager manager, @RequestBody @Validated VehicleAddRequest request) {
-        return ResponseEntity.ok(vehicleService.addVehicle(manager, request));
+    public ResponseEntity<VehicleResponse> addVehicle(@AuthenticationPrincipal Manager manager,
+                                                      @RequestBody @Validated VehicleAddRequest request) {
+
+        Vehicle vehicle = VehicleAddRequest.toEntity(manager, request);
+        VehicleResponse response = VehicleResponse.fromEntity(vehicleService.addVehicle(manager, vehicle));
+
+        return ResponseEntity.ok(response);
     }
 
     @Override
@@ -36,7 +43,7 @@ public class VehicleControllerImpl implements VehicleController{
     }
 
     @Override
-    @DeleteMapping()
+    @DeleteMapping("/{vehicleId}")
     public ResponseEntity<String> deleteVehicle(@PathVariable Long vehicleId) {
         vehicleService.deleteVehicle(vehicleId);
         return ResponseEntity.ok("차량이 등록 해제되었습니다.");
@@ -45,7 +52,7 @@ public class VehicleControllerImpl implements VehicleController{
     // todo: 부서별 필터 기능 적용및 페이징
     @Override
     @GetMapping()
-    public ResponseEntity<List<VehicleResponse>> getVehicleList(Manager manager) {
+    public ResponseEntity<List<VehicleResponse>> getVehicleList(@AuthenticationPrincipal Manager manager) {
         return ResponseEntity.ok(vehicleService.getVehicleList(manager));
     }
 

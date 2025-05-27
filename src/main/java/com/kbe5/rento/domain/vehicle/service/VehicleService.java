@@ -24,24 +24,21 @@ public class VehicleService {
     // test
     private final ManagerRepository managerRepository;
 
-    public VehicleResponse addVehicle(Manager manager, VehicleAddRequest request) {
+    public Vehicle addVehicle(Manager manager, Vehicle vehicle) {
         // 같은 번호는 에러 처리해줍니다
-        vehicleRepository.findByVehicleNumber(request.vehicleNumber())
+        vehicleRepository.findByVehicleNumber(vehicle.getVehicleNumber())
                 .ifPresent((__) -> {
                     throw new DomainException(ErrorType.SAME_VIHICLE_NUMBER);
                 });
 
-        Vehicle vehicle = VehicleAddRequest.toEntity(manager, request);
-        vehicleRepository.save(vehicle);
-
-        return VehicleResponse.fromEntity(vehicle);
+        return vehicleRepository.save(vehicle);
     }
 
     public List<VehicleResponse> getVehicleList(Manager manager) {
         // test
         Manager manager1 = managerRepository.findById(1L).orElseThrow();
 
-        List<Vehicle> vehicleList = vehicleRepository.findByCompany(manager1.getCompanyId());
+        List<Vehicle> vehicleList = vehicleRepository.findByCompany(manager1.getCompany());
 
         return vehicleList.stream().map(VehicleResponse::fromEntity).toList();
     }
