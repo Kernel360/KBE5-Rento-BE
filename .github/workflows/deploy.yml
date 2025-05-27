@@ -58,10 +58,10 @@ jobs:
             aws ecr get-login-password --region ap-northeast-2 | \
               docker login --username AWS --password-stdin 528782700548.dkr.ecr.ap-northeast-2.amazonaws.com
           
-            sudo docker stop rento-server || true
-            sudo docker rm rento-server || true
-            sudo docker pull 528782700548.dkr.ecr.ap-northeast-2.amazonaws.com/rento-server:latest
-            sudo docker run -d --name rento-server -p 8080:8080 528782700548.dkr.ecr.ap-northeast-2.amazonaws.com/rento-server:latest
+            docker stop rento-server || true
+            docker rm rento-server || true
+            docker pull 528782700548.dkr.ecr.ap-northeast-2.amazonaws.com/rento-server:latest
+            docker run -d --name rento-server -p 8080:8080 528782700548.dkr.ecr.ap-northeast-2.amazonaws.com/rento-server:latest
           EOF
 
 
