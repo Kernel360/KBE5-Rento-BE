@@ -6,6 +6,11 @@ import java.time.format.DateTimeFormatter;
 public class DateUtil {
     public static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
 
+    private DateUtil() {
+        //인스턴스 불가능한 Util 클래스 입니다.
+        throw new AssertionError();
+    }
+
     public static String toStr(LocalDateTime time) {
         if (time == null) {
             throw new IllegalArgumentException("LocalDateTime 값이 null 입니다.");

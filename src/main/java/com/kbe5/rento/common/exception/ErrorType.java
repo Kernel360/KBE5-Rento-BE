@@ -8,40 +8,31 @@ import org.springframework.http.HttpStatus;
 @Getter
 @AllArgsConstructor
 public enum ErrorType {
+    // DEPARTMENT
+    DEPARTMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "부서를 찾을 수 없습니다"),
+    DUPLICATE_DEPARTMENT_NAME(HttpStatus.BAD_REQUEST, "이미 존재하는 부서 이름입니다."),
+    ALREADY_MEMBER(HttpStatus.BAD_REQUEST, "해당 부서에 소속된 직원이 있어 삭제할 수 없습니다."),
 
-    SUCCESS("000", "Success"),
+    // VALIDATION
+    VALIDATION_ERROR(HttpStatus.BAD_REQUEST, "값을 잘못 입력했습니다."),
 
-    // INVALID ACCESS
-    INVALID_ACCESS_PATH("100", "Invalid access path."),
-    WRONG_APPROACH("101", "This is the wrong approach."),
-    CONTENT_TYPE_ERROR("102", "Content-Type error."),
-    CONTENT_LENGTH_ERROR("103", "Content-Length error."),
-    ACCEPT_ERROR("104", "ACCEPT error."),
-    CACHE_CONTROL_ERROR("105", "Cache-Control error."),
-    ACCEPT_ENCODING_ERROR("106", "Accept-Encoding error."),
-    TIMESTAMP_ERROR("107", "Timestamp error."),
-    TUID_ERROR("108", "TUID error."),
-    MISSING_KEY_VERSION("109", "Missing Key-Version."),
-    NOT_JSON_HEADER_TYPE("110", "Not json header type."),
+    // MANAGER
+    MANAGER_NOT_FOUND(HttpStatus.NOT_FOUND, "관리자를 찾을 수 없습니다."),
 
-    // TOKEN ERRORS
-    MISSING_TOKEN("200", "Missing Token."),
-    INVALID_TOKEN("201", "Invalid Token."),
-    UNUSABLE_TOKEN("202", "Unusable Token."),
+    // COMPANY
+    COMPANY_NOT_FOUND(HttpStatus.NOT_FOUND, "업체를 찾을 수 없습니다."),
 
-    // PROTOCOL ERRORS
-    PROTOCOL_FORMAT_ERROR("300", "This is a protocol format error."),
-    REQUIRED_PARAMETER_ERROR("301", "Required parameter error."),
-    NO_SEARCH_RESULTS("302", "There are no search results."),
-    DECRYPTION_ERROR("303", "Decryption error."),
-    MISMATCHED_MDN("304", "Mismatched MDN."),
+    //MEMBER
+    MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "사용자를 찾을 수 없습니다."),
+    DUPLICATE_PHONE_NUMBER(HttpStatus.BAD_REQUEST, "이미 존재하는 전화번호입니다."),
+    INVALID_POSITION(HttpStatus.BAD_REQUEST, "존재하지 않은 직책입니다."),
 
-    // PROCESSING ERRORS
-    DATA_PROCESSING_ERROR("400", "An error occurred while processing data."),
 
-    // SYSTEM ERRORS
-    UNDEFINED_ERROR("500", "An undefined error has occurred.");
+    // SECURITY
+    INVALID_TOKEN(HttpStatus.UNAUTHORIZED, "토큰이 없거나 잘못된 형식입니다."),
+    EXPIRED_TOKEN(HttpStatus.UNAUTHORIZED, "토큰이 만료되었습니다."),
+    FAILED_LOGIN(HttpStatus.UNAUTHORIZED, "아이디 또는 비밀번호가 올바르지 않습니다.");
 
-    private final String code;
+    private final HttpStatus status;
     private final String message;
 }

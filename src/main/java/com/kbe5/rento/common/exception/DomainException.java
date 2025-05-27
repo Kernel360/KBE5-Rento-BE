@@ -6,15 +6,15 @@ import org.springframework.http.HttpStatus;
 @Getter
 public class DomainException extends RuntimeException {
 
-  private final String resultCode;
   private final String message;
+  private final HttpStatus status;
 
   public DomainException(ErrorType errorType) {
-    this.resultCode = errorType.getCode();
     this.message = errorType.getMessage();
+    this.status = errorType.getStatus();
   }
 
   public ExceptionResponse toResponse() {
-    return new ExceptionResponse(resultCode, message);
+    return new ExceptionResponse(message);
   }
 }
