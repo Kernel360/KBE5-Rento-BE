@@ -58,23 +58,10 @@ jobs:
             aws ecr get-login-password --region ap-northeast-2 | \
               docker login --username AWS --password-stdin 528782700548.dkr.ecr.ap-northeast-2.amazonaws.com
 
-            SERVER_HOME=/home/ubuntu/rento-server
-            mkdir -p "$SERVER_HOME"
-            cd "$SERVER_HOME"
-
-            cat > .env << ENV
-            DB_HOST=${{ secrets.DB_HOST }}
-            DB_PORT=${{ secrets.DB_PORT }}
-            DB_NAME=${{ secrets.DB_NAME }}
-            DB_USER=${{ secrets.DB_USER }}
-            DB_PASS=${{ secrets.DB_PASS }}
-            SPRING_PROFILES_ACTIVE=deploy
-            ENV
-
             docker stop rento-server || true
             docker rm rento-server || true
             docker pull 528782700548.dkr.ecr.ap-northeast-2.amazonaws.com/rento-server:latest
-            docker run -d --name rento-server -p 8080:8080 --env-file /home/ubuntu/rento-server/.env 528782700548.dkr.ecr.ap-northeast-2.amazonaws.com/rento-server:latest
+            docker run -d --name rento-server -p 8080:8080 528782700548.dkr.ecr.ap-northeast-2.amazonaws.com/rento-server:latest
           EOF
 
 
