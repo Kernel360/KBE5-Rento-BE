@@ -34,6 +34,7 @@ public class Drive extends BaseEntity {
 
     private String startLocation;
     private String endLocation;
+
     private boolean isStart;
 
     @Builder

@@ -1,7 +1,11 @@
 package com.kbe5.rento.domain.vehicle.service;
 
+import com.kbe5.rento.domain.company.dto.request.CompanyRegisterRequest;
 import com.kbe5.rento.domain.company.entity.Company;
+import com.kbe5.rento.domain.company.service.CompanyService;
 import com.kbe5.rento.domain.manager.dto.request.ManagerSignUpRequest;
+import com.kbe5.rento.domain.manager.entity.Manager;
+import com.kbe5.rento.domain.manager.respository.ManagerRepository;
 import com.kbe5.rento.domain.manager.service.ManagerService;
 import com.kbe5.rento.domain.vehicle.dto.request.VehicleAddRequest;
 import com.kbe5.rento.domain.vehicle.dto.response.VehicleResponse;
@@ -33,19 +37,27 @@ class VehicleServiceTest {
 
     @Autowired
     private VehicleService vehicleService;
-
     @Autowired
     private VehicleRepository vehicleRepository;
-
     @Autowired
     private ManagerService managerService;
-
+    @Autowired
+    private ManagerRepository managerRepository;
+    @Autowired
+    private CompanyService companyService;
     @Autowired
     private Validator validator;
 
-    @BeforeEach
-    void setManager(){
-        Company company = new Company();
+    @Test
+    void 자동차_등록_테스트(){
+        //given
+        CompanyRegisterRequest companyRegisterRequest = new CompanyRegisterRequest(
+                11111111,
+                "test"
+        );
+
+        companyService.register(companyRegisterRequest);
+
 
         ManagerSignUpRequest managerSignUpRequest = new ManagerSignUpRequest(
                 "aaaa",
@@ -53,17 +65,12 @@ class VehicleServiceTest {
                 "test",
                 "11111",
                 "eeee",
-                "J110"
+                "C1"
         );
 
         managerService.signUp(managerSignUpRequest);
-    }
 
-    @Test
-    void 자동차_등록_테스트(){
-        //given
         VehicleAddRequest request = new VehicleAddRequest(
-                "J101",
                 "123가 1234",
                 "벤츠",
                 "아반떼",
@@ -73,7 +80,8 @@ class VehicleServiceTest {
                 "1000W"
         );
 
-        VehicleResponse response = vehicleService.addVehicle(request);
+        Manager manager = managerRepository.findById(1L).orElseThrow();
+        VehicleResponse response = vehicleService.addVehicle(manager, request);
         Vehicle vehicle = vehicleRepository.findById(1L).orElseThrow();
 
         assertThat(response.vehicleNumber()).isEqualTo(vehicle.getVehicleNumber());
@@ -82,7 +90,6 @@ class VehicleServiceTest {
     @Test
     void 자동차_번호_규칙을_준수해야합니다 () {
         VehicleAddRequest request = new VehicleAddRequest(
-                "J100",
                 "가 1234",
                 "벤츠",
                 "아반떼",

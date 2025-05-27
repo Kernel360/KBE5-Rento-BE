@@ -12,8 +12,6 @@ import jakarta.validation.constraints.NotNull;
 
 public record VehicleAddRequest(
         @NotBlank
-        String companyCode,
-        @NotBlank
         @VehicleNumber
         String vehicleNumber,
         @NotBlank

@@ -5,14 +5,15 @@ import com.kbe5.rento.domain.vehicle.dto.request.VehicleAddRequest;
 import com.kbe5.rento.domain.vehicle.dto.request.VehicleUpdateRequest;
 import com.kbe5.rento.domain.vehicle.dto.response.VehicleDetailResponse;
 import com.kbe5.rento.domain.vehicle.dto.response.VehicleResponse;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
 public interface VehicleController {
 
-    VehicleResponse addVehicle(Manager manager, VehicleAddRequest request);
-    void updateVehicle(Long vehicleId, VehicleUpdateRequest request);
-    void deleteVehicle(Long vehicleId);
-    List<VehicleResponse> getVehicleList(Manager manager);
-    VehicleDetailResponse getVehicle(Long vehicleId);
+    ResponseEntity<VehicleResponse> addVehicle(Manager manager, VehicleAddRequest request);
+    ResponseEntity<String> updateVehicle(Long vehicleId, VehicleUpdateRequest request);
+    ResponseEntity<String> deleteVehicle(Long vehicleId);
+    ResponseEntity<List<VehicleResponse>> getVehicleList(Manager manager);
+    ResponseEntity<VehicleDetailResponse> getVehicle(Long vehicleId);
 }

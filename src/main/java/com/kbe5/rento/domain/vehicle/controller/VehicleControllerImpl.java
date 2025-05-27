@@ -8,6 +8,7 @@ import com.kbe5.rento.domain.vehicle.dto.response.VehicleDetailResponse;
 import com.kbe5.rento.domain.vehicle.dto.response.VehicleResponse;
 import com.kbe5.rento.domain.vehicle.service.VehicleService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,34 +23,35 @@ public class VehicleControllerImpl implements VehicleController{
 
     @Override
     @PostMapping()
-    public VehicleResponse addVehicle(Manager manager, @RequestBody @Validated VehicleAddRequest request) {
-        // test
-        return vehicleService.addVehicle(/*manager, */request);
+    public ResponseEntity<VehicleResponse> addVehicle(Manager manager, @RequestBody @Validated VehicleAddRequest request) {
+        return ResponseEntity.ok(vehicleService.addVehicle(manager, request));
     }
 
     @Override
     @PutMapping("/{vehicleId}")
-    public void updateVehicle(@PathVariable Long vehicleId,
+    public ResponseEntity<String> updateVehicle(@PathVariable Long vehicleId,
                               @RequestBody @Validated VehicleUpdateRequest request) {
         vehicleService.updateVehicle(vehicleId, request);
+        return ResponseEntity.ok("차량 정보 수정 완료");
     }
 
     @Override
     @DeleteMapping()
-    public void deleteVehicle(@PathVariable Long vehicleId) {
+    public ResponseEntity<String> deleteVehicle(@PathVariable Long vehicleId) {
         vehicleService.deleteVehicle(vehicleId);
+        return ResponseEntity.ok("차량이 등록 해제되었습니다.");
     }
 
     // todo: 부서별 필터 기능 적용및 페이징
     @Override
     @GetMapping()
-    public List<VehicleResponse> getVehicleList(Manager manager) {
-        return vehicleService.getVehicleList(manager);
+    public ResponseEntity<List<VehicleResponse>> getVehicleList(Manager manager) {
+        return ResponseEntity.ok(vehicleService.getVehicleList(manager));
     }
 
     @Override
     @GetMapping("/{vehicleId}")
-    public VehicleDetailResponse getVehicle(@PathVariable Long vehicleId) {
-        return vehicleService.getVehicle(vehicleId);
+    public ResponseEntity<VehicleDetailResponse> getVehicle(@PathVariable Long vehicleId) {
+        return ResponseEntity.ok(vehicleService.getVehicle(vehicleId));
     }
 }

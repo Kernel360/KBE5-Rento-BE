@@ -6,6 +6,7 @@ import com.kbe5.rento.domain.drive.dto.DriveResponse;
 import com.kbe5.rento.domain.drive.service.DriveService;
 import com.kbe5.rento.domain.manager.entity.Manager;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,37 +21,41 @@ public class DriveControllerImpl implements DriveController {
 
     @Override
     @PostMapping
-    public void driveAdd(@RequestBody @Validated DriveAddRequest request) {
+    public ResponseEntity<String> driveAdd(@RequestBody @Validated DriveAddRequest request) {
         driveService.driveAdd(request);
+        return ResponseEntity.ok("운행 예약 완료");
     }
 
     @Override
     @PatchMapping("/start/{driveId}")
-    public void driveStart(@PathVariable Long driveId) {
+    public ResponseEntity<String> driveStart(@PathVariable Long driveId) {
         driveService.driveStart(driveId);
+        return ResponseEntity.ok("시동이 켜졌습니다");
     }
 
     @Override
     @PatchMapping("/end/{driveId}")
-    public void driveEnd(@PathVariable Long driveId) {
+    public ResponseEntity<String> driveEnd(@PathVariable Long driveId) {
         driveService.driveEnd(driveId);
+        return ResponseEntity.ok("시동이 종료되었습니다");
     }
 
     @Override
     @PatchMapping("/cancel/{driveId}")
-    public void driveCancel(@PathVariable Long driveId) {
+    public ResponseEntity<String> driveCancel(@PathVariable Long driveId) {
         driveService.driveCancel(driveId);
+        return ResponseEntity.ok("운행이 취소되었습니다");
     }
 
     @Override
     @GetMapping
-    public List<DriveResponse> getDriveList(Manager manager) {
-        return driveService.getDriveList(manager);
+    public ResponseEntity<List<DriveResponse>> getDriveList(Manager manager) {
+        return ResponseEntity.ok(driveService.getDriveList(manager));
     }
 
     @Override
     @GetMapping("/{driveId}")
-    public DriveDetailResponse getDriveDetail(@PathVariable Long driveId) {
-        return driveService.getDriveDetail(driveId);
+    public ResponseEntity<DriveDetailResponse> getDriveDetail(@PathVariable Long driveId) {
+        return ResponseEntity.ok(driveService.getDriveDetail(driveId));
     }
 }

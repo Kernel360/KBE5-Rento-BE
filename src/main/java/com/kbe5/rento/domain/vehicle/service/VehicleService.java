@@ -24,15 +24,11 @@ public class VehicleService {
     // test
     private final ManagerRepository managerRepository;
 
-    public VehicleResponse addVehicle(VehicleAddRequest request) {
-
-        // 테스트용 manager 생성
-        Manager manager = managerRepository.findById(1L).orElseThrow();
-
+    public VehicleResponse addVehicle(Manager manager, VehicleAddRequest request) {
         // 같은 번호는 에러 처리해줍니다
         vehicleRepository.findByVehicleNumber(request.vehicleNumber())
                 .ifPresent((__) -> {
-                    throw new DomainException(ErrorType.VALIDATION_ERROR);
+                    throw new DomainException(ErrorType.SAME_VIHICLE_NUMBER);
                 });
 
         Vehicle vehicle = VehicleAddRequest.toEntity(manager, request);
@@ -52,7 +48,7 @@ public class VehicleService {
 
     public VehicleDetailResponse getVehicle(Long vehicleId){
         Vehicle vehicle = vehicleRepository.findById(vehicleId).orElseThrow(
-                () -> new IllegalArgumentException("해당 차량 없음"));
+                () -> new DomainException(ErrorType.VEHICLE_NOT_FOUND) );
 
         return VehicleDetailResponse.fromEntity(vehicle);
     }
@@ -60,7 +56,7 @@ public class VehicleService {
     @Transactional
     public void updateVehicle(Long vehicleId, VehicleUpdateRequest request) {
         Vehicle vehicle = vehicleRepository.findById(vehicleId).orElseThrow(
-                () -> new IllegalArgumentException("해당 차량 없음"));
+                () -> new DomainException(ErrorType.VEHICLE_NOT_FOUND));
 
         vehicle.update(request);
     }

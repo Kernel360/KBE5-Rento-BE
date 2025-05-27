@@ -9,12 +9,19 @@ import java.time.LocalDateTime;
 
 public record DriveDetailResponse(
     Member member,
+
     Vehicle vehicle,
+
     DriveType driveType,
+
     LocalDateTime startDate,
+
     LocalDateTime endDate,
+
     String startLocation,
+
     String endLocation,
+
     boolean isStart
 ) {
     public static DriveDetailResponse fromEntity(Drive drive){

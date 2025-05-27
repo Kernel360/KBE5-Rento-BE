@@ -8,15 +8,20 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 public record DriveAddRequest(
-        @NotNull
+
+        @NotNull(message = "멤버는 null 일수 없습니다")
         Member member,
-        @NotNull
+
+        @NotNull(message = "차량는 null 일수 없습니다")
         Vehicle vehicle,
-        @NotNull
+
+        @NotNull(message = "운행 타입은 null 일수 없습니다")
         DriveType driveType,
-        @NotBlank
+
+        @NotBlank(message = "출발는 빈 값일수 일수 없습니다")
         String startLocation,
-        @NotBlank
+
+        @NotBlank(message = "멤버는 빈 값일수 없습니다")
         String endLocation
 ) {
     public static Drive toEntity(DriveAddRequest request) {

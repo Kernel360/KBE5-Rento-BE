@@ -1,9 +1,13 @@
 package com.kbe5.rento.domain.drive.service;
 
 import com.kbe5.rento.common.exception.DomainException;
+import com.kbe5.rento.domain.company.dto.request.CompanyRegisterRequest;
+import com.kbe5.rento.domain.company.service.CompanyService;
 import com.kbe5.rento.domain.drive.dto.DriveAddRequest;
 import com.kbe5.rento.domain.drive.entity.DriveType;
 import com.kbe5.rento.domain.manager.dto.request.ManagerSignUpRequest;
+import com.kbe5.rento.domain.manager.entity.Manager;
+import com.kbe5.rento.domain.manager.respository.ManagerRepository;
 import com.kbe5.rento.domain.manager.service.ManagerService;
 import com.kbe5.rento.domain.member.entity.Member;
 import com.kbe5.rento.domain.member.repository.MemberRepository;
@@ -34,45 +38,43 @@ class DriveServiceTest {
     @Autowired
     private DriveService driveService;
     @Autowired
+    private CompanyService companyService;
+    @Autowired
     private MemberService memberService;
     @Autowired
     private VehicleService vehicleService;
     @Autowired
     private ManagerService managerService;
-
+    @Autowired
+    private ManagerRepository managerRepository;
     @Autowired
     private MemberRepository memberRepository;
     @Autowired
     private VehicleRepository vehicleRepository;
 
 
-    void setManager(){
+    @Test
+    void 운행사용자와_운행차량이_같은_업체가_아니면안됩니다(){
+
+        CompanyRegisterRequest companyRegisterRequest = new CompanyRegisterRequest(
+                11111111,
+                "test"
+        );
+
+        companyService.register(companyRegisterRequest);
+
         ManagerSignUpRequest managerSignUpRequest = new ManagerSignUpRequest(
                 "aaaa",
                 "aaaa",
                 "test",
                 "11111",
                 "eeee",
-                "J110"
+                "C1"
         );
 
         managerService.signUp(managerSignUpRequest);
-    }
-
-    @BeforeEach
-    void setMember(){
-        setManager();
-
-        String companyCode = "J100";
-        memberService.save(companyCode);
-    }
-
-    @BeforeEach
-    void setVehicle(){
-        setManager();
 
         VehicleAddRequest request = new VehicleAddRequest(
-                "J100",
                 "123가 1234",
                 "벤츠",
                 "아반떼",
@@ -81,16 +83,13 @@ class DriveServiceTest {
                 100000L,
                 "1000W"
         );
+        Manager manager = managerRepository.findById(1L).orElseThrow();
+        vehicleService.addVehicle(manager, request);
 
-        vehicleService.addVehicle(request);
-    }
-
-    @Test
-    void 운행사용자와_운행차량이_같은_업체가_아니면안됩니다(){
         Member m = memberRepository.findById(1L).orElseThrow();
         Vehicle v = vehicleRepository.findById(1L).orElseThrow();
 
-        DriveAddRequest request = new DriveAddRequest(
+        DriveAddRequest request2 = new DriveAddRequest(
                 m,
                 v,
                 DriveType.BUSINESS,
@@ -98,7 +97,7 @@ class DriveServiceTest {
                 "테스트 서울"
         );
 
-        assertThatThrownBy(()-> driveService.driveAdd(request))
+        assertThatThrownBy(()-> driveService.driveAdd(request2))
                 .isInstanceOf(DomainException.class);
     }
 }

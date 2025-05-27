@@ -8,11 +8,17 @@ import java.time.LocalDateTime;
 
 public record DriveResponse(
         Member member,
+
         Vehicle vehicle,
+
         LocalDateTime startDate,
+
         LocalDateTime endDate,
+
         String startLocation,
+
         String endLocation,
+
         boolean isStart
 ) {
     public static DriveResponse fromEntity(Drive drive){
