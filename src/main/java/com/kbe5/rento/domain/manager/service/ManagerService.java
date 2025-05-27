@@ -7,12 +7,15 @@ import com.kbe5.rento.domain.company.service.CompanyService;
 import com.kbe5.rento.domain.manager.dto.request.ManagerDeleteRequest;
 import com.kbe5.rento.domain.manager.dto.request.ManagerSignUpRequest;
 import com.kbe5.rento.domain.manager.dto.request.ManagerUpdateRequest;
-import com.kbe5.rento.domain.manager.dto.response.*;
+import com.kbe5.rento.domain.manager.dto.response.ManagerDeleteResponse;
+import com.kbe5.rento.domain.manager.dto.response.ManagerResponse;
+import com.kbe5.rento.domain.manager.dto.response.ManagerSignUpResponse;
+import com.kbe5.rento.domain.manager.dto.response.ManagerUpdateResponse;
 import com.kbe5.rento.domain.manager.entity.Manager;
 import com.kbe5.rento.domain.manager.enums.ManagerRole;
 import com.kbe5.rento.domain.manager.respository.ManagerRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,7 +29,7 @@ public class ManagerService {
 
     private final ManagerRepository managerRepository;
     private final CompanyService companyService;
-    private final BCryptPasswordEncoder encoder;
+    private final PasswordEncoder encoder;
 
     public ManagerSignUpResponse signUp(ManagerSignUpRequest request) {
 
