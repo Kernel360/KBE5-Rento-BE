@@ -31,19 +31,19 @@ public class JwtUtil {
     }
 
     public String getLoginId(String token) {
-        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("loginId",
-                String.class);
+        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload()
+                .get("loginId", String.class);
     }
 
     public String getRole(String token) {
-        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("role",
-                String.class);
+        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload()
+                .get("role", String.class);
     }
 
     public String getCategory(String token) {
         try {
-            return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("category",
-                    String.class);
+            return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload()
+                    .get("category", String.class);
         } catch (JwtException | IllegalArgumentException e) {
             throw new DomainException(ErrorType.INVALID_TOKEN);
         }
