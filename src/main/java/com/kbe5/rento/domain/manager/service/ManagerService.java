@@ -13,6 +13,7 @@ import com.kbe5.rento.domain.manager.enums.ManagerRole;
 import com.kbe5.rento.domain.manager.respository.ManagerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,7 +27,7 @@ public class ManagerService {
 
     private final ManagerRepository managerRepository;
     private final CompanyService companyService;
-    private final BCryptPasswordEncoder encoder;
+    private final PasswordEncoder encoder;
 
     public ManagerSignUpResponse signUp(ManagerSignUpRequest request) {
 
