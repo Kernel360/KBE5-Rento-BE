@@ -17,19 +17,17 @@ import java.util.List;
 
 public interface ManagerController {
 
-    ResponseEntity<ApiResponse<ManagerSignUpResponse>> signUp(@RequestBody @Valid ManagerSignUpRequest request);
+    ResponseEntity<ApiResponse<ManagerSignUpResponse>> signUp(ManagerSignUpRequest request);
 
-    ResponseEntity<ApiResponse<ManagerResponse>> getManagerDetail(@PathVariable Long id);
+    ResponseEntity<ApiResponse<ManagerResponse>> getManagerDetail(Long id);
 
-    ResponseEntity<ApiResponse<List<ManagerResponse>>> getManagerList(@PathVariable String companyCode);
+    ResponseEntity<ApiResponse<List<ManagerResponse>>> getManagerList(String companyCode);
 
-    ResponseEntity<ApiResponse<ManagerUpdateResponse>> update(@PathVariable Long id, @RequestBody @Valid
-                                                              ManagerUpdateRequest request) ;
+    ResponseEntity<ApiResponse<ManagerUpdateResponse>> update(Long id, ManagerUpdateRequest request) ;
 
-    ResponseEntity<ApiResponse<ManagerDeleteResponse>> delete(@PathVariable Long id,
-                                                              @RequestBody @Valid ManagerDeleteRequest request);
+    ResponseEntity<ApiResponse<ManagerDeleteResponse>> delete(Long id, ManagerDeleteRequest request);
 
-    ResponseEntity<ApiResponse<Boolean>> checkAvailableLoginId(@PathVariable String loginId);
+    ResponseEntity<ApiResponse<Boolean>> checkAvailableLoginId(String loginId);
 
-    ResponseEntity<ApiResponse<Boolean>> checkAvailableEmail(@PathVariable String email);
+    ResponseEntity<ApiResponse<Boolean>> checkAvailableEmail(String email);
 }

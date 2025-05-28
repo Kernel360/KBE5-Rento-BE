@@ -16,17 +16,15 @@ import java.util.List;
 
 public interface CompanyController {
 
-    ResponseEntity<ApiResponse<CompanyRegisterResponse>> register(@RequestBody @Valid
-                                                                  CompanyRegisterRequest request);
+    ResponseEntity<ApiResponse<CompanyRegisterResponse>> register(CompanyRegisterRequest request);
 
-    ResponseEntity<ApiResponse<CompanyResponse>> getCompanyDetail(@PathVariable Long id);
+    ResponseEntity<ApiResponse<CompanyResponse>> getCompanyDetail(Long id);
 
     ResponseEntity<ApiResponse<List<CompanyResponse>>> getCompanyList();
 
-    ResponseEntity<ApiResponse<CompanyUpdateResponse>> updateCompanyInfo(@PathVariable Long id,
-                                                                         @RequestBody @Valid CompanyUpdateRequest request);
+    ResponseEntity<ApiResponse<CompanyUpdateResponse>> updateCompanyInfo(Long id, CompanyUpdateRequest request);
 
-    ResponseEntity<ApiResponse<Boolean>> checkAvailableBizNumber(@PathVariable int bizNumber);
+    ResponseEntity<ApiResponse<Boolean>> checkAvailableBizNumber(int bizNumber);
 
-    ResponseEntity<ApiResponse<CompanyDeleteResponse>> companyDelete(@PathVariable Long id);
+    ResponseEntity<ApiResponse<CompanyDeleteResponse>> companyDelete(Long id);
 }
