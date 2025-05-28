@@ -26,6 +26,7 @@ public class CompanyControllerImpl implements CompanyController {
     public ResponseEntity<ApiResponse<CompanyRegisterResponse>> register(@RequestBody @Valid
                                                                              CompanyRegisterRequest request) {
         Company company = CompanyRegisterRequest.toEntity(request);
+
         return ResEntityFactory.toResponse(ApiResultCode.SUCCESS,
                 CompanyRegisterResponse.fromEntity(companyService.register(company)));
     }

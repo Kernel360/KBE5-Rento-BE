@@ -21,7 +21,6 @@ public class CompanyService {
 
     private final CompanyRepository companyRepository;
 
-
     public Company register(Company company) {
         company = companyRepository.save(company);
 
