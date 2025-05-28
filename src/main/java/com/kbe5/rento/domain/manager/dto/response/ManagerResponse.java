@@ -12,14 +12,14 @@ public record ManagerResponse(
         String email,
         String loginId
 ) {
-    public static ManagerResponse from(Manager manager) {
+    public static ManagerResponse fromEntity(Manager manager) {
         return new ManagerResponse(manager.getId(), manager.getCompany().getId(), manager.getName(),
                 manager.getPhone(), manager.getEmail(), manager.getLoginId());
     }
 
-    public static List<ManagerResponse> from(List<Manager> managerList) {
+    public static List<ManagerResponse> fromEntity(List<Manager> managerList) {
         return managerList.stream()
-                .map(ManagerResponse::from)
+                .map(ManagerResponse::fromEntity)
                 .toList();
     }
 }
