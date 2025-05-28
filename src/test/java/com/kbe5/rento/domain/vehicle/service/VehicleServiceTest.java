@@ -2,6 +2,7 @@ package com.kbe5.rento.domain.vehicle.service;
 
 import com.kbe5.rento.common.exception.DomainException;
 import com.kbe5.rento.domain.company.entity.Company;
+import com.kbe5.rento.domain.department.entity.Department;
 import com.kbe5.rento.domain.drive.dto.DriveAddRequest;
 import com.kbe5.rento.domain.drive.entity.DriveType;
 import com.kbe5.rento.domain.manager.dto.request.ManagerSignUpRequest;
@@ -51,9 +52,10 @@ class VehicleServiceTest {
     private VehicleService vehicleService;
 
     private Manager manager;
-    private VehicleAddRequest request;
-    private Validator validator;
     private Vehicle vehicle;
+    private Validator validator;
+    private Department department;
+    private VehicleAddRequest request;
 
     @BeforeEach
     void setUp() {
@@ -70,9 +72,15 @@ class VehicleServiceTest {
                 .name("운행회원")
                 .build();
 
+        department = Department.builder()
+                .company(companyA)
+                .departmentName("teast부서")
+                .build();
+
         ReflectionTestUtils.setField(manager, "id", 1L);
 
         request = new VehicleAddRequest(
+                department,
                 "123가 1234",
                 "벤츠",
                 "아반떼",
@@ -94,7 +102,7 @@ class VehicleServiceTest {
         given(vehicleRepository.save(any(Vehicle.class)))
                 .willAnswer(invocation -> invocation.getArgument(0));
 
-        VehicleResponse response = VehicleResponse.fromEntity(vehicleService.addVehicle(manager, vehicle));
+        VehicleResponse response = VehicleResponse.fromEntity(vehicleService.addVehicle(vehicle));
 
         assertThat(response).isNotNull();
     }
@@ -110,13 +118,14 @@ class VehicleServiceTest {
         given(vehicleRepository.findByVehicleNumber(request.vehicleNumber()))
                 .willReturn(Optional.of(existing));
 
-        assertThatThrownBy(() -> vehicleService.addVehicle(manager, vehicle))
+        assertThatThrownBy(() -> vehicleService.addVehicle(vehicle))
                 .isInstanceOf(DomainException.class);
     }
 
     @Test
     void 자동차_번호_규칙을_준수하지_않으면_예외발생 () {
         VehicleAddRequest request = new VehicleAddRequest(
+                department,
                 "가 1234",
                 "벤츠",
                 "아반떼",

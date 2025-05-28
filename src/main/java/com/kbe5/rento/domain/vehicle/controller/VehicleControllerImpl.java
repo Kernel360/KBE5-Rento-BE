@@ -34,7 +34,7 @@ public class VehicleControllerImpl implements VehicleController{
             @RequestBody @Validated VehicleAddRequest request) {
         Vehicle vehicle = VehicleAddRequest.toEntity(customManagerDetails.getManager(), request);
         VehicleResponse response = VehicleResponse.fromEntity(vehicleService
-                .addVehicle(customManagerDetails.getManager(), vehicle));
+                .addVehicle(vehicle));
 
         return ResEntityFactory.toResponse(ApiResultCode.SUCCESS, response);
     }

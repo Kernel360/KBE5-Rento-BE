@@ -3,11 +3,7 @@ package com.kbe5.rento.domain.vehicle.service;
 import com.kbe5.rento.common.exception.DomainException;
 import com.kbe5.rento.common.exception.ErrorType;
 import com.kbe5.rento.domain.manager.entity.Manager;
-import com.kbe5.rento.domain.manager.respository.ManagerRepository;
-import com.kbe5.rento.domain.vehicle.dto.request.VehicleAddRequest;
 import com.kbe5.rento.domain.vehicle.dto.request.VehicleUpdateRequest;
-import com.kbe5.rento.domain.vehicle.dto.response.VehicleDetailResponse;
-import com.kbe5.rento.domain.vehicle.dto.response.VehicleResponse;
 import com.kbe5.rento.domain.vehicle.entity.Vehicle;
 import com.kbe5.rento.domain.vehicle.repository.VehicleRepository;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +19,7 @@ public class VehicleService {
 
     private final VehicleRepository vehicleRepository;
 
-    public Vehicle addVehicle(Manager manager, Vehicle vehicle) {
+    public Vehicle addVehicle(Vehicle vehicle) {
         vehicleRepository.findByVehicleNumber(vehicle.getVehicleNumber())
                 .ifPresent((__) -> {
                     throw new DomainException(ErrorType.SAME_VIHICLE_NUMBER);

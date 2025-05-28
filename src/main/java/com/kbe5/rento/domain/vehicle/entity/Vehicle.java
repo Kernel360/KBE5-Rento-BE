@@ -3,6 +3,7 @@ package com.kbe5.rento.domain.vehicle.entity;
 
 import com.kbe5.rento.common.util.BaseEntity;
 import com.kbe5.rento.domain.company.entity.Company;
+import com.kbe5.rento.domain.department.entity.Department;
 import com.kbe5.rento.domain.vehicle.dto.request.VehicleUpdateRequest;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -20,7 +21,9 @@ public class Vehicle extends BaseEntity {
     @JoinColumn(name = "company_id")
     private Company company;
 
-    // todo: 부서 추가 5.25
+    @ManyToOne
+    @JoinColumn(name = "department_id")
+    private Department department;
 
     private String vehicleNumber;
     private String brand;
@@ -40,9 +43,11 @@ public class Vehicle extends BaseEntity {
     private String batteryVoltage;
 
     @Builder
-    private Vehicle(Company company, String vehicleNumber, String brand, String modelName,
-                   VehicleType vehicleType, FuelType fuelType, Long totalDistanceKm, String batteryVoltage) {
+    private Vehicle(Company company, Department department, String vehicleNumber, String brand,
+                    String modelName, VehicleType vehicleType, FuelType fuelType,
+                    Long totalDistanceKm, String batteryVoltage) {
         this.company = company;
+        this.department = department;
         this.vehicleNumber = vehicleNumber;
         this.brand = brand;
         this.modelName = modelName;

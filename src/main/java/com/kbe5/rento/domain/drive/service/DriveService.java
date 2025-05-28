@@ -32,6 +32,7 @@ public class DriveService {
     }
 
     // 운행 시작
+    // todo: 시동 on 이벤트가 걸린다면 이 메서드 호출 되게 해야함 5.28
     public void driveStart(Long driveId){
         Drive drive = driveRepository.findById(driveId).orElseThrow(
                 () -> new DomainException(ErrorType.DRIVE_NOT_FOUND));
@@ -40,6 +41,7 @@ public class DriveService {
     }
 
     // 운행 종료
+    // todo: 시동 off? 아니면 그냥 운행 종료가 온다면 해당 메서드 호출 5.28
     public void driveEnd(Long driveId){
         Drive drive = driveRepository.findById(driveId).orElseThrow(
                 () -> new DomainException(ErrorType.DRIVE_NOT_FOUND));
