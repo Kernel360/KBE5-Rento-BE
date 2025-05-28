@@ -75,7 +75,7 @@ public class LoginAuthenticationFilter extends UsernamePasswordAuthenticationFil
         response.addHeader("RefreshToken", refreshToken);
         response.setContentType("application/json;charset=UTF-8");
 
-        ManagerLoginResponse loginResponse = ManagerLoginResponse.from(manager);
+        ManagerLoginResponse loginResponse = ManagerLoginResponse.fromEntity(manager);
 
         String body = new ObjectMapper().writeValueAsString(loginResponse);
 
