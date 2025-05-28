@@ -6,7 +6,7 @@ public record CompanyUpdateResponse(
         int bizNumber,
         String name
 ) {
-    public static CompanyUpdateResponse from(Company company) {
+    public static CompanyUpdateResponse fromEntity(Company company) {
         return new CompanyUpdateResponse(company.getBizNumber(), company.getName());
     }
 }

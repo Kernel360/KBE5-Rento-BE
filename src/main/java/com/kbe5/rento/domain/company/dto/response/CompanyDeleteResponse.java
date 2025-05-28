@@ -4,7 +4,7 @@ public record CompanyDeleteResponse(
         Long id,
         boolean isSuccess
 ) {
-    public static CompanyDeleteResponse from(Long id, boolean result) {
+    public static CompanyDeleteResponse fromEntity(Long id, boolean result) {
        return new CompanyDeleteResponse(id, result);
     }
 }

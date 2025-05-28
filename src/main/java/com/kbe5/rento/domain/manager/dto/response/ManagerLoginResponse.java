@@ -10,7 +10,7 @@ public record ManagerLoginResponse(
         String companyCode,
         long companyId
 ) {
-    public static ManagerLoginResponse from(Manager manager) {
+    public static ManagerLoginResponse fromEntity(Manager manager) {
         return new ManagerLoginResponse(manager.getLoginId(), manager.getName(), manager.getPhone(),
                 manager.getEmail(), manager.getCompanyCode(), manager.getCompany().getId());
     }

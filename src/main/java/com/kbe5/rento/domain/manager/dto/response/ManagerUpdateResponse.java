@@ -1,6 +1,5 @@
 package com.kbe5.rento.domain.manager.dto.response;
 
-import com.kbe5.rento.domain.company.entity.Company;
 import com.kbe5.rento.domain.manager.entity.Manager;
 
 public record ManagerUpdateResponse(
@@ -11,7 +10,7 @@ public record ManagerUpdateResponse(
         String email,
         String loginId
 ) {
-    public static ManagerUpdateResponse from(Manager manager) {
+    public static ManagerUpdateResponse fromEntity(Manager manager) {
         return new ManagerUpdateResponse(manager.getId(), manager.getCompany().getId(), manager.getName(),
                 manager.getPhone(), manager.getEmail(), manager.getLoginId());
     }
