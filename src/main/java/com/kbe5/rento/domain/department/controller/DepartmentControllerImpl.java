@@ -29,26 +29,26 @@ public class DepartmentControllerImpl implements DepartmentController {
     //부서 등록
     @Override
     @PostMapping
-    public ResponseEntity<ApiResponse<DepartmentInfoResponse>> registerDepartment(
+    public ResponseEntity<ApiResponse<String>> registerDepartment(
             @AuthenticationPrincipal CustomManagerDetails customManagerDetails,
             @RequestBody @Validated DepartmentRegisterRequest departmentRegisterRequest
     ) {
         Manager manager = customManagerDetails.getManager();
-        Department department = DepartmentRegisterRequest.toEntity(departmentRegisterRequest, manager.getCompany());
 
-        Department createdDepartment = departmentService.register(department);
-        DepartmentInfoResponse departmentInfoResponse = DepartmentInfoResponse.fromEntity(createdDepartment);
+        Department createdDepartment = departmentService.register(
+                DepartmentRegisterRequest.toEntity(departmentRegisterRequest, manager.getCompany())
+        );
 
-        return ResponseEntityFactory.toResponse(ApiResultCode.SUCCESS, departmentInfoResponse);
+        return ResponseEntityFactory.toResponse(
+                ApiResultCode.SUCCESS, createdDepartment.getDepartmentName() + "성공적으로 등록되었습니다."
+        );
     }
 
     //부서 목록 조회
     @Override
     @GetMapping
     public ResponseEntity<ApiResponse<List<DepartmentInfoResponse>>> getAllDepartments(@RequestParam String companyCode) {
-        List<DepartmentInfoResponse> departments = departmentService.getDepartments(companyCode).stream()
-                .map(DepartmentInfoResponse::fromEntity)
-                .toList();
+        List<DepartmentInfoResponse> departments = departmentService.getDepartments(companyCode);
 
         return ResponseEntityFactory.toResponse(ApiResultCode.SUCCESS, departments);
     }

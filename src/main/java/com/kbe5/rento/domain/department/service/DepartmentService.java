@@ -36,12 +36,13 @@ public class DepartmentService {
     }
 
     @Transactional(readOnly = true)
-    public List<Department> getDepartments(String companyCode) {
+    public List<DepartmentInfoResponse> getDepartments(String companyCode) {
         Company company = companyRepository.findByCompanyCode(companyCode).orElseThrow(
                 () -> new DomainException(ErrorType.COMPANY_NOT_FOUND)
         );
 
        return departmentRepository.findAllByCompanyId(company.getId()).stream()
+               .map(this::convertToDepartmentDto)
                .toList();
     }
 

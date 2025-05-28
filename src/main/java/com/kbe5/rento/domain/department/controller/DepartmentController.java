@@ -12,7 +12,7 @@ import java.util.List;
 public interface DepartmentController {
 
     //부서 등록
-    ResponseEntity<ApiResponse<DepartmentInfoResponse>> registerDepartment(CustomManagerDetails manager, DepartmentRegisterRequest departmentRegisterRequest);
+    ResponseEntity<ApiResponse<String>> registerDepartment(CustomManagerDetails manager, DepartmentRegisterRequest departmentRegisterRequest);
     //부서 목록 조회
     ResponseEntity<ApiResponse<List<DepartmentInfoResponse>>> getAllDepartments(String companyCode);
     //부서 수정

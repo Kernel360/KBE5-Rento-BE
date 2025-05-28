@@ -138,11 +138,10 @@ class DepartmentServiceTest {
         when(departmentRepository.findAllByCompanyId(1L)).thenReturn(departments);
 
         // when
-        List<Department> result = departmentService.getDepartments(companyCode);
+        List<DepartmentInfoResponse> result = departmentService.getDepartments(companyCode);
 
         // then
         assertThat(result.size()).isEqualTo(1);
-        assertThat(result.get(0)).isEqualTo(department);
         verify(companyRepository).findByCompanyCode(companyCode);
         verify(departmentRepository).findAllByCompanyId(1L);
     }
