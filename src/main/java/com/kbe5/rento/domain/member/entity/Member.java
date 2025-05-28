@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@Table(name = "users")
+@Table(name="members")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member extends BaseEntity {
     @Column(name = "name")

@@ -2,6 +2,11 @@ package com.kbe5.rento.domain.manager.entity;
 
 import com.kbe5.rento.domain.company.entity.Company;
 import com.kbe5.rento.common.util.BaseEntity;
+import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import lombok.AccessLevel;
 import com.kbe5.rento.domain.manager.dto.request.ManagerUpdateRequest;
 import com.kbe5.rento.domain.manager.enums.ManagerRole;
 import jakarta.persistence.*;
@@ -11,8 +16,8 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@NoArgsConstructor
 @Table(name = "managers")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Manager extends BaseEntity {
 
     @ManyToOne
