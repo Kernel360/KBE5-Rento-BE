@@ -7,7 +7,7 @@ public class SecurityPermissionApiList {
 
     public static final String[] PUBLIC_URLS = {
 
-            // "/api/**",
+//            "/api/**",
 
 //            // Manager APIs
 //            "/api/managers",

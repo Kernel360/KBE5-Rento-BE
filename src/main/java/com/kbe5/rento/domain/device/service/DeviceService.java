@@ -1,10 +1,13 @@
 package com.kbe5.rento.domain.device.service;
 
-import com.kbe5.rento.common.jwt.JwtUtil;
+import com.kbe5.rento.domain.device.entity.DeviceToken;
 import com.kbe5.rento.domain.device.enums.DeviceResultCode;
 import com.kbe5.rento.domain.device.entity.Device;
 import com.kbe5.rento.common.exception.DeviceException;
 import com.kbe5.rento.domain.device.repository.DeviceRepository;
+import com.kbe5.rento.domain.device.repository.DeviceTokenRepository;
+import java.time.LocalDateTime;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -18,11 +21,13 @@ public class DeviceService {
 
     private final DeviceRepository deviceRepository;
 
-    private final JwtUtil jwtUtil;
+    private final DeviceTokenRepository deviceTokenRepository;
+
+    private static final Long EXPIRED_MS = 4 * 60 * 60 * 1000L;
+
 
     @Transactional
     public Device registerDevice(Device device) {
-
         validateDuplicateDevice(device.getMdn());
 
         return deviceRepository.save(device);
@@ -35,12 +40,40 @@ public class DeviceService {
             });
     }
 
-//    public String issueToken(Device device){
-//        Device findDevice = deviceRepository.findByMobileDeviceNumber(request.mobileDeviceNumber())
-//            .orElseThrow(() -> new IllegalArgumentException("등록된 디바이스가 없습니다."));
-//
-//        long expiredMs = 4 * 60 * 60 * 1000L; // 4시간 (14,400,000 ms)
-//        String deviceJwt = jwtUtil.createDeviceJwt(device, expiredMs);
-//    }
+    @Transactional
+    public DeviceToken issueToken(Long mdn){
+        Device device = deviceRepository.findByMdn(mdn)
+            .orElseThrow(() -> new IllegalArgumentException("등록된 디바이스가 없습니다."));
+
+        DeviceToken deviceToken = createDeviceToken(device);
+
+        return deviceTokenRepository.save(deviceToken);
+    }
+
+    public DeviceToken createDeviceToken(Device device) {
+        String token = UUID.randomUUID().toString().replace("-", "");
+
+        return DeviceToken.of(token, device, LocalDateTime.now(), EXPIRED_MS);
+    }
+
+    public DeviceToken validateAndGetToken(String token) {
+        DeviceToken deviceToken = deviceTokenRepository.findByToken(token)
+            .orElseThrow(() -> new IllegalArgumentException("토큰 없음"));
+
+        if (isExpired(deviceToken.getCreatedAt(), deviceToken.getExPeriod())) {
+            throw new IllegalStateException("토큰 만료됨");
+        }
+
+        return deviceToken;
+    }
+    public boolean isExpired(LocalDateTime createdAt, Long exPeriod) {
+        // exPeriod가 초 단위
+        LocalDateTime expiredAt = createdAt.plusSeconds(exPeriod);
+        return expiredAt.isBefore(LocalDateTime.now());
+    }
+
+    public void deleteToken(String token) {
+        deviceTokenRepository.deleteByToken(token);
+    }
 
 }
