@@ -1,6 +1,9 @@
 package com.kbe5.rento.domain.vehicle.controller;
 
 
+import com.kbe5.rento.common.apiresponse.ApiResponse;
+import com.kbe5.rento.common.apiresponse.ApiResultCode;
+import com.kbe5.rento.common.apiresponse.ResEntityFactory;
 import com.kbe5.rento.domain.manager.dto.details.CustomManagerDetails;
 import com.kbe5.rento.domain.manager.entity.Manager;
 import com.kbe5.rento.domain.vehicle.dto.request.VehicleAddRequest;
@@ -26,43 +29,49 @@ public class VehicleControllerImpl implements VehicleController{
 
     @Override
     @PostMapping()
-    public ResponseEntity<VehicleResponse> addVehicle(@AuthenticationPrincipal CustomManagerDetails customManagerDetails,
-                                                      @RequestBody @Validated VehicleAddRequest request) {
+    public ResponseEntity<ApiResponse<VehicleResponse>> addVehicle(
+            @AuthenticationPrincipal CustomManagerDetails customManagerDetails,
+            @RequestBody @Validated VehicleAddRequest request) {
         Vehicle vehicle = VehicleAddRequest.toEntity(customManagerDetails.getManager(), request);
         VehicleResponse response = VehicleResponse.fromEntity(vehicleService
                 .addVehicle(customManagerDetails.getManager(), vehicle));
 
-        return ResponseEntity.ok(response);
+        return ResEntityFactory.toResponse(ApiResultCode.SUCCESS, response);
     }
 
     @Override
     @PutMapping("/{vehicleId}")
-    public ResponseEntity<String> updateVehicle(@PathVariable Long vehicleId,
+    public ResponseEntity<ApiResponse<String>> updateVehicle(@PathVariable Long vehicleId,
                               @RequestBody @Validated VehicleUpdateRequest request) {
         vehicleService.updateVehicle(vehicleId, request);
 
-        return ResponseEntity.ok("차량 정보 수정 완료");
+        return ResEntityFactory.toResponse(ApiResultCode.SUCCESS, "차량 정보 변경이 완료되었습니다!");
     }
 
     @Override
     @DeleteMapping("/{vehicleId}")
-    public ResponseEntity<String> deleteVehicle(@PathVariable Long vehicleId) {
+    public ResponseEntity<ApiResponse<String>> deleteVehicle(@PathVariable Long vehicleId) {
         vehicleService.deleteVehicle(vehicleId);
 
-        return ResponseEntity.ok("차량이 등록 해제되었습니다.");
+        return ResEntityFactory.toResponse(ApiResultCode.SUCCESS, "차량이 등록 해제되었습니다.");
     }
 
     // todo: 부서별 필터 기능 적용및 페이징
     @Override
     @GetMapping()
-    public ResponseEntity<List<VehicleResponse>> getVehicleList(@AuthenticationPrincipal CustomManagerDetails customManagerDetails) {
-        return ResponseEntity.ok(vehicleService.getVehicleList(customManagerDetails.getManager()).
-                stream().map(VehicleResponse::fromEntity).toList());
+    public ResponseEntity<ApiResponse<List<VehicleResponse>>> getVehicleList(
+            @AuthenticationPrincipal CustomManagerDetails customManagerDetails) {
+        return ResEntityFactory.toResponse(ApiResultCode.SUCCESS,
+                vehicleService.getVehicleList(customManagerDetails.getManager())
+                        .stream()
+                        .map(VehicleResponse::fromEntity)
+                        .toList());
     }
 
     @Override
     @GetMapping("/{vehicleId}")
-    public ResponseEntity<VehicleDetailResponse> getVehicle(@PathVariable Long vehicleId) {
-        return ResponseEntity.ok(VehicleDetailResponse.fromEntity(vehicleService.getVehicle(vehicleId)));
+    public ResponseEntity<ApiResponse<VehicleDetailResponse>> getVehicle(@PathVariable Long vehicleId) {
+        return ResEntityFactory.toResponse(ApiResultCode.SUCCESS,
+                VehicleDetailResponse.fromEntity(vehicleService.getVehicle(vehicleId)));
     }
 }

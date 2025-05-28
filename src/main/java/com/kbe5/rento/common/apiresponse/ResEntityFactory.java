@@ -2,9 +2,9 @@ package com.kbe5.rento.common.apiresponse;
 
 import org.springframework.http.ResponseEntity;
 
-public class ResponseEntityFactory {
+public class ResEntityFactory {
 
-    private void ResponseFactory() {
+    private void ResFactory() {
         throw new AssertionError();
     }
 

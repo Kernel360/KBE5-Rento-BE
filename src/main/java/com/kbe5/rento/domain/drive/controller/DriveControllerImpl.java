@@ -1,5 +1,8 @@
 package com.kbe5.rento.domain.drive.controller;
 
+import com.kbe5.rento.common.apiresponse.ApiResponse;
+import com.kbe5.rento.common.apiresponse.ApiResultCode;
+import com.kbe5.rento.common.apiresponse.ResEntityFactory;
 import com.kbe5.rento.domain.drive.dto.DriveAddRequest;
 import com.kbe5.rento.domain.drive.dto.DriveDetailResponse;
 import com.kbe5.rento.domain.drive.dto.DriveResponse;
@@ -23,47 +26,52 @@ public class DriveControllerImpl implements DriveController {
 
     @Override
     @PostMapping
-    public ResponseEntity<String> driveAdd(@RequestBody @Validated DriveAddRequest request) {
+    public ResponseEntity<ApiResponse<String>> driveAdd(@RequestBody @Validated DriveAddRequest request) {
         Drive drive = DriveAddRequest.toEntity(request);
         driveService.driveAdd(drive);
 
-        return ResponseEntity.ok("운행 예약 완료");
+        return ResEntityFactory.toResponse(ApiResultCode.SUCCESS, "운행 예약 완료");
     }
 
     @Override
     @PatchMapping("/start/{driveId}")
-    public ResponseEntity<String> driveStart(@PathVariable Long driveId) {
+    public ResponseEntity<ApiResponse<String>> driveStart(@PathVariable Long driveId) {
         driveService.driveStart(driveId);
 
-        return ResponseEntity.ok("시동이 켜졌습니다");
+        return ResEntityFactory.toResponse(ApiResultCode.SUCCESS,"시동이 켜졌습니다");
     }
 
     @Override
     @PatchMapping("/end/{driveId}")
-    public ResponseEntity<String> driveEnd(@PathVariable Long driveId) {
+    public ResponseEntity<ApiResponse<String>> driveEnd(@PathVariable Long driveId) {
         driveService.driveEnd(driveId);
 
-        return ResponseEntity.ok("시동이 종료되었습니다");
+        return ResEntityFactory.toResponse(ApiResultCode.SUCCESS,"시동이 종료되었습니다");
     }
 
     @Override
     @PatchMapping("/cancel/{driveId}")
-    public ResponseEntity<String> driveCancel(@PathVariable Long driveId) {
+    public ResponseEntity<ApiResponse<String>> driveCancel(@PathVariable Long driveId) {
         driveService.driveCancel(driveId);
 
-        return ResponseEntity.ok("운행이 취소되었습니다");
+        return ResEntityFactory.toResponse(ApiResultCode.SUCCESS,"운행이 취소되었습니다");
     }
 
     @Override
     @GetMapping
-    public ResponseEntity<List<DriveResponse>> getDriveList(@AuthenticationPrincipal Manager manager) {
-        return ResponseEntity.ok(driveService.getDriveList(manager).stream()
-                .map(DriveResponse::fromEntity).toList());
+    public ResponseEntity<ApiResponse<List<DriveResponse>>> getDriveList(
+            @AuthenticationPrincipal Manager manager) {
+        return ResEntityFactory.toResponse(ApiResultCode.SUCCESS, driveService
+                        .getDriveList(manager)
+                        .stream()
+                        .map(DriveResponse::fromEntity)
+                        .toList());
     }
 
     @Override
     @GetMapping("/{driveId}")
-    public ResponseEntity<DriveDetailResponse> getDriveDetail(@PathVariable Long driveId) {
-        return ResponseEntity.ok(DriveDetailResponse.fromEntity(driveService.getDriveDetail(driveId)));
+    public ResponseEntity<ApiResponse<DriveDetailResponse>> getDriveDetail(@PathVariable Long driveId) {
+        return ResEntityFactory.toResponse(ApiResultCode.SUCCESS,
+                DriveDetailResponse.fromEntity(driveService.getDriveDetail(driveId)));
     }
 }

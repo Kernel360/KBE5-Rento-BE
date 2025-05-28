@@ -1,5 +1,6 @@
 package com.kbe5.rento.domain.drive.controller;
 
+import com.kbe5.rento.common.apiresponse.ApiResponse;
 import com.kbe5.rento.domain.drive.dto.DriveAddRequest;
 import com.kbe5.rento.domain.drive.dto.DriveDetailResponse;
 import com.kbe5.rento.domain.drive.dto.DriveResponse;
@@ -10,10 +11,10 @@ import java.util.List;
 
 public interface DriveController {
 
-    ResponseEntity<String> driveAdd(DriveAddRequest request);
-    ResponseEntity<String> driveStart(Long driveId);
-    ResponseEntity<String> driveEnd(Long driveId);
-    ResponseEntity<String> driveCancel(Long driveId);
-    ResponseEntity<List<DriveResponse>> getDriveList(Manager manager);
-    ResponseEntity<DriveDetailResponse> getDriveDetail(Long driveId);
+    ResponseEntity<ApiResponse<String>> driveAdd(DriveAddRequest request);
+    ResponseEntity<ApiResponse<String>> driveStart(Long driveId);
+    ResponseEntity<ApiResponse<String>> driveEnd(Long driveId);
+    ResponseEntity<ApiResponse<String>> driveCancel(Long driveId);
+    ResponseEntity<ApiResponse<List<DriveResponse>>> getDriveList(Manager manager);
+    ResponseEntity<ApiResponse<DriveDetailResponse>> getDriveDetail(Long driveId);
 }
