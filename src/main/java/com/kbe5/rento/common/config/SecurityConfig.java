@@ -1,7 +1,7 @@
 package com.kbe5.rento.common.config;
 
-import com.kbe5.rento.common.jwt.JwtFilter;
-import com.kbe5.rento.common.jwt.JwtUtil;
+import com.kbe5.rento.common.jwt.util.JwtFilter;
+import com.kbe5.rento.common.jwt.util.JwtUtil;
 import com.kbe5.rento.common.securityFilter.LoginAuthenticationFilter;
 import com.kbe5.rento.common.util.SecurityPermissionApiList;
 import com.kbe5.rento.domain.manager.respository.ManagerRepository;
@@ -15,6 +15,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
@@ -38,7 +39,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public BCryptPasswordEncoder bCryptPasswordEncoder() {
+    public PasswordEncoder passwordEncoder() {
         return  new BCryptPasswordEncoder();
     }
 

@@ -1,4 +1,4 @@
-package com.kbe5.rento.common.jwt;
+package com.kbe5.rento.common.jwt.util;
 
 import com.kbe5.rento.common.exception.DomainException;
 import com.kbe5.rento.common.exception.ErrorType;
@@ -32,41 +32,35 @@ public class JwtFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request,@NonNull HttpServletResponse response,
                                     @NonNull FilterChain filterChain) throws ServletException, IOException {
 
-        String authorization = request.getHeader("Authorization");
+        String accessToken = request.getHeader("AccessToken");
 
-        if (authorization == null || !authorization.startsWith("Bearer ")) {
-
+        if (accessToken == null) {
             filterChain.doFilter(request, response);
-
             return;
         }
 
-        // "Bearer token..." 형식으로 약속되어있기 때문에 빈칸을 기준으로 split 하여 토큰을 얻어온다.
-        String token = authorization.split(" ")[1];
-
-        if (jwtUtil.isExpired(token)) {
-
-            filterChain.doFilter(request, response);
-
+        if (jwtUtil.isExpired(accessToken)) {
             return;
         }
 
-        try {
-            String loginId = jwtUtil.getLoginId(token);
+        String category = jwtUtil.getCategory(accessToken);
 
-            Manager manager = managerRepository.findByLoginId(loginId)
-                    .orElseThrow(() -> new DomainException(ErrorType.MANAGER_NOT_FOUND));
-
-            CustomManagerDetails customManagerDetails = new CustomManagerDetails(manager);
-
-            Authentication authToken = new UsernamePasswordAuthenticationToken(
-                    customManagerDetails, null, customManagerDetails.getAuthorities());
-
-            SecurityContextHolder.getContext().setAuthentication(authToken);
-
-        } catch (Exception e) {
-            throw new DomainException(ErrorType.INVALID_TOKEN);
+        if (!category.equals("access")) {
+            jwtUtil.tokenErrorResponse(response, ErrorType.INVALID_TOKEN);
+            return;
         }
+
+        String loginId = jwtUtil.getLoginId(accessToken);
+
+        Manager manager = managerRepository.findByLoginId(loginId)
+                .orElseThrow(() -> new DomainException(ErrorType.MANAGER_NOT_FOUND));
+
+        CustomManagerDetails customManagerDetails = new CustomManagerDetails(manager);
+
+        Authentication authToken = new UsernamePasswordAuthenticationToken(
+                customManagerDetails, null, customManagerDetails.getAuthorities());
+
+        SecurityContextHolder.getContext().setAuthentication(authToken);
 
         filterChain.doFilter(request, response);
     }

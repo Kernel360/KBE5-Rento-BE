@@ -57,11 +57,20 @@ jobs:
           
             aws ecr get-login-password --region ap-northeast-2 | \
               docker login --username AWS --password-stdin 528782700548.dkr.ecr.ap-northeast-2.amazonaws.com
-          
+
             docker stop rento-server || true
             docker rm rento-server || true
             docker pull 528782700548.dkr.ecr.ap-northeast-2.amazonaws.com/rento-server:latest
-            docker run -d --name rento-server -p 8080:8080 528782700548.dkr.ecr.ap-northeast-2.amazonaws.com/rento-server:latest
+            docker run -d \
+              --name rento-server \
+              -p 8080:8080 \
+              -e DB_HOST=${{ secrets.DB_HOST }} \
+              -e DB_PORT=${{ secrets.DB_PORT }} \
+              -e DB_NAME=${{ secrets.DB_NAME }} \
+              -e DB_USER=${{ secrets.DB_USER }} \
+              -e DB_PASS=${{ secrets.DB_PASS }} \
+              -e SPRING_PROFILES_ACTIVE=deploy \
+              528782700548.dkr.ecr.ap-northeast-2.amazonaws.com/rento-server:latest
           EOF
 
 
