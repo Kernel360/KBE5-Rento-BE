@@ -2,10 +2,8 @@ package com.kbe5.rento.domain.drive.service;
 
 import com.kbe5.rento.common.exception.DomainException;
 import com.kbe5.rento.domain.company.entity.Company;
-import com.kbe5.rento.domain.drive.dto.DriveAddRequest;
 import com.kbe5.rento.domain.drive.entity.Drive;
 import com.kbe5.rento.domain.drive.entity.DriveType;
-import com.kbe5.rento.domain.drive.service.DriveService;
 import com.kbe5.rento.domain.member.entity.Member;
 import com.kbe5.rento.domain.member.repository.MemberRepository;
 import com.kbe5.rento.domain.vehicle.entity.Vehicle;
@@ -22,12 +20,9 @@ import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import java.util.Optional;
-
 import static com.kbe5.rento.domain.vehicle.entity.FuelType.DIESEL;
 import static com.kbe5.rento.domain.vehicle.entity.VehicleType.SEDAN;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.BDDMockito.given;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)

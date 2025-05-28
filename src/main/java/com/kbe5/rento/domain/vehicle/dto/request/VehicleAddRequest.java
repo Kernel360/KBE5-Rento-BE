@@ -11,20 +11,20 @@ import jakarta.validation.constraints.NotNull;
 
 
 public record VehicleAddRequest(
-        @NotBlank
+        @NotBlank(message = "차량 번호는 null일수 없습니다")
         @VehicleNumber
         String vehicleNumber,
-        @NotBlank
+        @NotBlank(message = "차량 제조사는 null일수 없습니다")
         String brand,
-        @NotBlank
+        @NotBlank(message = "차량 모델명은 null일수 없습니다")
         String modelName,
-        @NotNull
+        @NotNull(message = "엔진 타입는 null일수 없습니다")
         VehicleType vehicleType,
-        @NotNull
+        @NotNull(message = "연료 타입는 null일수 없습니다")
         FuelType fuelType,
-        @NotNull
+        @NotNull(message = "총 키로수는 null일수 없습니다")
         Long totalDistanceKm,
-        @NotBlank
+        @NotBlank(message = "배터리 전압는 null일수 없습니다")
         String batteryVoltage
 ) {
     public static Vehicle toEntity(Manager manager, VehicleAddRequest request) {

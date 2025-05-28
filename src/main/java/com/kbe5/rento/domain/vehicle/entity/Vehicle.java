@@ -22,8 +22,6 @@ public class Vehicle extends BaseEntity {
 
     // todo: 부서 추가 5.25
 
-    // todo:
-
     private String vehicleNumber;
     private String brand;
     private String modelName;

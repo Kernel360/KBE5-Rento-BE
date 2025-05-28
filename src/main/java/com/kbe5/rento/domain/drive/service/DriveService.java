@@ -16,40 +16,33 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class DriveService {
 
     private final DriveRepository driveRepository;
 
-    // test
-    private final ManagerRepository managerRepository;
-
     // 운행 등록
     public void driveAdd(Drive drive) {
         // 경우 1 같은 회사가 아니면 이어지지 않습니다 -> 같은 부서면 등록되게 해야하나?
         if(drive.getVehicle().getCompany() != drive.getMember().getCompany()){
-            throw new DomainException(ErrorType.USER_VEHICLE_COMPANY_MISMATCH);
-        }
+            throw new DomainException(ErrorType.USER_VEHICLE_COMPANY_MISMATCH);}
 
         driveRepository.save(drive);
     }
 
     // 운행 시작
-    @Transactional
     public void driveStart(Long driveId){
         Drive drive = driveRepository.findById(driveId).orElseThrow(
-                () -> new DomainException(ErrorType.USER_VEHICLE_COMPANY_MISMATCH)
-        );
+                () -> new DomainException(ErrorType.DRIVE_NOT_FOUND));
 
         drive.driveStart();
     }
 
     // 운행 종료
-    @Transactional
     public void driveEnd(Long driveId){
         Drive drive = driveRepository.findById(driveId).orElseThrow(
-                () -> new DomainException(ErrorType.USER_VEHICLE_COMPANY_MISMATCH)
-        );
+                () -> new DomainException(ErrorType.DRIVE_NOT_FOUND));
 
         drive.driveEnd();
     }
@@ -57,8 +50,7 @@ public class DriveService {
     // 운행 취소
     public void driveCancel(Long driveId){
         Drive drive = driveRepository.findById(driveId).orElseThrow(
-                () -> new DomainException(ErrorType.USER_VEHICLE_COMPANY_MISMATCH)
-        );
+                () -> new DomainException(ErrorType.DRIVE_NOT_FOUND));
 
         drive.delete();
     }
@@ -66,15 +58,13 @@ public class DriveService {
     // 운행 목록 조회
     // todo: 운행 목록은 업체 기준으로 찾아준다 -> 업체 코드
     public List<Drive> getDriveList(Manager manager){
-        // test
-        Manager manager1 = managerRepository.findById(1L).orElseThrow();
-        return driveRepository.findByMember_Company(manager1.getCompany());
+        return driveRepository.findByMember_Company(manager.getCompany());
     }
 
     // 운행 상세
     public Drive getDriveDetail(Long driveId){
         return driveRepository.findById(driveId).orElseThrow(
-                () -> new DomainException(ErrorType.USER_VEHICLE_COMPANY_MISMATCH)
+                () -> new DomainException(ErrorType.DRIVE_NOT_FOUND)
         );
     }
 }

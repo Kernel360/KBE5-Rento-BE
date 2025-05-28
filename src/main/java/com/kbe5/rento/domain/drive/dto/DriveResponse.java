@@ -3,9 +3,11 @@ package com.kbe5.rento.domain.drive.dto;
 import com.kbe5.rento.domain.drive.entity.Drive;
 import com.kbe5.rento.domain.member.entity.Member;
 import com.kbe5.rento.domain.vehicle.entity.Vehicle;
+import lombok.Builder;
 
 import java.time.LocalDateTime;
 
+@Builder
 public record DriveResponse(
         Member member,
 
@@ -22,7 +24,13 @@ public record DriveResponse(
         boolean isStart
 ) {
     public static DriveResponse fromEntity(Drive drive){
-        return new DriveResponse(drive.getMember(), drive.getVehicle(), drive.getStartDate(),
-                drive.getEndDate(), drive.getStartLocation(), drive.getEndLocation(), drive.isStart());
+        return DriveResponse.builder()
+                .member(drive.getMember())
+                .vehicle(drive.getVehicle())
+                .startDate(drive.getStartDate())
+                .endDate(drive.getEndDate())
+                .startLocation(drive.getStartLocation())
+                .endLocation(drive.getEndLocation())
+                .build();
     }
 }

@@ -1,6 +1,7 @@
 package com.kbe5.rento.domain.vehicle.controller;
 
 
+import com.kbe5.rento.domain.manager.dto.details.CustomManagerDetails;
 import com.kbe5.rento.domain.manager.entity.Manager;
 import com.kbe5.rento.domain.vehicle.dto.request.VehicleAddRequest;
 import com.kbe5.rento.domain.vehicle.dto.request.VehicleUpdateRequest;
@@ -18,18 +19,18 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/vehicle")
+@RequestMapping("/api/vehicles")
 public class VehicleControllerImpl implements VehicleController{
 
     private final VehicleService vehicleService;
 
     @Override
     @PostMapping()
-    public ResponseEntity<VehicleResponse> addVehicle(@AuthenticationPrincipal Manager manager,
+    public ResponseEntity<VehicleResponse> addVehicle(@AuthenticationPrincipal CustomManagerDetails customManagerDetails,
                                                       @RequestBody @Validated VehicleAddRequest request) {
-
-        Vehicle vehicle = VehicleAddRequest.toEntity(manager, request);
-        VehicleResponse response = VehicleResponse.fromEntity(vehicleService.addVehicle(manager, vehicle));
+        Vehicle vehicle = VehicleAddRequest.toEntity(customManagerDetails.getManager(), request);
+        VehicleResponse response = VehicleResponse.fromEntity(vehicleService
+                .addVehicle(customManagerDetails.getManager(), vehicle));
 
         return ResponseEntity.ok(response);
     }
@@ -54,9 +55,8 @@ public class VehicleControllerImpl implements VehicleController{
     // todo: 부서별 필터 기능 적용및 페이징
     @Override
     @GetMapping()
-    public ResponseEntity<List<VehicleResponse>> getVehicleList(@AuthenticationPrincipal Manager manager) {
-
-        return ResponseEntity.ok(vehicleService.getVehicleList(manager).
+    public ResponseEntity<List<VehicleResponse>> getVehicleList(@AuthenticationPrincipal CustomManagerDetails customManagerDetails) {
+        return ResponseEntity.ok(vehicleService.getVehicleList(customManagerDetails.getManager()).
                 stream().map(VehicleResponse::fromEntity).toList());
     }
 

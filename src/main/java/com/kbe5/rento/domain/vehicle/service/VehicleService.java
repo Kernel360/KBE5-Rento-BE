@@ -17,15 +17,13 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class VehicleService {
 
     private final VehicleRepository vehicleRepository;
-    // test
-    private final ManagerRepository managerRepository;
 
     public Vehicle addVehicle(Manager manager, Vehicle vehicle) {
-        // 같은 번호는 에러 처리해줍니다
         vehicleRepository.findByVehicleNumber(vehicle.getVehicleNumber())
                 .ifPresent((__) -> {
                     throw new DomainException(ErrorType.SAME_VIHICLE_NUMBER);
@@ -35,19 +33,14 @@ public class VehicleService {
     }
 
     public List<Vehicle> getVehicleList(Manager manager) {
-        // test
-        Manager manager1 = managerRepository.findById(1L).orElseThrow();
-
-        return vehicleRepository.findByCompany(manager1.getCompany());
+        return vehicleRepository.findByCompany(manager.getCompany());
     }
 
     public Vehicle getVehicle(Long vehicleId){
         return vehicleRepository.findById(vehicleId).orElseThrow(
                 () -> new DomainException(ErrorType.VEHICLE_NOT_FOUND) );
-
     }
 
-    @Transactional
     public void updateVehicle(Long vehicleId, VehicleUpdateRequest request) {
         Vehicle vehicle = vehicleRepository.findById(vehicleId).orElseThrow(
                 () -> new DomainException(ErrorType.VEHICLE_NOT_FOUND));
@@ -60,5 +53,4 @@ public class VehicleService {
     }
 
     // todo: 자동차 번호로 검색 기능 -> 해당 업체의 자동차가 아니면 검색으로 안나와야함 5.23
-
 }

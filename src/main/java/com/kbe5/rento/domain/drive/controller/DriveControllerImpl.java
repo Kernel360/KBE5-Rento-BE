@@ -16,7 +16,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/drive")
+@RequestMapping("/api/drives")
 public class DriveControllerImpl implements DriveController {
 
     private final DriveService driveService;
@@ -26,6 +26,7 @@ public class DriveControllerImpl implements DriveController {
     public ResponseEntity<String> driveAdd(@RequestBody @Validated DriveAddRequest request) {
         Drive drive = DriveAddRequest.toEntity(request);
         driveService.driveAdd(drive);
+
         return ResponseEntity.ok("운행 예약 완료");
     }
 
@@ -33,6 +34,7 @@ public class DriveControllerImpl implements DriveController {
     @PatchMapping("/start/{driveId}")
     public ResponseEntity<String> driveStart(@PathVariable Long driveId) {
         driveService.driveStart(driveId);
+
         return ResponseEntity.ok("시동이 켜졌습니다");
     }
 
@@ -40,6 +42,7 @@ public class DriveControllerImpl implements DriveController {
     @PatchMapping("/end/{driveId}")
     public ResponseEntity<String> driveEnd(@PathVariable Long driveId) {
         driveService.driveEnd(driveId);
+
         return ResponseEntity.ok("시동이 종료되었습니다");
     }
 
@@ -47,6 +50,7 @@ public class DriveControllerImpl implements DriveController {
     @PatchMapping("/cancel/{driveId}")
     public ResponseEntity<String> driveCancel(@PathVariable Long driveId) {
         driveService.driveCancel(driveId);
+
         return ResponseEntity.ok("운행이 취소되었습니다");
     }
 

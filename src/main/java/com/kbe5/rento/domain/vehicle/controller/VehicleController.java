@@ -1,5 +1,6 @@
 package com.kbe5.rento.domain.vehicle.controller;
 
+import com.kbe5.rento.domain.manager.dto.details.CustomManagerDetails;
 import com.kbe5.rento.domain.manager.entity.Manager;
 import com.kbe5.rento.domain.vehicle.dto.request.VehicleAddRequest;
 import com.kbe5.rento.domain.vehicle.dto.request.VehicleUpdateRequest;
@@ -11,9 +12,9 @@ import java.util.List;
 
 public interface VehicleController {
 
-    ResponseEntity<VehicleResponse> addVehicle(Manager manager, VehicleAddRequest request);
+    ResponseEntity<VehicleResponse> addVehicle(CustomManagerDetails manager, VehicleAddRequest request);
     ResponseEntity<String> updateVehicle(Long vehicleId, VehicleUpdateRequest request);
     ResponseEntity<String> deleteVehicle(Long vehicleId);
-    ResponseEntity<List<VehicleResponse>> getVehicleList(Manager manager);
+    ResponseEntity<List<VehicleResponse>> getVehicleList(CustomManagerDetails manager);
     ResponseEntity<VehicleDetailResponse> getVehicle(Long vehicleId);
 }

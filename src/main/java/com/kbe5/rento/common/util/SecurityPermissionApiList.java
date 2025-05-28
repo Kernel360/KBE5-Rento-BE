@@ -7,7 +7,7 @@ public class SecurityPermissionApiList {
 
     public static final String[] PUBLIC_URLS = {
 
-            "/api/**",
+            // "/api/**",
 
 //            // Manager APIs
 //            "/api/managers",
@@ -52,11 +52,11 @@ public class SecurityPermissionApiList {
 //            "/api/driving-histories?search=",
 //
 //            // Reservation APIs
-//            "/api/reservations",
-//            "/api/reservations/{reservationId}",
+            "/api/reservations",
+            "/api/reservations/{reservationId}",
 //
 //            // Company APIs
-//            "/api/companies/register",
+            "/api/companies/register",
 //            "/api/companies",
 //            "/api/companies/{companyId}",
 
