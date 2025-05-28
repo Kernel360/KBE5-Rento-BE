@@ -22,18 +22,12 @@ public class CompanyService {
     private final CompanyRepository companyRepository;
 
 
-    public CompanyRegisterResponse register(CompanyRegisterRequest request) {
-
-        Company company = Company.builder()
-                .name(request.name())
-                .bizNumber(request.bizNumber())
-                .build();
-
+    public Company register(Company company) {
         company = companyRepository.save(company);
 
         makeCompanyCode(company);
 
-        return CompanyRegisterResponse.from(company);
+        return company;
     }
 
     //추후에 사용 될 함수입니다.
@@ -53,40 +47,33 @@ public class CompanyService {
         companyRepository.save(company);
     }
 
-    public CompanyUpdateResponse update(Long id, CompanyUpdateRequest request) {
-
+    public Company update(Long id, CompanyUpdateRequest request) {
         Company company = companyRepository
                 .findById(id).orElseThrow(() -> new DomainException(ErrorType.COMPANY_NOT_FOUND));
 
         company.toUpdate(request);
 
-        return CompanyUpdateResponse.from(company);
+        return company;
     }
 
     public CompanyDeleteResponse delete(Long id) {
         Company company = companyRepository.findById(id)
                 .orElseThrow(() -> new DomainException(ErrorType.COMPANY_NOT_FOUND));
 
-        companyRepository.delete(company); // 에러 방식 수정 후 리펙토링 예정입니다.
+        companyRepository.delete(company);
 
         return new CompanyDeleteResponse(company.getId(), true);
     }
 
     @Transactional(readOnly = true)
-    public List<CompanyResponse> getCompanyList() {
-
-        List<Company> companies = companyRepository.findAll();
-
-        return companies.stream().map(CompanyResponse::from).toList();
+    public List<Company> getCompanyList() {
+        return companyRepository.findAll();
     }
 
     @Transactional(readOnly = true)
-    public CompanyResponse getCompanyDetail(Long id) {
-
-        Company company = companyRepository.findById(id)
+    public Company getCompanyDetail(Long id) {
+        return companyRepository.findById(id)
                 .orElseThrow(() -> new DomainException(ErrorType.COMPANY_NOT_FOUND));
-
-        return CompanyResponse.from(company);
     }
 
     public Boolean isExistsBizNumber(int bizNumber) {
