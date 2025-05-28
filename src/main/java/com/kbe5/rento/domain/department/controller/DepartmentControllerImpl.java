@@ -36,7 +36,7 @@ public class DepartmentControllerImpl implements DepartmentController {
         Manager manager = customManagerDetails.getManager();
 
         Department createdDepartment = departmentService.register(
-                DepartmentRegisterRequest.toEntity(departmentRegisterRequest, manager.getCompany())
+                DepartmentRegisterRequest.of(departmentRegisterRequest, manager.getCompany())
         );
 
         return ResponseEntityFactory.toResponse(

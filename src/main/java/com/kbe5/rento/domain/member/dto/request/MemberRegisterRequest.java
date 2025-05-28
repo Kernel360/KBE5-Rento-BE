@@ -1,7 +1,5 @@
 package com.kbe5.rento.domain.member.dto.request;
 
-import com.kbe5.rento.domain.company.entity.Company;
-import com.kbe5.rento.domain.department.entity.Department;
 import com.kbe5.rento.domain.member.entity.Member;
 import com.kbe5.rento.domain.member.entity.Position;
 import jakarta.validation.constraints.NotBlank;
@@ -27,16 +25,15 @@ public record MemberRegisterRequest(
         @NotBlank(message = "기업코드는 필수 값입니다.")
         String companyCode
 ) {
-        public static Member toEntity(MemberRegisterRequest request, String password, Department department, Company company) {
+        public static Member toEntity(MemberRegisterRequest request) {
                 return Member.builder()
                         .name(request.name())
                         .email(request.email())
                         .position(request.getPosition())
                         .loginId(request.loginId())
-                        .password(password)
+                        .password(request.password())
                         .phoneNumber(request.phoneNumber())
-                        .department(department)
-                        .company(company)
+                        .companyCode(request.companyCode())
                         .build();
         }
 

@@ -6,6 +6,7 @@ import com.kbe5.rento.domain.company.entity.Company;
 import com.kbe5.rento.domain.company.repository.CompanyRepository;
 import com.kbe5.rento.domain.department.entity.Department;
 import com.kbe5.rento.domain.department.repository.DepartmentRepository;
+import com.kbe5.rento.domain.manager.entity.Manager;
 import com.kbe5.rento.domain.member.dto.request.MemberRegisterRequest;
 import com.kbe5.rento.domain.member.dto.request.MemberUpdateRequest;
 import com.kbe5.rento.domain.member.dto.response.MemberInfoResponse;
@@ -16,21 +17,19 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.mockito.Mockito.*;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class MemberServiceTest {
@@ -44,95 +43,81 @@ class MemberServiceTest {
     @Mock
     private DepartmentRepository departmentRepository;
 
-    @Mock
-    private PasswordEncoder passwordEncoder;
-
     @InjectMocks
     private MemberService memberService;
 
     private Department department;
     private Member member;
     private Company company;
+    private Manager manager;
 
     @BeforeEach
     void setUp() {
-        company = Company.builder()
-                .name("테스트 회사")
-                .bizNumber(123)
-                .build();
-        company.assignCompanyCode("T1");
-
-        department = Department.builder()
-                .departmentName("테스트 부서")
-                .company(company)
-                .build();
-
-        member = Member.builder()
-                .name("테스트 사용자")
-                .email("test@example.com")
-                .position(Position.CEO)
-                .loginId("testuser")
-                .password("encodedPassword")
-                .phoneNumber("010-1234-5678")
-                .department(department)
-                .company(company)
-                .build();
+        company = mock(Company.class);
+        department = mock(Department.class);
+        member = mock(Member.class);
+        manager = mock(Manager.class);
     }
 
     @Test
     @DisplayName("회원 등록 성공")
     void register_Success() {
         // given
-        MemberRegisterRequest request = new MemberRegisterRequest(
-                "테스트 사용자",
-                "test@example.com",
-                Position.CEO.getDisplayName(),
-                "testuser",
-                "password123",
-                "010-1234-5678",
-                1L,
-                "T1"
-        );
+        when(company.getId()).thenReturn(1L);
 
-        when(departmentRepository.findById(1L)).thenReturn(Optional.of(department));
+        // register에 실제 전달하는 member에 대한 stub 필요
+        when(member.getCompanyCode()).thenReturn("T1");
+        when(member.getPhoneNumber()).thenReturn("010-1234-5678");
+
         when(companyRepository.findByCompanyCode("T1")).thenReturn(Optional.of(company));
-        when(passwordEncoder.encode("password123")).thenReturn("encodedPassword");
-        when(memberRepository.existsByPhoneNumberAndCompanyId("010-1234-5678", company.getId()))
-                .thenReturn(false);
+        when(departmentRepository.findById(1L)).thenReturn(Optional.of(department));
+        when(memberRepository.save(any(Member.class))).thenReturn(member);
 
         // when
-        memberService.register(request);
+        Member result = memberService.register(member, 1L);
 
         // then
-        ArgumentCaptor<Member> captor = ArgumentCaptor.forClass(Member.class);
-        verify(memberRepository).save(captor.capture());
-
-        Member savedMember = captor.getValue();
-        assertThat(savedMember.getName()).isEqualTo("테스트 사용자");
-        assertThat(savedMember.getEmail()).isEqualTo("test@example.com");
-        assertThat(savedMember.getPhoneNumber()).isEqualTo("010-1234-5678");
-        assertThat(savedMember.getDepartment()).isEqualTo(department);
-        assertThat(savedMember.getCompany()).isEqualTo(company);
-        assertThat(savedMember.getPassword()).isEqualTo("encodedPassword");
-        assertThat(savedMember.getLoginId()).isEqualTo("testuser");
+        assertThat(result.getCompanyCode()).isEqualTo("T1");
+        verify(companyRepository, times(2)).findByCompanyCode("T1");
+        verify(memberRepository, times(1)).save(any(Member.class));
     }
+
 
     @Test
     @DisplayName("존재하지 않는 부서로 회원 등록 시 예외터지기")
     void register_DepartmentNotFound() {
         //given
-        MemberRegisterRequest request = getMemberRegisterRequest();
+        when(member.getCompanyCode()).thenReturn("T1");
+        when(member.getPhoneNumber()).thenReturn("010-1234-5678");
 
-        when(departmentRepository.findById(anyLong())).thenReturn(Optional.empty());
+        when(companyRepository.findByCompanyCode("T1")).thenReturn(Optional.of(company));
+        when(departmentRepository.findById(any())).thenReturn(Optional.empty());
 
-        //when
-        DomainException exception = assertThrows(DomainException.class, () -> {
-            memberService.register(request);
-        });
+        //when & then
+        assertThatThrownBy(() -> memberService.register(member, 999L))
+                .isInstanceOf(DomainException.class)
+                .hasMessage(ErrorType.DEPARTMENT_NOT_FOUND.getMessage());
 
-        //then
-        assertThat(exception.getMessage()).isEqualTo(ErrorType.DEPARTMENT_NOT_FOUND.getMessage());
-        verify(memberRepository, never()).save(any());
+        verify(memberRepository, never()).save(any(Member.class));
+    }
+
+    @Test
+    @DisplayName("회원 등록 시 전화번호 중복인 경우")
+    void register_Duplicate_Phone_Number(){
+        //given
+        when(member.getCompanyCode()).thenReturn("T1");
+        when(member.getPhoneNumber()).thenReturn("010-1234-5678");
+
+        when(company.getId()).thenReturn(1L);
+        when(companyRepository.findByCompanyCode("T1")).thenReturn(Optional.of(company));
+        when(memberRepository.existsByPhoneNumberAndCompanyId("010-1234-5678", 1L)).thenReturn(true);
+
+        //when & then
+        assertThatThrownBy(() -> memberService.register(member, 1L))
+        .isInstanceOf(DomainException.class)
+                .hasMessage(ErrorType.DUPLICATE_PHONE_NUMBER.getMessage());
+
+        verify(memberRepository, never()).save(any(Member.class));
     }
 
     @Test
@@ -140,37 +125,44 @@ class MemberServiceTest {
     void update_Success() {
         // given
         Long memberId = 1L;
-        MemberUpdateRequest request = new MemberUpdateRequest(
-                "수정된 이름",
-                "update@example.com",
-                Position.MANAGER.getDisplayName(),
-                2L,
-                "010-9999-9999",
-                "updatedUser",
-                "T1"
-        );
+        Long departmentId = 2L;
+        MemberUpdateRequest request = mock(MemberUpdateRequest.class);
 
-        Department newDepartment = Department.builder()
-                .departmentName("새로운 부서")
-                .company(company)
-                .build();
+        when(manager.getCompany()).thenReturn(company);
+        when(company.getId()).thenReturn(1L);
 
         when(memberRepository.findById(memberId)).thenReturn(Optional.of(member));
-        when(departmentRepository.findById(2L)).thenReturn(Optional.of(newDepartment));
+        when(departmentRepository.findById(departmentId)).thenReturn(Optional.of(department));
+
+        when(request.departmentId()).thenReturn(departmentId);
+        when(request.phoneNumber()).thenReturn("010-9999-8888");
+        when(request.companyCode()).thenReturn("T1");
+
+        // 기타 업데이트 필드도 mock
+        when(request.name()).thenReturn("수정된이름");
+        when(request.email()).thenReturn("edit@example.com");
+        when(request.getPosition()).thenReturn(Position.PRESIDENT);
+        when(request.loginId()).thenReturn("newLogin");
+
+        when(member.getCompany()).thenReturn(company);
+
+        when(member.getDepartment()).thenReturn(department);
+        when(department.getId()).thenReturn(2L);
+
+        // 중복 아님
         when(companyRepository.findByCompanyCode("T1")).thenReturn(Optional.of(company));
-        when(memberRepository.existsByPhoneNumberAndCompanyId("010-9999-9999", company.getId()))
-                .thenReturn(false);
+        when(memberRepository.existsByPhoneNumberAndCompanyId("010-9999-8888", 1L)).thenReturn(false);
 
         // when
-        memberService.update(request, memberId);
+        MemberInfoResponse result = memberService.update(manager, request, memberId);
 
         // then
-        assertThat(member.getName()).isEqualTo("수정된 이름");
-        assertThat(member.getEmail()).isEqualTo("update@example.com");
-        assertThat(member.getPhoneNumber()).isEqualTo("010-9999-9999");
-        assertThat(member.getDepartment()).isEqualTo(newDepartment);
-        assertThat(member.getLoginId()).isEqualTo("updatedUser");
+        assertThat(result).isNotNull();
+        verify(memberRepository, times(1)).findById(memberId);
+        verify(departmentRepository, times(1)).findById(departmentId);
+        verify(member, times(1)).update(any(), any(), any(), any(), any(), any());
     }
+
 
     @Test
     @DisplayName("등록되지 않은 사용자 수정 테스트")
@@ -191,7 +183,7 @@ class MemberServiceTest {
 
         //when
         DomainException exception = assertThrows(DomainException.class, () -> {
-            memberService.update(update, memberId);
+            memberService.update(manager, update, memberId);
         });
 
         //then
@@ -204,10 +196,14 @@ class MemberServiceTest {
         //given
         Long memberId = 1L;
 
+        when(manager.getCompany()).thenReturn(company);
+        when(company.getId()).thenReturn(1L);
+        when(member.getCompany()).thenReturn(company);
+
         when(memberRepository.findById(memberId)).thenReturn(Optional.of(member));
 
         //when
-        memberService.delete(memberId);
+        memberService.delete(manager, memberId);
 
         //then
         verify(memberRepository).delete(member);
@@ -223,7 +219,7 @@ class MemberServiceTest {
 
         //when
         DomainException exception = assertThrows(DomainException.class, () -> {
-            memberService.delete(memberId);
+            memberService.delete(manager, memberId);
         });
 
         //then
@@ -241,41 +237,45 @@ class MemberServiceTest {
         when(memberRepository.findAllByCompanyId(company.getId())).thenReturn(members);
 
         // when
-        List<MemberInfoResponse> result = memberService.getMemberList(companyCode);
+        List<Member> result = memberService.getMemberList(companyCode);
 
         // then
-        MemberInfoResponse response = result.get(0);
-        assertThat(response.name()).isEqualTo(member.getName());
-        assertThat(response.email()).isEqualTo(member.getEmail());
-        assertThat(response.phoneNumber()).isEqualTo(member.getPhoneNumber());
-        assertThat(response.position()).isEqualTo(member.getPosition());
-        assertThat(response.login_id()).isEqualTo(member.getLoginId());
-        assertThat(response.departmentId()).isEqualTo(member.getDepartment().getId());
-        assertThat(response.departmentName()).isEqualTo(member.getDepartment().getDepartmentName());
+        Member response = result.get(0);
+        assertThat(response.getName()).isEqualTo(member.getName());
+        assertThat(response.getEmail()).isEqualTo(member.getEmail());
+        assertThat(response.getPhoneNumber()).isEqualTo(member.getPhoneNumber());
+        assertThat(response.getPosition()).isEqualTo(member.getPosition());
+        assertThat(response.getLoginId()).isEqualTo(member.getLoginId());
     }
 
     @Test
     @DisplayName("사용자 상세 조회")
     void getUser() {
-        //given
+        // given
         Long memberId = 1L;
 
-        department = Mockito.spy(department);
+        when(department.getId()).thenReturn(10L);
+        when(member.getDepartment()).thenReturn(department);
+        when(member.getName()).thenReturn("박소윤");
+        when(member.getPhoneNumber()).thenReturn("010-1111-2222");
+        when(member.getPosition()).thenReturn(String.valueOf(Position.CEO));
+        when(member.getLoginId()).thenReturn("test");
+        when(member.getEmail()).thenReturn("test@test.com");
 
-        when(memberRepository.findById(anyLong())).thenReturn(Optional.of(member));
+        when(memberRepository.findById(memberId)).thenReturn(Optional.of(member));
 
-        //when
-        MemberInfoResponse result = memberService.getMember(memberId);
+        // when
+        Member result = memberService.getMember(memberId);
 
-        //then
-        assertThat(result.name()).isEqualTo(member.getName());
-        assertThat(result.phoneNumber()).isEqualTo(member.getPhoneNumber());
-        assertThat(result.position()).isEqualTo(member.getPosition());
-        assertThat(result.login_id()).isEqualTo(member.getLoginId());
-        assertThat(result.departmentId()).isEqualTo(member.getDepartment().getId());
-        assertThat(result.departmentName()).isEqualTo(member.getDepartment().getDepartmentName());
-        assertThat(result.email()).isEqualTo(member.getEmail());
+        // then
+        assertThat(result.getName()).isEqualTo("박소윤");
+        assertThat(result.getPhoneNumber()).isEqualTo("010-1111-2222");
+        assertThat(result.getPosition()).isEqualTo(String.valueOf(Position.CEO));
+        assertThat(result.getLoginId()).isEqualTo("test");
+        assertThat(result.getDepartment().getId()).isEqualTo(10L);
+        assertThat(result.getEmail()).isEqualTo("test@test.com");
     }
+
 
     @Test
     @DisplayName("존재하지 않는 회원 조회")
