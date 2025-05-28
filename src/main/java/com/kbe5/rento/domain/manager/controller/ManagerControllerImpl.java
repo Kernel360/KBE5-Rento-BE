@@ -25,32 +25,32 @@ public class ManagerControllerImpl implements ManagerController {
     public ResponseEntity<ApiResponse<ManagerSignUpResponse>> signUp(@RequestBody @Valid ManagerSignUpRequest request) {
         Manager manager = ManagerSignUpRequest.toEntity(request);
         return ResEntityFactory.toResponse(ApiResultCode.SUCCESS,
-                ManagerSignUpResponse.from(managerService.signUp(manager)));
+                ManagerSignUpResponse.fromEntity(managerService.signUp(manager)));
     }
 
     @GetMapping("/detail/{id}")
     public ResponseEntity<ApiResponse<ManagerResponse>> getManagerDetail(@PathVariable Long id) {
         return ResEntityFactory.toResponse(ApiResultCode.SUCCESS,
-                ManagerResponse.from(managerService.getManagerDetail(id)));
+                ManagerResponse.fromEntity(managerService.getManagerDetail(id)));
     }
 
     @GetMapping("/list/{companyCode}")
     public ResponseEntity<ApiResponse<List<ManagerResponse>>> getManagerList(@PathVariable String companyCode) {
         return ResEntityFactory.toResponse(ApiResultCode.SUCCESS,
-                ManagerResponse.from(managerService.getManagerList(companyCode)));
+                ManagerResponse.fromEntity(managerService.getManagerList(companyCode)));
     }
 
     @PutMapping
     public ResponseEntity<ApiResponse<ManagerUpdateResponse>> update(@RequestBody @Valid
                                                                          ManagerUpdateRequest request) {
         return ResEntityFactory.toResponse(ApiResultCode.SUCCESS,
-                 ManagerUpdateResponse.from(managerService.update(request)));
+                 ManagerUpdateResponse.fromEntity(managerService.update(request)));
     }
 
     @DeleteMapping
     public ResponseEntity<ApiResponse<ManagerDeleteResponse>> delete(@RequestBody @Valid ManagerDeleteRequest request) {
         return ResEntityFactory.toResponse(ApiResultCode.SUCCESS,
-                 ManagerDeleteResponse.from(managerService.delete(request)));
+                 ManagerDeleteResponse.fromEntity(managerService.delete(request)));
     }
 
     @GetMapping("/{loginId}")

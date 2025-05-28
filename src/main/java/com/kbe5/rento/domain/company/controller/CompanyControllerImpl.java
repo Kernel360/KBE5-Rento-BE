@@ -27,26 +27,26 @@ public class CompanyControllerImpl implements CompanyController {
                                                                              CompanyRegisterRequest request) {
         Company company = CompanyRegisterRequest.toEntity(request);
         return ResEntityFactory.toResponse(ApiResultCode.SUCCESS,
-                CompanyRegisterResponse.from(companyService.register(company)));
+                CompanyRegisterResponse.fromEntity(companyService.register(company)));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse<CompanyResponse>> getCompanyDetail(@PathVariable Long id) {
         return ResEntityFactory.toResponse(ApiResultCode.SUCCESS
-                ,CompanyResponse.from(companyService.getCompanyDetail(id)));
+                ,CompanyResponse.fromEntity(companyService.getCompanyDetail(id)));
     }
 
     @GetMapping
     public ResponseEntity<ApiResponse<List<CompanyResponse>>> getCompanyList() {
         return ResEntityFactory.toResponse(ApiResultCode.SUCCESS
-                ,CompanyResponse.from(companyService.getCompanyList()));
+                ,CompanyResponse.fromEntity(companyService.getCompanyList()));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<ApiResponse<CompanyUpdateResponse>> updateCompanyInfo(@PathVariable Long id,
                                                                    @RequestBody @Valid CompanyUpdateRequest request) {
         return ResEntityFactory.toResponse(ApiResultCode.SUCCESS
-                ,CompanyUpdateResponse.from(companyService.update(id, request)));
+                ,CompanyUpdateResponse.fromEntity(companyService.update(id, request)));
     }
 
     @GetMapping("/{bizNumber}")

@@ -1,54 +1,34 @@
 package com.kbe5.rento.domain.manager.controller;
 
-import com.kbe5.rento.domain.manager.dto.request.*;
-import com.kbe5.rento.domain.manager.dto.response.*;
-import com.kbe5.rento.domain.manager.service.ManagerService;
+import com.kbe5.rento.common.apiresponse.ApiResponse;
+import com.kbe5.rento.domain.manager.dto.request.ManagerDeleteRequest;
+import com.kbe5.rento.domain.manager.dto.request.ManagerSignUpRequest;
+import com.kbe5.rento.domain.manager.dto.request.ManagerUpdateRequest;
+import com.kbe5.rento.domain.manager.dto.response.ManagerDeleteResponse;
+import com.kbe5.rento.domain.manager.dto.response.ManagerResponse;
+import com.kbe5.rento.domain.manager.dto.response.ManagerSignUpResponse;
+import com.kbe5.rento.domain.manager.dto.response.ManagerUpdateResponse;
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
-@RestController
-@RequiredArgsConstructor
-@RequestMapping("/api/managers")
-public class ManagerController {
+public interface ManagerController {
 
-    private final ManagerService managerService;
+    ResponseEntity<ApiResponse<ManagerSignUpResponse>> signUp(@RequestBody @Valid ManagerSignUpRequest request);
 
-    @PostMapping("/sign-up")
-    public ResponseEntity<ManagerSignUpResponse> signUp(@RequestBody @Valid ManagerSignUpRequest request) {
-        return ResponseEntity.ok(managerService.signUp(request));
-    }
+    ResponseEntity<ApiResponse<ManagerResponse>> getManagerDetail(@PathVariable Long id);
 
-    @GetMapping("/detail/{id}")
-    public ResponseEntity<ManagerResponse> getManagerDetail(@PathVariable Long id) {
-        return ResponseEntity.ok(managerService.getManagerDetail(id));
-    }
+    ResponseEntity<ApiResponse<List<ManagerResponse>>> getManagerList(@PathVariable String companyCode);
 
-    @GetMapping("/list/{companyCode}")
-    public ResponseEntity<List<ManagerResponse>> getManagerList(@PathVariable String companyCode) {
-        return ResponseEntity.ok(managerService.getManagerList(companyCode));
-    }
+    ResponseEntity<ApiResponse<ManagerUpdateResponse>> update(@RequestBody @Valid
+                                                              ManagerUpdateRequest request);
 
-    @PutMapping
-    public ResponseEntity<ManagerUpdateResponse> update(@RequestBody @Valid ManagerUpdateRequest request) {
-        return ResponseEntity.ok(managerService.update(request));
-    }
+    ResponseEntity<ApiResponse<ManagerDeleteResponse>> delete(@RequestBody @Valid ManagerDeleteRequest request);
 
-    @DeleteMapping
-    public ResponseEntity<ManagerDeleteResponse> delete(@RequestBody @Valid ManagerDeleteRequest request) {
-        return ResponseEntity.ok(managerService.delete(request));
-    }
+    ResponseEntity<ApiResponse<Boolean>> checkAvailableLoginId(@PathVariable String loginId);
 
-    @GetMapping("/{loginId}")
-    public ResponseEntity<Boolean> checkAvailableLoginId(@PathVariable String loginId) {
-        return ResponseEntity.ok(!managerService.isExistsLoginId(loginId));
-    }
-
-    @GetMapping("/{email}")
-    public ResponseEntity<Boolean> checkAvailableEmail(@PathVariable String email) {
-        return ResponseEntity.ok(!managerService.isExistsEmail(email));
-    }
+    ResponseEntity<ApiResponse<Boolean>> checkAvailableEmail(@PathVariable String email);
 }
