@@ -57,8 +57,8 @@ public class ManagerService {
         return optionalManagerList.get();
     }
 
-    public Manager update(ManagerUpdateRequest request) {
-        Manager manager = managerRepository.findById(request.id())
+    public Manager update(Long id, ManagerUpdateRequest request) {
+        Manager manager = managerRepository.findById(id)
                 .orElseThrow(() -> new DomainException(ErrorType.MANAGER_NOT_FOUND));
 
         manager.toUpdate(request);
@@ -66,8 +66,8 @@ public class ManagerService {
         return manager;
     }
 
-    public boolean delete(ManagerDeleteRequest request) {
-        Manager manager = managerRepository.findById(request.id())
+    public boolean delete(Long id, ManagerDeleteRequest request) {
+        Manager manager = managerRepository.findById(id)
                 .orElseThrow(() -> new DomainException(ErrorType.MANAGER_NOT_FOUND));
 
         if (!manager.getPassword().equals(request.password())) {

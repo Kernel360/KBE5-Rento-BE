@@ -148,7 +148,7 @@ class ManagerServiceTest {
 
         given(managerRepository.findById(any())).willReturn(Optional.ofNullable(manager));
         // when
-        Manager updatedManager = managerService.update(request);
+        Manager updatedManager = managerService.update(company.getId(), request);
 
         ManagerUpdateResponse response = ManagerUpdateResponse.fromEntity(updatedManager);
         // then
@@ -160,14 +160,14 @@ class ManagerServiceTest {
     @Test
     void delete() {
         // given
-        ManagerDeleteRequest request = new ManagerDeleteRequest(manager.getId(), manager.getLoginId(),
+        ManagerDeleteRequest request = new ManagerDeleteRequest(manager.getLoginId(),
                 manager.getPassword());
 
 
         given(managerRepository.findById(any())).willReturn(Optional.ofNullable(manager));
 
         // when
-        boolean result = managerService.delete(request);
+        boolean result = managerService.delete(company.getId(), request);
 
         ManagerDeleteResponse response = ManagerDeleteResponse.fromEntity(result);
         // then

@@ -4,9 +4,6 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 public record ManagerDeleteRequest(
-        @NotNull
-        Long id,
-
         @NotBlank
         String loginId,
 

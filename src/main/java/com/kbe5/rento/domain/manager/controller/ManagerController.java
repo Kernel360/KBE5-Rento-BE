@@ -23,10 +23,11 @@ public interface ManagerController {
 
     ResponseEntity<ApiResponse<List<ManagerResponse>>> getManagerList(@PathVariable String companyCode);
 
-    ResponseEntity<ApiResponse<ManagerUpdateResponse>> update(@RequestBody @Valid
-                                                              ManagerUpdateRequest request);
+    ResponseEntity<ApiResponse<ManagerUpdateResponse>> update(@PathVariable Long id, @RequestBody @Valid
+                                                              ManagerUpdateRequest request) ;
 
-    ResponseEntity<ApiResponse<ManagerDeleteResponse>> delete(@RequestBody @Valid ManagerDeleteRequest request);
+    ResponseEntity<ApiResponse<ManagerDeleteResponse>> delete(@PathVariable Long id,
+                                                              @RequestBody @Valid ManagerDeleteRequest request);
 
     ResponseEntity<ApiResponse<Boolean>> checkAvailableLoginId(@PathVariable String loginId);
 

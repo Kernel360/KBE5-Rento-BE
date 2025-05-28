@@ -40,17 +40,18 @@ public class ManagerControllerImpl implements ManagerController {
                 ManagerResponse.fromEntity(managerService.getManagerList(companyCode)));
     }
 
-    @PutMapping
-    public ResponseEntity<ApiResponse<ManagerUpdateResponse>> update(@RequestBody @Valid
-                                                                         ManagerUpdateRequest request) {
+    @PutMapping("/{id}")
+    public ResponseEntity<ApiResponse<ManagerUpdateResponse>> update(@PathVariable Long id,
+                                                                       @RequestBody @Valid ManagerUpdateRequest request) {
         return ResEntityFactory.toResponse(ApiResultCode.SUCCESS,
-                 ManagerUpdateResponse.fromEntity(managerService.update(request)));
+                 ManagerUpdateResponse.fromEntity(managerService.update(id, request)));
     }
 
-    @DeleteMapping
-    public ResponseEntity<ApiResponse<ManagerDeleteResponse>> delete(@RequestBody @Valid ManagerDeleteRequest request) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ApiResponse<ManagerDeleteResponse>> delete(@PathVariable Long id,
+                                                                     @RequestBody @Valid ManagerDeleteRequest request) {
         return ResEntityFactory.toResponse(ApiResultCode.SUCCESS,
-                 ManagerDeleteResponse.fromEntity(managerService.delete(request)));
+                 ManagerDeleteResponse.fromEntity(managerService.delete(id, request)));
     }
 
     @GetMapping("/{loginId}")
