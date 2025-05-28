@@ -12,7 +12,7 @@ import com.kbe5.rento.domain.manager.enums.ManagerRole;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.NoArgsConstructor;import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Entity
 @Getter
@@ -61,5 +61,9 @@ public class Manager extends BaseEntity {
         this.name = request.name();
         this.phone = request.phone();
         this.email = request.email();
+    }
+
+    public void encodePassword(PasswordEncoder encoder) {
+        encoder.encode(this.password);
     }
 }
