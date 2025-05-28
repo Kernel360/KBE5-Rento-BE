@@ -4,14 +4,13 @@ import com.kbe5.rento.common.exception.DomainException;
 import com.kbe5.rento.common.exception.ErrorType;
 import com.kbe5.rento.domain.company.entity.Company;
 import com.kbe5.rento.domain.company.repository.CompanyRepository;
-import com.kbe5.rento.domain.department.dto.request.DepartmentRegisterRequest;
 import com.kbe5.rento.domain.department.dto.request.DepartmentUpdateRequest;
 import com.kbe5.rento.domain.department.dto.response.DepartmentInfoResponse;
 import com.kbe5.rento.domain.department.entity.Department;
 import com.kbe5.rento.domain.department.repository.DepartmentRepository;
+import com.kbe5.rento.domain.manager.entity.Manager;
 import com.kbe5.rento.domain.member.entity.Member;
 import com.kbe5.rento.domain.member.repository.MemberRepository;
-import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,35 +26,36 @@ public class DepartmentService {
     private final MemberRepository memberRepository;
 
     @Transactional
-    public void register(DepartmentRegisterRequest departmentRegisterRequest) {
-        Company company = companyRepository.findByCompanyCode(departmentRegisterRequest.companyCode())
+    public Department register(Department department) {
+        Company company = companyRepository.findById(department.getCompany().getId())
                 .orElseThrow(() -> new DomainException(ErrorType.COMPANY_NOT_FOUND));
 
-        validateDuplicateDepartmentName(departmentRegisterRequest.departmentName(), company.getId());
+        validateDuplicateDepartmentName(department.getDepartmentName(), company.getId());
 
-        Department department = DepartmentRegisterRequest.toEntity(departmentRegisterRequest, company);
-
-        departmentRepository.save(department);
+        return departmentRepository.save(department);
     }
 
     @Transactional(readOnly = true)
-    public List<DepartmentInfoResponse> getDepartments(String companyCode) {
+    public List<Department> getDepartments(String companyCode) {
         Company company = companyRepository.findByCompanyCode(companyCode).orElseThrow(
                 () -> new DomainException(ErrorType.COMPANY_NOT_FOUND)
         );
 
        return departmentRepository.findAllByCompanyId(company.getId()).stream()
-               .map(this::convertToDepartmentDto)
                .toList();
     }
 
     @Transactional
-    public DepartmentInfoResponse updateDepartment(Long departmentId, DepartmentUpdateRequest departmentUpdateRequest) {
+    public DepartmentInfoResponse updateDepartment(Manager manager, Long departmentId, DepartmentUpdateRequest departmentUpdateRequest) {
         Department department = departmentRepository.findById(departmentId)
                 .orElseThrow(() -> new DomainException(ErrorType.DEPARTMENT_NOT_FOUND));
 
         Company company = companyRepository.findByCompanyCode(departmentUpdateRequest.companyCode())
                 .orElseThrow(() -> new DomainException(ErrorType.COMPANY_NOT_FOUND));
+
+        if (!manager.getCompany().getId().equals(company.getId())) {
+            throw new DomainException(ErrorType.NOT_AUTHORIZED);
+        }
 
         validateDuplicateDepartmentName(departmentUpdateRequest.departmentName(), company.getId());
 
@@ -65,7 +65,7 @@ public class DepartmentService {
     }
 
     @Transactional
-    public void delete(Long departmentId) {
+    public void delete(Manager manager, Long departmentId) {
         List<Member> members = memberRepository.findAllByDepartmentId(departmentId);
 
         if(!members.isEmpty()) {
@@ -75,6 +75,10 @@ public class DepartmentService {
         Department department = departmentRepository.findById(departmentId).orElseThrow(
                 () -> new DomainException(ErrorType.DEPARTMENT_NOT_FOUND)
         );
+
+        if (!manager.getCompany().getId().equals(department.getCompany().getId())) {
+            throw new DomainException(ErrorType.NOT_AUTHORIZED);
+        }
 
         departmentRepository.delete(department);
     }
