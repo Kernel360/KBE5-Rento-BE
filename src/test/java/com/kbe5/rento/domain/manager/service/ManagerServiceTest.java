@@ -127,7 +127,7 @@ class ManagerServiceTest {
 
         List<Manager> managerList = List.of(manager1, manager2);
 
-        given(managerRepository.findAllByCompanyCode(any())).willReturn(Optional.of(managerList));
+        given(managerRepository.findAllByCompanyCode(any())).willReturn(managerList);
 
         // when
         List<Manager> findManagerList = managerService.getManagerList(company.getCompanyCode());

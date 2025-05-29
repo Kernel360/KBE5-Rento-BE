@@ -48,13 +48,13 @@ public class ManagerService {
 
     @Transactional(readOnly = true)
     public List<Manager> getManagerList(String companyCode) {
-        Optional<List<Manager>> optionalManagerList = managerRepository.findAllByCompanyCode(companyCode);
+        List<Manager> ManagerList = managerRepository.findAllByCompanyCode(companyCode);
 
-        if (optionalManagerList.map(List::isEmpty).orElse(true)) {
+        if (ManagerList.isEmpty()) {
             throw new DomainException(ErrorType.MANAGER_NOT_FOUND);
         }
 
-        return optionalManagerList.get();
+        return ManagerList;
     }
 
     public Manager update(Long id, ManagerUpdateRequest request) {
