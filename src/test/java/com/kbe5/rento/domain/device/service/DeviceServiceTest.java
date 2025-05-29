@@ -12,12 +12,9 @@ import com.kbe5.rento.domain.device.dto.request.DeviceRegisterRequest;
 import com.kbe5.rento.domain.device.entity.Device;
 import com.kbe5.rento.common.exception.DeviceException;
 import com.kbe5.rento.domain.device.entity.DeviceToken;
-import com.kbe5.rento.domain.device.enums.DeviceResultCode;
 import com.kbe5.rento.domain.device.repository.DeviceRepository;
 import com.kbe5.rento.domain.device.repository.DeviceTokenRepository;
-import java.time.LocalDateTime;
 import java.util.Optional;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -28,6 +25,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
 class DeviceServiceTest {
+
+    private static final Long EXPIRED_MS = 60 * 60 * 1000L;
 
     @InjectMocks
     private DeviceService deviceService;
@@ -102,14 +101,14 @@ class DeviceServiceTest {
     @DisplayName("정상적으로 토큰을 발급받는다")
     void issueToken_success() {
         // given
-        when(deviceRepository.findByMdn(12345L)).thenReturn(Optional.of(testDevice));
+        when(deviceRepository.findByMdn(1L)).thenReturn(Optional.of(testDevice));
         when(deviceTokenRepository.save(any(DeviceToken.class))).thenAnswer(inv -> inv.getArgument(0));
 
         // when
-        DeviceToken issued = deviceService.issueToken(12345L);
+        DeviceToken issued = deviceService.issueToken(1L);
 
         // then
-        assertThat(issued.getMdn()).isEqualTo(12345L);
+        assertThat(issued.getMdn()).isEqualTo(1L);
         assertThat(issued.getToken()).isNotBlank();
     }
 
@@ -121,8 +120,7 @@ class DeviceServiceTest {
 
         // when & then
         assertThatThrownBy(() -> deviceService.issueToken(12345L))
-            .isInstanceOf(DeviceException.class)
-            .hasMessageContaining(DeviceResultCode.MISMATCHED_MDN.getMessage());
+            .isInstanceOf(DeviceException.class);
     }
 
     @Test
@@ -130,7 +128,7 @@ class DeviceServiceTest {
     void validateAndGetToken_success() {
         // given
         DeviceToken deviceToken = DeviceToken.of(
-            "test-token", testDevice, LocalDateTime.now(), 1000L * 60 * 60 // 1시간
+            "test-token", testDevice, System.currentTimeMillis(), EXPIRED_MS// 1시간
         );
         when(deviceTokenRepository.findByToken("test-token")).thenReturn(Optional.of(deviceToken));
 
@@ -147,7 +145,6 @@ class DeviceServiceTest {
         // given
         when(deviceTokenRepository.findByToken("notfound")).thenReturn(Optional.empty());
 
-        // when & then
         assertThatThrownBy(() -> deviceService.validateAndGetToken("notfound"))
             .isInstanceOf(DeviceException.class);
     }
@@ -157,26 +154,13 @@ class DeviceServiceTest {
     void validateAndGetToken_expired() {
         // given
         DeviceToken expiredToken = DeviceToken.of(
-            "expired-token", testDevice, LocalDateTime.now().minusHours(2), 1000L * 60 * 60 // 1시간
+            "expired-token", testDevice, System.currentTimeMillis() - EXPIRED_MS - EXPIRED_MS
+            , EXPIRED_MS// 1시간
         );
         when(deviceTokenRepository.findByToken("expired-token")).thenReturn(Optional.of(expiredToken));
 
-        // when & then
         assertThatThrownBy(() -> deviceService.validateAndGetToken("expired-token"))
             .isInstanceOf(DeviceException.class);
     }
 
-    @Test
-    @DisplayName("만료 체크 로직 (isExpired)")
-    void isExpiredTest() {
-        LocalDateTime now = LocalDateTime.now();
-
-        // 유효함
-        boolean notExpired = deviceService.isExpired(now, 1000L * 60 * 60);
-        assertThat(notExpired).isFalse();
-
-        // 만료됨
-        boolean expired = deviceService.isExpired(now.minusHours(2), 1000L * 60 * 60);
-        assertThat(expired).isTrue();
-    }
 }

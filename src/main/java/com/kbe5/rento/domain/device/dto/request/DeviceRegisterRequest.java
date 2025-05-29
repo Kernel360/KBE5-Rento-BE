@@ -31,7 +31,7 @@ public record DeviceRegisterRequest(
     Integer deviceId
 ){
 
-    public Device toDevice() {
+    public Device toEntity() {
         return Device.builder()
             .mdn(this.mdn())
             .terminalId(this.terminalId())

@@ -3,6 +3,7 @@ package com.kbe5.rento.domain.device.entity;
 import com.kbe5.rento.common.util.BaseEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
+import java.util.UUID;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -37,5 +38,11 @@ public class Device extends BaseEntity {
         this.packetVersion = packetVersion;
         this.deviceId = deviceId;
         this.deviceFirmWareVersion = deviceFirmWareVersion;
+    }
+
+    public DeviceToken issueToken(Long expiredMs) {
+        String token = UUID.randomUUID().toString().replace("-", "");
+
+        return DeviceToken.of(token, this, System.currentTimeMillis(), expiredMs);
     }
 }

@@ -21,7 +21,7 @@ public class DeviceEventService {
     public OnEventResponse ignitionOnEvent(OnEventRequest request) {
 
         //토큰 기반으로 단말기 인증과 만료기간 기능 추가해야합니다
-        return OnEventResponse.from(deviceEventRepository.save(OnOffEvent.from(request)));
+        return OnEventResponse.fromEntity(deviceEventRepository.save(OnOffEvent.from(request)));
     }
 
 }

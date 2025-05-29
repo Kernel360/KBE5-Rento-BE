@@ -6,8 +6,6 @@ import com.kbe5.rento.domain.device.entity.Device;
 import com.kbe5.rento.common.exception.DeviceException;
 import com.kbe5.rento.domain.device.repository.DeviceRepository;
 import com.kbe5.rento.domain.device.repository.DeviceTokenRepository;
-import java.time.LocalDateTime;
-import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -16,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
 public class DeviceService {
 
     private final DeviceRepository deviceRepository;
@@ -45,33 +42,22 @@ public class DeviceService {
         Device device = deviceRepository.findByMdn(mdn)
             .orElseThrow(() -> new DeviceException(DeviceResultCode.MISMATCHED_MDN));
 
-        DeviceToken deviceToken = createDeviceToken(device);
+        DeviceToken token = device.issueToken(EXPIRED_MS);
 
-        return deviceTokenRepository.save(deviceToken);
+        return deviceTokenRepository.save(token);
     }
 
-    public DeviceToken createDeviceToken(Device device) {
-        String token = UUID.randomUUID().toString().replace("-", "");
-
-        return DeviceToken.of(token, device, LocalDateTime.now(), EXPIRED_MS);
-    }
-
+    @Transactional(readOnly = true)
     public DeviceToken validateAndGetToken(String token) {
         DeviceToken deviceToken = deviceTokenRepository.findByToken(token)
             .orElseThrow(() -> new DeviceException(DeviceResultCode.UNUSABLE_TOKEN));
 
-        if (isExpired(deviceToken.getCreatedAt(), deviceToken.getExPeriod())) {
-            throw new DeviceException(DeviceResultCode.INVALID_TOKEN);
-        }
+        deviceToken.validateNotExpired();
 
         return deviceToken;
     }
-    public boolean isExpired(LocalDateTime createdAt, Long exPeriod) {
-        // exPeriod가 초 단위
-        LocalDateTime expiredAt = createdAt.plusSeconds(exPeriod);
-        return expiredAt.isBefore(LocalDateTime.now());
-    }
 
+    @Transactional
     public void deleteToken(String token) {
         deviceTokenRepository.deleteByToken(token);
     }
