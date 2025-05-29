@@ -141,7 +141,7 @@ class ManagerServiceTest {
     @Test
     void update() {
         // given
-        ManagerUpdateRequest request = new ManagerUpdateRequest(manager.getId(), "updateTest",
+        ManagerUpdateRequest request = new ManagerUpdateRequest("updateTest",
                 "updateTest", "updateTest");
 
         manager.toUpdate(request);
