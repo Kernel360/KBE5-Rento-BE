@@ -1,5 +1,7 @@
 package com.kbe5.rento.common.jwt.device;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kbe5.rento.common.exception.DeviceException;
 import com.kbe5.rento.domain.device.entity.DeviceToken;
 import com.kbe5.rento.domain.device.service.DeviceService;
 import jakarta.servlet.FilterChain;
@@ -9,6 +11,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -44,10 +47,22 @@ public class DeviceTokenFilter extends OncePerRequestFilter {
 
         log.info("🥹 디바이스 필터에 걸리는 로직 ");
 
-        DeviceToken deviceToken = deviceService.validateAndGetToken(token);
-        Authentication auth = new DeviceAuthenticationToken(deviceToken); // 전체 객체를 넘김
-        SecurityContextHolder.getContext().setAuthentication(auth);
+        try {
+            DeviceToken deviceToken = deviceService.validateAndGetToken(token);
+            Authentication auth = new DeviceAuthenticationToken(deviceToken);
+            SecurityContextHolder.getContext().setAuthentication(auth);
 
-        filterChain.doFilter(request, response);
+            filterChain.doFilter(request, response); // 인증 성공 시 계속 진행
+        } catch (DeviceException e) {
+            deviceErrorResponse(response, e);
+        }
+    }
+
+    // 예외 응답 메서드
+    public void deviceErrorResponse(HttpServletResponse response, DeviceException deviceException) throws IOException {
+        response.setContentType("application/json;charset=UTF-8");
+        response.setStatus(HttpStatus.OK.value()); // 연동 규격서 항상 200으로 전송
+        String body = new ObjectMapper().writeValueAsString(deviceException.toResponse());
+        response.getWriter().write(body);
     }
 }

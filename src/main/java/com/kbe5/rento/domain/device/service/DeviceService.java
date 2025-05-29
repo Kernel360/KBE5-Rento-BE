@@ -43,7 +43,7 @@ public class DeviceService {
     @Transactional
     public DeviceToken issueToken(Long mdn){
         Device device = deviceRepository.findByMdn(mdn)
-            .orElseThrow(() -> new IllegalArgumentException("등록된 디바이스가 없습니다."));
+            .orElseThrow(() -> new DeviceException(DeviceResultCode.MISMATCHED_MDN));
 
         DeviceToken deviceToken = createDeviceToken(device);
 
@@ -58,10 +58,10 @@ public class DeviceService {
 
     public DeviceToken validateAndGetToken(String token) {
         DeviceToken deviceToken = deviceTokenRepository.findByToken(token)
-            .orElseThrow(() -> new IllegalArgumentException("토큰 없음"));
+            .orElseThrow(() -> new DeviceException(DeviceResultCode.UNUSABLE_TOKEN));
 
         if (isExpired(deviceToken.getCreatedAt(), deviceToken.getExPeriod())) {
-            throw new IllegalStateException("토큰 만료됨");
+            throw new DeviceException(DeviceResultCode.INVALID_TOKEN);
         }
 
         return deviceToken;

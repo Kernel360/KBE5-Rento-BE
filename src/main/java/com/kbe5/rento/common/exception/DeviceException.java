@@ -11,4 +11,10 @@ public class DeviceException extends RuntimeException{
         this.resultCode = deviceResultCode.getCode();
         this.resultMessage = deviceResultCode.getMessage();
     }
+
+    public DeviceExceptionResponse toResponse() {
+
+        return new DeviceExceptionResponse(resultCode, resultMessage);
+    }
+
 }
