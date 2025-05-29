@@ -54,7 +54,7 @@ public class ManagerControllerImpl implements ManagerController {
                  ManagerDeleteResponse.fromEntity(managerService.delete(id, request)));
     }
 
-    @GetMapping("/{loginId}")
+    @GetMapping("/check-loginId/{loginId}")
     public ResponseEntity<ApiResponse<Boolean>> checkAvailableLoginId(@PathVariable String loginId) {
         return ResEntityFactory.toResponse(ApiResultCode.SUCCESS,
                 !managerService.isExistsLoginId(loginId));

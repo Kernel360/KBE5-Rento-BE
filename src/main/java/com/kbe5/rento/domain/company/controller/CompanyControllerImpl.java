@@ -50,7 +50,7 @@ public class CompanyControllerImpl implements CompanyController {
                 ,CompanyUpdateResponse.fromEntity(companyService.update(id, request)));
     }
 
-    @GetMapping("/{bizNumber}")
+    @GetMapping("/check-bizNumber/{bizNumber}")
     public ResponseEntity<ApiResponse<Boolean>> checkAvailableBizNumber(@PathVariable int bizNumber) {
         return ResEntityFactory.toResponse(ApiResultCode.SUCCESS,
                 !companyService.isExistsBizNumber(bizNumber));
