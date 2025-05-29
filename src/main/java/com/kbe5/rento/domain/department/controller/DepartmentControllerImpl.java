@@ -1,13 +1,19 @@
 package com.kbe5.rento.domain.department.controller;
 
 
+import com.kbe5.rento.common.apiresponse.ApiResponse;
+import com.kbe5.rento.common.apiresponse.ApiResultCode;
+import com.kbe5.rento.common.apiresponse.ResponseEntityFactory;
 import com.kbe5.rento.domain.department.dto.request.DepartmentRegisterRequest;
 import com.kbe5.rento.domain.department.dto.request.DepartmentUpdateRequest;
 import com.kbe5.rento.domain.department.dto.response.DepartmentInfoResponse;
+import com.kbe5.rento.domain.department.entity.Department;
 import com.kbe5.rento.domain.department.service.DepartmentService;
-import lombok.AccessLevel;
+import com.kbe5.rento.domain.manager.dto.details.CustomManagerDetails;
+import com.kbe5.rento.domain.manager.entity.Manager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,42 +29,56 @@ public class DepartmentControllerImpl implements DepartmentController {
     //부서 등록
     @Override
     @PostMapping
-    public ResponseEntity<String> registerDepartment(
+    public ResponseEntity<ApiResponse<String>> registerDepartment(
+            @AuthenticationPrincipal CustomManagerDetails customManagerDetails,
             @RequestBody @Validated DepartmentRegisterRequest departmentRegisterRequest
     ) {
-        departmentService.register(departmentRegisterRequest);
+        Manager manager = customManagerDetails.getManager();
 
-        return ResponseEntity.ok("성공적으로 등록되었습니다!");
+        Department createdDepartment = departmentService.register(
+                DepartmentRegisterRequest.of(departmentRegisterRequest, manager.getCompany())
+        );
+
+        return ResponseEntityFactory.toResponse(
+                ApiResultCode.SUCCESS, createdDepartment.getDepartmentName() + "성공적으로 등록되었습니다."
+        );
     }
 
     //부서 목록 조회
     @Override
     @GetMapping
-    public ResponseEntity<List<DepartmentInfoResponse>> getAllDepartments(@RequestParam String companyCode) {
+    public ResponseEntity<ApiResponse<List<DepartmentInfoResponse>>> getAllDepartments(@RequestParam String companyCode) {
         List<DepartmentInfoResponse> departments = departmentService.getDepartments(companyCode);
 
-        return ResponseEntity.ok(departments);
+        return ResponseEntityFactory.toResponse(ApiResultCode.SUCCESS, departments);
     }
 
     //부서 수정
     @Override
     @PutMapping("/{departmentId}")
-    public ResponseEntity<DepartmentInfoResponse> updateDepartment(
+    public ResponseEntity<ApiResponse<DepartmentInfoResponse>> updateDepartment(
+            @AuthenticationPrincipal CustomManagerDetails customManagerDetails,
             @PathVariable Long departmentId,
             @Validated @RequestBody DepartmentUpdateRequest departmentUpdateRequest
     ) {
-        DepartmentInfoResponse response = departmentService.updateDepartment(departmentId, departmentUpdateRequest);
+        Manager manager = customManagerDetails.getManager();
 
-        return ResponseEntity.ok(response);
+        DepartmentInfoResponse response = departmentService.updateDepartment(manager, departmentId, departmentUpdateRequest);
+
+        return ResponseEntityFactory.toResponse(ApiResultCode.SUCCESS, response);
     }
 
     //부서 삭제
     @Override
     @DeleteMapping("/{departmentId}")
-    public ResponseEntity<String> deleteDepartment(@PathVariable Long departmentId) {
-        departmentService.delete(departmentId);
+    public ResponseEntity<ApiResponse<String>> deleteDepartment(
+            @AuthenticationPrincipal CustomManagerDetails customManagerDetails,
+            @PathVariable Long departmentId) {
+        Manager manager = customManagerDetails.getManager();
 
-        return ResponseEntity.ok().body("성공적으로 삭제되었습니다!");
+        departmentService.delete(manager, departmentId);
+
+        return ResponseEntityFactory.toResponse(ApiResultCode.SUCCESS, "success");
     }
 
 }

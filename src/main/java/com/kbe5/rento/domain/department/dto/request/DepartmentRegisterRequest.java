@@ -10,7 +10,7 @@ public record DepartmentRegisterRequest(
         @NotBlank(message = "부서이름은 필수입니다.")
         String departmentName
 ) {
-        public static Department toEntity(DepartmentRegisterRequest departmentRegisterRequest, Company company) {
+        public static Department of(DepartmentRegisterRequest departmentRegisterRequest, Company company) {
                 return Department.builder()
                         .departmentName(departmentRegisterRequest.departmentName())
                         .company(company)
