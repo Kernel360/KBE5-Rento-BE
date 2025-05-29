@@ -3,7 +3,7 @@ package com.kbe5.rento.domain.department.controller;
 
 import com.kbe5.rento.common.apiresponse.ApiResponse;
 import com.kbe5.rento.common.apiresponse.ApiResultCode;
-import com.kbe5.rento.common.apiresponse.ResponseEntityFactory;
+import com.kbe5.rento.common.apiresponse.ResEntityFactory;
 import com.kbe5.rento.domain.department.dto.request.DepartmentRegisterRequest;
 import com.kbe5.rento.domain.department.dto.request.DepartmentUpdateRequest;
 import com.kbe5.rento.domain.department.dto.response.DepartmentInfoResponse;
@@ -39,7 +39,7 @@ public class DepartmentControllerImpl implements DepartmentController {
                 DepartmentRegisterRequest.of(departmentRegisterRequest, manager.getCompany())
         );
 
-        return ResponseEntityFactory.toResponse(
+        return ResEntityFactory.toResponse(
                 ApiResultCode.SUCCESS, createdDepartment.getDepartmentName() + "성공적으로 등록되었습니다."
         );
     }
@@ -50,7 +50,7 @@ public class DepartmentControllerImpl implements DepartmentController {
     public ResponseEntity<ApiResponse<List<DepartmentInfoResponse>>> getAllDepartments(@RequestParam String companyCode) {
         List<DepartmentInfoResponse> departments = departmentService.getDepartments(companyCode);
 
-        return ResponseEntityFactory.toResponse(ApiResultCode.SUCCESS, departments);
+        return ResEntityFactory.toResponse(ApiResultCode.SUCCESS, departments);
     }
 
     //부서 수정
@@ -65,7 +65,7 @@ public class DepartmentControllerImpl implements DepartmentController {
 
         DepartmentInfoResponse response = departmentService.updateDepartment(manager, departmentId, departmentUpdateRequest);
 
-        return ResponseEntityFactory.toResponse(ApiResultCode.SUCCESS, response);
+        return ResEntityFactory.toResponse(ApiResultCode.SUCCESS, response);
     }
 
     //부서 삭제
@@ -78,7 +78,7 @@ public class DepartmentControllerImpl implements DepartmentController {
 
         departmentService.delete(manager, departmentId);
 
-        return ResponseEntityFactory.toResponse(ApiResultCode.SUCCESS, "success");
+        return ResEntityFactory.toResponse(ApiResultCode.SUCCESS, "success");
     }
 
 }
