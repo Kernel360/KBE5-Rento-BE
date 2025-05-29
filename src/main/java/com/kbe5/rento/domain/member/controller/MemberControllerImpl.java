@@ -2,7 +2,7 @@ package com.kbe5.rento.domain.member.controller;
 
 import com.kbe5.rento.common.apiresponse.ApiResponse;
 import com.kbe5.rento.common.apiresponse.ApiResultCode;
-import com.kbe5.rento.common.apiresponse.ResponseEntityFactory;
+import com.kbe5.rento.common.apiresponse.ResEntityFactory;
 import com.kbe5.rento.domain.manager.dto.details.CustomManagerDetails;
 import com.kbe5.rento.domain.manager.entity.Manager;
 import com.kbe5.rento.domain.member.dto.request.MemberRegisterRequest;
@@ -32,7 +32,7 @@ public class MemberControllerImpl implements MemberController {
     public ResponseEntity<ApiResponse<String>> register(@RequestBody @Validated MemberRegisterRequest request) {
         Member member = memberService.register(MemberRegisterRequest.toEntity(request),request.departmentId());
 
-        return ResponseEntityFactory.toResponse(ApiResultCode.SUCCESS, member.getName()+ " 성공적으로 등록되었습니다.");
+        return ResEntityFactory.toResponse(ApiResultCode.SUCCESS, member.getName()+ " 성공적으로 등록되었습니다.");
     }
 
     @Override
@@ -44,7 +44,7 @@ public class MemberControllerImpl implements MemberController {
     ) {
         Manager manager = customManagerDetails.getManager();
 
-        return ResponseEntityFactory.toResponse(ApiResultCode.SUCCESS, memberService.update(manager, request ,memberId));
+        return ResEntityFactory.toResponse(ApiResultCode.SUCCESS, memberService.update(manager, request ,memberId));
     }
 
     @Override
@@ -57,13 +57,13 @@ public class MemberControllerImpl implements MemberController {
 
         memberService.delete(manager, memberId);
 
-        return ResponseEntityFactory.toResponse(ApiResultCode.SUCCESS, "성공적으로 삭제되었습니다.");
+        return ResEntityFactory.toResponse(ApiResultCode.SUCCESS, "성공적으로 삭제되었습니다.");
     }
 
     @Override
     @GetMapping
     public ResponseEntity<ApiResponse<List<MemberInfoResponse>>> getUsers(@RequestParam String companyCode) {
-        return ResponseEntityFactory.toResponse(ApiResultCode.SUCCESS, memberService.getMemberList(companyCode)
+        return ResEntityFactory.toResponse(ApiResultCode.SUCCESS, memberService.getMemberList(companyCode)
                 .stream()
                 .map(MemberInfoResponse::from)
                 .toList()
@@ -73,7 +73,7 @@ public class MemberControllerImpl implements MemberController {
     @Override
     @GetMapping("/{memberId}")
     public ResponseEntity<ApiResponse<MemberInfoResponse>> getUser(@PathVariable Long memberId) {
-        return ResponseEntityFactory.toResponse(
+        return ResEntityFactory.toResponse(
                 ApiResultCode.SUCCESS, MemberInfoResponse.from(memberService.getMember(memberId)
                 )
         );
@@ -81,6 +81,6 @@ public class MemberControllerImpl implements MemberController {
 
     @GetMapping("/positions")
     public ResponseEntity<ApiResponse<List<String>>> getPositions() {
-        return ResponseEntityFactory.toResponse(ApiResultCode.SUCCESS, Position.getPositions());
+        return ResEntityFactory.toResponse(ApiResultCode.SUCCESS, Position.getPositions());
     }
 }
