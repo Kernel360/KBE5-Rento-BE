@@ -1,18 +1,7 @@
 spring:
   config:
-    import: "optional:file:.env[.properties]"
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: ${DB_URL}
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
+    import:
+      - optional:file:.env
+
   jpa:
-    database-platform: org.hibernate.dialect.MySQLDialect
-    hibernate:
-      ddl-auto: update
-    properties:
-      hibernate:
-        format_sql: true
-  messages:
-    basename: messages
-    encoding: UTF-8
+    show-sql: true

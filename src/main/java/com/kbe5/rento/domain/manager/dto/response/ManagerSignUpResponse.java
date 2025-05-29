@@ -7,7 +7,7 @@ public record ManagerSignUpResponse(
         String loginId,
         String companyCode
 ) {
-    public static ManagerSignUpResponse from(Manager manager, String companyCode) {
-        return new ManagerSignUpResponse(manager.getId(), manager.getLoginId(), companyCode);
+    public static ManagerSignUpResponse fromEntity(Manager manager) {
+        return new ManagerSignUpResponse(manager.getId(), manager.getLoginId(), manager.getCompanyCode());
     }
 }

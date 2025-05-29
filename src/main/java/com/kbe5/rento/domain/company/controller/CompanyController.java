@@ -1,52 +1,30 @@
 package com.kbe5.rento.domain.company.controller;
 
+import com.kbe5.rento.common.apiresponse.ApiResponse;
 import com.kbe5.rento.domain.company.dto.request.CompanyRegisterRequest;
 import com.kbe5.rento.domain.company.dto.request.CompanyUpdateRequest;
-import com.kbe5.rento.domain.company.dto.response.*;
-import com.kbe5.rento.domain.company.service.CompanyService;
+import com.kbe5.rento.domain.company.dto.response.CompanyDeleteResponse;
+import com.kbe5.rento.domain.company.dto.response.CompanyRegisterResponse;
+import com.kbe5.rento.domain.company.dto.response.CompanyResponse;
+import com.kbe5.rento.domain.company.dto.response.CompanyUpdateResponse;
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
-@RestController
-@RequiredArgsConstructor
-@RequestMapping("/api/companies")
-public class CompanyController {
+public interface CompanyController {
 
-    private final CompanyService companyService;
+    ResponseEntity<ApiResponse<CompanyRegisterResponse>> register(CompanyRegisterRequest request);
 
-    @PostMapping("/register")
-    public ResponseEntity<CompanyRegisterResponse> register(@RequestBody @Valid CompanyRegisterRequest request) {
-        return ResponseEntity.ok(companyService.register(request));
-    }
+    ResponseEntity<ApiResponse<CompanyResponse>> getCompanyDetail(Long id);
 
-    @GetMapping("/{id}")
-    public ResponseEntity<CompanyResponse> getCompanyDetail(@PathVariable Long id) {
-        return ResponseEntity.ok(companyService.getCompanyDetail(id));
-    }
+    ResponseEntity<ApiResponse<List<CompanyResponse>>> getCompanyList();
 
-    // 추후에 사용 될 메서드 입니다.
-    @GetMapping
-    public ResponseEntity<List<CompanyResponse>> getCompanyList() {
-        return ResponseEntity.ok(companyService.getCompanyList());
-    }
+    ResponseEntity<ApiResponse<CompanyUpdateResponse>> updateCompanyInfo(Long id, CompanyUpdateRequest request);
 
-    @PutMapping("/{id}")
-    public ResponseEntity<CompanyUpdateResponse> updateCompanyInfo(@PathVariable Long id,
-                                                                   @RequestBody @Valid CompanyUpdateRequest request) {
-        return ResponseEntity.ok(companyService.update(id, request));
-    }
+    ResponseEntity<ApiResponse<Boolean>> checkAvailableBizNumber(int bizNumber);
 
-    @GetMapping("/{bizNumber}")
-    public ResponseEntity<Boolean> checkAvailableBizNumber(@PathVariable int bizNumber) {
-        return ResponseEntity.ok(!companyService.isExistsBizNumber(bizNumber));
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<CompanyDeleteResponse> companyDelete(@PathVariable Long id) {
-        return ResponseEntity.ok(companyService.delete(id));
-    }
+    ResponseEntity<ApiResponse<CompanyDeleteResponse>> companyDelete(Long id);
 }

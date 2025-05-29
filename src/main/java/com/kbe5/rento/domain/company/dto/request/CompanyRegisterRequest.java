@@ -1,5 +1,6 @@
 package com.kbe5.rento.domain.company.dto.request;
 
+import com.kbe5.rento.domain.company.entity.Company;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
@@ -11,5 +12,10 @@ public record CompanyRegisterRequest(
         @NotBlank
         String name
 ) {
-
+        public static Company toEntity(CompanyRegisterRequest request) {
+                return Company.builder()
+                        .bizNumber(request.bizNumber())
+                        .name(request.name())
+                        .build();
+        }
 }

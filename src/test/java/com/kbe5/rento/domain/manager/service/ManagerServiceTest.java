@@ -1,14 +1,11 @@
 package com.kbe5.rento.domain.manager.service;
 
 import com.kbe5.rento.domain.company.entity.Company;
-import com.kbe5.rento.domain.company.repository.CompanyRepository;
 import com.kbe5.rento.domain.company.service.CompanyService;
 import com.kbe5.rento.domain.manager.dto.request.ManagerDeleteRequest;
-import com.kbe5.rento.domain.manager.dto.request.ManagerSignUpRequest;
 import com.kbe5.rento.domain.manager.dto.request.ManagerUpdateRequest;
 import com.kbe5.rento.domain.manager.dto.response.ManagerDeleteResponse;
 import com.kbe5.rento.domain.manager.dto.response.ManagerResponse;
-import com.kbe5.rento.domain.manager.dto.response.ManagerSignUpResponse;
 import com.kbe5.rento.domain.manager.dto.response.ManagerUpdateResponse;
 import com.kbe5.rento.domain.manager.entity.Manager;
 import com.kbe5.rento.domain.manager.respository.ManagerRepository;
@@ -67,19 +64,14 @@ class ManagerServiceTest {
     @Test
     void signUp() {
         // given
-        ManagerSignUpResponse managerSignUpResponse = ManagerSignUpResponse.from(manager, manager.getCompanyCode());
 
-        ManagerSignUpRequest request = new ManagerSignUpRequest(manager.getLoginId(), manager.getPassword(),
-                manager.getName(), manager.getPhone(), manager.getEmail(), manager.getCompanyCode());
-
-        given(companyService.findByCompanyCode(any())).willReturn(company);
         given(managerRepository.save(any())).willReturn(manager);
 
         // when
-        ManagerSignUpResponse response = managerService.signUp(request);
+        Manager newManger = managerService.signUp(manager);
 
         // then
-        assertThat(response).isEqualTo(managerSignUpResponse);
+        assertThat(newManger).isEqualTo(manager);
     }
 
     @Test
@@ -99,16 +91,15 @@ class ManagerServiceTest {
     @Test
     void getManagerDetail() {
         // given
-        ManagerResponse response = ManagerResponse.from(manager);
-
         Long id = manager.getId();
 
         given(managerRepository.findById(any())).willReturn(Optional.ofNullable(manager));
         // when
-        ManagerResponse result = managerService.getManagerDetail(id);
+        Manager detailManager = managerService.getManagerDetail(id);
 
+        ManagerResponse response = ManagerResponse.fromEntity(detailManager);
         // then
-        assertThat(result).isEqualTo(response);
+        assertThat(response.id()).isEqualTo(id);
     }
 
     @Test
@@ -136,11 +127,12 @@ class ManagerServiceTest {
 
         List<Manager> managerList = List.of(manager1, manager2);
 
-        given(managerRepository.findAllByCompanyCode(any())).willReturn(Optional.of(managerList));
+        given(managerRepository.findAllByCompanyCode(any())).willReturn(managerList);
 
         // when
-        List<ManagerResponse> result = managerService.getManagerList(company.getCompanyCode());
+        List<Manager> findManagerList = managerService.getManagerList(company.getCompanyCode());
 
+        List<ManagerResponse> result = ManagerResponse.fromEntity(findManagerList);
         // then
         assertThat(result).hasSize(2);
         assertThat(result.get(0).loginId()).isEqualTo("user1");
@@ -156,8 +148,9 @@ class ManagerServiceTest {
 
         given(managerRepository.findById(any())).willReturn(Optional.ofNullable(manager));
         // when
-        ManagerUpdateResponse response = managerService.update(request);
+        Manager updatedManager = managerService.update(company.getId(), request);
 
+        ManagerUpdateResponse response = ManagerUpdateResponse.fromEntity(updatedManager);
         // then
         assertThat(response.name()).isEqualTo("updateTest");
         assertThat(response.phone()).isEqualTo("updateTest");
@@ -167,15 +160,16 @@ class ManagerServiceTest {
     @Test
     void delete() {
         // given
-        ManagerDeleteRequest request = new ManagerDeleteRequest(manager.getId(), manager.getLoginId(),
+        ManagerDeleteRequest request = new ManagerDeleteRequest(manager.getLoginId(),
                 manager.getPassword());
 
 
         given(managerRepository.findById(any())).willReturn(Optional.ofNullable(manager));
 
         // when
-        ManagerDeleteResponse response = managerService.delete(request);
+        boolean result = managerService.delete(company.getId(), request);
 
+        ManagerDeleteResponse response = ManagerDeleteResponse.fromEntity(result);
         // then
         assertThat(response.isSuccess()).isEqualTo(true);
     }
