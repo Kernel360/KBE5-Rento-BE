@@ -2,7 +2,9 @@ package com.kbe5.rento.domain.manager.service;
 
 import com.kbe5.rento.common.exception.DomainException;
 import com.kbe5.rento.common.exception.ErrorType;
+import com.kbe5.rento.domain.company.dto.response.CompanyResponse;
 import com.kbe5.rento.domain.company.entity.Company;
+import com.kbe5.rento.domain.company.repository.CompanyRepository;
 import com.kbe5.rento.domain.company.service.CompanyService;
 import com.kbe5.rento.domain.manager.dto.request.ManagerDeleteRequest;
 import com.kbe5.rento.domain.manager.dto.request.ManagerSignUpRequest;
@@ -28,10 +30,17 @@ import java.util.Optional;
 public class ManagerService {
 
     private final ManagerRepository managerRepository;
+    private final CompanyRepository companyRepository;
     private final PasswordEncoder encoder;
 
     public Manager signUp(Manager manager) {
+        Company company = companyRepository.findByCompanyCode(manager.getCompanyCode())
+                        .orElseThrow(() -> new DomainException(ErrorType.COMPANY_NOT_FOUND));
+
         manager.encodePassword(encoder);
+        manager.assignCompany(company);
+        manager.assignRole(ManagerRole.ROLE_MANAGER);
+
         return managerRepository.save(manager);
     }
 

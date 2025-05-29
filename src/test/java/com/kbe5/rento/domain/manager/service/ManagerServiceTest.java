@@ -1,6 +1,7 @@
 package com.kbe5.rento.domain.manager.service;
 
 import com.kbe5.rento.domain.company.entity.Company;
+import com.kbe5.rento.domain.company.repository.CompanyRepository;
 import com.kbe5.rento.domain.company.service.CompanyService;
 import com.kbe5.rento.domain.manager.dto.request.ManagerDeleteRequest;
 import com.kbe5.rento.domain.manager.dto.request.ManagerUpdateRequest;
@@ -31,7 +32,7 @@ class ManagerServiceTest {
     private ManagerService managerService;
 
     @Mock
-    private CompanyService companyService;
+    private CompanyRepository companyRepository;
 
     @Mock
     private ManagerRepository managerRepository;
@@ -66,7 +67,7 @@ class ManagerServiceTest {
         // given
 
         given(managerRepository.save(any())).willReturn(manager);
-
+        given(companyRepository.findByCompanyCode(any())).willReturn(Optional.of(company));
         // when
         Manager newManger = managerService.signUp(manager);
 

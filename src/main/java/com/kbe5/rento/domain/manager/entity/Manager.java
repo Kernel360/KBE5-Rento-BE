@@ -2,6 +2,7 @@ package com.kbe5.rento.domain.manager.entity;
 
 import com.kbe5.rento.domain.company.entity.Company;
 import com.kbe5.rento.common.util.BaseEntity;
+import com.kbe5.rento.domain.company.repository.CompanyRepository;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -42,6 +43,7 @@ public class Manager extends BaseEntity {
     private String companyCode;
 
     @Column(length = 10)
+    @Enumerated(EnumType.STRING)
     private ManagerRole role;
 
     @Builder
@@ -65,5 +67,13 @@ public class Manager extends BaseEntity {
 
     public void encodePassword(PasswordEncoder encoder) {
         encoder.encode(this.password);
+    }
+
+    public void assignCompany(Company company) {
+        this.company = company;
+    }
+
+    public void assignRole(ManagerRole role) {
+        this.role = role;
     }
 }
