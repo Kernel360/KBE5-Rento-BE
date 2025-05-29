@@ -5,9 +5,6 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 public record ManagerUpdateRequest(
-        @NotNull
-        Long id,
-
         @NotBlank
         String name,
 
