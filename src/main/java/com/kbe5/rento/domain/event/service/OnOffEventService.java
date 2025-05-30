@@ -25,4 +25,10 @@ public class OnOffEventService {
         return eventRepository.save(onEvent);
     }
 
+    public OnOffEvent iginitionOffEvent(OnOffEvent offEvent, DeviceToken deviceToken) {
+
+        offEvent.validateMdnMatch(deviceToken.getMdn());
+
+        return eventRepository.save(offEvent);
+    }
 }

@@ -1,7 +1,9 @@
 package com.kbe5.rento.domain.event.controller;
 
 import com.kbe5.rento.domain.device.entity.DeviceToken;
+import com.kbe5.rento.domain.event.dto.request.onoff.OffEventRequest;
 import com.kbe5.rento.domain.event.dto.request.onoff.OnEventRequest;
+import com.kbe5.rento.domain.event.dto.response.onoff.OffEventResponse;
 import com.kbe5.rento.domain.event.dto.response.onoff.OnEventResponse;
 import com.kbe5.rento.domain.event.entity.OnOffEvent;
 import com.kbe5.rento.domain.event.service.OnOffEventService;
@@ -32,5 +34,19 @@ public class OnOffControllerImpl implements OnOffController{
         OnOffEvent savedEvent = onOffEventService.ignitionOnEvent(onOffEvent, deviceToken);
 
         return ResponseEntity.ok(OnEventResponse.fromEntity(savedEvent));
+    }
+
+    /**
+     * 전송이 되지 않거나 실패할 경우 다음 ON 데이터를 전송 할 때, 시동 OFF 데이터를 같이 보낸다
+     */
+    @PostMapping("/off")
+    public ResponseEntity<OffEventResponse> offEvent(
+        @AuthenticationPrincipal DeviceToken deviceToken,
+        @RequestBody @Validated OffEventRequest request) {
+
+        OnOffEvent onOffEvent = request.toEntity(deviceToken.getDeviceId());
+        OnOffEvent savedEvent = onOffEventService.iginitionOffEvent(onOffEvent, deviceToken);
+
+        return ResponseEntity.ok(OffEventResponse.fromEntity(savedEvent));
     }
 }

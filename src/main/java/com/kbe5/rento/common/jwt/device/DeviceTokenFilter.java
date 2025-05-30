@@ -30,7 +30,7 @@ public class DeviceTokenFilter extends OncePerRequestFilter {
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
 
         String path = request.getRequestURI();
-        return !path.startsWith("/api/devices"); // 이 경로만 필터 작동
+        return (!path.startsWith("/api/devices") && !path.startsWith("/api/events")); // 이 경로만 필터 작동
     }
 
     @Override

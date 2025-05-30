@@ -22,7 +22,6 @@ public class DeviceService {
 
     private static final Long EXPIRED_MS = 4 * 60 * 60 * 1000L;
 
-
     @Transactional
     public Device registerDevice(Device device) {
         validateDuplicateDevice(device.getMdn());

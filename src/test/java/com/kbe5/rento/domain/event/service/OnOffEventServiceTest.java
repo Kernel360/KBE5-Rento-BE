@@ -71,7 +71,7 @@ class OnOffEventServiceTest {
     }
 
     @Test
-    @DisplayName("토큰과 리쿠스트의 mdn 이 다르면 실패")
+    @DisplayName("토큰과 리퀘스트의 mdn 이 다르면 실패")
     void ignitionOnEvent_validateMdnMatchFail() {
         OnEventRequest request = new OnEventRequest(
             12345678901L,
