@@ -1,10 +1,11 @@
-package com.kbe5.rento.domain.device.dto.request;
+package com.kbe5.rento.domain.event.dto.request;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kbe5.rento.common.datetime.DateUtil;
 import com.kbe5.rento.domain.device.enums.GpsCondition;
+import com.kbe5.rento.domain.event.dto.request.onoff.OnEventRequest;
 import java.math.BigDecimal;
 import org.junit.jupiter.api.Test;
 
@@ -34,7 +35,7 @@ class OnEventRequestTest {
 
         OnEventRequest request = objectMapper.readValue(json, OnEventRequest.class);
 
-        assertThat(request.mobileDeviceNumber()).isEqualTo(12345678901L);
+        assertThat(request.mdn()).isEqualTo(12345678901L);
         assertThat(request.onTime()).isEqualTo(DateUtil.toLocalDateTime("20240523100000"));
         assertThat(request.offTime()).isNull();
         assertThat(request.gpsCondition()).isEqualTo(GpsCondition.NORMAL);
