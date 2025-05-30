@@ -1,6 +1,5 @@
 package com.kbe5.rento.domain.device.controller;
 
-import com.kbe5.rento.common.jwt.device.DeviceAuthenticationToken;
 import com.kbe5.rento.domain.device.dto.request.DeviceTokenRequest;
 import com.kbe5.rento.domain.device.dto.resonse.DeviceTokenResponse;
 import com.kbe5.rento.domain.device.entity.DeviceToken;
@@ -35,7 +34,7 @@ public class DeviceControllerImpl implements DeviceController{
     public ResponseEntity<DeviceRegisterResponse> registerDevice(
         @RequestBody @Validated DeviceRegisterRequest request) {
 
-        Device device = request.toDevice();
+        Device device = request.toEntity();
 
         Device registerDevice = deviceService.registerDevice(device);
 

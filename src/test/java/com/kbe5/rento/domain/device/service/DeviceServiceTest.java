@@ -71,7 +71,7 @@ class DeviceServiceTest {
             .thenReturn(Optional.empty());
 
         // when
-        Device device = request.toDevice();
+        Device device = request.toEntity();
 
         deviceService.registerDevice(device);
 
@@ -88,7 +88,7 @@ class DeviceServiceTest {
             .thenReturn(Optional.of(mock(Device.class)));
 
         //when
-        Device device = request.toDevice();
+        Device device = request.toEntity();
 
         assertThatThrownBy(() -> deviceService.registerDevice(device))
             .isInstanceOf(DeviceException.class);
