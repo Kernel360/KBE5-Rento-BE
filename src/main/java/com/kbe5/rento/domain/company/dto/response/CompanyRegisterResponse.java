@@ -6,7 +6,7 @@ public record CompanyRegisterResponse(
         String name,
         String code
 ) {
-    public static CompanyRegisterResponse from(Company company) {
+    public static CompanyRegisterResponse fromEntity(Company company) {
         return new CompanyRegisterResponse(company.getName(), company.getCompanyCode());
     }
 }

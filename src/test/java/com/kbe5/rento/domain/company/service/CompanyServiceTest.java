@@ -1,8 +1,7 @@
 package com.kbe5.rento.domain.company.service;
 
-import com.kbe5.rento.domain.company.dto.request.CompanyRegisterRequest;
 import com.kbe5.rento.domain.company.dto.request.CompanyUpdateRequest;
-import com.kbe5.rento.domain.company.dto.response.CompanyRegisterResponse;
+import com.kbe5.rento.domain.company.dto.response.CompanyDeleteResponse;
 import com.kbe5.rento.domain.company.dto.response.CompanyResponse;
 import com.kbe5.rento.domain.company.dto.response.CompanyUpdateResponse;
 import com.kbe5.rento.domain.company.entity.Company;
@@ -45,14 +44,13 @@ class CompanyServiceTest {
     @Test
     void register() {
         // given
-        CompanyRegisterRequest request = new CompanyRegisterRequest(company.getBizNumber(), company.getName());
 
         given(companyRepository.save(any())).willReturn(company);
         // when
-        CompanyRegisterResponse response = companyService.register(request);
+        Company response = companyService.register(company);
 
         // then
-        assertThat(response).isEqualTo(CompanyRegisterResponse.from(company));
+        assertThat(response).isEqualTo(company);
     }
 
     @Test
@@ -88,8 +86,9 @@ class CompanyServiceTest {
 
         given(companyRepository.findById(any())).willReturn(Optional.of(company));
         // when
-        CompanyUpdateResponse response = companyService.update(company.getId(), request);
+        Company newCompany = companyService.update(company.getId(), request);
 
+        CompanyUpdateResponse response = CompanyUpdateResponse.fromEntity(newCompany);
         // then
         assertThat(response.bizNumber()).isEqualTo(123);
         assertThat(response.name()).isEqualTo("updateTest");
@@ -99,10 +98,15 @@ class CompanyServiceTest {
     @Test
     void delete() {
         // given
+        Long id = company.getId();
 
+        given(companyRepository.findById(any())).willReturn(Optional.of(company));
         // when
+        CompanyDeleteResponse response = companyService.delete(id);
 
         // then
+        assertThat(response.id()).isEqualTo(id);
+        assertThat(response.isSuccess()).isEqualTo(true);
     }
 
     @Test
@@ -126,8 +130,9 @@ class CompanyServiceTest {
 
         given(companyRepository.findAll()).willReturn(companyList);
         // when
-        List<CompanyResponse> result = companyService.getCompanyList();
+        companyList = companyService.getCompanyList();
 
+        List<CompanyResponse> result = CompanyResponse.fromEntity(companyList);
         // then
         assertThat(result).hasSize(2);
         assertThat(result.get(0).bizNumber()).isEqualTo(1234);
@@ -141,8 +146,9 @@ class CompanyServiceTest {
 
         given(companyRepository.findById(any())).willReturn(Optional.of(company));
         // when
-        CompanyResponse response = companyService.getCompanyDetail(id);
+        company = companyService.getCompanyDetail(id);
 
+        CompanyResponse response = CompanyResponse.fromEntity(company);
         // then
         assertThat(response.name()).isEqualTo(company.getName());
         assertThat(response.bizNumber()).isEqualTo(company.getBizNumber());

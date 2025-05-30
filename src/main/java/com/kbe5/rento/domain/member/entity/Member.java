@@ -8,6 +8,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Entity
 @Getter
@@ -33,25 +34,27 @@ public class Member extends BaseEntity {
     @Column(name = "phone_number")
     private String phoneNumber;
 
-    @JoinColumn
+    @Column(name = "company_code")
+    private String companyCode;
+
+    @JoinColumn(name = "department_id")
     @ManyToOne(fetch = FetchType.LAZY)
     private Department department;
 
-    @JoinColumn
+    @JoinColumn(name = "company_id")
     @ManyToOne(fetch = FetchType.LAZY)
     private Company company;
 
     @Builder
     private Member(String name, String email, Position position, String loginId,
-                  String password, String phoneNumber, Department department, Company company) {
+                  String password, String phoneNumber, String companyCode) {
         this.name = name;
         this.email = email;
         this.position = position;
         this.loginId = loginId;
         this.password = password;
         this.phoneNumber = phoneNumber;
-        this.department = department;
-        this.company = company;
+        this.companyCode = companyCode;
     }
 
     public void update(String name, String email, Position position, String loginId, String phoneNumber, Department department) {
@@ -65,5 +68,17 @@ public class Member extends BaseEntity {
 
     public String getPosition(){
         return this.position.getDisplayName();
+    }
+
+    public void encodePassword(PasswordEncoder passwordEncoder) {
+        this.password = passwordEncoder.encode(password);
+    }
+
+    public void assignCompany(Company company) {
+        this.company = company;
+    }
+
+    public void assignDepartment(Department department) {
+        this.department = department;
     }
 }

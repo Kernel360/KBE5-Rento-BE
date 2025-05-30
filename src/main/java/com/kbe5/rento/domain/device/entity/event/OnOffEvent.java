@@ -1,8 +1,6 @@
 package com.kbe5.rento.domain.device.entity.event;
 
-import com.kbe5.rento.common.datetime.DateUtil;
 import com.kbe5.rento.domain.device.dto.request.OnEventRequest;
-import com.kbe5.rento.domain.device.enums.EventType;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import java.time.LocalDateTime;
@@ -12,8 +10,9 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.slf4j.Slf4j;
 
-@Getter
+
 @Slf4j
+@Getter
 @Entity
 @SuperBuilder
 @DiscriminatorValue("ON_OFF")

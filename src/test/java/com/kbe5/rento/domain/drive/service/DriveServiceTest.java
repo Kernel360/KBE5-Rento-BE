@@ -54,7 +54,7 @@ class DriveServiceTest {
                 .build();
 
         member = Member.builder()
-                .company(companyA)
+//                .company(companyA)
                 .name("운행회원")
                 .build();
 

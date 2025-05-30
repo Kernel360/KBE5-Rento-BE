@@ -8,7 +8,7 @@ public record CompanyDetailResponse(
         int bizNumber,
         String companyCode
 ) {
-    public static CompanyDetailResponse from(Company company) {
+    public static CompanyDetailResponse fromEntity(Company company) {
         return new CompanyDetailResponse(company.getId(), company.getName(),
                 company.getBizNumber(), company.getCompanyCode());
     }
