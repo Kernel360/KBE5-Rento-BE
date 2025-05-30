@@ -1,9 +1,12 @@
 package com.kbe5.rento.domain.drive.service;
 
+import com.kbe5.rento.CompanyTestFixtures;
+import com.kbe5.rento.DriveTestFixtures;
+import com.kbe5.rento.MemberTestFixtures;
+import com.kbe5.rento.VehicleTestFixtures;
 import com.kbe5.rento.common.exception.DomainException;
 import com.kbe5.rento.domain.company.entity.Company;
 import com.kbe5.rento.domain.drive.entity.Drive;
-import com.kbe5.rento.domain.drive.entity.DriveType;
 import com.kbe5.rento.domain.member.entity.Member;
 import com.kbe5.rento.domain.member.repository.MemberRepository;
 import com.kbe5.rento.domain.vehicle.entity.Vehicle;
@@ -20,8 +23,6 @@ import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import static com.kbe5.rento.domain.vehicle.entity.FuelType.DIESEL;
-import static com.kbe5.rento.domain.vehicle.entity.VehicleType.SEDAN;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @ExtendWith(MockitoExtension.class)
@@ -29,52 +30,22 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 class DriveServiceTest {
 
-    @Mock
-    private MemberRepository memberRepository;
-
-    @Mock
-    private VehicleRepository vehicleRepository;
-
     @InjectMocks
     private DriveService driveService;
 
-    private Member member;
-    private Vehicle vehicle;
     private Drive drive;
 
     @BeforeEach
     void setUp() {
-        Company companyA = Company.builder()
-                .name("testCompanyA")
-                .bizNumber(1234567890)
-                .build();
-        Company companyB = Company.builder()
-                .name("testCompanyB")
-                .bizNumber(555555555)
-                .build();
+        Company companyB = CompanyTestFixtures.companyB();
 
-        member = Member.builder()
-//                .company(companyA)
-                .name("운행회원")
-                .build();
-
-        vehicle = Vehicle.builder()
-                .company(companyB)
-                .vehicleType(SEDAN)
-                .fuelType(DIESEL)
-                .vehicleNumber("12가3456")
-                .build();
+        Member member = MemberTestFixtures.memberA(companyB);
+        Vehicle vehicle = VehicleTestFixtures.vehicleA();
 
         ReflectionTestUtils.setField(member, "id", 1L);
         ReflectionTestUtils.setField(vehicle, "id", 2L);
 
-        drive = Drive.builder()
-                .member(member)
-                .vehicle(vehicle)
-                .dirveType(DriveType.BUSINESS)
-                .startLocation("부산역")
-                .endLocation("강남역")
-                .build();
+        drive = DriveTestFixtures.driveA(companyB);
     }
 
     @Test
