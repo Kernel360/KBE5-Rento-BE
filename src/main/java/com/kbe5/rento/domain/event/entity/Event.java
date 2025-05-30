@@ -1,6 +1,5 @@
-package com.kbe5.rento.domain.device.entity.event;
+package com.kbe5.rento.domain.event.entity;
 
-import com.kbe5.rento.domain.device.enums.EventType;
 import com.kbe5.rento.domain.device.enums.GpsCondition;
 import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorColumn;
@@ -22,17 +21,19 @@ import lombok.experimental.SuperBuilder;
 @Getter
 @Entity
 @SuperBuilder
-@Table(name = "device_events")
+@Table(name = "events")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "event_type", discriminatorType = DiscriminatorType.STRING)
-public abstract class DeviceEvent {
+public abstract class Event {
 
     @Id
     @GeneratedValue
     Long id;
 
-    Long mobileDeviceNumber;
+    Long deviceUniqueId;
+
+    Long mdn;
 
     @Enumerated(EnumType.STRING)
     private GpsCondition gpsCondition;
@@ -48,7 +49,5 @@ public abstract class DeviceEvent {
     private Integer speed;
 
     private Long currentAccumulatedDistance; //총 누적 거리
-
-    private Integer batteryVolt;
 
 }

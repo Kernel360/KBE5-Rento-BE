@@ -5,6 +5,7 @@ import com.kbe5.rento.domain.device.entity.DeviceToken;
 import com.kbe5.rento.domain.device.enums.DeviceResultCode;
 
 public record DeviceTokenResponse(
+
     @JsonProperty("rstCd")
     String resultCode,
 
@@ -16,6 +17,7 @@ public record DeviceTokenResponse(
 
     String token,
 
+    @JsonProperty("exPeriod")
     Long exPeriod
 ) {
 

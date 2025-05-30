@@ -9,11 +9,13 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Getter
 @Entity
+@ToString
 @Table(name = "device_tokens")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class DeviceToken {

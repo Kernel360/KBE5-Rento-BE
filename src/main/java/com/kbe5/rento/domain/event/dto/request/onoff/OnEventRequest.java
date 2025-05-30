@@ -1,10 +1,10 @@
-package com.kbe5.rento.domain.device.dto.request;
+package com.kbe5.rento.domain.event.dto.request.onoff;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.kbe5.rento.common.datetime.LocalDateTimeDeserializer;
 import com.kbe5.rento.common.datetime.EventLocalDateTimeDeserializer;
+import com.kbe5.rento.domain.event.entity.OnOffEvent;
 import com.kbe5.rento.domain.device.enums.GpsCondition;
 import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.DecimalMin;
@@ -16,9 +16,10 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 public record OnEventRequest(
+
     @JsonProperty("mdn")
     @NotNull(message = "{device.mdn.notnull}")
-    Long mobileDeviceNumber, //차량 번호
+    Long mdn, //차량 번호
 
     @JsonProperty("tid")
     @NotBlank(message = "{device.tid.notblank}")
@@ -82,4 +83,18 @@ public record OnEventRequest(
     Long currentAccumulatedDistance
 ) {
 
+    public OnOffEvent toEntity(Long deviceUniqueId) {
+        return OnOffEvent.builder()
+            .mdn(this.mdn())
+            .deviceUniqueId(deviceUniqueId)
+            .gpsCondition(this.gpsCondition())
+            .latitude(this.latitude())
+            .longitude(this.longitude())
+            .angle(this.angle())
+            .speed(this.speed())
+            .currentAccumulatedDistance(this.currentAccumulatedDistance())
+            .onTime(this.onTime())
+            .offTime(this.offTime())
+            .build();
+    }
 }
