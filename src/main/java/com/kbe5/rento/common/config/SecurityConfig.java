@@ -1,13 +1,16 @@
 package com.kbe5.rento.common.config;
 
 import com.kbe5.rento.common.jwt.util.JwtFilter;
+import com.kbe5.rento.common.jwt.device.DeviceTokenFilter;
 import com.kbe5.rento.common.jwt.util.JwtUtil;
 import com.kbe5.rento.common.securityFilter.LoginAuthenticationFilter;
 import com.kbe5.rento.common.util.SecurityPermissionApiList;
 import com.kbe5.rento.domain.manager.respository.ManagerRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -24,6 +27,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Collections;
 
+@Slf4j
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -32,6 +36,7 @@ public class SecurityConfig {
     private final AuthenticationConfiguration authenticationConfiguration;
     private final JwtUtil jwtUtil;
     private final ManagerRepository managerRepository;
+    private final DeviceTokenFilter deviceTokenFilter;
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
@@ -63,9 +68,11 @@ public class SecurityConfig {
         http.authorizeHttpRequests(auth -> auth
                 .requestMatchers(SecurityPermissionApiList.PUBLIC_URLS).permitAll()
                 .requestMatchers("/admin").hasRole("ADMIN") // 추 후 시스템 관리자 구현 및 권한 설정 시 사용
+                .requestMatchers(HttpMethod.POST, "/api/devices","/api/devices/token").permitAll()
                 .anyRequest().authenticated());
 
         // LoginFilter 추가
+        http.addFilterBefore(deviceTokenFilter, LoginAuthenticationFilter.class);
         http.addFilterBefore(new JwtFilter(jwtUtil, managerRepository), LoginAuthenticationFilter.class);
         http.addFilterAt(new LoginAuthenticationFilter(authenticationManager(authenticationConfiguration), jwtUtil),
                 UsernamePasswordAuthenticationFilter.class);

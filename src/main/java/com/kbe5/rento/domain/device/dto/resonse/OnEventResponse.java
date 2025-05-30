@@ -8,7 +8,7 @@ public record OnEventResponse(
     Long mobileDeviceNumber//차량 번호
 ) {
 
-    public static OnEventResponse from(OnOffEvent onOffEvent) {
+    public static OnEventResponse fromEntity(OnOffEvent onOffEvent) {
         return new OnEventResponse(onOffEvent.getMobileDeviceNumber());
     }
 }

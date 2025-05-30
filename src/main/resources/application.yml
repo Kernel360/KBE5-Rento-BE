@@ -5,3 +5,7 @@ spring:
 
   jpa:
     show-sql: true
+
+  messages:
+    basename: messages
+    encoding: UTF-8

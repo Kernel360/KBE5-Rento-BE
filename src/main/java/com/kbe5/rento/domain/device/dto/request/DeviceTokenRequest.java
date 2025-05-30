@@ -1,13 +1,12 @@
 package com.kbe5.rento.domain.device.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.kbe5.rento.domain.device.entity.Device;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
-public record DeviceRegisterRequest(
+public record DeviceTokenRequest (
     @JsonProperty("mdn")
     @NotNull(message = "{device.mdn.notnull}")
     Long mdn,// 차량 번호
@@ -28,17 +27,10 @@ public record DeviceRegisterRequest(
 
     @JsonProperty("did")
     @NotNull(message = "{device.did.notnull}")
-    Integer deviceId
-){
+    Integer deviceId,
 
-    public Device toEntity() {
-        return Device.builder()
-            .mdn(this.mdn())
-            .terminalId(this.terminalId())
-            .makerId(this.makerId())
-            .packetVersion(this.packetVersion())
-            .deviceId(this.deviceId())
-            .deviceFirmWareVersion("LTE 1.2")
-            .build();
-    }
+    @JsonProperty("dFWVer")
+    @NotBlank(message = "{device.did.notblank}")
+    String deviceFirmWareVersion
+) {
 }
