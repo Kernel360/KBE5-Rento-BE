@@ -3,6 +3,7 @@ package com.kbe5.rento.domain.vehicle.service;
 import com.kbe5.rento.common.exception.DomainException;
 import com.kbe5.rento.domain.company.entity.Company;
 import com.kbe5.rento.domain.department.entity.Department;
+import com.kbe5.rento.domain.department.repository.DepartmentRepository;
 import com.kbe5.rento.domain.drive.dto.DriveAddRequest;
 import com.kbe5.rento.domain.drive.entity.DriveType;
 import com.kbe5.rento.domain.manager.dto.request.ManagerSignUpRequest;
@@ -11,6 +12,8 @@ import com.kbe5.rento.domain.manager.respository.ManagerRepository;
 import com.kbe5.rento.domain.vehicle.dto.request.VehicleAddRequest;
 import com.kbe5.rento.domain.vehicle.dto.response.VehicleResponse;
 import com.kbe5.rento.domain.vehicle.entity.Vehicle;
+import com.kbe5.rento.domain.vehicle.entity.VehicleInfo;
+import com.kbe5.rento.domain.vehicle.entity.VehicleMilleage;
 import com.kbe5.rento.domain.vehicle.repository.VehicleRepository;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
@@ -47,6 +50,9 @@ class VehicleServiceTest {
     private ManagerRepository managerRepository;
     @Mock
     private VehicleRepository vehicleRepository;
+    @Mock
+    private DepartmentRepository departmentRepository;
+
 
     @InjectMocks
     private VehicleService vehicleService;
@@ -80,7 +86,7 @@ class VehicleServiceTest {
         ReflectionTestUtils.setField(manager, "id", 1L);
 
         request = new VehicleAddRequest(
-                department,
+                1L,
                 "123가 1234",
                 "벤츠",
                 "아반떼",
@@ -90,19 +96,32 @@ class VehicleServiceTest {
                 "1000W"
         );
 
-        vehicle = VehicleAddRequest.toEntity(manager, request);
+        vehicle = Vehicle.builder()
+                .company(manager.getCompany())
+                .info(new VehicleInfo(
+                        request.vehicleNumber(),
+                        request.brand(),
+                        request.modelName(),
+                        request.vehicleType(),
+                        request.fuelType()
+                ))
+                .mileage(new VehicleMilleage(
+                        request.totalDistanceKm(),
+                        request.batteryVoltage()
+                ))
+                .build();
     }
 
     @Test
     void 자동차_등록_테스트(){
         given(managerRepository.findById(1L)).willReturn(Optional.of(manager));
-        given(vehicleRepository.findByVehicleNumber(vehicle.getVehicleNumber()))
+        given(vehicleRepository.findByInfo_VehicleNumber(vehicle.getInfo().vehicleNumber()))
                 .willReturn(Optional.empty());
 
         given(vehicleRepository.save(any(Vehicle.class)))
                 .willAnswer(invocation -> invocation.getArgument(0));
 
-        VehicleResponse response = VehicleResponse.fromEntity(vehicleService.addVehicle(vehicle));
+        VehicleResponse response = VehicleResponse.fromEntity(vehicleService.addVehicle(vehicle, 1L));
 
         assertThat(response).isNotNull();
     }
@@ -112,20 +131,21 @@ class VehicleServiceTest {
         given(managerRepository.findById(1L)).willReturn(Optional.of(manager));
         Vehicle existing = Vehicle.builder()
                 .company(manager.getCompany())
-                .vehicleNumber(request.vehicleNumber())
+                .info(new VehicleInfo(request.vehicleNumber(), request.brand(), request.modelName(),
+                        request.vehicleType(), request.fuelType()))
                 .build();
 
-        given(vehicleRepository.findByVehicleNumber(request.vehicleNumber()))
+        given(vehicleRepository.findByInfo_VehicleNumber(request.vehicleNumber()))
                 .willReturn(Optional.of(existing));
 
-        assertThatThrownBy(() -> vehicleService.addVehicle(vehicle))
+        assertThatThrownBy(() -> vehicleService.addVehicle(vehicle, 1L))
                 .isInstanceOf(DomainException.class);
     }
 
     @Test
     void 자동차_번호_규칙을_준수하지_않으면_예외발생 () {
         VehicleAddRequest request = new VehicleAddRequest(
-                department,
+                1L,
                 "가 1234",
                 "벤츠",
                 "아반떼",

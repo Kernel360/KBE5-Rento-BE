@@ -11,8 +11,12 @@ import com.kbe5.rento.domain.vehicle.dto.request.VehicleUpdateRequest;
 import com.kbe5.rento.domain.vehicle.dto.response.VehicleDetailResponse;
 import com.kbe5.rento.domain.vehicle.dto.response.VehicleResponse;
 import com.kbe5.rento.domain.vehicle.entity.Vehicle;
+import com.kbe5.rento.domain.vehicle.entity.VehicleInfo;
+import com.kbe5.rento.domain.vehicle.entity.VehicleMilleage;
 import com.kbe5.rento.domain.vehicle.service.VehicleService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
@@ -29,14 +33,13 @@ public class VehicleControllerImpl implements VehicleController{
 
     @Override
     @PostMapping()
-    public ResponseEntity<ApiResponse<VehicleResponse>> addVehicle(
+    public ResponseEntity<ApiResponse<String>> addVehicle(
             @AuthenticationPrincipal CustomManagerDetails customManagerDetails,
             @RequestBody @Validated VehicleAddRequest request) {
-        Vehicle vehicle = VehicleAddRequest.toEntity(customManagerDetails.getManager(), request);
-        VehicleResponse response = VehicleResponse.fromEntity(vehicleService
-                .addVehicle(vehicle));
+        vehicleService.addVehicle(request.toEntity(customManagerDetails.getManager()
+                .getCompany()), request.departmentId());
 
-        return ResEntityFactory.toResponse(ApiResultCode.SUCCESS, response);
+        return ResEntityFactory.toResponse(ApiResultCode.SUCCESS, "차량 등록 완료");
     }
 
     @Override
@@ -59,13 +62,14 @@ public class VehicleControllerImpl implements VehicleController{
     // todo: 부서별 필터 기능 적용및 페이징
     @Override
     @GetMapping()
-    public ResponseEntity<ApiResponse<List<VehicleResponse>>> getVehicleList(
-            @AuthenticationPrincipal CustomManagerDetails customManagerDetails) {
+    public ResponseEntity<ApiResponse<PagedModel<VehicleResponse>>> getVehicleList(
+            @AuthenticationPrincipal CustomManagerDetails customManagerDetails, Long departmentId,
+            boolean onlyFree, Pageable pageable) {
+
         return ResEntityFactory.toResponse(ApiResultCode.SUCCESS,
-                vehicleService.getVehicleList(customManagerDetails.getManager())
-                        .stream()
-                        .map(VehicleResponse::fromEntity)
-                        .toList());
+                new PagedModel<>(vehicleService.getVehicleList(customManagerDetails.getManager(), departmentId,
+                                onlyFree, pageable)
+                        .map(VehicleResponse::fromEntity)));
     }
 
     @Override
