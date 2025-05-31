@@ -66,7 +66,7 @@ public class Manager extends BaseEntity {
     }
 
     public void encodePassword(PasswordEncoder encoder) {
-        encoder.encode(this.password);
+        this.password = encoder.encode(password);
     }
 
     public void assignCompany(Company company) {

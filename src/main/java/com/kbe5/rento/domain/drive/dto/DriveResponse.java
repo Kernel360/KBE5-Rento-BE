@@ -9,9 +9,13 @@ import java.time.LocalDateTime;
 
 @Builder
 public record DriveResponse(
-        Member member,
+        /*Member member,
 
-        Vehicle vehicle,
+        Vehicle vehicle,*/
+
+        String memberName,
+
+        String vehicleNumber,
 
         LocalDateTime startDate,
 
@@ -25,8 +29,8 @@ public record DriveResponse(
 ) {
     public static DriveResponse fromEntity(Drive drive){
         return DriveResponse.builder()
-                .member(drive.getMember())
-                .vehicle(drive.getVehicle())
+                .memberName(drive.getMember().getName())
+                .vehicleNumber(drive.getVehicle().getInfo().vehicleNumber())
                 .startDate(drive.getStartDate())
                 .endDate(drive.getEndDate())
                 .startLocation(drive.getStartLocation())

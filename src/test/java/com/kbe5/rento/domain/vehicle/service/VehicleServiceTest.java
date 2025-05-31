@@ -77,7 +77,6 @@ class VehicleServiceTest {
         request = VehicleTestFixtures.vehicleAddRequest();
 
         ReflectionTestUtils.setField(department, "id", 1L);
-
     }
 
     @Test

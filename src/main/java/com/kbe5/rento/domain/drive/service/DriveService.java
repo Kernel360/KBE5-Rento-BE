@@ -2,13 +2,9 @@ package com.kbe5.rento.domain.drive.service;
 
 import com.kbe5.rento.common.exception.DomainException;
 import com.kbe5.rento.common.exception.ErrorType;
-import com.kbe5.rento.domain.drive.dto.DriveAddRequest;
-import com.kbe5.rento.domain.drive.dto.DriveDetailResponse;
-import com.kbe5.rento.domain.drive.dto.DriveResponse;
 import com.kbe5.rento.domain.drive.entity.Drive;
 import com.kbe5.rento.domain.drive.repository.DriveRepository;
 import com.kbe5.rento.domain.manager.entity.Manager;
-import com.kbe5.rento.domain.manager.respository.ManagerRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,7 +20,6 @@ public class DriveService {
 
     // 운행 등록
     public void driveAdd(Drive drive) {
-        // 경우 1 같은 회사가 아니면 이어지지 않습니다 -> 같은 부서면 등록되게 해야하나?
         if(drive.getVehicle().getCompany() != drive.getMember().getCompany()){
             throw new DomainException(ErrorType.USER_VEHICLE_COMPANY_MISMATCH);}
 
