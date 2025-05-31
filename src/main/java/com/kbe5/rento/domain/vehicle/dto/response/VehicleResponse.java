@@ -12,10 +12,10 @@ public record VehicleResponse(
 ) {
     public static VehicleResponse fromEntity(Vehicle vehicle) {
         return VehicleResponse.builder()
-                .vehicleNumber(vehicle.getVehicleNumber())
-                .brand(vehicle.getBrand())
-                .modelName(vehicle.getModelName())
-                .totalDistanceKm(vehicle.getTotalDistanceKm())
+                .vehicleNumber(vehicle.getInfo().vehicleNumber())
+                .brand(vehicle.getInfo().brand())
+                .modelName(vehicle.getInfo().modelName())
+                .totalDistanceKm(vehicle.getMileage().getTotalDistanceKm())
                 .build();
     }
 

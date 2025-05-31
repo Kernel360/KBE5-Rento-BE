@@ -2,13 +2,9 @@ package com.kbe5.rento.domain.drive.service;
 
 import com.kbe5.rento.common.exception.DomainException;
 import com.kbe5.rento.common.exception.ErrorType;
-import com.kbe5.rento.domain.drive.dto.DriveAddRequest;
-import com.kbe5.rento.domain.drive.dto.DriveDetailResponse;
-import com.kbe5.rento.domain.drive.dto.DriveResponse;
 import com.kbe5.rento.domain.drive.entity.Drive;
 import com.kbe5.rento.domain.drive.repository.DriveRepository;
 import com.kbe5.rento.domain.manager.entity.Manager;
-import com.kbe5.rento.domain.manager.respository.ManagerRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,7 +20,6 @@ public class DriveService {
 
     // 운행 등록
     public void driveAdd(Drive drive) {
-        // 경우 1 같은 회사가 아니면 이어지지 않습니다 -> 같은 부서면 등록되게 해야하나?
         if(drive.getVehicle().getCompany() != drive.getMember().getCompany()){
             throw new DomainException(ErrorType.USER_VEHICLE_COMPANY_MISMATCH);}
 
@@ -32,6 +27,7 @@ public class DriveService {
     }
 
     // 운행 시작
+    // todo: 시동 on 이벤트가 걸린다면 이 메서드 호출 되게 해야함 5.28
     public void driveStart(Long driveId){
         Drive drive = driveRepository.findById(driveId).orElseThrow(
                 () -> new DomainException(ErrorType.DRIVE_NOT_FOUND));
@@ -40,6 +36,7 @@ public class DriveService {
     }
 
     // 운행 종료
+    // todo: 시동 off? 아니면 그냥 운행 종료가 온다면 해당 메서드 호출 5.28
     public void driveEnd(Long driveId){
         Drive drive = driveRepository.findById(driveId).orElseThrow(
                 () -> new DomainException(ErrorType.DRIVE_NOT_FOUND));

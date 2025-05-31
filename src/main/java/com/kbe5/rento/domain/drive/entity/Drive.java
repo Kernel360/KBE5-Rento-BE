@@ -1,7 +1,6 @@
 package com.kbe5.rento.domain.drive.entity;
 
 import com.kbe5.rento.common.util.BaseEntity;
-import com.kbe5.rento.domain.manager.entity.Manager;
 import com.kbe5.rento.domain.member.entity.Member;
 import com.kbe5.rento.domain.vehicle.entity.Vehicle;
 import jakarta.persistence.*;

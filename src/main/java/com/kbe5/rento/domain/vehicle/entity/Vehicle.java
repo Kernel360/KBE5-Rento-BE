@@ -3,6 +3,7 @@ package com.kbe5.rento.domain.vehicle.entity;
 
 import com.kbe5.rento.common.util.BaseEntity;
 import com.kbe5.rento.domain.company.entity.Company;
+import com.kbe5.rento.domain.department.entity.Department;
 import com.kbe5.rento.domain.vehicle.dto.request.VehicleUpdateRequest;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -20,41 +21,35 @@ public class Vehicle extends BaseEntity {
     @JoinColumn(name = "company_id")
     private Company company;
 
-    // todo: 부서 추가 5.25
+    @ManyToOne
+    @JoinColumn(name = "department_id")
+    private Department department;
 
-    private String vehicleNumber;
-    private String brand;
-    private String modelName;
+    @Embedded
+    private VehicleInfo info;
 
-    @Enumerated(EnumType.STRING)
-    private VehicleType vehicleType;
-
-    @Enumerated(EnumType.STRING)
-    private FuelType fuelType;
-
-    private Long totalDistanceKm;
+    @Embedded
+    private VehicleMilleage mileage;
 
     // todo: 이번달 운행 누적 거리 필요한가?
     // private Long monthTotalKm;
 
-    private String batteryVoltage;
-
     @Builder
-    private Vehicle(Company company, String vehicleNumber, String brand, String modelName,
-                   VehicleType vehicleType, FuelType fuelType, Long totalDistanceKm, String batteryVoltage) {
+    public Vehicle(Company company, VehicleInfo info, VehicleMilleage mileage) {
         this.company = company;
-        this.vehicleNumber = vehicleNumber;
-        this.brand = brand;
-        this.modelName = modelName;
-        this.vehicleType = vehicleType;
-        this.fuelType = fuelType;
-        this.totalDistanceKm = totalDistanceKm;
-        this.batteryVoltage = batteryVoltage;
+        this.info = info;
+        this.mileage = mileage;
     }
 
-    public void update(VehicleUpdateRequest request){
-        this.vehicleNumber = request.vehicleNumber();
-        this.totalDistanceKm = request.totalDistanceKm();
-        this.batteryVoltage = request.batteryVoltage();
+    public void addDepartment(Department department) {
+        this.department = department;
+    }
+
+    public static Vehicle of(Company company, VehicleInfo info, VehicleMilleage mileage) {
+        return new Vehicle(company, info, mileage);
+    }
+
+    public void update(VehicleUpdateRequest request) {
+        this.mileage = new VehicleMilleage(request.totalDistanceKm(), request.batteryVoltage());
     }
 }
