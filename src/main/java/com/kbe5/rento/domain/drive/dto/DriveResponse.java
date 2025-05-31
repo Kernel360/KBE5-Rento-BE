@@ -9,10 +9,6 @@ import java.time.LocalDateTime;
 
 @Builder
 public record DriveResponse(
-        /*Member member,
-
-        Vehicle vehicle,*/
-
         String memberName,
 
         String vehicleNumber,
