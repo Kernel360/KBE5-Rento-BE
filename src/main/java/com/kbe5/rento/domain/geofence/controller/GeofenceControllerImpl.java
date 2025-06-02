@@ -59,8 +59,7 @@ public class GeofenceControllerImpl implements GeofenceController{
     @PutMapping("/{id}")
     public ResponseEntity<ApiResponse<Void>> update(@PathVariable Long id,
                                                     @RequestBody @Valid GeofenceUpdateRequest request) {
-        Geofence updatedGeofence = GeofenceUpdateRequest.toEntity(request);
-        geofenceService.update(id, updatedGeofence);
+        geofenceService.update(id, request);
 
         return ResEntityFactory.toResponse(ApiResultCode.SUCCESS, null);
     }

@@ -126,15 +126,14 @@ class GeofenceServiceTest {
     void update() {
         // given
         GeofenceUpdateRequest geofenceUpdateRequest = new GeofenceUpdateRequest("C3",
-                "updatedGeofence", 3214214, 51515214, 21,
+                "updatedGeofence", 3214214, 51515214, 21, EventType.ON,
                 "updatedGeofence", true);
 
-        Geofence updatedGeofence = GeofenceUpdateRequest.toEntity(geofenceUpdateRequest);
 
         given(geofenceRepository.findById(any())).willReturn(Optional.of(geofence));
 
         // when
-        geofenceService.update(geofence.getId(), updatedGeofence);
+        geofenceService.update(geofence.getId(), geofenceUpdateRequest);
 
         // then
         assertThat(geofence.getLatitude()).isEqualTo(geofenceUpdateRequest.latitude());

@@ -1,6 +1,7 @@
 package com.kbe5.rento.domain.geofence.entity;
 
 import com.kbe5.rento.common.util.BaseEntity;
+import com.kbe5.rento.domain.geofence.dto.request.GeofenceUpdateRequest;
 import com.kbe5.rento.domain.geofence.enums.EventType;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -41,14 +42,14 @@ public class Geofence extends BaseEntity {
         this.isActive = isActive;
     }
 
-    public void toUpdate(Geofence newGeofence) {
-        this.name = newGeofence.getName();
-        this.companyCode = newGeofence.getCompanyCode();
-        this.latitude = newGeofence.getLatitude();
-        this.longitude = newGeofence.getLongitude();
-        this.radius = newGeofence.getRadius();
-        this.eventType = newGeofence.getEventType();
-        this.description = newGeofence.getDescription();
-        this.isActive = newGeofence.isActive();
+    public void toUpdate(GeofenceUpdateRequest request) {
+        this.name = request.name();
+        this.companyCode = request.companyCode();
+        this.latitude = request.latitude();
+        this.longitude = request.longitude();
+        this.radius = request.radius();
+        this.eventType = request.eventType();
+        this.description = request.description();
+        this.isActive = request.isActive();
     }
 }

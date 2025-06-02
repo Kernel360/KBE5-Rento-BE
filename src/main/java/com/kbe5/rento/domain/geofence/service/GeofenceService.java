@@ -2,6 +2,7 @@ package com.kbe5.rento.domain.geofence.service;
 
 import com.kbe5.rento.common.exception.DomainException;
 import com.kbe5.rento.common.exception.ErrorType;
+import com.kbe5.rento.domain.geofence.dto.request.GeofenceUpdateRequest;
 import com.kbe5.rento.domain.geofence.entity.Geofence;
 import com.kbe5.rento.domain.geofence.repository.GeofenceRepository;
 import lombok.RequiredArgsConstructor;
@@ -46,11 +47,11 @@ public class GeofenceService {
         geofenceRepository.delete(geofence);
     }
 
-    public void update(Long id, Geofence updatedGeofence) {
+    public void update(Long id, GeofenceUpdateRequest request) {
         Geofence geofence = geofenceRepository.findById(id)
                 .orElseThrow(() -> new DomainException(ErrorType.GEOFENCE_NOT_FOUND));
 
-        geofence.toUpdate(updatedGeofence);
+        geofence.toUpdate(request);
     }
 }
 
