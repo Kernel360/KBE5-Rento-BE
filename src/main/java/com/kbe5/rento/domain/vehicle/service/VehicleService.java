@@ -39,20 +39,18 @@ public class VehicleService {
     ) {
         Long companyInd = manager.getCompany().getId();
 
-        Page<Vehicle> vehicles;
         if (departmentId == null && !onlyFree) {
-            vehicles = vehicleRepository.findAllByCompanyId(companyInd, pageable);
+            return vehicleRepository.findAllByCompanyId(companyInd, pageable);
         }
         else if (departmentId != null && !onlyFree) {
-            vehicles = vehicleRepository.findAllByCompanyIdAndDepartmentId(companyInd, departmentId, pageable);
+            return vehicleRepository.findAllByCompanyIdAndDepartmentId(companyInd, departmentId, pageable);
         }
         else if (departmentId == null && onlyFree) {
-            vehicles = vehicleRepository.findFreeByCompanyId(companyInd, pageable);
+            return vehicleRepository.findFreeByCompanyId(companyInd, pageable);
         }
         else {
-            vehicles = vehicleRepository.findFreeByCompanyIdAndDepartmentId(companyInd, departmentId, pageable);
+            return vehicleRepository.findFreeByCompanyIdAndDepartmentId(companyInd, departmentId, pageable);
         }
-        return vehicles;
     }
 
     public Vehicle getVehicle(Long vehicleId){
