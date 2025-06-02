@@ -17,13 +17,13 @@ public record VehicleDetailResponse(
 ) {
     public static VehicleDetailResponse fromEntity(Vehicle vehicle) {
         return VehicleDetailResponse.builder()
-                .vehicleNumber(vehicle.getVehicleNumber())
-                .brand(vehicle.getBrand())
-                .modelName(vehicle.getModelName())
-                .vehicleType(vehicle.getVehicleType())
-                .fuelType(vehicle.getFuelType())
-                .totalDistanceKm(vehicle.getTotalDistanceKm())
-                .batteryVoltage(vehicle.getBatteryVoltage())
+                .vehicleNumber(vehicle.getInfo().vehicleNumber())
+                .brand(vehicle.getInfo().brand())
+                .modelName(vehicle.getInfo().modelName())
+                .vehicleType(vehicle.getInfo().vehicleType())
+                .fuelType(vehicle.getInfo().fuelType())
+                .totalDistanceKm(vehicle.getMileage().getTotalDistanceKm())
+                .batteryVoltage(vehicle.getMileage().getBatteryVoltage())
                 .build();
     }
 }

@@ -2,19 +2,17 @@ package com.kbe5.rento.domain.vehicle.service;
 
 import com.kbe5.rento.common.exception.DomainException;
 import com.kbe5.rento.common.exception.ErrorType;
+import com.kbe5.rento.domain.department.entity.Department;
+import com.kbe5.rento.domain.department.repository.DepartmentRepository;
 import com.kbe5.rento.domain.manager.entity.Manager;
-import com.kbe5.rento.domain.manager.respository.ManagerRepository;
-import com.kbe5.rento.domain.vehicle.dto.request.VehicleAddRequest;
 import com.kbe5.rento.domain.vehicle.dto.request.VehicleUpdateRequest;
-import com.kbe5.rento.domain.vehicle.dto.response.VehicleDetailResponse;
-import com.kbe5.rento.domain.vehicle.dto.response.VehicleResponse;
 import com.kbe5.rento.domain.vehicle.entity.Vehicle;
 import com.kbe5.rento.domain.vehicle.repository.VehicleRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 @Transactional
@@ -22,18 +20,37 @@ import java.util.List;
 public class VehicleService {
 
     private final VehicleRepository vehicleRepository;
+    private final DepartmentRepository departmentRepository;
 
-    public Vehicle addVehicle(Manager manager, Vehicle vehicle) {
-        vehicleRepository.findByVehicleNumber(vehicle.getVehicleNumber())
-                .ifPresent((__) -> {
-                    throw new DomainException(ErrorType.SAME_VIHICLE_NUMBER);
-                });
+    public Vehicle addVehicle(Vehicle vehicle, Long departmentId) {
+        Department department = departmentRepository.findById(departmentId).orElseThrow(
+                () -> new DomainException(ErrorType.DEPARTMENT_NOT_FOUND)
+        );
+        vehicle.addDepartment(department);
 
         return vehicleRepository.save(vehicle);
     }
 
-    public List<Vehicle> getVehicleList(Manager manager) {
-        return vehicleRepository.findByCompany(manager.getCompany());
+    public Page<Vehicle> getVehicleList(
+            Manager manager,
+            Long departmentId,
+            boolean onlyFree,
+            Pageable pageable
+    ) {
+        Long companyInd = manager.getCompany().getId();
+
+        if (departmentId == null && !onlyFree) {
+            return vehicleRepository.findAllByCompanyId(companyInd, pageable);
+        }
+        else if (departmentId != null && !onlyFree) {
+            return vehicleRepository.findAllByCompanyIdAndDepartmentId(companyInd, departmentId, pageable);
+        }
+        else if (departmentId == null && onlyFree) {
+            return vehicleRepository.findFreeByCompanyId(companyInd, pageable);
+        }
+        else {
+            return vehicleRepository.findFreeByCompanyIdAndDepartmentId(companyInd, departmentId, pageable);
+        }
     }
 
     public Vehicle getVehicle(Long vehicleId){
@@ -51,6 +68,7 @@ public class VehicleService {
     public void deleteVehicle(Long vehicleId){
         vehicleRepository.deleteById(vehicleId);
     }
+
 
     // todo: 자동차 번호로 검색 기능 -> 해당 업체의 자동차가 아니면 검색으로 안나와야함 5.23
 }

@@ -8,6 +8,7 @@ import com.kbe5.rento.domain.drive.dto.DriveDetailResponse;
 import com.kbe5.rento.domain.drive.dto.DriveResponse;
 import com.kbe5.rento.domain.drive.entity.Drive;
 import com.kbe5.rento.domain.drive.service.DriveService;
+import com.kbe5.rento.domain.manager.dto.details.CustomManagerDetails;
 import com.kbe5.rento.domain.manager.entity.Manager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -60,9 +61,9 @@ public class DriveControllerImpl implements DriveController {
     @Override
     @GetMapping
     public ResponseEntity<ApiResponse<List<DriveResponse>>> getDriveList(
-            @AuthenticationPrincipal Manager manager) {
+            @AuthenticationPrincipal CustomManagerDetails manager) {
         return ResEntityFactory.toResponse(ApiResultCode.SUCCESS, driveService
-                        .getDriveList(manager)
+                        .getDriveList(manager.getManager())
                         .stream()
                         .map(DriveResponse::fromEntity)
                         .toList());
