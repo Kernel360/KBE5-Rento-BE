@@ -6,10 +6,13 @@ import com.kbe5.rento.domain.geofence.entity.Geofence;
 import com.kbe5.rento.domain.geofence.repository.GeofenceRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class GeofenceService {
 
     private final GeofenceRepository geofenceRepository;
@@ -18,6 +21,7 @@ public class GeofenceService {
         geofenceRepository.save(geofence);
     }
 
+    @Transactional(readOnly = true)
     public List<Geofence> getGeofenceList(String companyCode) {
         List<Geofence> geofenceList = geofenceRepository.findAllByCompanyCode(companyCode);
 
@@ -28,6 +32,7 @@ public class GeofenceService {
         return geofenceList;
     }
 
+    @Transactional(readOnly = true)
     public Geofence getGeofenceDetail(Long id) {
 
         return geofenceRepository.findById(id)

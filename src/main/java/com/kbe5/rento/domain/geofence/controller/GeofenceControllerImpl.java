@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/geofence")
+@RequestMapping("/api/geofences")
 public class GeofenceControllerImpl implements GeofenceController{
 
     private final GeofenceService geofenceService;
