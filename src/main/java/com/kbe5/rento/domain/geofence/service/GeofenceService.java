@@ -11,8 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
 @Transactional
+@RequiredArgsConstructor
 public class GeofenceService {
 
     private final GeofenceRepository geofenceRepository;
