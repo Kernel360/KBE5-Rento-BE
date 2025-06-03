@@ -1,7 +1,9 @@
 package com.kbe5.rento.common.securityFilter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kbe5.rento.common.exception.DomainException;
 import com.kbe5.rento.common.exception.ErrorType;
+import com.kbe5.rento.common.jwt.dto.JwtManagerArgumentDto;
 import com.kbe5.rento.common.jwt.util.JwtProperties;
 import com.kbe5.rento.common.jwt.util.JwtUtil;
 import com.kbe5.rento.domain.manager.dto.details.CustomManagerDetails;
@@ -16,12 +18,9 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.io.IOException;
-import java.util.Collection;
-import java.util.Iterator;
 
 public class LoginAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
@@ -49,7 +48,7 @@ public class LoginAuthenticationFilter extends UsernamePasswordAuthenticationFil
 
             return authenticationManager.authenticate(authToken);
         } catch (IOException e) {
-            throw new RuntimeException("Failed to parse login request"); // 에러타입 수정 후 적용 예정
+            throw new DomainException(ErrorType.FAILED_LOGIN);
         }
     }
 
@@ -58,16 +57,10 @@ public class LoginAuthenticationFilter extends UsernamePasswordAuthenticationFil
         CustomManagerDetails customManagerDetails = (CustomManagerDetails) authResult.getPrincipal();
 
         Manager manager = customManagerDetails.getManager();
+        JwtManagerArgumentDto managerArgumentDto = JwtManagerArgumentDto.fromEntity(manager);
 
-        String loginId = customManagerDetails.getUsername();
-
-        Collection<? extends GrantedAuthority> authorities = authResult.getAuthorities();
-        Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
-        GrantedAuthority auth = iterator.next();
-
-        String role = auth.getAuthority();
-        String accessToken = jwtUtil.createJwt("access", loginId, role, JwtProperties.ACCESS_EXPIRED_TIME);
-        String refreshToken = jwtUtil.createJwt("refresh", loginId, role, JwtProperties.REFRESH_EXPIRED_TIME);
+        String accessToken = jwtUtil.createJwt("access", managerArgumentDto, JwtProperties.ACCESS_EXPIRED_TIME);
+        String refreshToken = jwtUtil.createJwt("refresh", managerArgumentDto, JwtProperties.REFRESH_EXPIRED_TIME);
 
         jwtUtil.saveRefreshToken(refreshToken, manager, JwtProperties.REFRESH_EXPIRED_TIME);
 
