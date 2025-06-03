@@ -1,16 +1,14 @@
 package com.kbe5.rento.common.jwt.util;
 
-import com.kbe5.rento.common.exception.DomainException;
 import com.kbe5.rento.common.exception.ErrorType;
 import com.kbe5.rento.domain.manager.dto.details.CustomManagerDetails;
-import com.kbe5.rento.domain.manager.entity.Manager;
 import com.kbe5.rento.domain.manager.respository.ManagerRepository;
+import com.kbe5.rento.domain.manager.service.CustomMangerDetailsService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -51,12 +49,9 @@ public class JwtFilter extends OncePerRequestFilter {
             return;
         }
 
-        String loginId = jwtUtil.getLoginId(accessToken);
-
-        Manager manager = managerRepository.findByLoginId(loginId)
-                .orElseThrow(() -> new DomainException(ErrorType.MANAGER_NOT_FOUND));
-
-        CustomManagerDetails customManagerDetails = new CustomManagerDetails(manager);
+        CustomManagerDetails customManagerDetails =
+                (CustomManagerDetails) new CustomMangerDetailsService(managerRepository)
+                        .loadUserByUsername(jwtUtil.getLoginId(accessToken));
 
         Authentication authToken = new UsernamePasswordAuthenticationToken(
                 customManagerDetails, null, customManagerDetails.getAuthorities());
