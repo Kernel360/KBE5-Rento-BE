@@ -1,11 +1,14 @@
 package com.kbe5.rento.common.util;
 
-import com.kbe5.rento.common.exception.DomainException;
+import com.kbe5.rento.common.jwt.dto.JwtManagerArgumentDto;
 import com.kbe5.rento.common.jwt.entity.JwtRefresh;
 import com.kbe5.rento.common.jwt.respository.JwtRefreshRepository;
 import com.kbe5.rento.common.jwt.util.JwtProperties;
 import com.kbe5.rento.common.jwt.util.JwtUtil;
+import com.kbe5.rento.domain.company.entity.Company;
 import com.kbe5.rento.domain.manager.entity.Manager;
+import com.kbe5.rento.domain.manager.enums.ManagerRole;
+import com.kbe5.rento.domain.manager.respository.ManagerRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -24,6 +27,7 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
@@ -39,7 +43,7 @@ class JwtUtilTest {
     private JwtRefreshRepository jwtRefreshRepository;
 
     @Mock
-    private DomainException domainException;
+    private ManagerRepository managerRepository;
 
     private final SecretKey secretKey = new SecretKeySpec(
             JwtProperties.JWT_TOKEN.getBytes(StandardCharsets.UTF_8),
@@ -50,11 +54,37 @@ class JwtUtilTest {
     private String refreshToken;
     private String expiredToken;
 
+    private Manager manager;
+    private JwtManagerArgumentDto jwtManagerArgumentDto;
+
     @BeforeEach
     @DisplayName("테스트를 위한 초기 설정")
     void init() {
-        accessToken = jwtUtil.createJwt("access", "test", "ROLE_MANAGER", 60000L);
-        refreshToken = jwtUtil.createJwt("refresh", "test", "ROLE_MANAGER", 60000L);
+        Company company = Company.builder()
+                .name("testCompany")
+                .bizNumber(12312414)
+                .build();
+
+        manager = Manager.builder()
+                .loginId("testId")
+                .password("1234")
+                .company(company)
+                .phone("010-1234-1234")
+                .email("test@test.com")
+                .companyCode("C1")
+                .name("testName")
+                .role(ManagerRole.ROLE_MANAGER)
+                .build();
+
+        when(managerRepository.save(any(Manager.class))).thenReturn(manager);
+
+        manager = managerRepository.save(manager);
+
+        jwtManagerArgumentDto = new JwtManagerArgumentDto(1L, manager.getLoginId(), 1L, manager.getName(),
+                manager.getPhone(), manager.getEmail(), manager.getCompanyCode(), manager.getRole().toString());
+
+        accessToken = jwtUtil.createJwt("access", jwtManagerArgumentDto, 60000L);
+        refreshToken = jwtUtil.createJwt("refresh", jwtManagerArgumentDto, 60000L);
         expiredToken = "eyJhbGciOiJIUzI1NiJ9.eyJjYXRlZ29yeSI6InJlZnJlc2giLCJsb2dpbklkIjoidGVzdDMiLCJyb2xlIjoiUk9MRV9N" +
                 "QU5BR0VSIiwiaWF0IjoxNzQ4MzEzOTE5LCJleHAiOjE3NDgzMTM5NDl9.8C1b58R8_QdmGpH20e5veUHOybLTJDJJdAkur7p33FQ";
     }
@@ -65,7 +95,7 @@ class JwtUtilTest {
         String loginId = Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(accessToken).getPayload().get(
                 "loginId", String.class);
 
-        assertThat(loginId).isEqualTo("test");
+        assertThat(loginId).isEqualTo("testId");
     }
 
     @Test
@@ -108,12 +138,12 @@ class JwtUtilTest {
     void createJwt() {
         // given
         String category = "access";
-        String loginId = "test";
+        String loginId = "testId";
         String role = "ROLE_MANAGER";
         long expiryMs = 60000L; // 1분
 
         // when
-        String token = jwtUtil.createJwt(category, loginId, role, expiryMs);
+        String token = jwtUtil.createJwt(category, jwtManagerArgumentDto, expiryMs);
 
         // then
         Claims claims = Jwts.parser()
@@ -151,13 +181,19 @@ class JwtUtilTest {
     @DisplayName("refresh 토큰으로 새로운 토큰을 발급받는 테스트")
     void getNewAccessToken() {
         // given
-        String refreshToken = jwtUtil.createJwt("refresh", "testUser", "ROLE_MANAGER", 60000L);
+        String refreshToken = jwtUtil.createJwt("refresh", jwtManagerArgumentDto, 60000L);
         HttpServletRequest request = mock(HttpServletRequest.class);
         MockHttpServletResponse response = new MockHttpServletResponse();
 
+        JwtRefresh jwtRefresh = JwtRefresh.builder()
+                .refreshToken(refreshToken)
+                .manager(manager)
+                .expiredTime(JwtProperties.REFRESH_EXPIRED_TIME)
+                .build();
+
         when(request.getHeader("RefreshToken")).thenReturn(refreshToken);
         when(jwtRefreshRepository.existsByRefreshToken(refreshToken)).thenReturn(true);
-
+        when(jwtRefreshRepository.findByRefreshToken(refreshToken)).thenReturn(Optional.ofNullable(jwtRefresh));
         // when
         jwtUtil.getNewAccessToken(request, response);
 
