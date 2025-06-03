@@ -3,6 +3,7 @@ package com.kbe5.rento.common.jwt.util;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kbe5.rento.common.exception.DomainException;
 import com.kbe5.rento.common.exception.ErrorType;
+import com.kbe5.rento.common.jwt.dto.JwtManagerArgumentDto;
 import com.kbe5.rento.common.jwt.entity.JwtRefresh;
 import com.kbe5.rento.common.jwt.respository.JwtRefreshRepository;
 import com.kbe5.rento.domain.manager.entity.Manager;
@@ -49,6 +50,84 @@ public class JwtUtil {
         }
     }
 
+    public Long getId(String token) {
+        try {
+            return Jwts.parser()
+                    .verifyWith(secretKey)
+                    .build()
+                    .parseSignedClaims(token)
+                    .getPayload()
+                    .get("id", Long.class);
+        } catch (JwtException | IllegalArgumentException e) {
+            throw new DomainException(ErrorType.INVALID_TOKEN);
+        }
+    }
+
+    public Long getCompanyId(String token) {
+        try {
+            return Jwts.parser()
+                    .verifyWith(secretKey)
+                    .build()
+                    .parseSignedClaims(token)
+                    .getPayload()
+                    .get("company", Long.class);
+        } catch (JwtException | IllegalArgumentException e) {
+            throw new DomainException(ErrorType.INVALID_TOKEN);
+        }
+    }
+
+    public String getCompanyCode(String token) {
+        try {
+            return Jwts.parser()
+                    .verifyWith(secretKey)
+                    .build()
+                    .parseSignedClaims(token)
+                    .getPayload()
+                    .get("companyCode", String.class);
+        } catch (JwtException | IllegalArgumentException e) {
+            throw new DomainException(ErrorType.INVALID_TOKEN);
+        }
+    }
+
+    public String getEmail(String token) {
+        try {
+            return Jwts.parser()
+                    .verifyWith(secretKey)
+                    .build()
+                    .parseSignedClaims(token)
+                    .getPayload()
+                    .get("email", String.class);
+        } catch (JwtException | IllegalArgumentException e) {
+            throw new DomainException(ErrorType.INVALID_TOKEN);
+        }
+    }
+
+    public String getName(String token) {
+        try {
+            return Jwts.parser()
+                    .verifyWith(secretKey)
+                    .build()
+                    .parseSignedClaims(token)
+                    .getPayload()
+                    .get("name", String.class);
+        } catch (JwtException | IllegalArgumentException e) {
+            throw new DomainException(ErrorType.INVALID_TOKEN);
+        }
+    }
+
+    public String getPhone(String token) {
+        try {
+            return Jwts.parser()
+                    .verifyWith(secretKey)
+                    .build()
+                    .parseSignedClaims(token)
+                    .getPayload()
+                    .get("phone", String.class);
+        } catch (JwtException | IllegalArgumentException e) {
+            throw new DomainException(ErrorType.INVALID_TOKEN);
+        }
+    }
+
     public Boolean isExpired(String token) {
         try {
             Date expiration = Jwts.parser()
@@ -65,11 +144,17 @@ public class JwtUtil {
         }
     }
 
-    public String createJwt(String category, String loginId, String role, Long expiredMs) {
+    public String createJwt(String category, JwtManagerArgumentDto dto, Long expiredMs) {
         return Jwts.builder()
                 .claim("category", category)
-                .claim("loginId", loginId)
-                .claim("role", role)
+                .claim("id", dto.id())
+                .claim("loginId", dto.loginId())
+                .claim("role", dto.role())
+                .claim("companyId", dto.companyId())
+                .claim("companyCode", dto.companyCode())
+                .claim("email", dto.email())
+                .claim("name", dto.name())
+                .claim("phone", dto.phone())
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + expiredMs))
                 .signWith(secretKey)
@@ -77,6 +162,12 @@ public class JwtUtil {
     }
 
     public void saveRefreshToken(String refreshToken, Manager manager, Long expiredTime) {
+        if (jwtRefreshRepository.existsByRefreshToken(refreshToken)) {
+            JwtRefresh jwtRefresh = jwtRefreshRepository.findByRefreshToken(refreshToken)
+                            .orElseThrow(() -> new DomainException(ErrorType.REFRESH_TOKEN_NOT_FOUND));
+            jwtRefreshRepository.delete(jwtRefresh);
+        };
+
         jwtRefreshRepository.save(JwtRefresh.builder()
                         .manager(manager)
                         .refreshToken(refreshToken)
@@ -86,8 +177,7 @@ public class JwtUtil {
 
     public void getNewAccessToken(HttpServletRequest request, HttpServletResponse response) {
         String refresh = request.getHeader("RefreshToken");
-
-        String category = getCategory("category");
+        String category = getCategory(refresh);
 
         if (refresh == null || refresh.isEmpty()) {
             throw new DomainException(ErrorType.INVALID_TOKEN);
@@ -101,11 +191,17 @@ public class JwtUtil {
             return;
         }
 
-        String username = getLoginId(refresh);
-        String role = getRole(refresh);
+        JwtManagerArgumentDto managerArgumentDto = JwtManagerArgumentDto.of(this, refresh);
 
-        String newAccess = createJwt("access", username, role, JwtProperties.ACCESS_EXPIRED_TIME);
-        String newRefresh = createJwt("refresh", username, role, JwtProperties.ACCESS_EXPIRED_TIME);
+        String newAccess = createJwt("access", managerArgumentDto, JwtProperties.ACCESS_EXPIRED_TIME);
+        String newRefresh = createJwt("refresh", managerArgumentDto, JwtProperties.ACCESS_EXPIRED_TIME);
+
+        JwtRefresh oldRefreshToken = jwtRefreshRepository.findByRefreshToken(refresh)
+                .orElseThrow(() -> new DomainException(ErrorType.REFRESH_TOKEN_NOT_FOUND));
+
+        deleteRefreshToken(oldRefreshToken);
+
+        saveRefreshToken(newRefresh, oldRefreshToken.getManager(), JwtProperties.REFRESH_EXPIRED_TIME);
 
         response.setHeader("AccessToken", newAccess);
         response.setHeader("RefreshToken", newRefresh);
@@ -120,5 +216,9 @@ public class JwtUtil {
         String body = new ObjectMapper().writeValueAsString(domainException.toResponse());
 
         response.getWriter().write(body);
+    }
+
+    public void deleteRefreshToken(JwtRefresh oldRefreshToken) {
+        jwtRefreshRepository.delete(oldRefreshToken);
     }
 }
