@@ -65,6 +65,9 @@ public class SecurityPermissionApiList {
 
             // login && signUp
             "/api/managers/login",
-            "/api/managers/sign-up"
+            "/api/managers/sign-up",
+
+            // refresh
+            "/api/managers/refresh"
     };
 }
