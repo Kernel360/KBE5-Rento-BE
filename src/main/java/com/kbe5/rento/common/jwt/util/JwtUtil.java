@@ -31,101 +31,36 @@ public class JwtUtil {
                 Jwts.SIG.HS256.key().build().getAlgorithm());
     }
 
-    public String getLoginId(String token) {
-        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload()
-                .get("loginId", String.class);
-    }
-
     public String getRole(String token) {
-        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload()
-                .get("role", String.class);
+        return parseClaim(token, "role", String.class);
     }
 
     public String getCategory(String token) {
-        try {
-            return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload()
-                    .get("category", String.class);
-        } catch (JwtException | IllegalArgumentException e) {
-            throw new DomainException(ErrorType.INVALID_TOKEN);
-        }
+        return parseClaim(token, "category", String.class);
     }
 
     public Long getId(String token) {
-        try {
-            return Jwts.parser()
-                    .verifyWith(secretKey)
-                    .build()
-                    .parseSignedClaims(token)
-                    .getPayload()
-                    .get("id", Long.class);
-        } catch (JwtException | IllegalArgumentException e) {
-            throw new DomainException(ErrorType.INVALID_TOKEN);
-        }
-    }
-
-    public Long getCompanyId(String token) {
-        try {
-            return Jwts.parser()
-                    .verifyWith(secretKey)
-                    .build()
-                    .parseSignedClaims(token)
-                    .getPayload()
-                    .get("company", Long.class);
-        } catch (JwtException | IllegalArgumentException e) {
-            throw new DomainException(ErrorType.INVALID_TOKEN);
-        }
-    }
-
-    public String getCompanyCode(String token) {
-        try {
-            return Jwts.parser()
-                    .verifyWith(secretKey)
-                    .build()
-                    .parseSignedClaims(token)
-                    .getPayload()
-                    .get("companyCode", String.class);
-        } catch (JwtException | IllegalArgumentException e) {
-            throw new DomainException(ErrorType.INVALID_TOKEN);
-        }
-    }
-
-    public String getEmail(String token) {
-        try {
-            return Jwts.parser()
-                    .verifyWith(secretKey)
-                    .build()
-                    .parseSignedClaims(token)
-                    .getPayload()
-                    .get("email", String.class);
-        } catch (JwtException | IllegalArgumentException e) {
-            throw new DomainException(ErrorType.INVALID_TOKEN);
-        }
+        return parseClaim(token, "id", Long.class);
     }
 
     public String getName(String token) {
-        try {
-            return Jwts.parser()
-                    .verifyWith(secretKey)
-                    .build()
-                    .parseSignedClaims(token)
-                    .getPayload()
-                    .get("name", String.class);
-        } catch (JwtException | IllegalArgumentException e) {
-            throw new DomainException(ErrorType.INVALID_TOKEN);
-        }
+        return parseClaim(token, "name", String.class);
     }
 
-    public String getPhone(String token) {
-        try {
-            return Jwts.parser()
-                    .verifyWith(secretKey)
-                    .build()
-                    .parseSignedClaims(token)
-                    .getPayload()
-                    .get("phone", String.class);
-        } catch (JwtException | IllegalArgumentException e) {
-            throw new DomainException(ErrorType.INVALID_TOKEN);
-        }
+    public String getLoginId(String token) {
+        return parseClaim(token, "loginId", String.class);
+    }
+
+    public String getEmail(String token) {
+        return parseClaim(token, "email", String.class);
+    }
+
+    public Long getCompanyId(String token) {
+        return parseClaim(token, "companyId", Long.class);
+    }
+
+    public String getCompanyCode(String token) {
+        return parseClaim(token, "companyCode", String.class);
     }
 
     public Boolean isExpired(String token) {
@@ -140,7 +75,20 @@ public class JwtUtil {
             return expiration.before(new Date());
 
         } catch (JwtException | IllegalArgumentException e) {
-            throw new DomainException(ErrorType.EXPIRED_TOKEN);
+           throw new DomainException(ErrorType.EXPIRED_TOKEN);
+        }
+    }
+
+    private <T> T parseClaim(String token, String claimKey, Class<T> clazz) {
+        try {
+            return Jwts.parser()
+                    .verifyWith(secretKey)
+                    .build()
+                    .parseSignedClaims(token)
+                    .getPayload()
+                    .get(claimKey, clazz);
+        } catch (JwtException | IllegalArgumentException e) {
+            throw new DomainException(ErrorType.INVALID_TOKEN);
         }
     }
 
@@ -154,25 +102,10 @@ public class JwtUtil {
                 .claim("companyCode", dto.companyCode())
                 .claim("email", dto.email())
                 .claim("name", dto.name())
-                .claim("phone", dto.phone())
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + expiredMs))
                 .signWith(secretKey)
                 .compact();
-    }
-
-    public void saveRefreshToken(String refreshToken, Manager manager, Long expiredTime) {
-        if (jwtRefreshRepository.existsByRefreshToken(refreshToken)) {
-            JwtRefresh jwtRefresh = jwtRefreshRepository.findByRefreshToken(refreshToken)
-                            .orElseThrow(() -> new DomainException(ErrorType.REFRESH_TOKEN_NOT_FOUND));
-            jwtRefreshRepository.delete(jwtRefresh);
-        };
-
-        jwtRefreshRepository.save(JwtRefresh.builder()
-                        .manager(manager)
-                        .refreshToken(refreshToken)
-                        .expiredTime(expiredTime)
-                        .build());
     }
 
     public void getNewAccessToken(HttpServletRequest request, HttpServletResponse response) {
@@ -194,7 +127,7 @@ public class JwtUtil {
         JwtManagerArgumentDto managerArgumentDto = JwtManagerArgumentDto.of(this, refresh);
 
         String newAccess = createJwt("access", managerArgumentDto, JwtProperties.ACCESS_EXPIRED_TIME);
-        String newRefresh = createJwt("refresh", managerArgumentDto, JwtProperties.ACCESS_EXPIRED_TIME);
+        String newRefresh = createJwt("refresh", managerArgumentDto, JwtProperties.REFRESH_EXPIRED_TIME);
 
         JwtRefresh oldRefreshToken = jwtRefreshRepository.findByRefreshToken(refresh)
                 .orElseThrow(() -> new DomainException(ErrorType.REFRESH_TOKEN_NOT_FOUND));
@@ -207,8 +140,25 @@ public class JwtUtil {
         response.setHeader("RefreshToken", newRefresh);
     }
 
-    public void tokenErrorResponse(HttpServletResponse response, ErrorType errorType) throws IOException {
-        DomainException domainException = new DomainException(errorType);
+    public void saveRefreshToken(String refreshToken, Manager manager, Long expiredTime) {
+        if (jwtRefreshRepository.existsByRefreshToken(refreshToken)) {
+            JwtRefresh jwtRefresh = jwtRefreshRepository.findByRefreshToken(refreshToken)
+                    .orElseThrow(() -> new DomainException(ErrorType.REFRESH_TOKEN_NOT_FOUND));
+            deleteRefreshToken(jwtRefresh);
+        };
+
+        jwtRefreshRepository.save(JwtRefresh.builder()
+                .manager(manager)
+                .refreshToken(refreshToken)
+                .expiredTime(expiredTime)
+                .build());
+    }
+
+    public void deleteRefreshToken(JwtRefresh oldRefreshToken) {
+        jwtRefreshRepository.delete(oldRefreshToken);
+    }
+
+    public void tokenErrorResponse(HttpServletResponse response, DomainException domainException) throws IOException {
         response.setContentType("application/json;charset=UTF-8");
 
         response.setStatus(domainException.getStatus().value());
@@ -216,9 +166,5 @@ public class JwtUtil {
         String body = new ObjectMapper().writeValueAsString(domainException.toResponse());
 
         response.getWriter().write(body);
-    }
-
-    public void deleteRefreshToken(JwtRefresh oldRefreshToken) {
-        jwtRefreshRepository.delete(oldRefreshToken);
     }
 }
