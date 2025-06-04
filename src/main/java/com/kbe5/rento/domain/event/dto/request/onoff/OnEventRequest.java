@@ -86,6 +86,10 @@ public record OnEventRequest(
     public OnOffEvent toEntity(Long deviceUniqueId) {
         return OnOffEvent.builder()
             .mdn(this.mdn())
+            .terminalId(this.terminalId())
+            .makerId(this.makerId())
+            .packetVersion(this.packetVersion())
+            .deviceId(this.deviceId())
             .deviceUniqueId(deviceUniqueId)
             .gpsCondition(this.gpsCondition())
             .latitude(this.latitude())

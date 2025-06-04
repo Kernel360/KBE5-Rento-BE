@@ -1,6 +1,7 @@
 package com.kbe5.rento.domain.event.controller;
 
 import com.kbe5.rento.domain.device.entity.DeviceToken;
+import com.kbe5.rento.domain.device.enums.DeviceResultCode;
 import com.kbe5.rento.domain.event.dto.request.onoff.OffEventRequest;
 import com.kbe5.rento.domain.event.dto.request.onoff.OnEventRequest;
 import com.kbe5.rento.domain.event.dto.response.onoff.OffEventResponse;
@@ -33,7 +34,7 @@ public class OnOffControllerImpl implements OnOffController{
         OnOffEvent onOffEvent = request.toEntity(deviceToken.getDeviceId());
         OnOffEvent savedEvent = onOffEventService.ignitionOnEvent(onOffEvent, deviceToken);
 
-        return ResponseEntity.ok(OnEventResponse.fromEntity(savedEvent));
+        return ResponseEntity.ok(OnEventResponse.fromEntity(DeviceResultCode.SUCCESS, savedEvent));
     }
 
     /**
@@ -47,6 +48,6 @@ public class OnOffControllerImpl implements OnOffController{
         OnOffEvent onOffEvent = request.toEntity(deviceToken.getDeviceId());
         OnOffEvent savedEvent = onOffEventService.iginitionOffEvent(onOffEvent, deviceToken);
 
-        return ResponseEntity.ok(OffEventResponse.fromEntity(savedEvent));
+        return ResponseEntity.ok(OffEventResponse.fromEntity(DeviceResultCode.SUCCESS, savedEvent));
     }
 }

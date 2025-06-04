@@ -2,7 +2,9 @@ package com.kbe5.rento.domain.event.dto.request.cycleinfo;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.kbe5.rento.domain.device.entity.DeviceToken;
 import com.kbe5.rento.domain.device.enums.GpsCondition;
+import com.kbe5.rento.domain.event.entity.CycleInfo;
 import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Max;
@@ -60,4 +62,17 @@ public record CycleInfoRequest(
     Integer battery
 ){
 
+    public CycleInfo toEntity(DeviceToken deviceToken) {
+        return CycleInfo.builder()
+            .deviceUniqueId(deviceToken.getDeviceId())
+            .sec(this.sec())
+            .gpsCondition(this.gpsCondition())
+            .longitude(this.longitude())
+            .latitude(this.latitude())
+            .angle(this.angle())
+            .speed(this.speed())
+            .sum(this.sum())
+            .battery(this.battery())
+            .build();
+    }
 }

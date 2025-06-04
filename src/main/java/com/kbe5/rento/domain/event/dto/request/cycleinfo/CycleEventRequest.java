@@ -1,6 +1,9 @@
 package com.kbe5.rento.domain.event.dto.request.cycleinfo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.kbe5.rento.domain.device.entity.DeviceToken;
+import com.kbe5.rento.domain.event.entity.CycleEvent;
+import com.kbe5.rento.domain.event.entity.CycleInfo;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -45,4 +48,22 @@ public record CycleEventRequest(
     List<CycleInfoRequest> cycleInfoRequests
 ) {
 
+    public CycleEvent toEntity(Long deviceUniqueId) {
+        return CycleEvent.builder()
+            .mdn(this.mdn())
+            .deviceUniqueId(deviceUniqueId)
+            .terminalId(this.terminalId())
+            .makerId(this.makerId())
+            .packetVersion(this.packetVersion())
+            .deviceId(this.deviceId())
+            .oTime(this.oTime())
+            .cycleCount(this.cycleCount())
+            .build();
+    }
+
+    public List<CycleInfo> toCycleInfoEntities(DeviceToken deviceToken) {
+        return this.cycleInfoRequests().stream()
+            .map(req -> req.toEntity(deviceToken))
+            .toList();
+    }
 }
