@@ -3,6 +3,7 @@ package com.kbe5.rento.domain.company.controller;
 import com.kbe5.rento.common.apiresponse.ApiResponse;
 import com.kbe5.rento.common.apiresponse.ApiResultCode;
 import com.kbe5.rento.common.apiresponse.ResEntityFactory;
+import com.kbe5.rento.domain.company.dto.request.CompanyBiznumberRequest;
 import com.kbe5.rento.domain.company.dto.request.CompanyRegisterRequest;
 import com.kbe5.rento.domain.company.dto.request.CompanyUpdateRequest;
 import com.kbe5.rento.domain.company.dto.response.*;
@@ -50,10 +51,10 @@ public class CompanyControllerImpl implements CompanyController {
                 ,CompanyUpdateResponse.fromEntity(companyService.update(id, request)));
     }
 
-    @GetMapping("/check-bizNumber/{bizNumber}")
-    public ResponseEntity<ApiResponse<Boolean>> checkAvailableBizNumber(@PathVariable int bizNumber) {
+    @GetMapping("/check-bizNumber")
+    public ResponseEntity<ApiResponse<Boolean>> checkAvailableBizNumber(@RequestBody CompanyBiznumberRequest request) {
         return ResEntityFactory.toResponse(ApiResultCode.SUCCESS,
-                !companyService.isExistsBizNumber(bizNumber));
+                !companyService.isExistsBizNumber(request.biznumber()));
     }
 
     @DeleteMapping("/{id}")

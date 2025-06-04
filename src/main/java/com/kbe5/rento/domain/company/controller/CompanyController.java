@@ -1,6 +1,7 @@
 package com.kbe5.rento.domain.company.controller;
 
 import com.kbe5.rento.common.apiresponse.ApiResponse;
+import com.kbe5.rento.domain.company.dto.request.CompanyBiznumberRequest;
 import com.kbe5.rento.domain.company.dto.request.CompanyRegisterRequest;
 import com.kbe5.rento.domain.company.dto.request.CompanyUpdateRequest;
 import com.kbe5.rento.domain.company.dto.response.CompanyDeleteResponse;
@@ -24,7 +25,7 @@ public interface CompanyController {
 
     ResponseEntity<ApiResponse<CompanyUpdateResponse>> updateCompanyInfo(Long id, CompanyUpdateRequest request);
 
-    ResponseEntity<ApiResponse<Boolean>> checkAvailableBizNumber(int bizNumber);
+    ResponseEntity<ApiResponse<Boolean>> checkAvailableBizNumber(CompanyBiznumberRequest request);
 
     ResponseEntity<ApiResponse<CompanyDeleteResponse>> companyDelete(Long id);
 }
