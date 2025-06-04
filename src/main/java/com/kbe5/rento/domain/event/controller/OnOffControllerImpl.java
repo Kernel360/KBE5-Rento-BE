@@ -7,7 +7,7 @@ import com.kbe5.rento.domain.event.dto.request.onoff.OnEventRequest;
 import com.kbe5.rento.domain.event.dto.response.onoff.OffEventResponse;
 import com.kbe5.rento.domain.event.dto.response.onoff.OnEventResponse;
 import com.kbe5.rento.domain.event.entity.OnOffEvent;
-import com.kbe5.rento.domain.event.service.OnOffEventService;
+import com.kbe5.rento.domain.event.service.EventService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/events/on-off")
 public class OnOffControllerImpl implements OnOffController{
 
-    private final OnOffEventService onOffEventService;
+    private final EventService eventService;
 
     @PostMapping("/on")
     public ResponseEntity<OnEventResponse> onEvent(
@@ -32,7 +32,7 @@ public class OnOffControllerImpl implements OnOffController{
         @RequestBody @Validated OnEventRequest request) {
 
         OnOffEvent onOffEvent = request.toEntity(deviceToken.getDeviceId());
-        OnOffEvent savedEvent = onOffEventService.ignitionOnEvent(onOffEvent, deviceToken);
+        OnOffEvent savedEvent = eventService.ignitionOnEvent(onOffEvent, deviceToken);
 
         return ResponseEntity.ok(OnEventResponse.fromEntity(DeviceResultCode.SUCCESS, savedEvent));
     }
@@ -46,7 +46,7 @@ public class OnOffControllerImpl implements OnOffController{
         @RequestBody @Validated OffEventRequest request) {
 
         OnOffEvent onOffEvent = request.toEntity(deviceToken.getDeviceId());
-        OnOffEvent savedEvent = onOffEventService.iginitionOffEvent(onOffEvent, deviceToken);
+        OnOffEvent savedEvent = eventService.iginitionOffEvent(onOffEvent, deviceToken);
 
         return ResponseEntity.ok(OffEventResponse.fromEntity(DeviceResultCode.SUCCESS, savedEvent));
     }

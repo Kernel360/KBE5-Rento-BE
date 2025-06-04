@@ -22,12 +22,12 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-class OnOffEventServiceTest {
+class EventServiceTest {
 
     private static final Long EXPIRED_MS = 60 * 60 * 1000L;
 
     @InjectMocks
-    private OnOffEventService onOffEventService;
+    private EventService eventService;
 
     @Mock
     private EventRepository eventRepository;
@@ -59,7 +59,7 @@ class OnOffEventServiceTest {
         OnOffEvent onOffEvent = request.toEntity(deviceUniqueId);
         when(eventRepository.save(any(OnOffEvent.class))).thenReturn(onOffEvent);
 
-        OnOffEvent result = onOffEventService.ignitionOnEvent(onOffEvent, deviceToken);
+        OnOffEvent result = eventService.ignitionOnEvent(onOffEvent, deviceToken);
 //
 //        //저장테스트
         verify(eventRepository).save(any(OnOffEvent.class));
@@ -99,7 +99,7 @@ class OnOffEventServiceTest {
         OnOffEvent onOffEvent = request.toEntity(deviceUniqueId);
 
         // when & then
-        assertThatThrownBy(() -> onOffEventService.ignitionOnEvent(onOffEvent, deviceToken))
+        assertThatThrownBy(() -> eventService.ignitionOnEvent(onOffEvent, deviceToken))
             .isInstanceOf(com.kbe5.rento.common.exception.DeviceException.class);
     }
 

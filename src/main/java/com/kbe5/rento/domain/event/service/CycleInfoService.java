@@ -17,14 +17,6 @@ public class CycleInfoService {
 
     private final CycleInfoRepository cycleInfoRepository;
 
-    private final EventRepository eventRepository;
-
-    @Transactional
-    public CycleEvent saveCycleEvent(CycleEvent cycleEvent) {
-
-        return eventRepository.save(cycleEvent);
-    }
-
     @Transactional
     public void saveCycleInfo(List<CycleInfo> cycleInfo) {
        cycleInfoRepository.saveAll(cycleInfo);

@@ -7,6 +7,7 @@ import com.kbe5.rento.domain.event.dto.response.cycleinfo.CycleEventResponse;
 import com.kbe5.rento.domain.event.entity.CycleEvent;
 import com.kbe5.rento.domain.event.entity.CycleInfo;
 import com.kbe5.rento.domain.event.service.CycleInfoService;
+import com.kbe5.rento.domain.event.service.EventService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +28,8 @@ public class CycleInfoControllerImpl implements CycleInfoController{
 
     private final CycleInfoService cycleInfoService;
 
+    private final EventService eventService;
+
     @Transactional
     @PostMapping
     public ResponseEntity<CycleEventResponse> save(
@@ -39,7 +42,7 @@ public class CycleInfoControllerImpl implements CycleInfoController{
         List<CycleInfo> cycleInfoList = request.toCycleInfoEntities(deviceToken);
         cycleInfoService.saveCycleInfo(cycleInfoList);
 
-        CycleEvent saveCycleEvent = cycleInfoService.saveCycleEvent(cycleEvent);
+        CycleEvent saveCycleEvent = eventService.saveCycleEvent(cycleEvent);
 
         return ResponseEntity.ok(CycleEventResponse.fromEntity(DeviceResultCode.SUCCESS, saveCycleEvent));
     }
