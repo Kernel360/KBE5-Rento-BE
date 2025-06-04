@@ -4,8 +4,8 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.kbe5.rento.common.datetime.EventLocalDateTimeDeserializer;
-import com.kbe5.rento.domain.event.entity.OnOffEvent;
 import com.kbe5.rento.domain.device.enums.GpsCondition;
+import com.kbe5.rento.domain.event.entity.OnOffEvent;
 import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Max;
@@ -15,7 +15,7 @@ import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-public record OnEventRequest(
+public record OffEventRequest(
 
     @JsonProperty("mdn")
     @NotNull(message = "{device.mdn.notnull}")
@@ -43,6 +43,7 @@ public record OnEventRequest(
     @JsonDeserialize(using = EventLocalDateTimeDeserializer.class)
     LocalDateTime onTime,
 
+    @NotNull(message = "{device.offTime.notnull}")
     @JsonDeserialize(using = EventLocalDateTimeDeserializer.class)
     LocalDateTime offTime,
 
@@ -80,23 +81,18 @@ public record OnEventRequest(
     @Max(9999999)
     @JsonProperty("sum")
     @NotNull(message = "{device.currentAccumulatedDistance.notnull}")
-    Long sum
-) {
+    Long currentAccumulatedDistance) {
 
     public OnOffEvent toEntity(Long deviceUniqueId) {
         return OnOffEvent.builder()
             .mdn(this.mdn())
-            .terminalId(this.terminalId())
-            .makerId(this.makerId())
-            .packetVersion(this.packetVersion())
-            .deviceId(this.deviceId())
             .deviceUniqueId(deviceUniqueId)
             .gpsCondition(this.gpsCondition())
             .latitude(this.latitude())
             .longitude(this.longitude())
             .angle(this.angle())
             .speed(this.speed())
-            .currentAccumulatedDistance(this.sum())
+            .currentAccumulatedDistance(this.currentAccumulatedDistance())
             .onTime(this.onTime())
             .offTime(this.offTime())
             .build();

@@ -68,6 +68,10 @@ public class SecurityPermissionApiList {
             "/api/managers/sign-up",
 
             // refresh
-            "/api/managers/refresh"
+            "/api/managers/refresh",
+
+            // device
+            "/api/devices",
+            "/api/devices/token"
     };
 }

@@ -1,11 +1,10 @@
-package com.kbe5.rento.domain.event.dto.request.onoff;
+package com.kbe5.rento.domain.event.dto.request.cycleinfo;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.kbe5.rento.common.datetime.EventLocalDateTimeDeserializer;
-import com.kbe5.rento.domain.event.entity.OnOffEvent;
+import com.kbe5.rento.domain.device.entity.DeviceToken;
 import com.kbe5.rento.domain.device.enums.GpsCondition;
+import com.kbe5.rento.domain.event.entity.CycleInfo;
 import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Max;
@@ -13,38 +12,13 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 
-public record OnEventRequest(
+public record CycleInfoRequest(
 
-    @JsonProperty("mdn")
-    @NotNull(message = "{device.mdn.notnull}")
-    Long mdn, //차량 번호
-
-    @JsonProperty("tid")
-    @NotBlank(message = "{device.tid.notblank}")
-    String terminalId, // A001로 고정
-
-    @JsonProperty("mid")
-    @NotNull(message = "{device.mid.notnull}")
-    Integer makerId, // 6으로 고정
-
-    @Min(0)
-    @Max(65535)
-    @JsonProperty("pv")
-    @NotNull(message = "{device.pv.notnull}")
-    Integer packetVersion, // 5로 고정
-
-    @JsonProperty("did")
-    @NotNull(message = "{device.did.notnull}")
-    Integer deviceId, //1로 고정
-
-    @NotNull(message = "{device.onTime.notnull}")
-    @JsonDeserialize(using = EventLocalDateTimeDeserializer.class)
-    LocalDateTime onTime,
-
-    @JsonDeserialize(using = EventLocalDateTimeDeserializer.class)
-    LocalDateTime offTime,
+    @NotNull
+    @Min(value = 0, message = "sec(발생시간)은 0 이상이어야 합니다.")
+    @Max(value = 59, message = "sec(발생시간)은 59 이하이어야 합니다.")
+    Integer sec,
 
     @JsonProperty("gcd")
     @NotNull(message = "{device.gpsCondition.notnull}")
@@ -80,25 +54,25 @@ public record OnEventRequest(
     @Max(9999999)
     @JsonProperty("sum")
     @NotNull(message = "{device.currentAccumulatedDistance.notnull}")
-    Long sum
-) {
+    Long sum,
 
-    public OnOffEvent toEntity(Long deviceUniqueId) {
-        return OnOffEvent.builder()
-            .mdn(this.mdn())
-            .terminalId(this.terminalId())
-            .makerId(this.makerId())
-            .packetVersion(this.packetVersion())
-            .deviceId(this.deviceId())
-            .deviceUniqueId(deviceUniqueId)
+    @Min(0)
+    @Max(9999)
+    @NotBlank(message = "bat(배터리 전압)은 필수입니다.")
+    Integer battery
+){
+
+    public CycleInfo toEntity(DeviceToken deviceToken) {
+        return CycleInfo.builder()
+            .deviceUniqueId(deviceToken.getDeviceId())
+            .sec(this.sec())
             .gpsCondition(this.gpsCondition())
-            .latitude(this.latitude())
             .longitude(this.longitude())
+            .latitude(this.latitude())
             .angle(this.angle())
             .speed(this.speed())
-            .currentAccumulatedDistance(this.sum())
-            .onTime(this.onTime())
-            .offTime(this.offTime())
+            .sum(this.sum())
+            .battery(this.battery())
             .build();
     }
 }
