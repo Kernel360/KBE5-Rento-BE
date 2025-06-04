@@ -81,7 +81,7 @@ class JwtUtilTest {
         manager = managerRepository.save(manager);
 
         jwtManagerArgumentDto = new JwtManagerArgumentDto(1L, manager.getLoginId(), 1L, manager.getName(),
-                manager.getPhone(), manager.getEmail(), manager.getCompanyCode(), manager.getRole().toString());
+                manager.getEmail(), manager.getCompanyCode(), manager.getRole().toString());
 
         accessToken = jwtUtil.createJwt("access", jwtManagerArgumentDto, 60000L);
         refreshToken = jwtUtil.createJwt("refresh", jwtManagerArgumentDto, 60000L);
