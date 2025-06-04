@@ -80,7 +80,7 @@ public record OnEventRequest(
     @Max(9999999)
     @JsonProperty("sum")
     @NotNull(message = "{device.currentAccumulatedDistance.notnull}")
-    Long currentAccumulatedDistance
+    Long sum
 ) {
 
     public OnOffEvent toEntity(Long deviceUniqueId) {
@@ -92,7 +92,7 @@ public record OnEventRequest(
             .longitude(this.longitude())
             .angle(this.angle())
             .speed(this.speed())
-            .currentAccumulatedDistance(this.currentAccumulatedDistance())
+            .currentAccumulatedDistance(this.sum())
             .onTime(this.onTime())
             .offTime(this.offTime())
             .build();
