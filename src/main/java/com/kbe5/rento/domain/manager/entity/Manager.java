@@ -1,19 +1,15 @@
 package com.kbe5.rento.domain.manager.entity;
 
-import com.kbe5.rento.domain.company.entity.Company;
 import com.kbe5.rento.common.util.BaseEntity;
-import com.kbe5.rento.domain.company.repository.CompanyRepository;
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
-import lombok.AccessLevel;
+import com.kbe5.rento.domain.company.entity.Company;
 import com.kbe5.rento.domain.manager.dto.request.ManagerUpdateRequest;
 import com.kbe5.rento.domain.manager.enums.ManagerRole;
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;import org.springframework.security.crypto.password.PasswordEncoder;
+import lombok.NoArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Entity
 @Getter
@@ -42,7 +38,7 @@ public class Manager extends BaseEntity {
     @Column(length = 30)
     private String companyCode;
 
-    @Column(length = 10)
+    @Column(length = 20)
     @Enumerated(EnumType.STRING)
     private ManagerRole role;
 
@@ -66,7 +62,7 @@ public class Manager extends BaseEntity {
     }
 
     public void encodePassword(PasswordEncoder encoder) {
-        encoder.encode(this.password);
+        this.password = encoder.encode(password);
     }
 
     public void assignCompany(Company company) {

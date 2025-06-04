@@ -35,6 +35,14 @@ public abstract class Event {
 
     Long mdn;
 
+    String terminalId;
+
+    Integer makerId;
+
+    Integer packetVersion;
+
+    Integer deviceId;
+
     @Enumerated(EnumType.STRING)
     private GpsCondition gpsCondition;
 

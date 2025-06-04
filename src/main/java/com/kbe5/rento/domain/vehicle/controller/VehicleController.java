@@ -7,15 +7,21 @@ import com.kbe5.rento.domain.vehicle.dto.request.VehicleAddRequest;
 import com.kbe5.rento.domain.vehicle.dto.request.VehicleUpdateRequest;
 import com.kbe5.rento.domain.vehicle.dto.response.VehicleDetailResponse;
 import com.kbe5.rento.domain.vehicle.dto.response.VehicleResponse;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedModel;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
 public interface VehicleController {
 
-    ResponseEntity<ApiResponse<VehicleResponse>> addVehicle(CustomManagerDetails manager, VehicleAddRequest request);
+    ResponseEntity<ApiResponse<String>> addVehicle(CustomManagerDetails manager,
+                                                            VehicleAddRequest request);
     ResponseEntity<ApiResponse<String>> updateVehicle(Long vehicleId, VehicleUpdateRequest request);
     ResponseEntity<ApiResponse<String>> deleteVehicle(Long vehicleId);
-    ResponseEntity<ApiResponse<List<VehicleResponse>>> getVehicleList(CustomManagerDetails manager);
+    ResponseEntity<ApiResponse<PagedModel<VehicleResponse>>> getVehicleList(CustomManagerDetails manager,
+                                                                            Long departmentId,
+                                                                            boolean onlyfree,
+                                                                            Pageable pageable);
     ResponseEntity<ApiResponse<VehicleDetailResponse>> getVehicle(Long vehicleId);
 }
