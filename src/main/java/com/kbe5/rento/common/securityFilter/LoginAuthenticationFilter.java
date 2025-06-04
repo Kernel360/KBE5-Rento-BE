@@ -77,7 +77,7 @@ public class LoginAuthenticationFilter extends UsernamePasswordAuthenticationFil
 
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
-
-        jwtUtil.tokenErrorResponse(response, ErrorType.FAILED_LOGIN);
+        DomainException domainException = new DomainException(ErrorType.FAILED_LOGIN);
+        jwtUtil.tokenErrorResponse(response, domainException);
     }
 }
