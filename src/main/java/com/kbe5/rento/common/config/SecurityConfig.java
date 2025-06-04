@@ -68,8 +68,6 @@ public class SecurityConfig {
         http.authorizeHttpRequests(auth -> auth
                 .requestMatchers(SecurityPermissionApiList.PUBLIC_URLS).permitAll()
                 .requestMatchers("/admin").hasRole("ADMIN") // 추 후 시스템 관리자 구현 및 권한 설정 시 사용
-                .requestMatchers(HttpMethod.POST,
-                    "/api/devices","/api/devices/token").permitAll()
                 .anyRequest().authenticated());
 
         // LoginFilter 추가
