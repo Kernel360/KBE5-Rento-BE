@@ -31,6 +31,9 @@ public record DeviceTokenRequest (
 
     @JsonProperty("dFWVer")
     @NotBlank(message = "{device.did.notblank}")
-    String deviceFirmWareVersion
+    String deviceFirmWareVersion,
+
+    @NotNull(message = "{device.companyCode.notnull}")
+    String companyCode
 ) {
 }
