@@ -64,7 +64,7 @@ public class ManagerControllerImpl implements ManagerController {
     }
 
     @GetMapping("/{email}")
-    public ResponseEntity<ApiResponse<Boolean>> checkAvailableEmail( String email) {
+    public ResponseEntity<ApiResponse<Boolean>> checkAvailableEmail(@PathVariable String email) {
         return ResEntityFactory.toResponse(ApiResultCode.SUCCESS,
                 !managerService.isExistsEmail(email));
     }

@@ -58,6 +58,7 @@ public record CycleInfoRequest(
 
     @Min(0)
     @Max(9999)
+    @JsonProperty("bat")
     @NotBlank(message = "bat(배터리 전압)은 필수입니다.")
     Integer battery
 ){
