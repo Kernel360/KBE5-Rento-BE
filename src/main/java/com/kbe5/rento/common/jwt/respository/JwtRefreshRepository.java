@@ -9,4 +9,6 @@ public interface JwtRefreshRepository extends JpaRepository<JwtRefresh, Long> {
 
     Optional<JwtRefresh> findByRefreshToken(String token);
     Boolean existsByRefreshToken(String token);
+
+    Optional<JwtRefresh> findByManagerId(Long managerId);
 }
