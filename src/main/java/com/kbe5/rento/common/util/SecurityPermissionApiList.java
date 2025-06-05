@@ -72,6 +72,13 @@ public class SecurityPermissionApiList {
 
             // device
             "/api/devices",
-            "/api/devices/token"
+            "/api/devices/token",
+
+            //swagger
+            "/swagger-ui/**",
+            "/swagger-ui.html",
+            "/swagger-ui/index.html",
+            "/v3/api-docs",
+            "/v3/api-docs/**",
     };
 }
