@@ -2,6 +2,8 @@ package com.kbe5.rento.domain.manager.service;
 
 import com.kbe5.rento.common.exception.DomainException;
 import com.kbe5.rento.common.exception.ErrorType;
+import com.kbe5.rento.common.jwt.entity.JwtRefresh;
+import com.kbe5.rento.common.jwt.respository.JwtRefreshRepository;
 import com.kbe5.rento.domain.company.dto.response.CompanyResponse;
 import com.kbe5.rento.domain.company.entity.Company;
 import com.kbe5.rento.domain.company.repository.CompanyRepository;
@@ -32,6 +34,7 @@ public class ManagerService {
     private final ManagerRepository managerRepository;
     private final CompanyRepository companyRepository;
     private final PasswordEncoder encoder;
+    private final JwtRefreshRepository jwtRefreshRepository;
 
     public Manager signUp(Manager manager) {
         Company company = companyRepository.findByCompanyCode(manager.getCompanyCode())
@@ -64,6 +67,14 @@ public class ManagerService {
         }
 
         return ManagerList;
+    }
+
+    @Transactional
+    public void logout(Long managerId){
+        JwtRefresh jwtRefresh = jwtRefreshRepository.findByManagerId(managerId)
+                .orElseThrow(() -> new DomainException(ErrorType.REFRESH_TOKEN_NOT_FOUND));
+
+        jwtRefreshRepository.delete(jwtRefresh);
     }
 
     public Manager update(Long id, ManagerUpdateRequest request) {

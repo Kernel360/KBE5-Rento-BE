@@ -66,6 +66,9 @@ public class SecurityPermissionApiList {
             // login && signUp
             "/api/managers/login",
             "/api/managers/sign-up",
+            "/api/managers/check-loginId/{loginId}",
+            "/api/managers/{email}",
+            "/api/managers/logout",
 
             // refresh
             "/api/managers/refresh",
