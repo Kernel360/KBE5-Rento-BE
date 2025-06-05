@@ -21,4 +21,5 @@ public class CycleInfoService {
     public void saveCycleInfo(List<CycleInfo> cycleInfo) {
        cycleInfoRepository.saveAll(cycleInfo);
     }
+
 }
