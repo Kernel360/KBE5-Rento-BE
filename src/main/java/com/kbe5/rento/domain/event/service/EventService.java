@@ -2,6 +2,7 @@ package com.kbe5.rento.domain.event.service;
 
 import com.kbe5.rento.domain.device.entity.DeviceToken;
 import com.kbe5.rento.domain.event.entity.CycleEvent;
+import com.kbe5.rento.domain.event.entity.Event;
 import com.kbe5.rento.domain.event.entity.OnOffEvent;
 import com.kbe5.rento.domain.event.repository.EventRepository;
 import lombok.RequiredArgsConstructor;
@@ -17,22 +18,11 @@ public class EventService {
     private final EventRepository eventRepository;
 
     @Transactional
-    public OnOffEvent ignitionOnEvent(OnOffEvent onEvent, DeviceToken deviceToken) {
+    public <T extends Event> T ignitionOnEvent(T event, DeviceToken deviceToken) {
+        event.validateMdnMatch(deviceToken.getMdn());
 
-        onEvent.validateMdnMatch(deviceToken.getMdn());
-
-        //todo: db 에서 던져주는 runtime error 어떻게 처리할지 생각해 봐야합니다
-        return eventRepository.save(onEvent);
-    }
-
-
-    @Transactional
-    public OnOffEvent iginitionOffEvent(OnOffEvent offEvent, DeviceToken deviceToken) {
-
-        offEvent.validateMdnMatch(deviceToken.getMdn());
-
-        //todo: db 에서 던져주는 runtime error 어떻게 처리할지 생각해 봐야합니다
-        return eventRepository.save(offEvent);
+        // TODO: runtime 예외 처리 방법 고민 필요
+        return eventRepository.save(event);
     }
 
     @Transactional
