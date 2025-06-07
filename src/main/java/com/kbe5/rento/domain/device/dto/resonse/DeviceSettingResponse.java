@@ -1,6 +1,7 @@
 package com.kbe5.rento.domain.device.dto.resonse;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.kbe5.rento.domain.device.enums.DeviceResultCode;
 
 import java.util.List;
 import java.time.LocalDateTime;
@@ -19,15 +20,21 @@ public record DeviceSettingResponse(
         LocalDateTime oTime,
 
         @JsonProperty("ctrCnt")
-        String controlCount, // 제어명령 개수
+        int controlCount, // 제어명령 개수
 
         @JsonProperty("geoCnt")
         int geofenceCount,
 
         @JsonProperty("crtList")
-        List<DeviceRegisterResponse> deviceRegisterResponseList,
+        List<DeviceControlInfoResponse> deviceControlInfoResponseList,
 
         @JsonProperty("geoList")
         List<GeofenceControlInfoResponse> geofenceControlInfoResponseList
 ) {
+        public static DeviceSettingResponse of(DeviceResultCode resultCode, long mdn, LocalDateTime oTime
+                , int controlCount, int geofenceCount, List<DeviceControlInfoResponse> deviceControlInfoResponseList,
+                                               List<GeofenceControlInfoResponse> geofenceControlInfoResponseList) {
+                return new DeviceSettingResponse(resultCode.getCode(), resultCode.getMessage(), mdn, oTime, controlCount, geofenceCount,
+                        deviceControlInfoResponseList, geofenceControlInfoResponseList);
+        }
 }

@@ -7,39 +7,44 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+
 @Entity
 @Getter
 @NoArgsConstructor
 @Table(name = "geofence_control_info")
-public class GeofenceControlInfoEntity extends BaseEntity {
+public class GeofenceControlInfo extends BaseEntity {
+
+    private Long mdn;
 
     @Column(name = "geo_ctr_id", length = 32, nullable = false)
-    private String geoCtrId;
+    private Long geoCtrId;
 
     @Column(name = "up_val", length = 8)
-    private String upVal;
+    private Integer upVal;
 
     @Column(name = "geo_grp_id", length = 8)
-    private String geoGrpId;
+    private Integer geoGrpId;
 
     @Column(name = "geo_evt_tp", length = 8)
-    private String geoEvtTp;
+    private Short geoEvtTp;
 
     @Column(name = "geo_range", length = 8)
-    private String geoRange;
+    private Integer geoRange;
 
     @Column(name = "lat", length = 16)
-    private String lat;
+    private BigDecimal lat;
 
     @Column(name = "lon", length = 16)
-    private String lon;
+    private BigDecimal lon;
 
     @Column(name = "on_time", length = 14)
-    private String onTime;
+    private LocalDateTime onTime;
 
     @Column(name = "off_time", length = 14)
-    private String offTime;
+    private LocalDateTime offTime;
 
     @Column(name = "store_tp", length = 4)
-    private String storeTp;
+    private Short storeTp;
 }

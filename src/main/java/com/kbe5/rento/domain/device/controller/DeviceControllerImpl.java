@@ -49,9 +49,9 @@ public class DeviceControllerImpl implements DeviceController{
         return ResponseEntity.ok(DeviceTokenResponse.of(DeviceResultCode.SUCCESS, deviceToken));
     }
 
-    @Override
+    @PostMapping("/get-set-info")
     public ResponseEntity<DeviceSettingResponse> getSetInfo(@RequestBody @Validated
-                                                                DeviceSettingRequest deviceSettingRequest) {
-        return null;
+                                                                DeviceSettingRequest request) {
+        return ResponseEntity.ok(deviceService.getDeviceSetInfo(request));
     }
 }

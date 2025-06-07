@@ -34,6 +34,7 @@ public record DeviceSettingRequest(
         @NotNull(message = "{device.onTime.notnull}")
         LocalDateTime onTime,
 
+        @JsonProperty("dFWVer")
         @NotNull(message = "{device.dFWVer.notnull}")
         String deviceFirmwareVersion // 'LTE 1.2' 로 고정
 ) {
