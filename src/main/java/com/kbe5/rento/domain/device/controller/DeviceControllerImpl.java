@@ -1,6 +1,8 @@
 package com.kbe5.rento.domain.device.controller;
 
+import com.kbe5.rento.domain.device.dto.request.DeviceSettingRequest;
 import com.kbe5.rento.domain.device.dto.request.DeviceTokenRequest;
+import com.kbe5.rento.domain.device.dto.resonse.DeviceSettingResponse;
 import com.kbe5.rento.domain.device.dto.resonse.DeviceTokenResponse;
 import com.kbe5.rento.domain.device.entity.DeviceToken;
 import com.kbe5.rento.domain.device.enums.DeviceResultCode;
@@ -47,4 +49,9 @@ public class DeviceControllerImpl implements DeviceController{
         return ResponseEntity.ok(DeviceTokenResponse.of(DeviceResultCode.SUCCESS, deviceToken));
     }
 
+    @PostMapping("/get-set-info")
+    public ResponseEntity<DeviceSettingResponse> getSetInfo(@RequestBody @Validated
+                                                                DeviceSettingRequest request) {
+        return ResponseEntity.ok(deviceService.getDeviceSetInfo(request.mdn()));
+    }
 }
