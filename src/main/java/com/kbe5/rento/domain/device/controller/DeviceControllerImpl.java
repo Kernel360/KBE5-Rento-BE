@@ -52,6 +52,6 @@ public class DeviceControllerImpl implements DeviceController{
     @PostMapping("/get-set-info")
     public ResponseEntity<DeviceSettingResponse> getSetInfo(@RequestBody @Validated
                                                                 DeviceSettingRequest request) {
-        return ResponseEntity.ok(deviceService.getDeviceSetInfo(request));
+        return ResponseEntity.ok(deviceService.getDeviceSetInfo(request.mdn()));
     }
 }

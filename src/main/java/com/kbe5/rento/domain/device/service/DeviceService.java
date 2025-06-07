@@ -17,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Slf4j
@@ -66,8 +67,7 @@ public class DeviceService {
     }
 
     @Transactional
-    public DeviceSettingResponse getDeviceSetInfo(DeviceSettingRequest request) {
-        Long mdn = request.mdn();
+    public DeviceSettingResponse getDeviceSetInfo(Long mdn) {
 
         List<DeviceControlInfoResponse> controlInfos = deviceControlInfoRepository.findAllByMdn(mdn).stream()
                 .map(DeviceControlInfoResponse::fromEntity)
@@ -81,10 +81,12 @@ public class DeviceService {
             throw new DeviceException(DeviceResultCode.NO_SEARCH_RESULTS);
         }
 
+        LocalDateTime oTime = LocalDateTime.now();
+
         return DeviceSettingResponse.of(
                 DeviceResultCode.SUCCESS,
                 mdn,
-                request.onTime(),
+                oTime,
                 controlInfos.size(),
                 geoFenceInfos.size(),
                 controlInfos,
