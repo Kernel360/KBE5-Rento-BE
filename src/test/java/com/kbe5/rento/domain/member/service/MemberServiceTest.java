@@ -151,7 +151,6 @@ class MemberServiceTest {
 
         // 중복 아님
         when(companyRepository.findByCompanyCode("T1")).thenReturn(Optional.of(company));
-        when(memberRepository.existsByPhoneNumberAndCompanyId("010-9999-8888", 1L)).thenReturn(false);
 
         // when
         MemberInfoResponse result = memberService.update(manager, request, memberId);

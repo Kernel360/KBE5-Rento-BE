@@ -10,5 +10,15 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     List<Member> findAllByCompanyId(Long id);
 
+    Member findByPhoneNumberAndCompanyId(String phoneNumber, Long id);
+
     boolean existsByPhoneNumberAndCompanyId(String phoneNumber, Long id);
+
+    boolean existsByEmailAndCompanyId(String email, Long id);
+
+    boolean existsByLoginIdAndCompanyId(String loginId, Long id);
+
+    Member findByEmailAndCompanyId(String email, Long id);
+
+    Member findByLoginIdAndCompanyId(String loginId, Long id);
 }

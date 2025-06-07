@@ -57,6 +57,7 @@ public class SecurityPermissionApiList {
 //
 //            // Company APIs
             "/api/companies/register",
+            "/api/companies/check-bizNumber",
 //            "/api/companies",
 //            "/api/companies/{companyId}",
 
