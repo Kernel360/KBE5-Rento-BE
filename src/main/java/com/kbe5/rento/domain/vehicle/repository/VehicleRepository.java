@@ -45,6 +45,4 @@ public interface VehicleRepository extends JpaRepository<Vehicle, Long> {
                 @Param("did") Long departmentId,
                 Pageable pageable
         );
-
-        Optional<Vehicle> findByInfoModelName(String modelName);
 }
