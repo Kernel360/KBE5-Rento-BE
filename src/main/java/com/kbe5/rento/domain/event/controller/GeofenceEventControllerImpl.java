@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/events/geofence")
+@RequestMapping("/api/events/geofences")
 public class GeofenceEventControllerImpl implements GeofenceEventController{
 
     private final EventService eventService;
