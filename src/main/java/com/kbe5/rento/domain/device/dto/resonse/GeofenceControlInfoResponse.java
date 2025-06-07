@@ -1,7 +1,6 @@
 package com.kbe5.rento.domain.device.dto.resonse;
 
-import com.kbe5.rento.domain.device.domain.GeofenceControlInfo;
-import com.kbe5.rento.domain.device.enums.GeoEventType;
+import com.kbe5.rento.domain.device.entity.GeofenceControlInfo;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -10,7 +9,7 @@ public record GeofenceControlInfoResponse(
         long geoControlId,
         int updateValue,
         int geofenceGroupId,
-        int geoEventType,
+        short geoEventType,
         int geofenceRange,
         BigDecimal latitude,
         BigDecimal longitude,
@@ -18,19 +17,18 @@ public record GeofenceControlInfoResponse(
         LocalDateTime offTime,
         short storeType
 ) {
-
-    public static GeofenceControlInfoResponse fromDomain(GeofenceControlInfo domain) {
+    public static GeofenceControlInfoResponse fromEntity(GeofenceControlInfo entity) {
         return new GeofenceControlInfoResponse(
-                domain.getGeoControlId(),
-                domain.getUpdateValue(),
-                domain.getGeofenceGroupId(),
-                domain.getGeoEventType(),
-                domain.getGeofenceRange(),
-                domain.getLatitude(),
-                domain.getLongitude(),
-                domain.getOnTime(),
-                domain.getOffTime(),
-                domain.getStoreType()
+                entity.getGeoCtrId(),
+                entity.getUpVal(),
+                entity.getGeoGrpId(),
+                entity.getGeoEvtTp(),
+                entity.getGeoRange(),
+                entity.getLat(),
+                entity.getLon(),
+                entity.getOnTime(),
+                entity.getOffTime(),
+                entity.getStoreTp()
         );
     }
 }
