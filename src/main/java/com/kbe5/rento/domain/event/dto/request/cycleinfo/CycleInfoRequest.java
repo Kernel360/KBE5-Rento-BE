@@ -65,7 +65,7 @@ public record CycleInfoRequest(
 
     public CycleInfo toEntity(DeviceToken deviceToken) {
         return CycleInfo.builder()
-            .deviceUniqueId(deviceToken.getDeviceId())
+            .mdn(deviceToken.getMdn())
             .sec(this.sec())
             .gpsCondition(this.gpsCondition())
             .longitude(this.longitude())

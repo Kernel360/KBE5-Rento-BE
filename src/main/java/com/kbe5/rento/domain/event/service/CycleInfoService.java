@@ -22,12 +22,10 @@ public class CycleInfoService {
 
         long start = System.currentTimeMillis();
 
-        cycleInfoRepository.saveAll(cycleInfo);
+        cycleInfoRepository.bulkInsert(cycleInfo);
 
         long end = System.currentTimeMillis();
 
-        long performanceTime = end - start;
-
-        log.info("DB 저장 소요 시간: {} ms", performanceTime);
+        log.info("DB 저장 소요 시간: {} ms", end - start);
     }
 }
