@@ -1,6 +1,10 @@
 package com.kbe5.rento.domain.device.dto.resonse;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.kbe5.rento.common.datetime.EventLocalDateTimeDeserializer;
+import com.kbe5.rento.common.datetime.LocalDateTimeSerializer;
 import com.kbe5.rento.domain.device.enums.DeviceResultCode;
 
 import java.util.List;
@@ -17,6 +21,7 @@ public record DeviceSettingResponse(
         Long mdn,
 
         @JsonProperty("oTime")
+        @JsonSerialize(using = LocalDateTimeSerializer.class)
         LocalDateTime oTime,
 
         @JsonProperty("ctrCnt")

@@ -1,6 +1,8 @@
 package com.kbe5.rento.domain.device.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.kbe5.rento.common.datetime.EventLocalDateTimeDeserializer;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -32,6 +34,7 @@ public record DeviceSettingRequest(
         Integer deviceId,
 
         @NotNull(message = "{device.onTime.notnull}")
+        @JsonDeserialize(using = EventLocalDateTimeDeserializer.class)
         LocalDateTime onTime,
 
         @JsonProperty("dFWVer")
