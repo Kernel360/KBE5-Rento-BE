@@ -24,11 +24,4 @@ public class OnOffEvent extends Event {
     LocalDateTime offTime;
 
     private Integer batteryVolt;
-
-    public void validateMdnMatch(Long mdn) {
-        if (!this.mdn.equals(mdn)) {
-            throw new DeviceException(DeviceResultCode.MISMATCHED_MDN);
-        }
-    }
-
 }
