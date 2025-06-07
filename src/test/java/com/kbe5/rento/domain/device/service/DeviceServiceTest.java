@@ -49,7 +49,8 @@ class DeviceServiceTest {
             "A001",    // terminalId
             6,         // makerId
             5,         // packetVersion
-            1          // deviceId
+            1,          // deviceId
+            "C1"
         );
 
         testDevice = Device.builder()

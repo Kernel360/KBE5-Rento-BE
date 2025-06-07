@@ -28,8 +28,11 @@ public record DeviceRegisterRequest(
 
     @JsonProperty("did")
     @NotNull(message = "{device.did.notnull}")
-    Integer deviceId
-){
+    Integer deviceId,
+
+    @NotNull(message = "{device.companyCode.notnull}")
+    String companyCode
+) {
 
     public Device toEntity() {
         return Device.builder()
@@ -39,6 +42,7 @@ public record DeviceRegisterRequest(
             .packetVersion(this.packetVersion())
             .deviceId(this.deviceId())
             .deviceFirmWareVersion("LTE 1.2")
+            .companyCode(this.companyCode)
             .build();
     }
 }
