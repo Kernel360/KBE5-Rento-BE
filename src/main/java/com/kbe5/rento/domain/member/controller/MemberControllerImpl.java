@@ -83,4 +83,23 @@ public class MemberControllerImpl implements MemberController {
     public ResponseEntity<ApiResponse<List<String>>> getPositions() {
         return ResEntityFactory.toResponse(ApiResultCode.SUCCESS, Position.getPositions());
     }
+
+    //아이디 중복 체크
+    @GetMapping("/check-id/{loginId}")
+    public ResponseEntity<ApiResponse<Boolean>> checkId(
+            @PathVariable String loginId) {
+        return ResEntityFactory.toResponse(ApiResultCode.SUCCESS, !memberService.isExistLoginId(loginId));
+    }
+
+    //이메일 중복 체크
+    @GetMapping("/check-email/{email}")
+    public ResponseEntity<ApiResponse<Boolean>> checkEmail(@PathVariable String email) {
+        return ResEntityFactory.toResponse(ApiResultCode.SUCCESS, !memberService.isExistEmail(email));
+    }
+
+    //전화번호 중복 체크
+    @GetMapping("/check-phone/{phoneNumber}")
+    public ResponseEntity<ApiResponse<Boolean>> checkPhoneNumber(@PathVariable String phoneNumber) {
+        return ResEntityFactory.toResponse(ApiResultCode.SUCCESS, !memberService.isExistPhoneNumber(phoneNumber));
+    }
 }

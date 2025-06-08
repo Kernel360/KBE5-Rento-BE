@@ -31,19 +31,33 @@ public class MemberService {
 
     @Transactional
     public Member register(Member member, Long departmentId) {
-        validateDuplicateFields(member.getPhoneNumber(), member.getEmail(), member.getLoginId(), member.getCompanyCode());
+        validateDuplicate(member); // 중복 검증
 
         member.encodePassword(passwordEncoder);
 
-        member.assignCompany(companyRepository.findByCompanyCode(member.getCompanyCode()).orElseThrow(
-                () -> new DomainException(ErrorType.COMPANY_NOT_FOUND))
-        );
-        member.assignDepartment(departmentRepository.findById(departmentId).orElseThrow(
-                () -> new DomainException(ErrorType.DEPARTMENT_NOT_FOUND))
-        );
+        Company company = companyRepository.findByCompanyCode(member.getCompanyCode())
+                .orElseThrow(() -> new DomainException(ErrorType.COMPANY_NOT_FOUND));
+        Department department = departmentRepository.findById(departmentId)
+                .orElseThrow(() -> new DomainException(ErrorType.DEPARTMENT_NOT_FOUND));
+
+        member.assignCompany(company);
+        member.assignDepartment(department);
 
         return memberRepository.save(member);
     }
+
+    private void validateDuplicate(Member member) {
+        if (isExistPhoneNumber(member.getPhoneNumber())) {
+            throw new DomainException(ErrorType.DUPLICATE_PHONE_NUMBER);
+        }
+        if (isExistEmail(member.getEmail())) {
+            throw new DomainException(ErrorType.DUPLICATE_EMAIL);
+        }
+        if (isExistLoginId(member.getLoginId())) {
+            throw new DomainException(ErrorType.DUPLICATE_LOGIN_ID);
+        }
+    }
+
 
     @Transactional
     public MemberInfoResponse update(Manager manager, MemberUpdateRequest request, Long memberId) {
@@ -53,16 +67,35 @@ public class MemberService {
         Department department = departmentRepository.findById(request.departmentId())
                 .orElseThrow(() -> new DomainException(ErrorType.DEPARTMENT_NOT_FOUND));
 
-        if(!manager.getCompany().getId().equals(member.getCompany().getId())) {
+        if (!manager.getCompany().getId().equals(member.getCompany().getId())) {
             throw new DomainException(ErrorType.NOT_AUTHORIZED);
         }
 
-        validateDuplicateFields(request.phoneNumber(), request.email(), request.loginId(), request.companyCode(), memberId);
+        // 중복 체크 (자기 자신은 제외)
+        if (memberRepository.existsByEmailAndIdNot(request.email(), memberId)) {
+            throw new DomainException(ErrorType.DUPLICATE_EMAIL);
+        }
 
-        member.update(request.name(), request.email(), request.getPosition(), request.loginId(), request.phoneNumber(), department);
+        if (memberRepository.existsByLoginIdAndIdNot(request.loginId(), memberId)) {
+            throw new DomainException(ErrorType.DUPLICATE_LOGIN_ID);
+        }
+
+        if (memberRepository.existsByPhoneNumberAndIdNot(request.phoneNumber(), memberId)) {
+            throw new DomainException(ErrorType.DUPLICATE_PHONE_NUMBER);
+        }
+
+        member.update(
+                request.name(),
+                request.email(),
+                request.getPosition(),
+                request.loginId(),
+                request.phoneNumber(),
+                department
+        );
 
         return MemberInfoResponse.from(member);
     }
+
 
     @Transactional
     public void delete(Manager manager, Long memberId) {
@@ -90,50 +123,15 @@ public class MemberService {
                 .orElseThrow(() -> new DomainException(ErrorType.MEMBER_NOT_FOUND));
     }
 
-    // 회원가입 시 중복 검증 (새 등록)
-    private void validateDuplicateFields(String phoneNumber, String email, String loginId, String companyCode) {
-        Company company = companyRepository.findByCompanyCode(companyCode).orElseThrow(
-                () -> new DomainException(ErrorType.COMPANY_NOT_FOUND)
-        );
-
-        // 전화번호 중복 체크
-        if(memberRepository.existsByPhoneNumberAndCompanyId(phoneNumber, company.getId())) {
-            throw new DomainException(ErrorType.DUPLICATE_PHONE_NUMBER);
-        }
-
-        // 이메일 중복 체크
-        if(memberRepository.existsByEmailAndCompanyId(email, company.getId())) {
-            throw new DomainException(ErrorType.DUPLICATE_EMAIL);
-        }
-
-        // 로그인 아이디 중복 체크
-        if(memberRepository.existsByLoginIdAndCompanyId(loginId, company.getId())) {
-            throw new DomainException(ErrorType.DUPLICATE_LOGIN_ID);
-        }
+    public boolean isExistLoginId(String loginId) {
+        return memberRepository.existsByLoginId(loginId);
     }
 
-    // 회원 업데이트 시 중복 검증 (자신 제외)
-    private void validateDuplicateFields(String phoneNumber, String email, String loginId, String companyCode, Long memberId) {
-        Company company = companyRepository.findByCompanyCode(companyCode).orElseThrow(
-                () -> new DomainException(ErrorType.COMPANY_NOT_FOUND)
-        );
+    public boolean isExistEmail(String email) {
+        return memberRepository.existsByEmail(email);
+    }
 
-        // 전화번호 중복 체크 (자신 제외)
-        Member memberWithSamePhone = memberRepository.findByPhoneNumberAndCompanyId(phoneNumber, company.getId());
-        if(memberWithSamePhone != null && !Objects.equals(memberWithSamePhone.getId(), memberId)) {
-            throw new DomainException(ErrorType.DUPLICATE_PHONE_NUMBER);
-        }
-
-        // 이메일 중복 체크 (자신 제외)
-        Member memberWithSameEmail = memberRepository.findByEmailAndCompanyId(email, company.getId());
-        if(memberWithSameEmail != null && !Objects.equals(memberWithSameEmail.getId(), memberId)) {
-            throw new DomainException(ErrorType.DUPLICATE_EMAIL);
-        }
-
-        // 로그인 아이디 중복 체크 (자신 제외)
-        Member memberWithSameLoginId = memberRepository.findByLoginIdAndCompanyId(loginId, company.getId());
-        if(memberWithSameLoginId != null && !Objects.equals(memberWithSameLoginId.getId(), memberId)) {
-            throw new DomainException(ErrorType.DUPLICATE_LOGIN_ID);
-        }
+    public boolean isExistPhoneNumber(String phoneNumber) {
+        return memberRepository.existsByPhoneNumber(phoneNumber);
     }
 }
