@@ -24,8 +24,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.List;
 import java.util.Optional;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
+import static org.assertj.core.api.AssertionsForClassTypes.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -103,6 +102,14 @@ class MemberServiceTest {
     @Test
     @DisplayName("전화번호 중복체크")
     void register_Duplicate_Phone_Number(){
+        //given
+        when(memberRepository.existsByPhoneNumber("01011111111")).thenReturn(true);
+
+        //when
+        boolean result = memberService.isExistPhoneNumber("01011111111");
+
+        //then
+        assertThat(result).isTrue();
 
     }
 

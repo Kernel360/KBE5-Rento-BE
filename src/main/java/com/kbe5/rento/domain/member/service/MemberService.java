@@ -122,6 +122,7 @@ public class MemberService {
                 .orElseThrow(() -> new DomainException(ErrorType.MEMBER_NOT_FOUND));
     }
 
+    //todo: 기업별로도 확인하기
     public boolean isExistLoginId(String loginId) {
         return memberRepository.existsByLoginId(loginId);
     }
