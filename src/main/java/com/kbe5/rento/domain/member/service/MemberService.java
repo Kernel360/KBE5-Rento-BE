@@ -35,13 +35,12 @@ public class MemberService {
 
         member.encodePassword(passwordEncoder);
 
-        Company company = companyRepository.findByCompanyCode(member.getCompanyCode())
-                .orElseThrow(() -> new DomainException(ErrorType.COMPANY_NOT_FOUND));
-        Department department = departmentRepository.findById(departmentId)
-                .orElseThrow(() -> new DomainException(ErrorType.DEPARTMENT_NOT_FOUND));
-
-        member.assignCompany(company);
-        member.assignDepartment(department);
+        member.assignCompany(companyRepository.findByCompanyCode(member.getCompanyCode()).orElseThrow(
+                () -> new DomainException(ErrorType.COMPANY_NOT_FOUND))
+        );
+        member.assignDepartment(departmentRepository.findById(departmentId).orElseThrow(
+                () -> new DomainException(ErrorType.DEPARTMENT_NOT_FOUND))
+        );
 
         return memberRepository.save(member);
     }
