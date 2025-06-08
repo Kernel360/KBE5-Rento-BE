@@ -1,5 +1,7 @@
 package com.kbe5.rento.domain.event.entity;
 
+import com.kbe5.rento.common.exception.DeviceException;
+import com.kbe5.rento.domain.device.enums.DeviceResultCode;
 import com.kbe5.rento.domain.device.enums.GpsCondition;
 import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorColumn;
@@ -58,4 +60,9 @@ public abstract class Event {
 
     private Long currentAccumulatedDistance; //총 누적 거리
 
+    public void validateMdnMatch(Long mdn) {
+        if (!this.mdn.equals(mdn)) {
+            throw new DeviceException(DeviceResultCode.MISMATCHED_MDN);
+        }
+    }
 }
