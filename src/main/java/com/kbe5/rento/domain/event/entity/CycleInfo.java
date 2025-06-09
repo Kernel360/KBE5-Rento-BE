@@ -2,6 +2,8 @@ package com.kbe5.rento.domain.event.entity;
 
 import com.kbe5.rento.domain.device.enums.GpsCondition;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -19,13 +21,14 @@ import lombok.NoArgsConstructor;
 public class CycleInfo {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long deviceUniqueId;
+    private Long mdn;
 
     private Integer sec;
 
+    @Enumerated(value = EnumType.STRING)
     private GpsCondition gpsCondition;
 
     private BigDecimal latitude;
@@ -41,10 +44,10 @@ public class CycleInfo {
     private Integer battery;
 
     @Builder
-    public CycleInfo(Long id, Long deviceUniqueId, Integer sec, GpsCondition gpsCondition, BigDecimal latitude,
+    public CycleInfo(Long id, Long mdn, Integer sec, GpsCondition gpsCondition, BigDecimal latitude,
         BigDecimal longitude, Integer angle, Integer speed, Long sum, Integer battery) {
         this.id = id;
-        this.deviceUniqueId = deviceUniqueId;
+        this.mdn = mdn;
         this.sec = sec;
         this.gpsCondition = gpsCondition;
         this.latitude = latitude;

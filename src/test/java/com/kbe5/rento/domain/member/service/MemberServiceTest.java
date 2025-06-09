@@ -24,11 +24,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.List;
 import java.util.Optional;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
+import static org.assertj.core.api.AssertionsForClassTypes.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -63,11 +63,10 @@ class MemberServiceTest {
     @DisplayName("회원 등록 성공")
     void register_Success() {
         // given
-        when(company.getId()).thenReturn(1L);
+        given(memberRepository.save(any())).willReturn(member);
 
         // register에 실제 전달하는 member에 대한 stub 필요
         when(member.getCompanyCode()).thenReturn("T1");
-        when(member.getPhoneNumber()).thenReturn("010-1234-5678");
 
         when(companyRepository.findByCompanyCode("T1")).thenReturn(Optional.of(company));
         when(departmentRepository.findById(1L)).thenReturn(Optional.of(department));
@@ -78,7 +77,7 @@ class MemberServiceTest {
 
         // then
         assertThat(result.getCompanyCode()).isEqualTo("T1");
-        verify(companyRepository, times(2)).findByCompanyCode("T1");
+        verify(companyRepository, times(1)).findByCompanyCode("T1");
         verify(memberRepository, times(1)).save(any(Member.class));
     }
 
@@ -88,7 +87,6 @@ class MemberServiceTest {
     void register_DepartmentNotFound() {
         //given
         when(member.getCompanyCode()).thenReturn("T1");
-        when(member.getPhoneNumber()).thenReturn("010-1234-5678");
 
         when(companyRepository.findByCompanyCode("T1")).thenReturn(Optional.of(company));
         when(departmentRepository.findById(any())).thenReturn(Optional.empty());
@@ -102,22 +100,17 @@ class MemberServiceTest {
     }
 
     @Test
-    @DisplayName("회원 등록 시 전화번호 중복인 경우")
+    @DisplayName("전화번호 중복체크")
     void register_Duplicate_Phone_Number(){
         //given
-        when(member.getCompanyCode()).thenReturn("T1");
-        when(member.getPhoneNumber()).thenReturn("010-1234-5678");
+        when(memberRepository.existsByPhoneNumber("01011111111")).thenReturn(true);
 
-        when(company.getId()).thenReturn(1L);
-        when(companyRepository.findByCompanyCode("T1")).thenReturn(Optional.of(company));
-        when(memberRepository.existsByPhoneNumberAndCompanyId("010-1234-5678", 1L)).thenReturn(true);
+        //when
+        boolean result = memberService.isExistPhoneNumber("01011111111");
 
-        //when & then
-        assertThatThrownBy(() -> memberService.register(member, 1L))
-        .isInstanceOf(DomainException.class)
-                .hasMessage(ErrorType.DUPLICATE_PHONE_NUMBER.getMessage());
+        //then
+        assertThat(result).isTrue();
 
-        verify(memberRepository, never()).save(any(Member.class));
     }
 
     @Test
@@ -135,8 +128,6 @@ class MemberServiceTest {
         when(departmentRepository.findById(departmentId)).thenReturn(Optional.of(department));
 
         when(request.departmentId()).thenReturn(departmentId);
-        when(request.phoneNumber()).thenReturn("010-9999-8888");
-        when(request.companyCode()).thenReturn("T1");
 
         // 기타 업데이트 필드도 mock
         when(request.name()).thenReturn("수정된이름");
@@ -148,10 +139,6 @@ class MemberServiceTest {
 
         when(member.getDepartment()).thenReturn(department);
         when(department.getId()).thenReturn(2L);
-
-        // 중복 아님
-        when(companyRepository.findByCompanyCode("T1")).thenReturn(Optional.of(company));
-        when(memberRepository.existsByPhoneNumberAndCompanyId("010-9999-8888", 1L)).thenReturn(false);
 
         // when
         MemberInfoResponse result = memberService.update(manager, request, memberId);

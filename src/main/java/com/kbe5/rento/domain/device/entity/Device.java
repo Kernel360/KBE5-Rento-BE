@@ -29,15 +29,18 @@ public class Device extends BaseEntity {
 
     private String deviceFirmWareVersion;
 
+    private String companyCode;
+
     @Builder
     public Device(Long mdn, String terminalId, Integer makerId, Integer packetVersion,
-        Integer deviceId, String deviceFirmWareVersion) {
+        Integer deviceId, String deviceFirmWareVersion, String companyCode) {
         this.mdn = mdn;
         this.terminalId = terminalId;
         this.makerId = makerId;
         this.packetVersion = packetVersion;
         this.deviceId = deviceId;
         this.deviceFirmWareVersion = deviceFirmWareVersion;
+        this.companyCode = companyCode;
     }
 
     public DeviceToken issueToken(Long expiredMs) {

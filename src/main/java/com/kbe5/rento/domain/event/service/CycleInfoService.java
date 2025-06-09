@@ -19,6 +19,13 @@ public class CycleInfoService {
 
     @Transactional
     public void saveCycleInfo(List<CycleInfo> cycleInfo) {
-       cycleInfoRepository.saveAll(cycleInfo);
+
+        long start = System.currentTimeMillis();
+
+        cycleInfoRepository.bulkInsert(cycleInfo);
+
+        long end = System.currentTimeMillis();
+
+        log.info("DB 저장 소요 시간: {} ms", end - start);
     }
 }
