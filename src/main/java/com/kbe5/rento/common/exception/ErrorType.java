@@ -43,6 +43,7 @@ public enum ErrorType {
     // Drive
     DRIVE_NOT_FOUND(HttpStatus.NOT_FOUND, "운행을 찾지 못했습니다."),
     USER_VEHICLE_COMPANY_MISMATCH(HttpStatus.BAD_REQUEST, "업체가 일치하지 않습니다"),
+    DRIVE_NOT_DISTANCE(HttpStatus.BAD_REQUEST, "주행 거리가 없습니다"),
 
     // Geofence
     GEOFENCE_NOT_FOUND(HttpStatus.NOT_FOUND, "지오펜스를 찾을 수 없습니다.");

@@ -16,12 +16,11 @@ import org.springframework.transaction.annotation.Transactional;
 public class EventService {
 
     private final EventRepository eventRepository;
-
+  
     @Transactional
     public <T extends Event> T ignitionOnEvent(T event, DeviceToken deviceToken) {
         event.validateMdnMatch(deviceToken.getMdn());
-
-        // TODO: runtime 예외 처리 방법 고민 필요
+      
         return eventRepository.save(event);
     }
 

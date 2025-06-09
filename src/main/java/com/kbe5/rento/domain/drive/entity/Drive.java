@@ -8,6 +8,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.grammars.hql.HqlParser;
 
 import java.time.LocalDateTime;
 
@@ -29,31 +30,45 @@ public class Drive extends BaseEntity {
     private LocalDateTime endDate;
 
     @Enumerated(EnumType.STRING)
-    private DriveType dirveType;
+    private DriveType driveType;
 
     private String startLocation;
     private String endLocation;
 
+    private Long distance;
+
+    // todo: enum으로 관리하기
     private boolean isStart;
 
+    private Long mdn;
+
     @Builder
-    private Drive(Member member, Vehicle vehicle, DriveType dirveType, String startLocation,
-                 String endLocation) {
+    private Drive(Member member, Vehicle vehicle, DriveType driveType, String startLocation,
+                 String endLocation, LocalDateTime startDate, LocalDateTime endDate) {
         this.member = member;
         this.vehicle = vehicle;
-        this.dirveType = dirveType;
+        this.driveType = driveType;
         this.startLocation = startLocation;
         this.endLocation = endLocation;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.distance = 0L;
         this.isStart = false;
     }
 
     public void driveStart(){
        this.isStart = true;
-       this.startDate = LocalDateTime.now();
     }
 
     public void driveEnd(){
         this.isStart = false;
-        this.endDate = LocalDateTime.now();
+    }
+
+    public void addDistance(Long distance){
+        this.distance = distance;
+    }
+
+    public void addMdn(Long mdn){
+        this.mdn = mdn;
     }
 }

@@ -52,4 +52,12 @@ public class Vehicle extends BaseEntity {
     public void update(VehicleUpdateRequest request) {
         this.mileage = new VehicleMilleage(request.totalDistanceKm(), request.batteryVoltage());
     }
+
+    public void addMdn(Long vehicleId) {
+        this.mileage.addMdn(vehicleId);
+    }
+
+    public void addDistance(Long distance) {
+        this.mileage.addDistance(distance);
+    }
 }

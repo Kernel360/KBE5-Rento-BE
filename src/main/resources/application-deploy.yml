@@ -12,3 +12,7 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
+      properties:
+        hibernate:
+          jdbc:
+            time_zone: Asia/Seoul
