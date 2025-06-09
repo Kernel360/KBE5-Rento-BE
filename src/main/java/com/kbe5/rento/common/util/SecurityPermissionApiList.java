@@ -7,6 +7,7 @@ public class SecurityPermissionApiList {
 
     public static final String[] PUBLIC_URLS = {
 
+            "/health",
 //            "/api/**",
 
 //            // Manager APIs
