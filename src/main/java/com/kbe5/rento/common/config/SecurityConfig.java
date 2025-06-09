@@ -86,6 +86,7 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
 
         configuration.setAllowedOrigins(Collections.singletonList("http://localhost:3000")); // 프론트 서버 포트로 변경 예정
+        configuration.setAllowedMethods(Collections.singletonList("https://www.rento.world"));
         configuration.setAllowedMethods(Collections.singletonList("*")); // 추 후 https 만 허용
         configuration.setAllowCredentials(true);
         configuration.setAllowedHeaders(Collections.singletonList("*"));
