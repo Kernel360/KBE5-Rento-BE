@@ -30,7 +30,6 @@ public class EventService {
     public OnOffEvent iginitionOffEvent(OnOffEvent offEvent, DeviceToken deviceToken) {
 
         offEvent.validateMdnMatch(deviceToken.getMdn());
-
         //todo: db 에서 던져주는 runtime error 어떻게 처리할지 생각해 봐야합니다
         return eventRepository.save(offEvent);
     }

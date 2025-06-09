@@ -36,7 +36,7 @@ public class VehicleControllerImpl implements VehicleController{
     public ResponseEntity<ApiResponse<String>> addVehicle(
             @AuthenticationPrincipal CustomManagerDetails customManagerDetails,
             @RequestBody @Validated VehicleAddRequest request) {
-        vehicleService.addVehicle(request.toEntity(customManagerDetails.getManager()
+            vehicleService.addVehicle(request.toEntity(customManagerDetails.getManager()
                 .getCompany()), request.departmentId());
 
         return ResEntityFactory.toResponse(ApiResultCode.SUCCESS, "차량 등록 완료");

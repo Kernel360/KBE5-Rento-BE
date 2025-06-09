@@ -27,8 +27,9 @@ public class VehicleService {
                 () -> new DomainException(ErrorType.DEPARTMENT_NOT_FOUND)
         );
         vehicle.addDepartment(department);
-
-        return vehicleRepository.save(vehicle);
+        var res = vehicleRepository.save(vehicle);
+        res.addMdn(res.getId());
+        return res;
     }
 
     public Page<Vehicle> getVehicleList(

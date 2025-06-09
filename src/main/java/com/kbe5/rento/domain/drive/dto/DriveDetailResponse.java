@@ -24,19 +24,21 @@ public record DriveDetailResponse(
 
     String endLocation,
 
+    Long distance,
+
     boolean isStart
 ) {
     public static DriveDetailResponse fromEntity(Drive drive){
         return DriveDetailResponse.builder()
                 .member(drive.getMember())
                 .vehicle(drive.getVehicle())
-                .driveType(drive.getDirveType())
+                .driveType(drive.getDriveType())
                 .startDate(drive.getStartDate())
                 .endDate(drive.getEndDate())
                 .startLocation(drive.getStartLocation())
                 .endLocation(drive.getEndLocation())
+                .distance(drive.getDistance())
                 .isStart(drive.isStart())
                 .build();
     }
 }
-
