@@ -48,7 +48,7 @@ public class CycleInfoControllerImpl implements CycleInfoController{
     }
 
     @Override
-    @GetMapping("get-list")
+    @GetMapping("/get-list")
     public ResponseEntity<List<EventDataResponse>> getList() {
 
         List<EventDataResponse> eventDataResponseList = eventService.getList()
