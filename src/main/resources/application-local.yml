@@ -17,7 +17,7 @@ spring:
   jpa:
     show-sql: false    # ★ 추가 또는 true에서 false로 변경
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     properties:
       hibernate:
 #        format_sql: true

@@ -84,7 +84,7 @@ public record OnEventRequest(
     Long sum
 ) {
 
-    public OnOffEvent toEntity(Long deviceUniqueId, EventType eventType) {
+    public OnOffEvent toEntity(Long deviceUniqueId) {
         return OnOffEvent.builder()
             .mdn(this.mdn())
             .terminalId(this.terminalId())
@@ -100,7 +100,7 @@ public record OnEventRequest(
             .currentAccumulatedDistance(this.sum())
             .onTime(this.onTime())
             .offTime(this.offTime())
-            .eventType(eventType)
+            .eventType(EventType.ON)
             .build();
     }
 }

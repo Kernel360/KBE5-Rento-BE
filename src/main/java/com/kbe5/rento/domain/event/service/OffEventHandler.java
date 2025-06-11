@@ -4,7 +4,9 @@ import com.kbe5.rento.domain.event.entity.Event;
 import com.kbe5.rento.domain.event.enums.EventType;
 import com.kbe5.rento.domain.event.repository.EventRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
+@Component
 @RequiredArgsConstructor
 public class OffEventHandler implements EventHandler {
 
@@ -22,5 +24,4 @@ public class OffEventHandler implements EventHandler {
 
         eventRepository.save(event);
     }
-
 }

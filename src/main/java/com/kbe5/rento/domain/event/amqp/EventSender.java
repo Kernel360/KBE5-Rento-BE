@@ -18,16 +18,10 @@ public class EventSender {
     private final Queue queue;
 
     public void send(Event event, Long mdn) {
+
         event.validateMdnMatch(mdn);
 
+        log.info("sender : {}",event.getClass().getName());
         template.convertAndSend(queue.getName(), event);
     }
-//
-//    public void sendEventAndCycleInfo(Event event, List<CycleInfo> cycleInfoList) {
-//        // 1. 이벤트 객체를 "event" 큐로
-//        template.convertAndSend("event", event);
-//
-//        // 2. 주기정보 리스트를 "cycle-info" 큐로
-//        template.convertAndSend("cycle-info", cycleInfoList);
-//    }
 }
