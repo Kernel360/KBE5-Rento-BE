@@ -34,6 +34,9 @@ public class SecurityPermissionApiList {
             "/api/devices",
             "/api/devices/token",
 
+            //event
+            "/api/events/cycle-info/get-list",
+
             //swagger
             "/swagger-ui/**",
             "/swagger-ui.html",
