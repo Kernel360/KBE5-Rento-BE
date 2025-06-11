@@ -31,7 +31,6 @@ public class DriveControllerImpl implements DriveController {
         Drive drive = DriveAddRequest.toEntity(request);
         driveService.driveAdd(drive);
 
-
         return ResEntityFactory.toResponse(ApiResultCode.SUCCESS, "운행 예약 완료");
     }
 
