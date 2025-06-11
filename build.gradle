@@ -47,6 +47,9 @@ dependencies {
 	// https://mvnrepository.com/artifact/org.springframework/spring-jdbc
 	implementation 'org.springframework:spring-jdbc:6.2.7'
 
+	// https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-amqp
+	implementation 'org.springframework.boot:spring-boot-starter-amqp:3.5.0'
+
 	runtimeOnly 'com.h2database:h2'
 	runtimeOnly 'com.mysql:mysql-connector-j'
 

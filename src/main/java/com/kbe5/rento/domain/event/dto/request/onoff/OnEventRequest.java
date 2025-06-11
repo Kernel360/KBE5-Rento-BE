@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.kbe5.rento.common.datetime.EventLocalDateTimeDeserializer;
 import com.kbe5.rento.domain.event.entity.OnOffEvent;
 import com.kbe5.rento.domain.device.enums.GpsCondition;
+import com.kbe5.rento.domain.event.enums.EventType;
 import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Max;
@@ -83,7 +84,7 @@ public record OnEventRequest(
     Long sum
 ) {
 
-    public OnOffEvent toEntity(Long deviceUniqueId) {
+    public OnOffEvent toEntity(Long deviceUniqueId, EventType eventType) {
         return OnOffEvent.builder()
             .mdn(this.mdn())
             .terminalId(this.terminalId())
@@ -99,6 +100,7 @@ public record OnEventRequest(
             .currentAccumulatedDistance(this.sum())
             .onTime(this.onTime())
             .offTime(this.offTime())
+            .eventType(eventType)
             .build();
     }
 }

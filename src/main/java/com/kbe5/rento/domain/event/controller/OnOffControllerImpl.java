@@ -20,33 +20,33 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/events/on-off")
+//@RequestMapping("/api/events/on-off")
 public class OnOffControllerImpl implements OnOffController{
 
     private final EventService eventService;
 
-    @PostMapping("/on")
-    public ResponseEntity<EventResponse> onEvent(
-            @AuthenticationPrincipal DeviceToken deviceToken, // 바로 DeviceToken!
-            @RequestBody @Validated OnEventRequest request) {
-
-        OnOffEvent onOffEvent = request.toEntity(deviceToken.getDeviceId());
-        OnOffEvent savedEvent = eventService.ignitionOnEvent(onOffEvent, deviceToken);
-
-        return ResponseEntity.ok(EventResponse.fromEntity(DeviceResultCode.SUCCESS, savedEvent));
-    }
+//    @PostMapping("/on")
+//    public ResponseEntity<EventResponse> onEvent(
+//            @AuthenticationPrincipal DeviceToken deviceToken, // 바로 DeviceToken!
+//            @RequestBody @Validated OnEventRequest request) {
+//
+//        OnOffEvent onOffEvent = request.toEntity(deviceToken.getDeviceId());
+//        OnOffEvent savedEvent = eventService.ignitionOnEvent(onOffEvent, deviceToken);
+//
+//        return ResponseEntity.ok(EventResponse.fromEntity(DeviceResultCode.SUCCESS, savedEvent));
+//    }
 
     /**
      * 전송이 되지 않거나 실패할 경우 다음 ON 데이터를 전송 할 때, 시동 OFF 데이터를 같이 보낸다
      */
-    @PostMapping("/off")
-    public ResponseEntity<EventResponse> offEvent(
-            @AuthenticationPrincipal DeviceToken deviceToken,
-            @RequestBody @Validated OffEventRequest request) {
-
-        OnOffEvent onOffEvent = request.toEntity(deviceToken.getDeviceId());
-        OnOffEvent savedEvent = eventService.ignitionOnEvent(onOffEvent, deviceToken);
-
-        return ResponseEntity.ok(EventResponse.fromEntity(DeviceResultCode.SUCCESS, savedEvent));
-    }
+//    @PostMapping("/off")
+//    public ResponseEntity<EventResponse> offEvent(
+//            @AuthenticationPrincipal DeviceToken deviceToken,
+//            @RequestBody @Validated OffEventRequest request) {
+//
+//        OnOffEvent onOffEvent = request.toEntity(deviceToken.getDeviceId());
+//        OnOffEvent savedEvent = eventService.ignitionOnEvent(onOffEvent, deviceToken);
+//
+//        return ResponseEntity.ok(EventResponse.fromEntity(DeviceResultCode.SUCCESS, savedEvent));
+//    }
 }
