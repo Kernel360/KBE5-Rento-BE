@@ -88,7 +88,8 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
 
         // 프론트 도메인 허용
-        configuration.setAllowedOriginPatterns(Arrays.asList("https://*.rento.world", "https://www.rento.world"));
+        configuration.setAllowedOriginPatterns(Arrays.asList("https://*.rento.world", "https://www.rento.world",
+                "http://localhost:3000", "https://localhost:3000"));
 
         // 허용 HTTP 메서드
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
