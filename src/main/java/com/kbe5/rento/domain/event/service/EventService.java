@@ -35,13 +35,6 @@ public class EventService {
     }
 
     @Transactional
-    public <T extends Event> T ignitionOnEvent(T event, DeviceToken deviceToken) {
-        event.validateMdnMatch(deviceToken.getMdn());
-
-        return eventRepository.save(event);
-    }
-
-    @Transactional
     public CycleEvent saveCycleEvent(CycleEvent cycleEvent) {
 
         return eventRepository.save(cycleEvent);

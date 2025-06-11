@@ -1,5 +1,6 @@
 package com.kbe5.rento.domain.event.amqp;
 
+import com.kbe5.rento.domain.event.entity.CycleInfo;
 import com.kbe5.rento.domain.event.entity.Event;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,4 +22,12 @@ public class EventSender {
 
         template.convertAndSend(queue.getName(), event);
     }
+//
+//    public void sendEventAndCycleInfo(Event event, List<CycleInfo> cycleInfoList) {
+//        // 1. 이벤트 객체를 "event" 큐로
+//        template.convertAndSend("event", event);
+//
+//        // 2. 주기정보 리스트를 "cycle-info" 큐로
+//        template.convertAndSend("cycle-info", cycleInfoList);
+//    }
 }

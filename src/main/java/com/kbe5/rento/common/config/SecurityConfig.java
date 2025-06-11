@@ -6,6 +6,7 @@ import com.kbe5.rento.common.jwt.util.JwtUtil;
 import com.kbe5.rento.common.securityFilter.LoginAuthenticationFilter;
 import com.kbe5.rento.common.util.SecurityPermissionApiList;
 import com.kbe5.rento.domain.manager.respository.ManagerRepository;
+import java.util.Arrays;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
@@ -87,6 +88,7 @@ public class SecurityConfig {
 
         configuration.setAllowedOrigins(Collections.singletonList("http://localhost:3000")); // 프론트 서버 포트로 변경 예정
         configuration.setAllowedMethods(Collections.singletonList("*")); // 추 후 https 만 허용
+//        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowCredentials(true);
         configuration.setAllowedHeaders(Collections.singletonList("*"));
         configuration.setMaxAge(3600L); // 요청 캐시 시간

@@ -12,6 +12,7 @@ import com.kbe5.rento.domain.member.entity.Member;
 import com.kbe5.rento.domain.member.entity.Position;
 import com.kbe5.rento.domain.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/members")
@@ -63,10 +65,17 @@ public class MemberControllerImpl implements MemberController {
     @Override
     @GetMapping
     public ResponseEntity<ApiResponse<List<MemberInfoResponse>>> getUsers(@RequestParam String companyCode) {
-        return ResEntityFactory.toResponse(ApiResultCode.SUCCESS, memberService.getMemberList(companyCode)
+        log.info("company code is : {}", companyCode);
+        List<Member> memberList = memberService.getMemberList(companyCode);
+        log.info("member size : {}",memberList.size());
+        return ResEntityFactory.toResponse(ApiResultCode.SUCCESS, memberList
                 .stream()
                 .map(MemberInfoResponse::from)
                 .toList()
+//        return ResEntityFactory.toResponse(ApiResultCode.SUCCESS, memberService.getMemberList(companyCode)
+//                .stream()
+//                .map(MemberInfoResponse::from)
+//                .toList()
         );
     }
 
