@@ -30,7 +30,7 @@ import lombok.experimental.SuperBuilder;
 public abstract class Event {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
     Long deviceUniqueId;
