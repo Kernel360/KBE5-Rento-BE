@@ -63,7 +63,7 @@ public class ManagerControllerImpl implements ManagerController {
                 !managerService.isExistsLoginId(loginId));
     }
 
-    @GetMapping("/{email}")
+    @GetMapping("/check-email/{email}")
     public ResponseEntity<ApiResponse<Boolean>> checkAvailableEmail(@PathVariable String email) {
         return ResEntityFactory.toResponse(ApiResultCode.SUCCESS,
                 !managerService.isExistsEmail(email));

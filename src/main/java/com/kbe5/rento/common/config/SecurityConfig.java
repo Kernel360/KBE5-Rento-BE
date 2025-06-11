@@ -26,7 +26,9 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 @Slf4j
 @Configuration
@@ -86,13 +88,23 @@ public class SecurityConfig {
 
         CorsConfiguration configuration = new CorsConfiguration();
 
-        configuration.setAllowedOrigins(Collections.singletonList("http://localhost:3000")); // 프론트 서버 포트로 변경 예정
-        configuration.setAllowedMethods(Collections.singletonList("*")); // 추 후 https 만 허용
-//        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        // 프론트 도메인 허용
+        configuration.setAllowedOriginPatterns(Arrays.asList("https://*.rento.world", "https://www.rento.world",
+                "http://localhost:3000", "https://localhost:3000"));
+
+        // 허용 HTTP 메서드
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
+
+        // 인증 정보 허용
         configuration.setAllowCredentials(true);
-        configuration.setAllowedHeaders(Collections.singletonList("*"));
-        configuration.setMaxAge(3600L); // 요청 캐시 시간
-        configuration.setExposedHeaders(Collections.singletonList("Authorization")); // 클라이언트에 노출할 해더
+
+        // 모든 헤더 허용
+        configuration.setAllowedHeaders(List.of("*"));
+
+        // ⭐️ 응답 헤더 중 노출할 것 명시
+        configuration.setExposedHeaders(List.of("AccessToken", "RefreshToken"));
+
+        configuration.setMaxAge(3600L);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);

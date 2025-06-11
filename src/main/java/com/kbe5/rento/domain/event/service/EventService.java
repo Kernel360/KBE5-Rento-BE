@@ -14,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Slf4j
 @Service
 public class EventService {
@@ -37,5 +39,10 @@ public class EventService {
         }else {
             throw new DeviceException(DeviceResultCode.UNDEFINED_ERROR);
         }
+    }
+
+    public List<Event> getList() {
+
+        return eventRepository.findAll();
     }
 }

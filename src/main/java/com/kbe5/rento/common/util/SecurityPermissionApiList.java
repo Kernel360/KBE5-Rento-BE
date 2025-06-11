@@ -7,59 +7,15 @@ public class SecurityPermissionApiList {
 
     public static final String[] PUBLIC_URLS = {
 
-//            "/api/**",
+            "/health",
 
-//            // Manager APIs
-//            "/api/managers",
-//            "/api/managers/sign-up",
-//            "/api/managers/login",
-//            "/api/managers/logout",
-//            "/api/managers/{email}",
-//            "/api/managers/{loginId}",
-//            "/api/managers/list/{companyCode}",
-//            "/api/managers/detail/{Id}",
-//
-//            // Member APIs
-//            "/api/members",
-//            "/api/members/{memberId}",
-//
-//            // Vehicle APIs
-//            "/api/vehicles",
-//            "/api/vehicles/{vehicleId}",
-//            "/api/vehicles/{vehicleNumber}",
-//
-//            // Emulator APIs
-//            "/api/emulators/on",
-//            "/api/emulators/off",
-//            "/api/emulators/control-info",
-//            "/api/emulators/control-info/confirm",
-//            "/api/emulators/token",
-//
-//            // Cycle Info APIs
-//            "/api/cycleinfos",
-//
-//            // Geofencing APIs
-//            "/api/geofencings",
-//            "/api/geofencings/{geofencingId}",
-//            "/api/geofencings/send-geo-point",
-//
-//            // Location APIs
-//            "/api/locations",
-//
-//            // Driving History APIs
-//            "/api/driving-histories",
-//            "/api/drivings-histories/{drivinghistory_id}",
-//            "/api/driving-histories?search=",
-//
-//            // Reservation APIs
+            // Reservation APIs
             "/api/reservations",
             "/api/reservations/{reservationId}",
-//
-//            // Company APIs
+
+            // Company APIs
             "/api/companies/register",
             "/api/companies/check-bizNumber",
-//            "/api/companies",
-//            "/api/companies/{companyId}",
 
             // h2
             "/h2-console/**",
@@ -68,7 +24,7 @@ public class SecurityPermissionApiList {
             "/api/managers/login",
             "/api/managers/sign-up",
             "/api/managers/check-loginId/{loginId}",
-            "/api/managers/{email}",
+            "/api/managers/check-email/{email}",
             "/api/managers/logout",
 
             // refresh
@@ -77,6 +33,9 @@ public class SecurityPermissionApiList {
             // device
             "/api/devices", //regiset
             "/api/devices/token", //token
+
+            //event
+            "/api/events/cycle-info/get-list",
 
             //swagger
             "/swagger-ui/**",

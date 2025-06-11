@@ -5,6 +5,7 @@ import lombok.Builder;
 
 @Builder
 public record VehicleResponse(
+        Long id,
         String vehicleNumber,
         String brand,
         String modelName,
@@ -12,6 +13,7 @@ public record VehicleResponse(
 ) {
     public static VehicleResponse fromEntity(Vehicle vehicle) {
         return VehicleResponse.builder()
+                .id(vehicle.getId())
                 .vehicleNumber(vehicle.getInfo().vehicleNumber())
                 .brand(vehicle.getInfo().brand())
                 .modelName(vehicle.getInfo().modelName())
