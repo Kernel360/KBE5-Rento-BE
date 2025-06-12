@@ -31,8 +31,8 @@ public class SecurityPermissionApiList {
             "/api/managers/refresh",
 
             // device
-            "/api/devices",
-            "/api/devices/token",
+            "/api/devices", //regiset
+            "/api/devices/token", //token
 
             //event
             "/api/events/cycle-info/get-list",

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.kbe5.rento.domain.device.entity.DeviceToken;
 import com.kbe5.rento.domain.event.entity.CycleEvent;
 import com.kbe5.rento.domain.event.entity.CycleInfo;
+import com.kbe5.rento.domain.event.enums.EventType;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -58,6 +59,7 @@ public record CycleEventRequest(
             .deviceId(this.deviceId())
             .oTime(this.oTime())
             .cycleCount(this.cycleCount())
+            .eventType(EventType.CYCLE_INFO)
             .build();
     }
 

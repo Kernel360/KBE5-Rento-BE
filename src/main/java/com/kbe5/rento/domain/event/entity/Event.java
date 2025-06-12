@@ -3,6 +3,7 @@ package com.kbe5.rento.domain.event.entity;
 import com.kbe5.rento.common.exception.DeviceException;
 import com.kbe5.rento.domain.device.enums.DeviceResultCode;
 import com.kbe5.rento.domain.device.enums.GpsCondition;
+import com.kbe5.rento.domain.event.enums.EventType;
 import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorColumn;
 import jakarta.persistence.DiscriminatorType;
@@ -27,7 +28,7 @@ import lombok.experimental.SuperBuilder;
 @Table(name = "events")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "event_type", discriminatorType = DiscriminatorType.STRING)
+@DiscriminatorColumn(discriminatorType = DiscriminatorType.STRING)
 public abstract class Event {
 
     @Id
@@ -60,6 +61,9 @@ public abstract class Event {
     private Integer speed;
 
     private Long currentAccumulatedDistance; //총 누적 거리
+
+    @Enumerated(EnumType.STRING)
+    private EventType eventType;
 
     public void validateMdnMatch(Long mdn) {
         if (!this.mdn.equals(mdn)) {

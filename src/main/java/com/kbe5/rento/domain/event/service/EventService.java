@@ -1,12 +1,16 @@
 package com.kbe5.rento.domain.event.service;
 
-import com.kbe5.rento.domain.device.entity.DeviceToken;
-import com.kbe5.rento.domain.event.entity.CycleEvent;
+import com.kbe5.rento.common.exception.DeviceException;
+import com.kbe5.rento.domain.device.enums.DeviceResultCode;
 import com.kbe5.rento.domain.event.entity.Event;
-import com.kbe5.rento.domain.event.entity.OnOffEvent;
+import com.kbe5.rento.domain.event.enums.EventType;
 import com.kbe5.rento.domain.event.repository.EventRepository;
-import lombok.RequiredArgsConstructor;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,22 +18,27 @@ import java.util.List;
 
 @Slf4j
 @Service
-@RequiredArgsConstructor
 public class EventService {
 
-    private final EventRepository eventRepository;
-  
-    @Transactional
-    public <T extends Event> T ignitionOnEvent(T event, DeviceToken deviceToken) {
-        event.validateMdnMatch(deviceToken.getMdn());
-      
-        return eventRepository.save(event);
+    private final Map<EventType, EventHandler> eventHandlers;
+
+    @Autowired
+    public EventService(List<EventHandler> handlers) {
+        this.eventHandlers = handlers.stream()
+            .collect(Collectors.toMap(EventHandler::getEventType, Function.identity()));
     }
 
     @Transactional
-    public CycleEvent saveCycleEvent(CycleEvent cycleEvent) {
+    public void processEvent(Event event) {
 
-        return eventRepository.save(cycleEvent);
+        log.info("processEvent receive {}", event.getClass().getName());
+
+        EventHandler handler = eventHandlers.get(event.getEventType());
+        if (handler != null) {
+            handler.handle(event);
+        }else {
+            throw new DeviceException(DeviceResultCode.UNDEFINED_ERROR);
+        }
     }
 
     public List<Event> getList() {

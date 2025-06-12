@@ -20,4 +20,8 @@ public record EventResponse(
     public static EventResponse fromEntity(DeviceResultCode resultCode, Event event) {
         return new EventResponse(resultCode.getCode(), resultCode.getMessage(), event.getMdn());
     }
+
+    public static EventResponse fromEntity(DeviceResultCode resultCode, Long mdn) {
+        return new EventResponse(resultCode.getCode(), resultCode.getMessage(), mdn);
+    }
 }

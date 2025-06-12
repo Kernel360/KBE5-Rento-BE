@@ -2,9 +2,10 @@ package com.kbe5.rento.domain.event.entity;
 
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Transient;
 import java.time.LocalDateTime;
+import java.util.List;
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
@@ -22,4 +23,10 @@ public class CycleEvent extends Event{
 
     private Integer cycleCount;
 
+    @Transient
+    List<CycleInfo> cycleInfos;
+
+    public void setCycleInfos(List<CycleInfo> cycleInfos) {
+        this.cycleInfos = cycleInfos;
+    }
 }

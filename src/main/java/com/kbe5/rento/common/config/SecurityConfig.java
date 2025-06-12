@@ -6,6 +6,7 @@ import com.kbe5.rento.common.jwt.util.JwtUtil;
 import com.kbe5.rento.common.securityFilter.LoginAuthenticationFilter;
 import com.kbe5.rento.common.util.SecurityPermissionApiList;
 import com.kbe5.rento.domain.manager.respository.ManagerRepository;
+import java.util.Arrays;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
