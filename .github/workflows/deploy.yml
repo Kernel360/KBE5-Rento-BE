@@ -68,6 +68,7 @@ jobs:
 
             docker run -d \
               --name rento-server \
+              --network rento-net \
               -p 80:8080 \
               -e DB_HOST="\$DB_HOST" \
               -e DB_PORT="\$DB_PORT" \
