@@ -18,7 +18,7 @@ spring:
             time_zone: Asia/Seoul
 
   rabbitmq:
-    host: localhost   # EC2에서 Spring Boot를 "호스트"로 실행한다면 'localhost'
+    host: rabbitmq   # EC2에서 Spring Boot를 "호스트"로 실행한다면 'localhost'
     port: 5672
     username: guest
     password: guest
