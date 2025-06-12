@@ -22,10 +22,13 @@ public class EventService {
 
     private final Map<EventType, EventHandler> eventHandlers;
 
+    private final EventRepository eventRepository;
+
     @Autowired
-    public EventService(List<EventHandler> handlers) {
+    public EventService(List<EventHandler> handlers, EventRepository eventRepository) {
         this.eventHandlers = handlers.stream()
             .collect(Collectors.toMap(EventHandler::getEventType, Function.identity()));
+        this.eventRepository = eventRepository;
     }
 
     @Transactional
