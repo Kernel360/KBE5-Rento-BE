@@ -16,3 +16,7 @@ spring:
         hibernate:
           jdbc:
             time_zone: Asia/Seoul
+
+  rabbitmq:
+    host: rabbitmq
+    port: 5672
