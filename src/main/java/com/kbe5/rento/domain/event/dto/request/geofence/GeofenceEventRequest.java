@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.kbe5.rento.common.datetime.EventLocalDateTimeDeserializer;
 import com.kbe5.rento.domain.device.enums.GpsCondition;
 import com.kbe5.rento.domain.event.entity.GeofenceEvent;
+import com.kbe5.rento.domain.event.enums.EventType;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.*;
@@ -106,6 +107,7 @@ public record GeofenceEventRequest(
                 .speed(this.speed())
                 .currentAccumulatedDistance(this.sum())
                 .oTime(this.oTime())
+                .eventType(EventType.GEOFENCE)
                 .build();
     }
 }
