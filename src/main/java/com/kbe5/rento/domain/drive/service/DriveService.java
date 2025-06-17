@@ -11,6 +11,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -22,7 +23,6 @@ public class DriveService {
     private final EventRepository eventRepository;
     private final VehicleRepository vehicleRepository;
 
-
     // 운행 등록
     public void driveAdd(Drive drive) {
         if(drive.getVehicle().getCompany() != drive.getMember().getCompany()){
@@ -31,6 +31,8 @@ public class DriveService {
         var vehicle = vehicleRepository.findById(drive.getVehicle().getId()).orElseThrow(()
         -> new DomainException(ErrorType.VEHICLE_NOT_FOUND));
         driveRepository.save(drive);
+
+        vehicle.reservation(vehicle.getId());
 
         drive.addMdn(vehicle.getMileage().getMdn());
     }
@@ -83,5 +85,10 @@ public class DriveService {
         return driveRepository.findById(driveId).orElseThrow(
                 () -> new DomainException(ErrorType.DRIVE_NOT_FOUND)
         );
+    }
+
+    // 이벤트를 위한 해당 차량 찾기
+    public Long findDriveForEvent(Long mdn, LocalDateTime onTime){
+        return driveRepository.findMdnAndStartDate(mdn, onTime);
     }
 }

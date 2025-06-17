@@ -43,9 +43,9 @@ public class Device extends BaseEntity {
         this.companyCode = companyCode;
     }
 
-    public DeviceToken issueToken(Long expiredMs) {
+    public DeviceToken issueToken(Long expiredMs, Long driveId) {
         String token = UUID.randomUUID().toString().replace("-", "");
 
-        return DeviceToken.of(token, this, System.currentTimeMillis(), expiredMs);
+        return DeviceToken.of(token, this, System.currentTimeMillis(), expiredMs, driveId);
     }
 }

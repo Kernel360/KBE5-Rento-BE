@@ -12,6 +12,7 @@ import com.kbe5.rento.domain.device.repository.DeviceControlInfoRepository;
 import com.kbe5.rento.domain.device.repository.DeviceRepository;
 import com.kbe5.rento.domain.device.repository.DeviceTokenRepository;
 import com.kbe5.rento.domain.device.repository.GeofenceControlInfoRepository;
+import com.kbe5.rento.domain.drive.service.DriveService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -29,6 +30,8 @@ public class DeviceService {
     private final DeviceTokenRepository deviceTokenRepository;
     private final DeviceControlInfoRepository deviceControlInfoRepository;
     private final GeofenceControlInfoRepository geofenceControlInfoRepository;
+
+    private final DriveService driveService;
 
     private static final Long EXPIRED_MS = 4 * 60 * 60 * 1000L;
 
@@ -51,7 +54,9 @@ public class DeviceService {
         Device device = deviceRepository.findByMdn(mdn)
             .orElseThrow(() -> new DeviceException(DeviceResultCode.MISMATCHED_MDN));
 
-        DeviceToken token = device.issueToken(EXPIRED_MS);
+        Long driveId = driveService.findDriveForEvent(mdn, LocalDateTime.now());
+
+        DeviceToken token = device.issueToken(EXPIRED_MS, driveId);
 
         return deviceTokenRepository.save(token);
     }

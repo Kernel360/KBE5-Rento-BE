@@ -47,6 +47,8 @@ public abstract class Event {
 
     Integer deviceId;
 
+    Long driveId;
+
     @Enumerated(EnumType.STRING)
     private GpsCondition gpsCondition;
 

@@ -2,6 +2,7 @@ package com.kbe5.rento.domain.vehicle.repository;
 
 import com.kbe5.rento.domain.company.entity.Company;
 import com.kbe5.rento.domain.vehicle.entity.Vehicle;
+import com.kbe5.rento.domain.vehicle.entity.VehicleStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -24,11 +25,12 @@ public interface VehicleRepository extends JpaRepository<Vehicle, Long> {
       SELECT v FROM Vehicle v
        WHERE v.company.id = :cid
          AND v.id NOT IN (
-           SELECT d.vehicle.id FROM Drive d WHERE d.isStart = true
+           SELECT v.id FROM Vehicle v WHERE v.status = :status
          )
     """)
         Page<Vehicle> findFreeByCompanyId(
                 @Param("cid") Long companyId,
+                @Param("status") VehicleStatus status,
                 Pageable pageable
         );
 
@@ -37,12 +39,13 @@ public interface VehicleRepository extends JpaRepository<Vehicle, Long> {
        WHERE v.company.id = :cid
          AND v.department.id = :did
          AND v.id NOT IN (
-           SELECT d.vehicle.id FROM Drive d WHERE d.isStart = true
+           SELECT v.id FROM Vehicle v WHERE v.status = :status
          )
     """)
         Page<Vehicle> findFreeByCompanyIdAndDepartmentId(
                 @Param("cid") Long companyId,
                 @Param("did") Long departmentId,
+                @Param("status") VehicleStatus status,
                 Pageable pageable
         );
 }

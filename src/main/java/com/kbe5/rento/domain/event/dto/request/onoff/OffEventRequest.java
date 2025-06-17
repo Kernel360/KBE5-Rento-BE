@@ -84,7 +84,7 @@ public record OffEventRequest(
     @NotNull(message = "{device.currentAccumulatedDistance.notnull}")
     Long currentAccumulatedDistance) {
 
-    public OnOffEvent toEntity(Long deviceUniqueId) {
+    public OnOffEvent toEntity(Long deviceUniqueId, Long driveId) {
         return OnOffEvent.builder()
             .mdn(this.mdn())
             .deviceUniqueId(deviceUniqueId)
@@ -97,6 +97,7 @@ public record OffEventRequest(
             .onTime(this.onTime())
             .offTime(this.offTime())
             .eventType(EventType.OFF)
+            .driveId(driveId)
             .build();
     }
 }

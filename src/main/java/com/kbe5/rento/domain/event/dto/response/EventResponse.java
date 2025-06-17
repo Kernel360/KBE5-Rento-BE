@@ -14,12 +14,8 @@ public record EventResponse(
         String resultMessage,
 
         @JsonProperty("mdn")
-        Long mdn //차량 번호
+        Long mdn  //차량 번호
 ) {
-
-    public static EventResponse fromEntity(DeviceResultCode resultCode, Event event) {
-        return new EventResponse(resultCode.getCode(), resultCode.getMessage(), event.getMdn());
-    }
 
     public static EventResponse fromEntity(DeviceResultCode resultCode, Long mdn) {
         return new EventResponse(resultCode.getCode(), resultCode.getMessage(), mdn);

@@ -84,7 +84,7 @@ public record OnEventRequest(
     Long sum
 ) {
 
-    public OnOffEvent toEntity(Long deviceUniqueId) {
+    public OnOffEvent toEntity(Long deviceUniqueId, Long driveId) {
         return OnOffEvent.builder()
             .mdn(this.mdn())
             .terminalId(this.terminalId())
@@ -101,6 +101,7 @@ public record OnEventRequest(
             .onTime(this.onTime())
             .offTime(this.offTime())
             .eventType(EventType.ON)
+            .driveId(driveId)
             .build();
     }
 }

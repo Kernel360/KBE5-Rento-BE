@@ -7,6 +7,7 @@ import com.kbe5.rento.domain.department.repository.DepartmentRepository;
 import com.kbe5.rento.domain.manager.entity.Manager;
 import com.kbe5.rento.domain.vehicle.dto.request.VehicleUpdateRequest;
 import com.kbe5.rento.domain.vehicle.entity.Vehicle;
+import com.kbe5.rento.domain.vehicle.entity.VehicleStatus;
 import com.kbe5.rento.domain.vehicle.repository.VehicleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -47,10 +48,10 @@ public class VehicleService {
             return vehicleRepository.findAllByCompanyIdAndDepartmentId(companyInd, departmentId, pageable);
         }
         else if (departmentId == null && onlyFree) {
-            return vehicleRepository.findFreeByCompanyId(companyInd, pageable);
+            return vehicleRepository.findFreeByCompanyId(companyInd, VehicleStatus.RESERVATION ,pageable);
         }
         else {
-            return vehicleRepository.findFreeByCompanyIdAndDepartmentId(companyInd, departmentId, pageable);
+            return vehicleRepository.findFreeByCompanyIdAndDepartmentId(companyInd, departmentId, VehicleStatus.RESERVATION, pageable);
         }
     }
 

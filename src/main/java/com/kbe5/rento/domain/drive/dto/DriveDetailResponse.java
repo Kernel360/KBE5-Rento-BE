@@ -1,6 +1,7 @@
 package com.kbe5.rento.domain.drive.dto;
 
 import com.kbe5.rento.domain.drive.entity.Drive;
+import com.kbe5.rento.domain.drive.entity.DriveStatus;
 import com.kbe5.rento.domain.drive.entity.DriveType;
 import com.kbe5.rento.domain.member.entity.Member;
 import com.kbe5.rento.domain.vehicle.entity.Vehicle;
@@ -26,7 +27,7 @@ public record DriveDetailResponse(
 
     Long distance,
 
-    boolean isStart
+    DriveStatus driveStatus
 ) {
     public static DriveDetailResponse fromEntity(Drive drive){
         return DriveDetailResponse.builder()
@@ -38,7 +39,7 @@ public record DriveDetailResponse(
                 .startLocation(drive.getStartLocation())
                 .endLocation(drive.getEndLocation())
                 .distance(drive.getDistance())
-                .isStart(drive.isStart())
+                .driveStatus(drive.getDriveStatus())
                 .build();
     }
 }

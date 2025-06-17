@@ -31,8 +31,7 @@ public class Vehicle extends BaseEntity {
     @Embedded
     private VehicleMilleage mileage;
 
-    // todo: 이번달 운행 누적 거리 필요한가?
-    // private Long monthTotalKm;
+    private VehicleStatus status;
 
     @Builder
     public Vehicle(Company company, VehicleInfo info, VehicleMilleage mileage) {
@@ -59,5 +58,10 @@ public class Vehicle extends BaseEntity {
 
     public void addDistance(Long distance) {
         this.mileage.addDistance(distance);
+    }
+
+    // todo: 시간대 별로 예약 가능 여부는 잠깐 빼두기 필요하다면 그냥 상태 말고 시간대 별로 valid걸면 될듯 6.17
+    public void reservation(Long vehicleId) {
+        this.status = VehicleStatus.RESERVATION;
     }
 }

@@ -2,6 +2,7 @@ package com.kbe5.rento.domain.event.controller;
 
 import com.kbe5.rento.domain.device.entity.DeviceToken;
 import com.kbe5.rento.domain.device.enums.DeviceResultCode;
+import com.kbe5.rento.domain.drive.service.DriveService;
 import com.kbe5.rento.domain.event.amqp.EventSender;
 import com.kbe5.rento.domain.event.dto.request.cycleinfo.CycleEventRequest;
 import com.kbe5.rento.domain.event.dto.request.onoff.OffEventRequest;
@@ -29,6 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class EventController {
 
     private final EventSender eventSender;
+    private final DriveService driveService;
 
     @PostMapping("/on-off/on")
     public ResponseEntity<EventResponse> ignitionOn(
@@ -38,8 +40,10 @@ public class EventController {
 
         Long mdn = request.mdn();
 
-        OnOffEvent onOffEvent = request.toEntity(deviceToken.getDeviceId());
+        OnOffEvent onOffEvent = request.toEntity(deviceToken.getDeviceId(), deviceToken.getDriveId());
         eventSender.send(onOffEvent, mdn);
+
+        driveService.driveStart(deviceToken.getDriveId());
 
         return ResponseEntity.ok(EventResponse.fromEntity(DeviceResultCode.SUCCESS, mdn));
     }
@@ -51,8 +55,10 @@ public class EventController {
 
         Long mdn = request.mdn();
 
-        OnOffEvent onOffEvent = request.toEntity(deviceToken.getDeviceId());
+        OnOffEvent onOffEvent = request.toEntity(deviceToken.getDeviceId(), deviceToken.getDriveId());
         eventSender.send(onOffEvent, mdn);
+
+        driveService.driveEnd(deviceToken.getDriveId());
 
         return ResponseEntity.ok(EventResponse.fromEntity(DeviceResultCode.SUCCESS, mdn));
     }

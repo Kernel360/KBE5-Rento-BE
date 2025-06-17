@@ -27,6 +27,7 @@ public class Drive extends BaseEntity {
     private Vehicle vehicle;
 
     private LocalDateTime startDate;
+
     private LocalDateTime endDate;
 
     @Enumerated(EnumType.STRING)
@@ -37,8 +38,8 @@ public class Drive extends BaseEntity {
 
     private Long distance;
 
-    // todo: enum으로 관리하기
-    private boolean isStart;
+    @Enumerated(EnumType.STRING)
+    private DriveStatus driveStatus;
 
     private Long mdn;
 
@@ -53,15 +54,15 @@ public class Drive extends BaseEntity {
         this.startDate = startDate;
         this.endDate = endDate;
         this.distance = 0L;
-        this.isStart = false;
+        this.driveStatus = DriveStatus.READY;
     }
 
     public void driveStart(){
-       this.isStart = true;
+       this.driveStatus = DriveStatus.DRIVING;
     }
 
     public void driveEnd(){
-        this.isStart = false;
+        this.driveStatus = DriveStatus.COMPLETED;
     }
 
     public void addDistance(Long distance){

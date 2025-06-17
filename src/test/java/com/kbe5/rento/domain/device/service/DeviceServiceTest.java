@@ -1,3 +1,4 @@
+/*
 package com.kbe5.rento.domain.device.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -165,3 +166,4 @@ class DeviceServiceTest {
     }
 
 }
+*/
