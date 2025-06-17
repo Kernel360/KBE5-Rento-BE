@@ -1,6 +1,5 @@
 package com.kbe5.rento.domain.vehicle.entity;
 
-
 import com.kbe5.rento.common.util.BaseEntity;
 import com.kbe5.rento.domain.company.entity.Company;
 import com.kbe5.rento.domain.department.entity.Department;
@@ -31,6 +30,7 @@ public class Vehicle extends BaseEntity {
     @Embedded
     private VehicleMilleage mileage;
 
+    @Enumerated(EnumType.STRING)
     private VehicleStatus status;
 
     @Builder
@@ -38,6 +38,7 @@ public class Vehicle extends BaseEntity {
         this.company = company;
         this.info = info;
         this.mileage = mileage;
+        this.status = VehicleStatus.READY;
     }
 
     public void addDepartment(Department department) {
@@ -61,7 +62,11 @@ public class Vehicle extends BaseEntity {
     }
 
     // todo: 시간대 별로 예약 가능 여부는 잠깐 빼두기 필요하다면 그냥 상태 말고 시간대 별로 valid걸면 될듯 6.17
-    public void reservation(Long vehicleId) {
+    public void reservation() {
         this.status = VehicleStatus.RESERVATION;
+    }
+
+    public void cancel() {
+        this.status = VehicleStatus.READY;
     }
 }
