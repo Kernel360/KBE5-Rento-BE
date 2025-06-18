@@ -66,6 +66,7 @@ public class Drive extends BaseEntity {
     }
 
     public void addDistance(Long distance){
+        distance -= this.vehicle.getMileage().getTotalDistanceKm();
         this.distance = distance;
     }
 

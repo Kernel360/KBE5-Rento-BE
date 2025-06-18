@@ -29,6 +29,6 @@ public class VehicleMilleage {
         if (currentDistance == null || currentDistance < 0) {
             throw new DomainException(ErrorType.DRIVE_NOT_DISTANCE);
         }
-        this.totalDistanceKm += currentDistance;
+        this.totalDistanceKm = currentDistance;
     }
 }

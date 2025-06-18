@@ -51,11 +51,6 @@ public class DriveService {
 
         drive.driveEnd();
 
-        // todo: event request로 추가 가능할듯?
-        /*Long distance = eventRepository.findLastOffDistance(drive.getVehicle().getMileage().getMdn(),
-                drive.getStartDate(), drive.getEndDate()).orElseThrow(() ->
-                new DomainException(ErrorType.DRIVE_NOT_DISTANCE));*/
-
         drive.getVehicle().cancel();
         drive.addDistance(distance);
         drive.getVehicle().addDistance(distance);
