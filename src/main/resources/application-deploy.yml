@@ -1,3 +1,9 @@
+
+logging:
+  level:
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+
 spring:
   config:
     activate:
@@ -10,6 +16,7 @@ spring:
     password: ${DB_PASS}
 
   jpa:
+    show-sql: true
     hibernate:
       ddl-auto: update
       properties:

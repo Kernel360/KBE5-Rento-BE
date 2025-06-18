@@ -32,7 +32,7 @@ public class DeviceService {
 
     private final DriveService driveService;
 
-    private final static LocalDateTime NOW = LocalDateTime.of(2025,6,7,7,25,1).withNano(0);
+    private final static LocalDateTime NOW = LocalDateTime.of(2025,6,7,7,25,1);
 
     private static final Long EXPIRED_MS = 4 * 60 * 60 * 1000L;
 
