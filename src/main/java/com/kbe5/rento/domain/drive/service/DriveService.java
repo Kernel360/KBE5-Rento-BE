@@ -4,7 +4,6 @@ import com.kbe5.rento.common.exception.DomainException;
 import com.kbe5.rento.common.exception.ErrorType;
 import com.kbe5.rento.domain.drive.entity.Drive;
 import com.kbe5.rento.domain.drive.repository.DriveRepository;
-import com.kbe5.rento.domain.event.repository.EventRepository;
 import com.kbe5.rento.domain.manager.entity.Manager;
 import com.kbe5.rento.domain.vehicle.repository.VehicleRepository;
 import jakarta.transaction.Transactional;
@@ -20,7 +19,6 @@ import java.util.List;
 public class DriveService {
 
     private final DriveRepository driveRepository;
-    private final EventRepository eventRepository;
     private final VehicleRepository vehicleRepository;
 
     // 운행 등록
@@ -81,10 +79,7 @@ public class DriveService {
     // 이벤트를 위한 해당 차량 찾기
     public Long findDriveForEvent(Long mdn, LocalDateTime onTime){
 
-        LocalDateTime minus = onTime.minusNanos(1_000_000);
-        LocalDateTime plus  = onTime.plusNanos( 1_000_000);
-
-        Long driveid = driveRepository.findIdByMdnAndStartDateBetween(mdn, minus, plus);
+        Long driveid = driveRepository.findIdByMdnAndStartDateBetween(mdn, onTime);
 
         if(driveid == null){
             throw new DomainException(ErrorType.DRIVE_NOT_FOUND);

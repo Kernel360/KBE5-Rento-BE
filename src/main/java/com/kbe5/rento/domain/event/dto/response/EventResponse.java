@@ -2,8 +2,6 @@ package com.kbe5.rento.domain.event.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.kbe5.rento.domain.device.enums.DeviceResultCode;
-import com.kbe5.rento.domain.event.entity.Event;
-import com.kbe5.rento.domain.event.entity.OnOffEvent;
 
 public record EventResponse(
 

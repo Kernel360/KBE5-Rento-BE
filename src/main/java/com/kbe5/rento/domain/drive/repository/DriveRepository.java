@@ -8,7 +8,6 @@ import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 public interface DriveRepository extends JpaRepository<Drive, Long> {
 
@@ -18,10 +17,9 @@ public interface DriveRepository extends JpaRepository<Drive, Long> {
       SELECT d.id
       FROM Drive d
       WHERE d.mdn = :mdn
-        AND d.startDate BETWEEN :startMinus AND :startPlus
+        AND d.startDate = :startDate
     """)
     Long findIdByMdnAndStartDateBetween(@Param("mdn") Long mdn,
-                                        @Param("startMinus") LocalDateTime startMinus,
-                                        @Param("startPlus")  LocalDateTime startPlus
+                                        @Param("startDate") LocalDateTime startDate
     );
 }

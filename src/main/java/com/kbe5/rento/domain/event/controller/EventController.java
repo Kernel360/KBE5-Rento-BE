@@ -11,8 +11,6 @@ import com.kbe5.rento.domain.event.dto.response.EventResponse;
 import com.kbe5.rento.domain.event.entity.CycleEvent;
 import com.kbe5.rento.domain.event.entity.CycleInfo;
 import com.kbe5.rento.domain.event.entity.OnOffEvent;
-import com.kbe5.rento.domain.event.enums.EventType;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +20,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -42,9 +42,8 @@ public class EventController {
 
         driveService.driveStart(deviceToken.getDriveId());
 
-        OnOffEvent onOffEvent = request.toEntity(deviceToken.getDeviceId(), deviceToken.getDriveId());
+        OnOffEvent onOffEvent = request.toEntity(deviceToken);
         eventSender.send(onOffEvent, mdn);
-
 
         return ResponseEntity.ok(EventResponse.fromEntity(DeviceResultCode.SUCCESS, mdn));
     }
@@ -58,7 +57,7 @@ public class EventController {
 
         driveService.driveEnd(deviceToken.getDriveId(), request.currentAccumulatedDistance());
 
-        OnOffEvent onOffEvent = request.toEntity(deviceToken.getDeviceId(), deviceToken.getDriveId());
+        OnOffEvent onOffEvent = request.toEntity(deviceToken);
         eventSender.send(onOffEvent, mdn);
 
 
@@ -73,7 +72,7 @@ public class EventController {
 
         Long mdn = request.mdn();
 
-        CycleEvent cycleEvent = request.toEntity(deviceToken.getDeviceId(), deviceToken.getDriveId());
+        CycleEvent cycleEvent = request.toEntity(deviceToken);
 
         List<CycleInfo> cycleInfoList = request.toCycleInfoEntities(deviceToken);
 

@@ -10,17 +10,4 @@ import java.util.Optional;
 
 public interface EventRepository extends JpaRepository<Event, Long> {
 
-    /*@Query("""
-      select e.currentAccumulatedDistance
-      from OnOffEvent e
-      where e.mdn       = :mdn
-        and e.offTime  between :start and :end
-      order by e.offTime desc
-    """)
-    Optional<Long> findLastOffDistance(
-            @Param("mdn")   Long mdn,
-            @Param("start") LocalDateTime start,
-            @Param("end")   LocalDateTime end
-    );*/
-
 }
