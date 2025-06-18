@@ -90,7 +90,7 @@ public record GeofenceEventRequest(
         @NotNull(message = "{device.currentAccumulatedDistance.notnull}")
         Long sum
 ) {
-    public GeofenceEvent toEntity(Long deviceUniqueId) {
+    public GeofenceEvent toEntity(Long deviceUniqueId, Long driveId) {
         return GeofenceEvent.builder()
                 .mdn(this.mdn())
                 .terminalId(this.terminalId())
@@ -108,6 +108,7 @@ public record GeofenceEventRequest(
                 .currentAccumulatedDistance(this.sum())
                 .oTime(this.oTime())
                 .eventType(EventType.GEOFENCE)
+                .driveId(driveId)
                 .build();
     }
 }

@@ -5,11 +5,8 @@ import com.kbe5.rento.domain.device.entity.DeviceToken;
 import com.kbe5.rento.domain.event.entity.CycleEvent;
 import com.kbe5.rento.domain.event.entity.CycleInfo;
 import com.kbe5.rento.domain.event.enums.EventType;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.*;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -49,10 +46,10 @@ public record CycleEventRequest(
     List<CycleInfoRequest> cycleInfoRequests
 ) {
 
-    public CycleEvent toEntity(Long deviceUniqueId) {
+    public CycleEvent toEntity(DeviceToken token) {
         return CycleEvent.builder()
             .mdn(this.mdn())
-            .deviceUniqueId(deviceUniqueId)
+            .deviceUniqueId(token.getDeviceId())
             .terminalId(this.terminalId())
             .makerId(this.makerId())
             .packetVersion(this.packetVersion())
@@ -60,6 +57,7 @@ public record CycleEventRequest(
             .oTime(this.oTime())
             .cycleCount(this.cycleCount())
             .eventType(EventType.CYCLE_INFO)
+            .driveId(token.getDriveId())
             .build();
     }
 

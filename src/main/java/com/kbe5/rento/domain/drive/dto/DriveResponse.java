@@ -1,8 +1,7 @@
 package com.kbe5.rento.domain.drive.dto;
 
 import com.kbe5.rento.domain.drive.entity.Drive;
-import com.kbe5.rento.domain.member.entity.Member;
-import com.kbe5.rento.domain.vehicle.entity.Vehicle;
+import com.kbe5.rento.domain.drive.entity.DriveStatus;
 import lombok.Builder;
 
 import java.time.LocalDateTime;
@@ -23,7 +22,7 @@ public record DriveResponse(
 
         String endLocation,
 
-        boolean isStart
+        DriveStatus status
 ) {
     public static DriveResponse fromEntity(Drive drive){
         return DriveResponse.builder()
@@ -34,6 +33,7 @@ public record DriveResponse(
                 .endDate(drive.getEndDate())
                 .startLocation(drive.getStartLocation())
                 .endLocation(drive.getEndLocation())
+                .status(drive.getDriveStatus())
                 .build();
     }
 }

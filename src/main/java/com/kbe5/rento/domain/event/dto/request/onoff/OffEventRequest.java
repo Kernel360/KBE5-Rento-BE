@@ -4,15 +4,12 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.kbe5.rento.common.datetime.EventLocalDateTimeDeserializer;
+import com.kbe5.rento.domain.device.entity.DeviceToken;
 import com.kbe5.rento.domain.device.enums.GpsCondition;
 import com.kbe5.rento.domain.event.entity.OnOffEvent;
 import com.kbe5.rento.domain.event.enums.EventType;
-import jakarta.validation.constraints.DecimalMax;
-import jakarta.validation.constraints.DecimalMin;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.*;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
@@ -84,10 +81,10 @@ public record OffEventRequest(
     @NotNull(message = "{device.currentAccumulatedDistance.notnull}")
     Long currentAccumulatedDistance) {
 
-    public OnOffEvent toEntity(Long deviceUniqueId) {
+    public OnOffEvent toEntity(DeviceToken token) {
         return OnOffEvent.builder()
             .mdn(this.mdn())
-            .deviceUniqueId(deviceUniqueId)
+            .deviceUniqueId(token.getDeviceId())
             .gpsCondition(this.gpsCondition())
             .latitude(this.latitude())
             .longitude(this.longitude())
@@ -97,6 +94,7 @@ public record OffEventRequest(
             .onTime(this.onTime())
             .offTime(this.offTime())
             .eventType(EventType.OFF)
+            .driveId(token.getDriveId())
             .build();
     }
 }

@@ -5,14 +5,10 @@ import com.kbe5.rento.common.apiresponse.ApiResponse;
 import com.kbe5.rento.common.apiresponse.ApiResultCode;
 import com.kbe5.rento.common.apiresponse.ResEntityFactory;
 import com.kbe5.rento.domain.manager.dto.details.CustomManagerDetails;
-import com.kbe5.rento.domain.manager.entity.Manager;
 import com.kbe5.rento.domain.vehicle.dto.request.VehicleAddRequest;
 import com.kbe5.rento.domain.vehicle.dto.request.VehicleUpdateRequest;
 import com.kbe5.rento.domain.vehicle.dto.response.VehicleDetailResponse;
 import com.kbe5.rento.domain.vehicle.dto.response.VehicleResponse;
-import com.kbe5.rento.domain.vehicle.entity.Vehicle;
-import com.kbe5.rento.domain.vehicle.entity.VehicleInfo;
-import com.kbe5.rento.domain.vehicle.entity.VehicleMilleage;
 import com.kbe5.rento.domain.vehicle.service.VehicleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -21,8 +17,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor

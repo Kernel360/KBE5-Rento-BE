@@ -1,25 +1,14 @@
 spring:
   config:
-    activate:
-      on-profile: local
-
-  datasource:
-    url: jdbc:h2:mem:testdb;
-    driver-class-name: org.h2.Driver
-    username: sa
-    password:
-
-  h2:
-    console:
-      enabled: true
-      path: /h2-console
-
+    import:
+      - optional:file:.env
+  profiles:
+    active: local
   jpa:
-    show-sql: false    # ★ 추가 또는 true에서 false로 변경
-    hibernate:
-      ddl-auto: update
+    show-sql: true
     properties:
-      hibernate:
-#        format_sql: true
-        jdbc:
-          time_zone: Asia/Seoul
+      hibernate.jdbc.time_zone: Asia/Seoul
+
+  messages:
+    basename: messages
+    encoding: UTF-8

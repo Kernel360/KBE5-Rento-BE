@@ -1,5 +1,6 @@
 package com.kbe5.rento.domain.event.amqp;
 
+import com.kbe5.rento.domain.drive.service.DriveService;
 import com.kbe5.rento.domain.event.entity.Event;
 import com.kbe5.rento.domain.event.service.EventService;
 import lombok.RequiredArgsConstructor;

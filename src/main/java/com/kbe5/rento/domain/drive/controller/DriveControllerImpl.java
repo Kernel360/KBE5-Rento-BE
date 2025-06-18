@@ -9,7 +9,6 @@ import com.kbe5.rento.domain.drive.dto.DriveResponse;
 import com.kbe5.rento.domain.drive.entity.Drive;
 import com.kbe5.rento.domain.drive.service.DriveService;
 import com.kbe5.rento.domain.manager.dto.details.CustomManagerDetails;
-import com.kbe5.rento.domain.manager.entity.Manager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -32,22 +31,6 @@ public class DriveControllerImpl implements DriveController {
         driveService.driveAdd(drive);
 
         return ResEntityFactory.toResponse(ApiResultCode.SUCCESS, "운행 예약 완료");
-    }
-
-    @Override
-    @PatchMapping("/start/{driveId}")
-    public ResponseEntity<ApiResponse<String>> driveStart(@PathVariable Long driveId) {
-        driveService.driveStart(driveId);
-
-        return ResEntityFactory.toResponse(ApiResultCode.SUCCESS,"시동이 켜졌습니다");
-    }
-
-    @Override
-    @PatchMapping("/end/{driveId}")
-    public ResponseEntity<ApiResponse<String>> driveEnd(@PathVariable Long driveId) {
-        driveService.driveEnd(driveId);
-
-        return ResEntityFactory.toResponse(ApiResultCode.SUCCESS,"시동이 종료되었습니다");
     }
 
     @Override
