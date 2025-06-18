@@ -15,9 +15,16 @@ spring:
       path: /h2-console
 
   jpa:
-    show-sql: false    # ★ 추가 또는 true에서 false로 변경
+    show-sql: false
     hibernate:
       ddl-auto: update
     properties:
       hibernate:
 #        format_sql: true
+
+server:
+  tomcat:
+    threads:
+      max: 200
+      min-spare: 10
+    accept-count: 100

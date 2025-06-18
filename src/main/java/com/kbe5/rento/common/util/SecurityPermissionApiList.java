@@ -8,7 +8,7 @@ public class SecurityPermissionApiList {
     public static final String[] PUBLIC_URLS = {
 
             "/health",
-
+            "/actuator/**",
             // Reservation APIs
             "/api/reservations",
             "/api/reservations/{reservationId}",

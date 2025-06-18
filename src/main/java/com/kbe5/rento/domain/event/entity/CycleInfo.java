@@ -1,6 +1,7 @@
 package com.kbe5.rento.domain.event.entity;
 
 import com.kbe5.rento.domain.device.enums.GpsCondition;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -31,8 +32,10 @@ public class CycleInfo {
     @Enumerated(value = EnumType.STRING)
     private GpsCondition gpsCondition;
 
+    @Column(precision = 9, scale = 6)
     private BigDecimal latitude;
 
+    @Column(precision = 9, scale = 6)
     private BigDecimal longitude;
 
     private Integer angle;
