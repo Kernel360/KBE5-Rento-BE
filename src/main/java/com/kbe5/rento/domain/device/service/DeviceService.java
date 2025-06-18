@@ -33,6 +33,8 @@ public class DeviceService {
 
     private final DriveService driveService;
 
+    private final static LocalDateTime NOW = LocalDateTime.of(2025,6,7,7,25,1, 123_000);
+
     private static final Long EXPIRED_MS = 4 * 60 * 60 * 1000L;
 
     @Transactional
@@ -54,7 +56,7 @@ public class DeviceService {
         Device device = deviceRepository.findByMdn(mdn)
             .orElseThrow(() -> new DeviceException(DeviceResultCode.MISMATCHED_MDN));
 
-        Long driveId = driveService.findDriveForEvent(mdn, LocalDateTime.now());
+        Long driveId = driveService.findDriveForEvent(mdn, NOW);
 
         DeviceToken token = device.issueToken(EXPIRED_MS, driveId);
 

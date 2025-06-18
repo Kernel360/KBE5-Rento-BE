@@ -49,7 +49,7 @@ public record CycleEventRequest(
     List<CycleInfoRequest> cycleInfoRequests
 ) {
 
-    public CycleEvent toEntity(Long deviceUniqueId) {
+    public CycleEvent toEntity(Long deviceUniqueId, Long driveId) {
         return CycleEvent.builder()
             .mdn(this.mdn())
             .deviceUniqueId(deviceUniqueId)
@@ -60,6 +60,7 @@ public record CycleEventRequest(
             .oTime(this.oTime())
             .cycleCount(this.cycleCount())
             .eventType(EventType.CYCLE_INFO)
+            .driveId(driveId)
             .build();
     }
 

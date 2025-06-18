@@ -10,7 +10,7 @@ import java.util.Optional;
 
 public interface EventRepository extends JpaRepository<Event, Long> {
 
-    @Query("""
+    /*@Query("""
       select e.currentAccumulatedDistance
       from OnOffEvent e
       where e.mdn       = :mdn
@@ -21,6 +21,6 @@ public interface EventRepository extends JpaRepository<Event, Long> {
             @Param("mdn")   Long mdn,
             @Param("start") LocalDateTime start,
             @Param("end")   LocalDateTime end
-    );
+    );*/
 
 }

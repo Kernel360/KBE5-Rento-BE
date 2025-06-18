@@ -34,22 +34,6 @@ public class DriveControllerImpl implements DriveController {
     }
 
     @Override
-    @PatchMapping("/start/{driveId}")
-    public ResponseEntity<ApiResponse<String>> driveStart(@PathVariable Long driveId) {
-        driveService.driveStart(driveId);
-
-        return ResEntityFactory.toResponse(ApiResultCode.SUCCESS,"시동이 켜졌습니다");
-    }
-
-    @Override
-    @PatchMapping("/end/{driveId}")
-    public ResponseEntity<ApiResponse<String>> driveEnd(@PathVariable Long driveId) {
-        driveService.driveEnd(driveId);
-
-        return ResEntityFactory.toResponse(ApiResultCode.SUCCESS,"시동이 종료되었습니다");
-    }
-
-    @Override
     @PatchMapping("/cancel/{driveId}")
     public ResponseEntity<ApiResponse<String>> driveCancel(@PathVariable Long driveId) {
         driveService.driveCancel(driveId);

@@ -14,7 +14,14 @@ public interface DriveRepository extends JpaRepository<Drive, Long> {
 
     List<Drive> findByMember_Company(Company company);
 
-    @Query("SELECT d.id FROM Drive d WHERE d.mdn = :mdn AND d.startDate = :startDate")
-    Long findMdnAndStartDate(@Param("mdn") Long mdn,
-                                        @Param("startDate") LocalDateTime startDate);
+    @Query("""
+      SELECT d.id
+      FROM Drive d
+      WHERE d.mdn = :mdn
+        AND d.startDate BETWEEN :startMinus AND :startPlus
+    """)
+    Long findIdByMdnAndStartDateBetween(@Param("mdn") Long mdn,
+                                        @Param("startMinus") LocalDateTime startMinus,
+                                        @Param("startPlus")  LocalDateTime startPlus
+    );
 }

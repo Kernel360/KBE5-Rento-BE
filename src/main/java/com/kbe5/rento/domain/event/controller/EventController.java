@@ -40,10 +40,11 @@ public class EventController {
 
         Long mdn = request.mdn();
 
+        driveService.driveStart(deviceToken.getDriveId());
+
         OnOffEvent onOffEvent = request.toEntity(deviceToken.getDeviceId(), deviceToken.getDriveId());
         eventSender.send(onOffEvent, mdn);
 
-        driveService.driveStart(deviceToken.getDriveId());
 
         return ResponseEntity.ok(EventResponse.fromEntity(DeviceResultCode.SUCCESS, mdn));
     }
@@ -55,10 +56,11 @@ public class EventController {
 
         Long mdn = request.mdn();
 
+        driveService.driveEnd(deviceToken.getDriveId(), request.currentAccumulatedDistance());
+
         OnOffEvent onOffEvent = request.toEntity(deviceToken.getDeviceId(), deviceToken.getDriveId());
         eventSender.send(onOffEvent, mdn);
 
-        driveService.driveEnd(deviceToken.getDriveId());
 
         return ResponseEntity.ok(EventResponse.fromEntity(DeviceResultCode.SUCCESS, mdn));
     }
@@ -71,7 +73,7 @@ public class EventController {
 
         Long mdn = request.mdn();
 
-        CycleEvent cycleEvent = request.toEntity(deviceToken.getDeviceId());
+        CycleEvent cycleEvent = request.toEntity(deviceToken.getDeviceId(), deviceToken.getDriveId());
 
         List<CycleInfo> cycleInfoList = request.toCycleInfoEntities(deviceToken);
 

@@ -45,7 +45,7 @@ public class DriveService {
     }
 
     // 운행 종료
-    public void driveEnd(Long driveId){
+    public void driveEnd(Long driveId, Long distance){
         Drive drive = driveRepository.findById(driveId).orElseThrow(
                 () -> new DomainException(ErrorType.DRIVE_NOT_FOUND));
 
@@ -85,6 +85,15 @@ public class DriveService {
 
     // 이벤트를 위한 해당 차량 찾기
     public Long findDriveForEvent(Long mdn, LocalDateTime onTime){
-        return driveRepository.findMdnAndStartDate(mdn, onTime);
+
+        LocalDateTime minus = onTime.minusNanos(1_000_000);
+        LocalDateTime plus  = onTime.plusNanos( 1_000_000);
+
+        Long driveid = driveRepository.findIdByMdnAndStartDateBetween(mdn, minus, plus);
+
+        if(driveid == null){
+            throw new DomainException(ErrorType.DRIVE_NOT_FOUND);
+        }
+        return driveid;
     }
 }
