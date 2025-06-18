@@ -17,7 +17,7 @@ public interface DriveRepository extends JpaRepository<Drive, Long> {
       SELECT d.id
       FROM Drive d
       WHERE d.mdn = :mdn
-        AND d.startDate = :startDate
+        AND d.startDate <= :startDate
     """)
     Long findIdByMdnAndStartDateBetween(@Param("mdn") Long mdn,
                                         @Param("startDate") LocalDateTime startDate
