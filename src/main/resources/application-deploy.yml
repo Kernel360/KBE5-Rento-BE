@@ -16,3 +16,9 @@ spring:
         hibernate:
           jdbc:
             time_zone: Asia/Seoul
+
+  rabbitmq:
+    host: rabbitmq   # EC2에서 Spring Boot를 "호스트"로 실행한다면 'localhost'
+    port: 5672
+    username: guest
+    password: guest
