@@ -28,7 +28,7 @@ public class FcmControllerImpl implements FcmController {
 
         Manager manager = customManagerDetails.getManager();
 
-        fcmService.send(tokenNotificationRequest, manager);
+        //fcmService.send(tokenNotificationRequest, manager);
 
         return ResEntityFactory.toResponse(ApiResultCode.SUCCESS, "메세지 보내는 것을 성공하였습니다");
     }

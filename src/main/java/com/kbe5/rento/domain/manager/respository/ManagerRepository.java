@@ -18,4 +18,8 @@ public interface ManagerRepository extends JpaRepository<Manager, Long> {
     boolean existsByEmail(String email);
 
     List<Manager> findAllByCompanyCode(String companyCode);
+
+    List<Manager> findAllByCompany(Company company);
+
+    Optional<Manager> findByFcmToken(String failedToken);
 }
