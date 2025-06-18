@@ -51,6 +51,9 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-amqp:3.5.0'
 	implementation 'org.springframework:spring-messaging'
 
+	// https://mvnrepository.com/artifact/com.google.firebase/firebase-admin
+	implementation("com.google.firebase:firebase-admin:9.2.0")
+
 	runtimeOnly 'com.h2database:h2'
 	runtimeOnly 'com.mysql:mysql-connector-j'
 

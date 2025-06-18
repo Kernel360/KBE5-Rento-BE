@@ -10,6 +10,7 @@ import com.kbe5.rento.domain.manager.dto.details.CustomManagerDetails;
 import com.kbe5.rento.domain.manager.dto.request.ManagerLoginRequest;
 import com.kbe5.rento.domain.manager.dto.response.ManagerLoginResponse;
 import com.kbe5.rento.domain.manager.entity.Manager;
+import com.kbe5.rento.domain.manager.respository.ManagerRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -26,11 +27,13 @@ public class LoginAuthenticationFilter extends UsernamePasswordAuthenticationFil
 
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
+    private final ManagerRepository managerRepository;
 
-    public LoginAuthenticationFilter(AuthenticationManager authenticationManager, JwtUtil jwtUtil) {
+    public LoginAuthenticationFilter(AuthenticationManager authenticationManager, JwtUtil jwtUtil, ManagerRepository managerRepository) {
         this.authenticationManager = authenticationManager;
         this.jwtUtil = jwtUtil;
         this.setFilterProcessesUrl("/api/managers/login");
+        this.managerRepository = managerRepository;
     }
 
     @Override
@@ -39,6 +42,8 @@ public class LoginAuthenticationFilter extends UsernamePasswordAuthenticationFil
         try {
             ObjectMapper mapper = new ObjectMapper();
             ManagerLoginRequest loginRequest = mapper.readValue(request.getInputStream(), ManagerLoginRequest.class);
+
+            request.setAttribute("loginRequest", loginRequest);
 
             String loginId = loginRequest.loginId();
             String password = loginRequest.password();
@@ -56,8 +61,16 @@ public class LoginAuthenticationFilter extends UsernamePasswordAuthenticationFil
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
         CustomManagerDetails customManagerDetails = (CustomManagerDetails) authResult.getPrincipal();
 
-        Manager manager = customManagerDetails.getManager();
+        Manager manager = managerRepository.findById(customManagerDetails.getManager().getId())
+                .orElseThrow(() -> new DomainException(ErrorType.MANAGER_NOT_FOUND));
+
         JwtManagerArgumentDto managerArgumentDto = JwtManagerArgumentDto.fromEntity(manager);
+
+        ManagerLoginRequest loginRequest = (ManagerLoginRequest) request.getAttribute("loginRequest");
+        String fcmToken = loginRequest.fcmToken();
+
+        manager.assignFcmToken(fcmToken);
+        managerRepository.save(manager);
 
         String accessToken = jwtUtil.createJwt("access", managerArgumentDto, JwtProperties.ACCESS_EXPIRED_TIME);
         String refreshToken = jwtUtil.createJwt("refresh", managerArgumentDto, JwtProperties.REFRESH_EXPIRED_TIME);
