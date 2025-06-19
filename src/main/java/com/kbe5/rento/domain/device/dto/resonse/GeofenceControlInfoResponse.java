@@ -10,7 +10,7 @@ public record GeofenceControlInfoResponse(
         int updateValue,
         int geofenceGroupId,
         short geoEventType,
-        int geofenceRange,
+        double geofenceRange,
         BigDecimal latitude,
         BigDecimal longitude,
         LocalDateTime onTime,
