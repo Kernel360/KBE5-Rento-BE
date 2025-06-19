@@ -4,6 +4,9 @@ import static org.assertj.core.api.Assertions.*;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Map;
+
+import com.kbe5.rento.common.response.api.ApiResponse;
+import com.kbe5.rento.common.response.api.ApiResultCode;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

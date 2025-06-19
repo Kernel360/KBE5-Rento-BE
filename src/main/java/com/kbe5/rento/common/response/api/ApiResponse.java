@@ -1,4 +1,4 @@
-package com.kbe5.rento.common.apiresponse;
+package com.kbe5.rento.common.response.api;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AccessLevel;
