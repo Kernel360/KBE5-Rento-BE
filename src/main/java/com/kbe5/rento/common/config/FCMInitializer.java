@@ -3,12 +3,12 @@ package com.kbe5.rento.common.config;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
-import org.springframework.beans.factory.annotation.Value;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.io.ClassPathResource;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.io.FileInputStream;
 import java.io.IOException;
 
 @Slf4j
@@ -20,7 +20,7 @@ public class FCMInitializer {
 
     @PostConstruct
     public void init() {
-        try (var inputStream = new ClassPathResource(firebaseConfigPath).getInputStream()) {
+        try (var inputStream = new FileInputStream(firebaseConfigPath)) {
             GoogleCredentials googleCredentials = GoogleCredentials.fromStream(inputStream);
 
             FirebaseOptions options = new FirebaseOptions.Builder()
