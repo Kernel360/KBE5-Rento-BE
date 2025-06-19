@@ -74,6 +74,11 @@ public class ManagerService {
         JwtRefresh jwtRefresh = jwtRefreshRepository.findByManagerId(managerId)
                 .orElseThrow(() -> new DomainException(ErrorType.REFRESH_TOKEN_NOT_FOUND));
 
+        Manager manager = managerRepository.findById(managerId).orElseThrow(() -> new DomainException(ErrorType.MANAGER_NOT_FOUND));
+
+        manager.assignFcmToken(null);
+        managerRepository.save(manager);
+
         jwtRefreshRepository.delete(jwtRefresh);
     }
 
@@ -90,12 +95,11 @@ public class ManagerService {
         Manager manager = managerRepository.findById(id)
                 .orElseThrow(() -> new DomainException(ErrorType.MANAGER_NOT_FOUND));
 
-        if (!manager.getPassword().equals(request.password())) {
+        if (!encoder.matches(request.password(), manager.getPassword())) {
             return false;
         }
 
         managerRepository.delete(manager);
-
         return true;
     }
 

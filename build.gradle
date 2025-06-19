@@ -51,6 +51,9 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-amqp:3.5.0'
 	implementation 'org.springframework:spring-messaging'
 
+	//FCM 관련 의존성
+	implementation("com.google.firebase:firebase-admin:9.2.0")
+
 	runtimeOnly 'com.h2database:h2'
 	runtimeOnly 'com.mysql:mysql-connector-j'
 
