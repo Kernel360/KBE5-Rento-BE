@@ -23,6 +23,10 @@ spring:
         hibernate:
           jdbc:
             time_zone: Asia/Seoul
+  data:
+    redis:
+      host: ${REDIS_HOST}
+      port: ${REDIS_PORT}
 
   rabbitmq:
     host: rabbitmq   # EC2에서 Spring Boot를 "호스트"로 실행한다면 'localhost'
