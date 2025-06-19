@@ -34,6 +34,11 @@ public class FcmService {
         List<String> failedTokens = new ArrayList<>();
 
         for (String token : tokens) {
+            if (token == null) {
+                log.warn("FCM 토큰이 null 입니다. 메시지를 생성하지 않습니다.");
+                continue;  // null이면 건너뜀
+            }
+
             Message message = Message.builder()
                     .setToken(token)
                     .putData("title", tokenNotificationRequest.title())
