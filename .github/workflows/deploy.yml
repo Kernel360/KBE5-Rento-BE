@@ -59,11 +59,11 @@ jobs:
             export AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}
             export AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
-            # firebase 디렉토리 없으면 생성
-            mkdir -p firebase
+            # firebase 디렉토리 없으면 생성 (절대 경로 사용)
+            mkdir -p /home/ubuntu/firebase
 
-            # firebase config 파일 생성
-            echo '${{ secrets.FIREBASE_CONFIG }}' > firebase/rento-f1d61-firebase-adminsdk-fbsvc-bd76cc388d.json
+            # firebase config 파일 생성 (절대 경로 사용)
+            echo '${{ secrets.FIREBASE_CONFIG }}' > /home/ubuntu/firebase/rento-f1d61-firebase-adminsdk-fbsvc-bd76cc388d.json
 
             aws ecr get-login-password --region ap-northeast-2 | \
               docker login --username AWS --password-stdin 528782700548.dkr.ecr.ap-northeast-2.amazonaws.com
@@ -76,16 +76,13 @@ jobs:
               --name rento-server \
               --network mynet \
               -p 80:8080 \
+              -v /home/ubuntu/firebase:/app/firebase \
               -e DB_HOST="\$DB_HOST" \
               -e DB_PORT="\$DB_PORT" \
               -e DB_NAME="\$DB_NAME" \
               -e DB_USER="\$DB_USER" \
               -e DB_PASS="\$DB_PASS" \
               -e SPRING_PROFILES_ACTIVE=deploy \
-              -e FIREBASE_PATH="firebase/rento-f1d61-firebase-adminsdk-fbsvc-bd76cc388d.json" \
+              -e FIREBASE_PATH="/app/firebase/rento-f1d61-firebase-adminsdk-fbsvc-bd76cc388d.json" \
               528782700548.dkr.ecr.ap-northeast-2.amazonaws.com/rento-server:latest
           EOF
-
-
-
-
