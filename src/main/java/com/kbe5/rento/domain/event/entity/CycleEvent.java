@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.slf4j.Slf4j;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Slf4j
@@ -19,8 +18,6 @@ import java.util.List;
 @DiscriminatorValue("CYCLE_INFO")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CycleEvent extends Event{
-
-    private LocalDateTime oTime;
 
     private Integer cycleCount;
 

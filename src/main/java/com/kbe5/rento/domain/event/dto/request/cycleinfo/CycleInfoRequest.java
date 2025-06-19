@@ -8,6 +8,7 @@ import com.kbe5.rento.domain.event.entity.CycleInfo;
 import jakarta.validation.constraints.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 public record CycleInfoRequest(
 
@@ -55,12 +56,13 @@ public record CycleInfoRequest(
     @Min(0)
     @Max(9999)
     @JsonProperty("bat")
-    @NotBlank(message = "bat(배터리 전압)은 필수입니다.")
+    @NotNull(message = "bat(배터리 전압)은 필수입니다.")
     Integer battery
 ){
 
-    public CycleInfo toEntity(DeviceToken deviceToken) {
+    public CycleInfo toEntity(LocalDateTime oTime, DeviceToken deviceToken) {
         return CycleInfo.builder()
+            .cycleInfoTime(oTime.plusSeconds(this.sec()))
             .mdn(deviceToken.getMdn())
             .sec(this.sec())
             .gpsCondition(this.gpsCondition())

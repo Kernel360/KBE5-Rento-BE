@@ -1,10 +1,12 @@
 package com.kbe5.rento.domain.event.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.kbe5.rento.common.exception.DeviceException;
 import com.kbe5.rento.domain.device.enums.DeviceResultCode;
 import com.kbe5.rento.domain.device.enums.GpsCondition;
 import com.kbe5.rento.domain.event.enums.EventType;
 import jakarta.persistence.*;
+import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,17 +18,17 @@ import java.math.BigDecimal;
 @Entity
 @SuperBuilder
 @Table(name = "events")
+@IdClass(EventId.class)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(discriminatorType = DiscriminatorType.STRING)
 public abstract class Event {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    @JsonProperty("oTime")
+    private LocalDateTime oTime;
 
-    Long deviceUniqueId;
-
+    @Id
     Long mdn;
 
     String terminalId;

@@ -83,8 +83,8 @@ public record OffEventRequest(
 
     public OnOffEvent toEntity(DeviceToken token) {
         return OnOffEvent.builder()
+            .oTime(this.offTime())
             .mdn(this.mdn())
-            .deviceUniqueId(token.getDeviceId())
             .gpsCondition(this.gpsCondition())
             .latitude(this.latitude())
             .longitude(this.longitude())

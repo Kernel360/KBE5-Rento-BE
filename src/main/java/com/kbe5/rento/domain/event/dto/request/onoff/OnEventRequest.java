@@ -82,12 +82,12 @@ public record OnEventRequest(
 ) {
     public OnOffEvent toEntity(DeviceToken token) {
         return OnOffEvent.builder()
+            .oTime(this.onTime())
             .mdn(this.mdn())
             .terminalId(this.terminalId())
             .makerId(this.makerId())
             .packetVersion(this.packetVersion())
             .deviceId(this.deviceId())
-            .deviceUniqueId(token.getDeviceId())
             .gpsCondition(this.gpsCondition())
             .latitude(this.latitude())
             .longitude(this.longitude())

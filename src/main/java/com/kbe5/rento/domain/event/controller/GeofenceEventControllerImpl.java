@@ -28,7 +28,7 @@ public class GeofenceEventControllerImpl implements GeofenceEventController{
     public ResponseEntity<EventResponse> receiveGeofenceEvent (@AuthenticationPrincipal DeviceToken deviceToken,
                                                  @RequestBody @Validated GeofenceEventRequest request) {
 
-        GeofenceEvent geofenceEvent = request.toEntity(deviceToken.getDeviceId(), deviceToken.getDriveId());
+        GeofenceEvent geofenceEvent = request.toEntity(deviceToken.getDriveId());
         eventSender.send(geofenceEvent, request.mdn());
 
         return ResponseEntity.ok(EventResponse.fromEntity(DeviceResultCode.SUCCESS, request.mdn()));

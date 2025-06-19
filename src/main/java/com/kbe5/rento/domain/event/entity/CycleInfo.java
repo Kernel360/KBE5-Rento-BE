@@ -2,6 +2,7 @@ package com.kbe5.rento.domain.event.entity;
 
 import com.kbe5.rento.domain.device.enums.GpsCondition;
 import jakarta.persistence.*;
+import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,13 +13,14 @@ import java.math.BigDecimal;
 @Getter
 @Entity
 @Table(name = "cycle_info")
+@IdClass(CycleInfoId.class)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CycleInfo {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private LocalDateTime cycleInfoTime;
 
+    @Id
     private Long mdn;
 
     private Integer sec;
@@ -41,9 +43,9 @@ public class CycleInfo {
     private Integer battery;
 
     @Builder
-    public CycleInfo(Long id, Long mdn, Integer sec, GpsCondition gpsCondition, BigDecimal latitude,
+    public CycleInfo(LocalDateTime cycleInfoTime, Long mdn, Integer sec, GpsCondition gpsCondition, BigDecimal latitude,
         BigDecimal longitude, Integer angle, Integer speed, Long sum, Integer battery) {
-        this.id = id;
+        this.cycleInfoTime = cycleInfoTime;
         this.mdn = mdn;
         this.sec = sec;
         this.gpsCondition = gpsCondition;
