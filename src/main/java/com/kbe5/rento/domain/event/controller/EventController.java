@@ -12,9 +12,7 @@ import com.kbe5.rento.domain.event.dto.response.EventResponse;
 import com.kbe5.rento.domain.event.entity.CycleEvent;
 import com.kbe5.rento.domain.event.entity.CycleInfo;
 import com.kbe5.rento.domain.event.entity.OnOffEvent;
-import com.kbe5.rento.domain.firebase.dto.TokenNotificationRequest;
 import com.kbe5.rento.domain.firebase.service.FcmService;
-import com.kbe5.rento.domain.manager.entity.Manager;
 import com.kbe5.rento.domain.manager.respository.ManagerRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,8 +24,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Slf4j
@@ -39,7 +35,6 @@ public class EventController {
     private final EventSender eventSender;
     private final DriveService driveService;
     private final FcmService fcmService;
-    private final ManagerRepository managerRepository;
 
     @PostMapping("/on-off/on")
     public ResponseEntity<EventResponse> ignitionOn(
@@ -51,17 +46,9 @@ public class EventController {
 
         driveService.driveStart(deviceToken.getDriveId());
 
+        //알림 기능
         Drive drive = driveService.getDriveDetail(deviceToken.getDriveId());
-        String vehicleNumber = drive.getVehicle().getInfo().vehicleNumber();
-
-        List<Manager> managers = managerRepository.findAllByCompany(drive.getVehicle().getCompany());
-
-        String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-
-        //todo: 지도 완성되면 지도 url 추가하기 -> null 주면 오류남!
-        TokenNotificationRequest notificationRequest = new TokenNotificationRequest("운행 시작", vehicleNumber + "의 운행이 시작되었습니다\n" + now, "http://localhost:3000");
-
-        fcmService.send(notificationRequest, managers);
+        fcmService.getDrive(drive);
 
         OnOffEvent onOffEvent = request.toEntity(deviceToken);
         eventSender.send(onOffEvent, mdn);
@@ -77,6 +64,10 @@ public class EventController {
         Long mdn = request.mdn();
 
         driveService.driveEnd(deviceToken.getDriveId(), request.currentAccumulatedDistance());
+
+        //알림 기능
+        Drive drive = driveService.getDriveDetail(deviceToken.getDriveId());
+        fcmService.getDrive(drive);
 
         OnOffEvent onOffEvent = request.toEntity(deviceToken);
         eventSender.send(onOffEvent, mdn);
