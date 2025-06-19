@@ -59,6 +59,12 @@ jobs:
             export AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}
             export AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
+            # firebase 디렉토리 없으면 생성
+            mkdir -p firebase
+
+            # firebase config 파일 생성
+            echo '${{ secrets.FIREBASE_CONFIG }}' > firebase/rento-f1d61-firebase-adminsdk-fbsvc-bd76cc388d.json
+
             aws ecr get-login-password --region ap-northeast-2 | \
               docker login --username AWS --password-stdin 528782700548.dkr.ecr.ap-northeast-2.amazonaws.com
 
