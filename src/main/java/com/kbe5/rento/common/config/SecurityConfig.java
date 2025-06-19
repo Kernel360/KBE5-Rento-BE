@@ -73,7 +73,7 @@ public class SecurityConfig {
         // LoginFilter 추가
         http.addFilterBefore(deviceTokenFilter, LoginAuthenticationFilter.class);
         http.addFilterBefore(new JwtFilter(jwtUtil, managerRepository), LoginAuthenticationFilter.class);
-        http.addFilterAt(new LoginAuthenticationFilter(authenticationManager(authenticationConfiguration), jwtUtil, managerRepository),
+        http.addFilterAt(new LoginAuthenticationFilter(authenticationManager(authenticationConfiguration), jwtUtil),
                 UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
