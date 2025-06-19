@@ -82,6 +82,8 @@ jobs:
               -e DB_NAME="\$DB_NAME" \
               -e DB_USER="\$DB_USER" \
               -e DB_PASS="\$DB_PASS" \
+              -e REDIS_HOST="${{ secrets.REDIS_HOST }}" \
+              -e REDIS_PORT="${{ secrets.REDIS_PORT }}" \
               -e SPRING_PROFILES_ACTIVE=deploy \
               -e FIREBASE_PATH="/app/firebase/rento-f1d61-firebase-adminsdk-fbsvc-bd76cc388d.json" \
               528782700548.dkr.ecr.ap-northeast-2.amazonaws.com/rento-server:latest
