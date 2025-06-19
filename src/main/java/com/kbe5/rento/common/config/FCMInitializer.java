@@ -18,22 +18,21 @@ public class FCMInitializer {
     @Value("${fcm.firebase_config_path}")
     private String firebaseConfigPath;
 
-    @PostConstruct //빈 객체가 생성되고 의존성 주입이 완료된 후에 초기화가 실행될 수 있도록 @PostConstruct 설정
+    @PostConstruct
     public void init() {
-        try{
-            GoogleCredentials googleCredentials = GoogleCredentials
-                    .fromStream(new ClassPathResource(firebaseConfigPath).getInputStream());
+        try (var inputStream = new ClassPathResource(firebaseConfigPath).getInputStream()) {
+            GoogleCredentials googleCredentials = GoogleCredentials.fromStream(inputStream);
 
             FirebaseOptions options = new FirebaseOptions.Builder()
                     .setCredentials(googleCredentials)
                     .build();
 
-            if(FirebaseApp.getApps().isEmpty()) {
+            if (FirebaseApp.getApps().isEmpty()) {
                 FirebaseApp.initializeApp(options);
                 log.info("Firebase 앱이 초기화되었습니다");
             }
-        } catch(IOException e){
-            log.error(e.getMessage());
+        } catch (IOException e) {
+            log.error("Firebase 초기화 실패: {}", e.getMessage(), e);
         }
     }
 }
