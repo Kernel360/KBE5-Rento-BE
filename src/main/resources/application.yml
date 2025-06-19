@@ -14,4 +14,4 @@ spring:
     encoding: UTF-8
 
 fcm:
-  firebase_config_path: ${FIREBASE_PATH}
+  firebase_config_path: ${FIREBASE_CONFIG}
