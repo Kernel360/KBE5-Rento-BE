@@ -1,5 +1,6 @@
 rootProject.name = 'rento-mm'
-include 'api'
-include 'adapter'
+include 'rento-api'
+include 'rento-adapter'
 include 'common'
 include 'domain'
+include 'infra'

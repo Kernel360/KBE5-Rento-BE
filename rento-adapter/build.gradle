@@ -4,7 +4,7 @@ plugins {
     id 'io.spring.dependency-management'
 }
 
-group = 'org.kbe5'
+group = 'com.kbe5'
 version = '1.0-SNAPSHOT'
 
 configurations {
@@ -14,8 +14,6 @@ configurations {
 }
 
 dependencies {
-
-    //modules
     implementation project(':common')
     implementation project(':domain')
 
@@ -33,7 +31,6 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-validation'
 
     compileOnly 'org.projectlombok:lombok'
-    developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
     // Security
     implementation 'org.springframework.boot:spring-boot-starter-security'
@@ -56,4 +53,12 @@ dependencies {
 
 test {
     useJUnitPlatform()
+}
+
+bootJar {
+    enabled = true
+}
+
+jar {
+    enabled = false
 }
