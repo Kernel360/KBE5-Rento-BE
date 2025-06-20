@@ -1,4 +1,4 @@
-package com.kbe5.domain.model.entity;
+package com.kbe5.domain;
 
 import jakarta.persistence.*;
 import lombok.Getter;
