@@ -40,8 +40,6 @@ public class LoginAuthenticationFilter extends UsernamePasswordAuthenticationFil
             ObjectMapper mapper = new ObjectMapper();
             ManagerLoginRequest loginRequest = mapper.readValue(request.getInputStream(), ManagerLoginRequest.class);
 
-            request.setAttribute("loginRequest", loginRequest);
-
             String loginId = loginRequest.loginId();
             String password = loginRequest.password();
 
@@ -57,15 +55,9 @@ public class LoginAuthenticationFilter extends UsernamePasswordAuthenticationFil
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
         CustomManagerDetails customManagerDetails = (CustomManagerDetails) authResult.getPrincipal();
-
         Manager manager = customManagerDetails.getManager();
 
         JwtManagerArgumentDto managerArgumentDto = JwtManagerArgumentDto.fromEntity(manager);
-
-        ManagerLoginRequest loginRequest = (ManagerLoginRequest) request.getAttribute("loginRequest");
-        String fcmToken = loginRequest.fcmToken();
-
-        manager.assignFcmToken(fcmToken);
 
         String accessToken = jwtUtil.createJwt("access", managerArgumentDto, JwtProperties.ACCESS_EXPIRED_TIME);
         String refreshToken = jwtUtil.createJwt("refresh", managerArgumentDto, JwtProperties.REFRESH_EXPIRED_TIME);

@@ -5,11 +5,13 @@ import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 @Slf4j
 @Component
@@ -20,7 +22,7 @@ public class FCMInitializer {
 
     @PostConstruct
     public void init() {
-        try (var inputStream = new FileInputStream(firebaseConfigPath)) {
+        try (InputStream inputStream = getFirebaseConfigInputStream()) {
             GoogleCredentials googleCredentials = GoogleCredentials.fromStream(inputStream);
 
             FirebaseOptions options = new FirebaseOptions.Builder()
@@ -33,6 +35,14 @@ public class FCMInitializer {
             }
         } catch (IOException e) {
             log.error("Firebase 초기화 실패: {}", e.getMessage(), e);
+        }
+    }
+
+    private InputStream getFirebaseConfigInputStream() throws IOException {
+        if (firebaseConfigPath.startsWith("/") || firebaseConfigPath.startsWith("./")) {
+            return new FileInputStream(firebaseConfigPath);
+        } else {
+            return new ClassPathResource(firebaseConfigPath).getInputStream();
         }
     }
 }

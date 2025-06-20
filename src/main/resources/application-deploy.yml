@@ -29,3 +29,6 @@ spring:
     port: 5672
     username: guest
     password: guest
+
+fcm:
+  firebase_config_path: ${FIREBASE_PATH}
