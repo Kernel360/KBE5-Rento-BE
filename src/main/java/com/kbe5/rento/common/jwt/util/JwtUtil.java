@@ -67,7 +67,7 @@ public class JwtUtil {
         return parseClaim(token, "companyCode", String.class);
     }
 
-    public Boolean isExpired(String token, HttpServletResponse response) {
+    public Boolean isExpired(String token) {
         try {
             Date expiration = Jwts.parser()
                     .verifyWith(secretKey)
@@ -125,7 +125,7 @@ public class JwtUtil {
             throw new DomainException(ErrorType.INVALID_TOKEN);
         }
 
-        if (isExpired(refresh, response) || !redisTemplate.hasKey(managerArgumentDto.id().toString())) {
+        if (isExpired(refresh) || !redisTemplate.hasKey(managerArgumentDto.id().toString())) {
             //Todo: 로그아웃 로직 구현
             throw new DomainException(ErrorType.EXPIRED_TOKEN);
         }
