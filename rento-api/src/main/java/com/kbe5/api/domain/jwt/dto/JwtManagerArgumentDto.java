@@ -1,7 +1,7 @@
 package com.kbe5.api.domain.jwt.dto;
 
-import com.kbe5.rento.common.jwt.util.JwtUtil;
-import com.kbe5.rento.domain.manager.entity.Manager;
+
+import com.kbe5.api.domain.jwt.util.JwtUtil;
 
 public record JwtManagerArgumentDto(
         Long id,

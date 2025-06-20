@@ -1,6 +1,6 @@
 package com.kbe5.api.domain.jwt.controller;
 
-import com.kbe5.rento.common.jwt.util.JwtUtil;
+import com.kbe5.api.domain.jwt.util.JwtUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;

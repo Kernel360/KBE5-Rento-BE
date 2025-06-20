@@ -1,10 +1,8 @@
 package com.kbe5.api.domain.jwt.util;
 
-import com.kbe5.rento.common.exception.ErrorType;
-import com.kbe5.rento.common.response.error.ErrorResponse;
-import com.kbe5.rento.domain.manager.dto.details.CustomManagerDetails;
-import com.kbe5.rento.domain.manager.respository.ManagerRepository;
-import com.kbe5.rento.domain.manager.service.CustomMangerDetailsService;
+import com.kbe5.api.domain.manager.dto.details.CustomManagerDetails;
+import com.kbe5.common.exception.ErrorType;
+import com.kbe5.common.response.error.ErrorResponse;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
