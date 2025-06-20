@@ -1,11 +1,11 @@
 package com.kbe5.api.domain.company.service;
 
-import com.kbe5.rento.common.exception.DomainException;
-import com.kbe5.rento.common.exception.ErrorType;
-import com.kbe5.rento.domain.company.dto.request.CompanyUpdateRequest;
-import com.kbe5.rento.domain.company.dto.response.CompanyDeleteResponse;
-import com.kbe5.rento.domain.company.entity.Company;
-import com.kbe5.rento.domain.company.repository.CompanyRepository;
+import com.kbe5.api.domain.company.dto.request.CompanyUpdateRequest;
+import com.kbe5.api.domain.company.dto.response.CompanyDeleteResponse;
+import com.kbe5.common.exception.DomainException;
+import com.kbe5.common.exception.ErrorType;
+import com.kbe5.domain.company.entity.Company;
+import com.kbe5.domain.company.repository.CompanyRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

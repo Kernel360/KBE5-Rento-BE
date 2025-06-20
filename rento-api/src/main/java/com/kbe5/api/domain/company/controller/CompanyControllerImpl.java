@@ -12,6 +12,7 @@ import com.kbe5.api.domain.company.service.CompanyService;
 import com.kbe5.common.apiresponse.ResEntityFactory;
 import com.kbe5.common.response.api.ApiResponse;
 import com.kbe5.common.response.api.ApiResultCode;
+import com.kbe5.domain.company.entity.Company;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

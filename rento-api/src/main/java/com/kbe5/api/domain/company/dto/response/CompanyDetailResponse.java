@@ -1,6 +1,6 @@
 package com.kbe5.api.domain.company.dto.response;
 
-import com.kbe5.rento.domain.company.entity.Company;
+import com.kbe5.domain.company.entity.Company;
 
 public record CompanyDetailResponse(
         Long id,
