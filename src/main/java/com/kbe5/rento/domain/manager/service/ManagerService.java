@@ -8,6 +8,7 @@ import com.kbe5.rento.domain.company.dto.response.CompanyResponse;
 import com.kbe5.rento.domain.company.entity.Company;
 import com.kbe5.rento.domain.company.repository.CompanyRepository;
 import com.kbe5.rento.domain.company.service.CompanyService;
+import com.kbe5.rento.domain.firebase.dto.UpdateFcmTokenRequest;
 import com.kbe5.rento.domain.manager.dto.request.ManagerDeleteRequest;
 import com.kbe5.rento.domain.manager.dto.request.ManagerSignUpRequest;
 import com.kbe5.rento.domain.manager.dto.request.ManagerUpdateRequest;
@@ -109,5 +110,12 @@ public class ManagerService {
 
     public boolean isExistsEmail(String email) {
         return managerRepository.existsByEmail(email);
+    }
+
+    public void updateFcmToken(Long managerId, UpdateFcmTokenRequest tokenRequest) {
+        Manager manager = managerRepository.findById(managerId)
+                .orElseThrow(() -> new DomainException(ErrorType.MANAGER_NOT_FOUND));
+
+        manager.assignFcmToken(tokenRequest.token());
     }
 }
