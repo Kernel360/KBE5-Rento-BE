@@ -1,4 +1,4 @@
-package com.kbe5.api.jwt.device;
+package com.kbe5.api.domain.jwt.device;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kbe5.rento.common.exception.DeviceException;

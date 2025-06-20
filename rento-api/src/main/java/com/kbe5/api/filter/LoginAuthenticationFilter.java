@@ -1,19 +1,17 @@
 package com.kbe5.api.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.kbe5.rento.common.exception.DomainException;
-import com.kbe5.rento.common.exception.ErrorType;
-import com.kbe5.rento.common.jwt.dto.JwtManagerArgumentDto;
-import com.kbe5.rento.common.jwt.util.JwtProperties;
-import com.kbe5.rento.common.jwt.util.JwtUtil;
-import com.kbe5.rento.domain.manager.dto.details.CustomManagerDetails;
-import com.kbe5.rento.domain.manager.dto.request.ManagerLoginRequest;
-import com.kbe5.rento.domain.manager.dto.response.ManagerLoginResponse;
-import com.kbe5.rento.domain.manager.entity.Manager;
+
+import com.kbe5.api.domain.jwt.dto.JwtManagerArgumentDto;
+import com.kbe5.api.domain.jwt.util.JwtProperties;
+import com.kbe5.api.domain.jwt.util.JwtUtil;
+import com.kbe5.common.exception.DomainException;
+import com.kbe5.common.exception.ErrorType;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -22,6 +20,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import java.io.IOException;
 
+@Slf4j
 public class LoginAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     private final AuthenticationManager authenticationManager;
@@ -55,14 +54,14 @@ public class LoginAuthenticationFilter extends UsernamePasswordAuthenticationFil
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
         CustomManagerDetails customManagerDetails = (CustomManagerDetails) authResult.getPrincipal();
-
         Manager manager = customManagerDetails.getManager();
+
         JwtManagerArgumentDto managerArgumentDto = JwtManagerArgumentDto.fromEntity(manager);
 
         String accessToken = jwtUtil.createJwt("access", managerArgumentDto, JwtProperties.ACCESS_EXPIRED_TIME);
         String refreshToken = jwtUtil.createJwt("refresh", managerArgumentDto, JwtProperties.REFRESH_EXPIRED_TIME);
 
-        jwtUtil.saveRefreshToken(refreshToken, manager, JwtProperties.REFRESH_EXPIRED_TIME);
+        jwtUtil.saveRefreshTokenToRedis(managerArgumentDto.id(), refreshToken);
 
         response.addHeader("AccessToken",accessToken);
         response.addHeader("RefreshToken", refreshToken);
@@ -77,7 +76,6 @@ public class LoginAuthenticationFilter extends UsernamePasswordAuthenticationFil
 
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
-        DomainException domainException = new DomainException(ErrorType.FAILED_LOGIN);
-        jwtUtil.tokenErrorResponse(response, domainException);
+        ErrorResponse.SendError(response, ErrorType.FAILED_LOGIN);
     }
 }

@@ -1,32 +1,37 @@
-package com.kbe5.api.jwt.util;
+package com.kbe5.api.domain.jwt.util;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.kbe5.rento.common.exception.DomainException;
-import com.kbe5.rento.common.exception.ErrorType;
-import com.kbe5.rento.common.jwt.dto.JwtManagerArgumentDto;
-import com.kbe5.rento.common.jwt.entity.JwtRefresh;
-import com.kbe5.rento.common.jwt.respository.JwtRefreshRepository;
-import com.kbe5.rento.domain.manager.entity.Manager;
+
+import com.kbe5.api.domain.jwt.dto.JwtManagerArgumentDto;
+import com.kbe5.common.exception.DomainException;
+import com.kbe5.common.exception.ErrorType;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
+import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
+@Slf4j
 @Component
+@RequiredArgsConstructor
 public class JwtUtil {
 
-    private final SecretKey secretKey;
-    private final JwtRefreshRepository jwtRefreshRepository;
+    private SecretKey secretKey;
+    private final RedisTemplate<String, String> redisTemplate;
 
-    public JwtUtil(JwtRefreshRepository jwtRefreshRepository) {
-        this.jwtRefreshRepository = jwtRefreshRepository;
+    @PostConstruct
+    public void init() {
         this.secretKey = new SecretKeySpec(JwtProperties.JWT_TOKEN.getBytes(StandardCharsets.UTF_8),
                 Jwts.SIG.HS256.key().build().getAlgorithm());
     }
@@ -73,9 +78,8 @@ public class JwtUtil {
                     .getExpiration();
 
             return expiration.before(new Date());
-
-        } catch (JwtException | IllegalArgumentException e) {
-           throw new DomainException(ErrorType.EXPIRED_TOKEN);
+        } catch (ExpiredJwtException e) {
+            return true;
         }
     }
 
@@ -112,59 +116,50 @@ public class JwtUtil {
         String refresh = request.getHeader("RefreshToken");
         String category = getCategory(refresh);
 
+        JwtManagerArgumentDto managerArgumentDto = JwtManagerArgumentDto.of(this, refresh);
+
         if (refresh == null || refresh.isEmpty()) {
             throw new DomainException(ErrorType.INVALID_TOKEN);
         }
 
-        if (!category.equals("refresh") || !jwtRefreshRepository.existsByRefreshToken(refresh)) {
+        if (!category.equals("refresh")) {
             throw new DomainException(ErrorType.INVALID_TOKEN);
         }
 
-        if (isExpired(refresh)) {
-            return;
+        if (isExpired(refresh) || !redisTemplate.hasKey(managerArgumentDto.id().toString())) {
+            //Todo: 로그아웃 로직 구현
+            throw new DomainException(ErrorType.EXPIRED_TOKEN);
         }
 
-        JwtManagerArgumentDto managerArgumentDto = JwtManagerArgumentDto.of(this, refresh);
+        if (!getRefreshFromRedis(managerArgumentDto.id()).equals(refresh)) {
+            throw new DomainException(ErrorType.INVALID_TOKEN);
+        }
 
         String newAccess = createJwt("access", managerArgumentDto, JwtProperties.ACCESS_EXPIRED_TIME);
         String newRefresh = createJwt("refresh", managerArgumentDto, JwtProperties.REFRESH_EXPIRED_TIME);
 
-        JwtRefresh oldRefreshToken = jwtRefreshRepository.findByRefreshToken(refresh)
-                .orElseThrow(() -> new DomainException(ErrorType.REFRESH_TOKEN_NOT_FOUND));
-
-        deleteRefreshToken(oldRefreshToken);
-
-        saveRefreshToken(newRefresh, oldRefreshToken.getManager(), JwtProperties.REFRESH_EXPIRED_TIME);
+        saveRefreshTokenToRedis(managerArgumentDto.id(), newRefresh);
 
         response.setHeader("AccessToken", newAccess);
         response.setHeader("RefreshToken", newRefresh);
     }
 
-    public void saveRefreshToken(String refreshToken, Manager manager, Long expiredTime) {
-        if (jwtRefreshRepository.existsByRefreshToken(refreshToken)) {
-            JwtRefresh jwtRefresh = jwtRefreshRepository.findByRefreshToken(refreshToken)
-                    .orElseThrow(() -> new DomainException(ErrorType.REFRESH_TOKEN_NOT_FOUND));
-            deleteRefreshToken(jwtRefresh);
-        };
+    public void saveRefreshTokenToRedis(Long id, String refreshToken) {
+        ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
 
-        jwtRefreshRepository.save(JwtRefresh.builder()
-                .manager(manager)
-                .refreshToken(refreshToken)
-                .expiredTime(expiredTime)
-                .build());
+        String key = id.toString();
+
+        valueOperations.set(
+                key,
+                refreshToken,
+                JwtProperties.REFRESH_EXPIRED_TIME,
+                TimeUnit.MILLISECONDS
+        );
     }
 
-    public void deleteRefreshToken(JwtRefresh oldRefreshToken) {
-        jwtRefreshRepository.delete(oldRefreshToken);
-    }
+    public String getRefreshFromRedis(Long id) {
+        ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
 
-    public void tokenErrorResponse(HttpServletResponse response, DomainException domainException) throws IOException {
-        response.setContentType("application/json;charset=UTF-8");
-
-        response.setStatus(domainException.getStatus().value());
-
-        String body = new ObjectMapper().writeValueAsString(domainException.toResponse());
-
-        response.getWriter().write(body);
+        return valueOperations.get(id.toString());
     }
 }
