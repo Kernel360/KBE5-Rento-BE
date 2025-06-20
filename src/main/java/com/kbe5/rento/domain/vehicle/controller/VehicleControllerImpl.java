@@ -1,9 +1,8 @@
 package com.kbe5.rento.domain.vehicle.controller;
 
-
-import com.kbe5.rento.common.apiresponse.ApiResponse;
-import com.kbe5.rento.common.apiresponse.ApiResultCode;
 import com.kbe5.rento.common.apiresponse.ResEntityFactory;
+import com.kbe5.rento.common.response.api.ApiResponse;
+import com.kbe5.rento.common.response.api.ApiResultCode;
 import com.kbe5.rento.domain.manager.dto.details.CustomManagerDetails;
 import com.kbe5.rento.domain.vehicle.dto.request.VehicleAddRequest;
 import com.kbe5.rento.domain.vehicle.dto.request.VehicleUpdateRequest;

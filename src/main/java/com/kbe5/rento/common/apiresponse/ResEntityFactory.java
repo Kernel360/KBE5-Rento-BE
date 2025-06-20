@@ -1,5 +1,7 @@
 package com.kbe5.rento.common.apiresponse;
 
+import com.kbe5.rento.common.response.api.ApiResponse;
+import com.kbe5.rento.common.response.api.ApiResultCode;
 import org.springframework.http.ResponseEntity;
 
 public class ResEntityFactory {

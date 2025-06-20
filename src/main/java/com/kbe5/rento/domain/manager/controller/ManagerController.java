@@ -1,6 +1,6 @@
 package com.kbe5.rento.domain.manager.controller;
 
-import com.kbe5.rento.common.apiresponse.ApiResponse;
+import com.kbe5.rento.common.response.api.ApiResponse;
 import com.kbe5.rento.domain.manager.dto.request.ManagerDeleteRequest;
 import com.kbe5.rento.domain.manager.dto.request.ManagerSignUpRequest;
 import com.kbe5.rento.domain.manager.dto.request.ManagerUpdateRequest;
@@ -8,10 +8,7 @@ import com.kbe5.rento.domain.manager.dto.response.ManagerDeleteResponse;
 import com.kbe5.rento.domain.manager.dto.response.ManagerResponse;
 import com.kbe5.rento.domain.manager.dto.response.ManagerSignUpResponse;
 import com.kbe5.rento.domain.manager.dto.response.ManagerUpdateResponse;
-import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 

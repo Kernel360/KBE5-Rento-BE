@@ -1,8 +1,8 @@
 package com.kbe5.rento.domain.geofence.controller;
 
-import com.kbe5.rento.common.apiresponse.ApiResponse;
-import com.kbe5.rento.common.apiresponse.ApiResultCode;
 import com.kbe5.rento.common.apiresponse.ResEntityFactory;
+import com.kbe5.rento.common.response.api.ApiResponse;
+import com.kbe5.rento.common.response.api.ApiResultCode;
 import com.kbe5.rento.domain.geofence.dto.request.GeofenceRegisterRequest;
 import com.kbe5.rento.domain.geofence.dto.request.GeofenceUpdateRequest;
 import com.kbe5.rento.domain.geofence.dto.response.GeofenceInfoResponse;

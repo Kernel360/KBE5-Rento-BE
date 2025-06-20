@@ -1,6 +1,6 @@
 package com.kbe5.rento.domain.company.controller;
 
-import com.kbe5.rento.common.apiresponse.ApiResponse;
+import com.kbe5.rento.common.response.api.ApiResponse;
 import com.kbe5.rento.domain.company.dto.request.CompanyBiznumberRequest;
 import com.kbe5.rento.domain.company.dto.request.CompanyRegisterRequest;
 import com.kbe5.rento.domain.company.dto.request.CompanyUpdateRequest;
