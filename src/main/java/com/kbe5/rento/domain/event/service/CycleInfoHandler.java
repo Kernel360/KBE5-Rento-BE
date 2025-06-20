@@ -27,11 +27,11 @@ public class CycleInfoHandler implements EventHandler {
     @Override
     public void handle(Event event) {
 
-        eventRepository.save(event);
-
         CycleEvent cycleEvent = (CycleEvent) event;
         List<CycleInfo> cycleInfo = cycleEvent.getCycleInfos();
 
+        eventRepository.save(cycleEvent);
+        
         if (isNotNullAndNotEmpty(cycleInfo)){
             cycleInfoRepository.bulkInsert(cycleInfo);
         }

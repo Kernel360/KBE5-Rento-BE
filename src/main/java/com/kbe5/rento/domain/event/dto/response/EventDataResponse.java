@@ -1,6 +1,6 @@
 package com.kbe5.rento.domain.event.dto.response;
 
-import com.kbe5.rento.domain.device.enums.GpsCondition;
+import com.kbe5.rento.domain.event.enums.GpsCondition;
 import com.kbe5.rento.domain.event.entity.CycleEvent;
 import com.kbe5.rento.domain.event.entity.Event;
 import com.kbe5.rento.domain.event.entity.GeofenceEvent;
@@ -11,8 +11,6 @@ import java.time.LocalDateTime;
 
 public record EventDataResponse(
         // Event 공통 필드
-        Long id,
-        Long deviceUniqueId,
         Long mdn,
         String terminalId,
         Integer makerId,
@@ -46,8 +44,6 @@ public record EventDataResponse(
 
     public static EventDataResponse fromEntity(Event event) {
         return new EventDataResponse(
-                event.getId(),
-                event.getDeviceUniqueId(),
                 event.getMdn(),
                 event.getTerminalId(),
                 event.getMakerId(),

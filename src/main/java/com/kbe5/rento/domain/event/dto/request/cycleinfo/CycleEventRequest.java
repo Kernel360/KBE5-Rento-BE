@@ -48,22 +48,21 @@ public record CycleEventRequest(
 
     public CycleEvent toEntity(DeviceToken token) {
         return CycleEvent.builder()
+            .oTime(this.oTime())
             .mdn(this.mdn())
-            .deviceUniqueId(token.getDeviceId())
             .terminalId(this.terminalId())
             .makerId(this.makerId())
             .packetVersion(this.packetVersion())
             .deviceId(this.deviceId())
-            .oTime(this.oTime())
             .cycleCount(this.cycleCount())
             .eventType(EventType.CYCLE_INFO)
             .driveId(token.getDriveId())
             .build();
     }
 
-    public List<CycleInfo> toCycleInfoEntities(DeviceToken deviceToken) {
+    public List<CycleInfo> toCycleInfoEntities(DeviceToken token) {
         return this.cycleInfoRequests().stream()
-            .map(req -> req.toEntity(deviceToken))
+            .map(req -> req.of(this.oTime(), token))
             .toList();
     }
 }

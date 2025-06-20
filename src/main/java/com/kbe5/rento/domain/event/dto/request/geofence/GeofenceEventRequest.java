@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.kbe5.rento.common.datetime.EventLocalDateTimeDeserializer;
-import com.kbe5.rento.domain.device.enums.GpsCondition;
+import com.kbe5.rento.domain.event.enums.GpsCondition;
 import com.kbe5.rento.domain.event.entity.GeofenceEvent;
 import com.kbe5.rento.domain.event.enums.EventType;
 import jakarta.persistence.EnumType;
@@ -90,25 +90,25 @@ public record GeofenceEventRequest(
         @NotNull(message = "{device.currentAccumulatedDistance.notnull}")
         Long sum
 ) {
-    public GeofenceEvent toEntity(Long deviceUniqueId, Long driveId) {
+    public GeofenceEvent toEntity(Long driveId) {
         return GeofenceEvent.builder()
-                .mdn(this.mdn())
-                .terminalId(this.terminalId())
-                .makerId(this.makerId())
-                .packetVersion(this.packetVersion())
-                .deviceId(this.deviceId())
-                .geoGrpId(this.geofenceGroupId)
-                .geoPid(this.geofencePointId)
-                .evtVal(this.eventValue)
-                .gpsCondition(this.gpsCondition())
-                .latitude(this.latitude())
-                .longitude(this.longitude())
-                .angle(this.angle())
-                .speed(this.speed())
-                .currentAccumulatedDistance(this.sum())
-                .oTime(this.oTime())
-                .eventType(EventType.GEOFENCE)
-                .driveId(driveId)
-                .build();
+            .oTime(this.oTime())
+            .mdn(this.mdn())
+            .terminalId(this.terminalId())
+            .makerId(this.makerId())
+            .packetVersion(this.packetVersion())
+            .deviceId(this.deviceId())
+            .geoGrpId(this.geofenceGroupId)
+            .geoPid(this.geofencePointId)
+            .evtVal(this.eventValue)
+            .gpsCondition(this.gpsCondition())
+            .latitude(this.latitude())
+            .longitude(this.longitude())
+            .angle(this.angle())
+            .speed(this.speed())
+            .currentAccumulatedDistance(this.sum())
+            .eventType(EventType.GEOFENCE)
+            .driveId(driveId)
+            .build();
     }
 }

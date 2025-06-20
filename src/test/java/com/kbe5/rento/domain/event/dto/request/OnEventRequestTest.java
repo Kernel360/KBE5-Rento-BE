@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kbe5.rento.common.datetime.DateUtil;
-import com.kbe5.rento.domain.device.enums.GpsCondition;
+import com.kbe5.rento.domain.event.enums.GpsCondition;
 import com.kbe5.rento.domain.event.dto.request.onoff.OnEventRequest;
 import java.math.BigDecimal;
 import org.junit.jupiter.api.Test;

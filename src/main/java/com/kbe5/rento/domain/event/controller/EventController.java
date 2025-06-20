@@ -6,11 +6,13 @@ import com.kbe5.rento.domain.drive.entity.Drive;
 import com.kbe5.rento.domain.drive.service.DriveService;
 import com.kbe5.rento.domain.event.amqp.EventSender;
 import com.kbe5.rento.domain.event.dto.request.cycleinfo.CycleEventRequest;
+import com.kbe5.rento.domain.event.dto.request.geofence.GeofenceEventRequest;
 import com.kbe5.rento.domain.event.dto.request.onoff.OffEventRequest;
 import com.kbe5.rento.domain.event.dto.request.onoff.OnEventRequest;
 import com.kbe5.rento.domain.event.dto.response.EventResponse;
 import com.kbe5.rento.domain.event.entity.CycleEvent;
 import com.kbe5.rento.domain.event.entity.CycleInfo;
+import com.kbe5.rento.domain.event.entity.GeofenceEvent;
 import com.kbe5.rento.domain.event.entity.OnOffEvent;
 import com.kbe5.rento.domain.firebase.service.FcmService;
 import com.kbe5.rento.domain.manager.respository.ManagerRepository;
@@ -46,7 +48,7 @@ public class EventController {
 
         driveService.driveStart(deviceToken.getDriveId());
 
-        //알림 기능
+        //todo:이부분 성능문제 해결필요
         Drive drive = driveService.getDriveDetail(deviceToken.getDriveId());
         fcmService.getDrive(drive);
 
@@ -65,7 +67,7 @@ public class EventController {
 
         driveService.driveEnd(deviceToken.getDriveId(), request.currentAccumulatedDistance());
 
-        //알림 기능
+        //todo:이부분 성능문제 해결필요
         Drive drive = driveService.getDriveDetail(deviceToken.getDriveId());
         fcmService.getDrive(drive);
 
@@ -85,13 +87,22 @@ public class EventController {
         Long mdn = request.mdn();
 
         CycleEvent cycleEvent = request.toEntity(deviceToken);
-
         List<CycleInfo> cycleInfoList = request.toCycleInfoEntities(deviceToken);
-
         cycleEvent.setCycleInfos(cycleInfoList);
 
         eventSender.send(cycleEvent, mdn);
 
         return ResponseEntity.ok(EventResponse.fromEntity(DeviceResultCode.SUCCESS, mdn));
+    }
+
+    @PostMapping("/geofences")
+    public ResponseEntity<EventResponse> receiveGeofenceEvent (
+        @AuthenticationPrincipal DeviceToken deviceToken,
+        @RequestBody @Validated GeofenceEventRequest request) {
+
+        GeofenceEvent geofenceEvent = request.toEntity(deviceToken.getDriveId());
+        eventSender.send(geofenceEvent, request.mdn());
+
+        return ResponseEntity.ok(EventResponse.fromEntity(DeviceResultCode.SUCCESS, request.mdn()));
     }
 }

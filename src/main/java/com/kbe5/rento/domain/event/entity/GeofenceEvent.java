@@ -8,8 +8,6 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.slf4j.Slf4j;
 
-import java.time.LocalDateTime;
-
 @Slf4j
 @Getter
 @Entity
@@ -17,8 +15,6 @@ import java.time.LocalDateTime;
 @DiscriminatorValue("GEOFENCE")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class GeofenceEvent extends Event {
-
-    LocalDateTime oTime;
 
     int geoGrpId;
 
