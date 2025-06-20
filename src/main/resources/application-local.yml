@@ -29,6 +29,12 @@ spring:
     host: localhost # 추후 rabbitmq 서버의 주소로 변경
     port: 5672  # AMQP 기본 포트
     virtual-host: / # 가상 호스트 주소
+
+  data:
+    redis:
+      host: localhost
+      port: 6379
+
 server:
   tomcat:
     threads:
@@ -38,4 +44,3 @@ server:
 
 fcm:
   firebase_config_path: firebase/rento-f1d61-firebase-adminsdk-fbsvc-bd76cc388d.json
-

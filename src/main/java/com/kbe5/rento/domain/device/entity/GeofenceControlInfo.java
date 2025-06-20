@@ -31,7 +31,7 @@ public class GeofenceControlInfo extends BaseEntity {
     private Short geoEvtTp;
 
     @Column(name = "geo_range", length = 8)
-    private Integer geoRange;
+    private Double geoRange;
 
     @Column(name = "lat", length = 16)
     private BigDecimal lat;

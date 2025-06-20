@@ -2,6 +2,7 @@ package com.kbe5.rento.common.jwt.util;
 
 import com.kbe5.rento.common.exception.DomainException;
 import com.kbe5.rento.common.exception.ErrorType;
+import com.kbe5.rento.common.response.error.ErrorResponse;
 import com.kbe5.rento.domain.manager.dto.details.CustomManagerDetails;
 import com.kbe5.rento.domain.manager.respository.ManagerRepository;
 import com.kbe5.rento.domain.manager.service.CustomMangerDetailsService;
@@ -31,37 +32,33 @@ public class JwtFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request,@NonNull HttpServletResponse response,
                                     @NonNull FilterChain filterChain) throws ServletException, IOException {
-        try {
-            String accessToken = request.getHeader("AccessToken");
+        String accessToken = request.getHeader("AccessToken");
 
-            if (accessToken == null) {
-                filterChain.doFilter(request, response);
-                return;
-            }
-
-            if (jwtUtil.isExpired(accessToken)) {
-                return;
-            }
-
-            String category = jwtUtil.getCategory(accessToken);
-
-            if (!category.equals("access")) {
-                DomainException domainException = new DomainException(ErrorType.INVALID_TOKEN);
-                jwtUtil.tokenErrorResponse(response, domainException);
-                return;
-            }
-
-            CustomManagerDetails customManagerDetails =
-                    (CustomManagerDetails) new CustomMangerDetailsService(managerRepository)
-                            .loadUserByUsername(jwtUtil.getLoginId(accessToken));
-
-            Authentication authToken = new UsernamePasswordAuthenticationToken(
-                    customManagerDetails, null, customManagerDetails.getAuthorities());
-
-            SecurityContextHolder.getContext().setAuthentication(authToken);
-        } catch (DomainException e) {
-            jwtUtil.tokenErrorResponse(response, e);
+        if (accessToken == null || accessToken.isEmpty()) {
+            filterChain.doFilter(request, response);
+            return;
         }
+
+        if (jwtUtil.isExpired(accessToken)) {
+            ErrorResponse.SendError(response, ErrorType.EXPIRED_TOKEN);
+            return;
+        }
+
+        String category = jwtUtil.getCategory(accessToken);
+
+        if (!category.equals("access")) {
+            ErrorResponse.SendError(response, ErrorType.INVALID_TOKEN);
+            return;
+        }
+
+        CustomManagerDetails customManagerDetails =
+                (CustomManagerDetails) new CustomMangerDetailsService(managerRepository)
+                        .loadUserByUsername(jwtUtil.getLoginId(accessToken));
+
+        Authentication authToken = new UsernamePasswordAuthenticationToken(
+                customManagerDetails, null, customManagerDetails.getAuthorities());
+
+        SecurityContextHolder.getContext().setAuthentication(authToken);
 
         filterChain.doFilter(request, response);
     }
