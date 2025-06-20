@@ -49,8 +49,8 @@ public class EventController {
         driveService.driveStart(deviceToken.getDriveId());
 
         //todo:이부분 성능문제 해결필요
-        Drive drive = driveService.getDriveDetail(deviceToken.getDriveId());
-        fcmService.getDrive(drive);
+//        Drive drive = driveService.getDriveDetail(deviceToken.getDriveId());
+//        fcmService.getDrive(drive);
 
         OnOffEvent onOffEvent = request.toEntity(deviceToken);
         eventSender.send(onOffEvent, mdn);
@@ -68,8 +68,8 @@ public class EventController {
         driveService.driveEnd(deviceToken.getDriveId(), request.currentAccumulatedDistance());
 
         //todo:이부분 성능문제 해결필요
-        Drive drive = driveService.getDriveDetail(deviceToken.getDriveId());
-        fcmService.getDrive(drive);
+//        Drive drive = driveService.getDriveDetail(deviceToken.getDriveId());
+//        fcmService.getDrive(drive);
 
         OnOffEvent onOffEvent = request.toEntity(deviceToken);
         eventSender.send(onOffEvent, mdn);
