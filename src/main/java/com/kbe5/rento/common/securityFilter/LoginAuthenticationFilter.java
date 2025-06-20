@@ -59,8 +59,8 @@ public class LoginAuthenticationFilter extends UsernamePasswordAuthenticationFil
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
         CustomManagerDetails customManagerDetails = (CustomManagerDetails) authResult.getPrincipal();
-
         Manager manager = customManagerDetails.getManager();
+
         JwtManagerArgumentDto managerArgumentDto = JwtManagerArgumentDto.fromEntity(manager);
 
         String accessToken = jwtUtil.createJwt("access", managerArgumentDto, JwtProperties.ACCESS_EXPIRED_TIME);

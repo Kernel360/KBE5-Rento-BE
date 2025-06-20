@@ -42,9 +42,11 @@ public class Manager extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private ManagerRole role;
 
+    private String fcmToken;
+
     @Builder
     private Manager(Company company, String name, String phone, String email, String loginId, String password,
-                    String companyCode, ManagerRole role) {
+                    String companyCode, ManagerRole role, String fcmToken) {
         this.company = company;
         this.name = name;
         this.phone = phone;
@@ -53,6 +55,7 @@ public class Manager extends BaseEntity {
         this.password = password;
         this.companyCode = companyCode;
         this.role = role;
+        this.fcmToken = fcmToken;
     }
 
     public void toUpdate(ManagerUpdateRequest request) {
@@ -71,5 +74,9 @@ public class Manager extends BaseEntity {
 
     public void assignRole(ManagerRole role) {
         this.role = role;
+    }
+
+    public void assignFcmToken(String fcmToken) {
+        this.fcmToken = fcmToken;
     }
 }

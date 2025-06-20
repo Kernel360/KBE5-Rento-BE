@@ -3,12 +3,12 @@ package com.kbe5.rento.domain.manager.controller;
 import com.kbe5.rento.common.apiresponse.ApiResponse;
 import com.kbe5.rento.common.apiresponse.ApiResultCode;
 import com.kbe5.rento.common.apiresponse.ResEntityFactory;
+import com.kbe5.rento.domain.firebase.dto.UpdateFcmTokenRequest;
 import com.kbe5.rento.domain.manager.dto.details.CustomManagerDetails;
 import com.kbe5.rento.domain.manager.dto.request.*;
 import com.kbe5.rento.domain.manager.dto.response.*;
 import com.kbe5.rento.domain.manager.entity.Manager;
 import com.kbe5.rento.domain.manager.service.ManagerService;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -79,4 +79,15 @@ public class ManagerControllerImpl implements ManagerController {
         return ResEntityFactory.toResponse(ApiResultCode.SUCCESS, "로그아웃이 성공적으로 처리되었습니다");
     }
 
+    @PatchMapping("/fcm-token")
+    public ResponseEntity<ApiResponse<String>> updateFcmToken(
+            @RequestBody UpdateFcmTokenRequest tokenRequest,
+            @AuthenticationPrincipal CustomManagerDetails customManagerDetails
+            ){
+        Long managerId = customManagerDetails.getManager().getId();
+
+        managerService.updateFcmToken(managerId, tokenRequest);
+
+        return ResEntityFactory.toResponse(ApiResultCode.SUCCESS, "FCM Token이 성공적으로 저장되었습니다.");
+    }
 }
