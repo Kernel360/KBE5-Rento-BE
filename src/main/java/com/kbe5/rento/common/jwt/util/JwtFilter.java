@@ -39,7 +39,7 @@ public class JwtFilter extends OncePerRequestFilter {
             return;
         }
 
-        if (jwtUtil.isExpired(accessToken, response)) {
+        if (jwtUtil.isExpired(accessToken)) {
             ErrorResponse.SendError(response, ErrorType.EXPIRED_TOKEN);
             return;
         }
