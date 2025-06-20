@@ -1,6 +1,6 @@
 package com.kbe5.rento.domain.department.controller;
 
-import com.kbe5.rento.common.apiresponse.ApiResponse;
+import com.kbe5.rento.common.response.api.ApiResponse;
 import com.kbe5.rento.domain.department.dto.request.DepartmentRegisterRequest;
 import com.kbe5.rento.domain.department.dto.request.DepartmentUpdateRequest;
 import com.kbe5.rento.domain.department.dto.response.DepartmentInfoResponse;

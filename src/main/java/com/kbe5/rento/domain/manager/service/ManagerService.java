@@ -2,20 +2,11 @@ package com.kbe5.rento.domain.manager.service;
 
 import com.kbe5.rento.common.exception.DomainException;
 import com.kbe5.rento.common.exception.ErrorType;
-import com.kbe5.rento.common.jwt.entity.JwtRefresh;
-import com.kbe5.rento.common.jwt.respository.JwtRefreshRepository;
-import com.kbe5.rento.domain.company.dto.response.CompanyResponse;
 import com.kbe5.rento.domain.company.entity.Company;
 import com.kbe5.rento.domain.company.repository.CompanyRepository;
-import com.kbe5.rento.domain.company.service.CompanyService;
 import com.kbe5.rento.domain.firebase.dto.UpdateFcmTokenRequest;
 import com.kbe5.rento.domain.manager.dto.request.ManagerDeleteRequest;
-import com.kbe5.rento.domain.manager.dto.request.ManagerSignUpRequest;
 import com.kbe5.rento.domain.manager.dto.request.ManagerUpdateRequest;
-import com.kbe5.rento.domain.manager.dto.response.ManagerDeleteResponse;
-import com.kbe5.rento.domain.manager.dto.response.ManagerResponse;
-import com.kbe5.rento.domain.manager.dto.response.ManagerSignUpResponse;
-import com.kbe5.rento.domain.manager.dto.response.ManagerUpdateResponse;
 import com.kbe5.rento.domain.manager.entity.Manager;
 import com.kbe5.rento.domain.manager.enums.ManagerRole;
 import com.kbe5.rento.domain.manager.respository.ManagerRepository;
@@ -25,7 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Transactional
@@ -35,7 +25,6 @@ public class ManagerService {
     private final ManagerRepository managerRepository;
     private final CompanyRepository companyRepository;
     private final PasswordEncoder encoder;
-    private final JwtRefreshRepository jwtRefreshRepository;
 
     public Manager signUp(Manager manager) {
         Company company = companyRepository.findByCompanyCode(manager.getCompanyCode())
@@ -72,15 +61,15 @@ public class ManagerService {
 
     @Transactional
     public void logout(Long managerId){
-        JwtRefresh jwtRefresh = jwtRefreshRepository.findByManagerId(managerId)
-                .orElseThrow(() -> new DomainException(ErrorType.REFRESH_TOKEN_NOT_FOUND));
-
-        Manager manager = managerRepository.findById(managerId).orElseThrow(() -> new DomainException(ErrorType.MANAGER_NOT_FOUND));
-
-        manager.assignFcmToken(null);
-        managerRepository.save(manager);
-
-        jwtRefreshRepository.delete(jwtRefresh);
+//        JwtRefresh jwtRefresh = jwtRefreshRepository.findByManagerId(managerId)
+//                .orElseThrow(() -> new DomainException(ErrorType.REFRESH_TOKEN_NOT_FOUND));
+//
+//        Manager manager = managerRepository.findById(managerId).orElseThrow(() -> new DomainException(ErrorType.MANAGER_NOT_FOUND));
+//
+//        manager.assignFcmToken(null);
+//        managerRepository.save(manager);
+//
+//        jwtRefreshRepository.delete(jwtRefresh);
     }
 
     public Manager update(Long id, ManagerUpdateRequest request) {

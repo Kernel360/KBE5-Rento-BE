@@ -1,6 +1,6 @@
 package com.kbe5.rento.domain.vehicle.controller;
 
-import com.kbe5.rento.common.apiresponse.ApiResponse;
+import com.kbe5.rento.common.response.api.ApiResponse;
 import com.kbe5.rento.domain.manager.dto.details.CustomManagerDetails;
 import com.kbe5.rento.domain.vehicle.dto.request.VehicleAddRequest;
 import com.kbe5.rento.domain.vehicle.dto.request.VehicleUpdateRequest;
@@ -17,7 +17,7 @@ public interface VehicleController {
 
     @Operation(summary = "차량 등록")
     ResponseEntity<ApiResponse<String>> addVehicle(CustomManagerDetails manager,
-                                                            VehicleAddRequest request);
+                                                   VehicleAddRequest request);
     @Operation(summary = "차량 정보 변경")
     ResponseEntity<ApiResponse<String>> updateVehicle(Long vehicleId, VehicleUpdateRequest request);
     @Operation(summary = "차량 삭제")

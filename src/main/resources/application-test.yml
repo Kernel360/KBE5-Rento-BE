@@ -37,3 +37,6 @@ server:
       max: 200
       min-spare: 10
     accept-count: 100
+
+fcm:
+  firebase_config_path: firebase/rento-f1d61-firebase-adminsdk-fbsvc-bd76cc388d.json

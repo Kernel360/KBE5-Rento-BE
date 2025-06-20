@@ -1,6 +1,6 @@
 package com.kbe5.rento.domain.member.controller;
 
-import com.kbe5.rento.common.apiresponse.ApiResponse;
+import com.kbe5.rento.common.response.api.ApiResponse;
 import com.kbe5.rento.domain.manager.dto.details.CustomManagerDetails;
 import com.kbe5.rento.domain.member.dto.request.MemberRegisterRequest;
 import com.kbe5.rento.domain.member.dto.request.MemberUpdateRequest;
