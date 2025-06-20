@@ -1,5 +1,8 @@
-package com.kbe5.common.response;
+package com.kbe5.common.apiresponse;
 
+
+import com.kbe5.common.response.api.ApiResultCode;
+import com.kbe5.common.response.api.ApiResponse;
 import org.springframework.http.ResponseEntity;
 
 public class ResEntityFactory {

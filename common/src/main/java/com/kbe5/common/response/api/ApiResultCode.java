@@ -1,4 +1,4 @@
-package com.kbe5.common.response;
+package com.kbe5.common.response.api;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
