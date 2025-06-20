@@ -1,6 +1,7 @@
 package com.kbe5.api.domain.manager.dto.response;
 
-import com.kbe5.rento.domain.manager.entity.Manager;
+
+import com.kbe5.domain.manager.entity.Manager;
 
 public record ManagerSignUpResponse(
         Long id,

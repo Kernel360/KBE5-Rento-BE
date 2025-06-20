@@ -1,5 +1,6 @@
 package com.kbe5.api.domain.manager.dto.details;
 
+import com.kbe5.domain.manager.entity.Manager;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;

@@ -1,6 +1,6 @@
 package com.kbe5.api.domain.manager.dto.request;
 
-import com.kbe5.rento.domain.manager.entity.Manager;
+import com.kbe5.domain.manager.entity.Manager;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
