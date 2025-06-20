@@ -1,9 +1,10 @@
 package com.kbe5.api.domain.jwt.device;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.kbe5.rento.common.exception.DeviceException;
-import com.kbe5.rento.domain.device.entity.DeviceToken;
-import com.kbe5.rento.domain.device.service.DeviceService;
+
+import com.kbe5.api.domain.device.service.DeviceService;
+import com.kbe5.common.exception.DeviceException;
+import com.kbe5.domain.device.entity.DeviceToken;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

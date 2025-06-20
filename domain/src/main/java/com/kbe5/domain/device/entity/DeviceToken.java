@@ -1,6 +1,5 @@
 package com.kbe5.domain.device.entity;
 
-
 import com.kbe5.domain.device.enums.DeviceResultCode;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;

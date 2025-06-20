@@ -2,7 +2,7 @@ package com.kbe5.adapter.service;
 
 
 import com.kbe5.common.exception.DeviceException;
-import com.kbe5.domain.device.enums.DeviceResultCode;
+import com.kbe5.common.exception.DeviceResultCode;
 import com.kbe5.domain.event.entity.Event;
 import com.kbe5.domain.event.enums.EventType;
 import com.kbe5.domain.event.repository.EventRepository;

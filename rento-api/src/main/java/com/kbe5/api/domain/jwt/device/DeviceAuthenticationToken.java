@@ -1,6 +1,6 @@
 package com.kbe5.api.domain.jwt.device;
 
-import com.kbe5.rento.domain.device.entity.DeviceToken;
+import com.kbe5.domain.device.entity.DeviceToken;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 
 public class DeviceAuthenticationToken extends AbstractAuthenticationToken {

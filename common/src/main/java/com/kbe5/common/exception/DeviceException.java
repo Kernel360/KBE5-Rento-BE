@@ -1,6 +1,5 @@
 package com.kbe5.common.exception;
 
-import com.kbe5.rento.domain.device.enums.DeviceResultCode;
 import lombok.Getter;
 
 @Getter
