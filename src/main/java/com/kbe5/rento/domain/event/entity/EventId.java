@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class EventId implements Serializable {
 
-    private LocalDateTime oTime;
-
     private Long mdn;
+
+    private LocalDateTime oTime;
 }

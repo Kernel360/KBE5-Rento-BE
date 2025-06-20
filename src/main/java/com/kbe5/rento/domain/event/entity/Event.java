@@ -25,11 +25,11 @@ import java.math.BigDecimal;
 public abstract class Event {
 
     @Id
-    @JsonProperty("oTime")
-    private LocalDateTime oTime;
+    private Long mdn;
 
     @Id
-    private Long mdn;
+    @JsonProperty("oTime")
+    private LocalDateTime oTime;
 
     private Long driveId;
 

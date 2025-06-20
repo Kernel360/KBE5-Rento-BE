@@ -14,7 +14,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CycleInfoId implements Serializable {
 
-    private LocalDateTime cycleInfoTime;
 
     private Long mdn;
+
+    private LocalDateTime cycleInfoTime;
 }

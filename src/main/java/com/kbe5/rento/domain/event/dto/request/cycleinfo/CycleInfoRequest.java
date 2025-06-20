@@ -60,7 +60,7 @@ public record CycleInfoRequest(
     Integer battery
 ){
 
-    public CycleInfo toEntity(LocalDateTime oTime, DeviceToken deviceToken) {
+    public CycleInfo of(LocalDateTime oTime, DeviceToken deviceToken) {
         return CycleInfo.builder()
             .cycleInfoTime(oTime.plusSeconds(this.sec()))
             .mdn(deviceToken.getMdn())

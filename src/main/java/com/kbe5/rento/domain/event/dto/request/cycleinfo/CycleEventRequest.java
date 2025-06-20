@@ -62,7 +62,7 @@ public record CycleEventRequest(
 
     public List<CycleInfo> toCycleInfoEntities(DeviceToken token) {
         return this.cycleInfoRequests().stream()
-            .map(req -> req.toEntity(this.oTime(), token))
+            .map(req -> req.of(this.oTime(), token))
             .toList();
     }
 }

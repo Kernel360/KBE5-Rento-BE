@@ -18,10 +18,10 @@ import java.math.BigDecimal;
 public class CycleInfo {
 
     @Id
-    private LocalDateTime cycleInfoTime;
+    private Long mdn;
 
     @Id
-    private Long mdn;
+    private LocalDateTime cycleInfoTime;
 
     private Long driveId;
 
