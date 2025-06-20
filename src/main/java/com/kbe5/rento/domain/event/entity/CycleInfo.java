@@ -1,6 +1,6 @@
 package com.kbe5.rento.domain.event.entity;
 
-import com.kbe5.rento.domain.device.enums.GpsCondition;
+import com.kbe5.rento.domain.event.enums.GpsCondition;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import lombok.AccessLevel;
@@ -23,6 +23,8 @@ public class CycleInfo {
     @Id
     private Long mdn;
 
+    private Long driveId;
+
     private Integer sec;
 
     @Enumerated(value = EnumType.STRING)
@@ -43,10 +45,12 @@ public class CycleInfo {
     private Integer battery;
 
     @Builder
-    public CycleInfo(LocalDateTime cycleInfoTime, Long mdn, Integer sec, GpsCondition gpsCondition, BigDecimal latitude,
-        BigDecimal longitude, Integer angle, Integer speed, Long sum, Integer battery) {
+    public CycleInfo(LocalDateTime cycleInfoTime, Long mdn, Long driveId, Integer sec,
+        GpsCondition gpsCondition, BigDecimal latitude, BigDecimal longitude, Integer angle, Integer speed, Long sum,
+        Integer battery) {
         this.cycleInfoTime = cycleInfoTime;
         this.mdn = mdn;
+        this.driveId = driveId;
         this.sec = sec;
         this.gpsCondition = gpsCondition;
         this.latitude = latitude;

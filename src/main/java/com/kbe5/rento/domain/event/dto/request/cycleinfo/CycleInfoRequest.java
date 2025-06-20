@@ -3,7 +3,7 @@ package com.kbe5.rento.domain.event.dto.request.cycleinfo;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.kbe5.rento.domain.device.entity.DeviceToken;
-import com.kbe5.rento.domain.device.enums.GpsCondition;
+import com.kbe5.rento.domain.event.enums.GpsCondition;
 import com.kbe5.rento.domain.event.entity.CycleInfo;
 import jakarta.validation.constraints.*;
 
@@ -64,6 +64,7 @@ public record CycleInfoRequest(
         return CycleInfo.builder()
             .cycleInfoTime(oTime.plusSeconds(this.sec()))
             .mdn(deviceToken.getMdn())
+            .driveId(deviceToken.getDriveId())
             .sec(this.sec())
             .gpsCondition(this.gpsCondition())
             .longitude(this.longitude())

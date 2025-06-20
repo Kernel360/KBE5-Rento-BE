@@ -1,6 +1,6 @@
 package com.kbe5.rento.domain.event.dto.response;
 
-import com.kbe5.rento.domain.device.enums.GpsCondition;
+import com.kbe5.rento.domain.event.enums.GpsCondition;
 import com.kbe5.rento.domain.event.entity.CycleEvent;
 import com.kbe5.rento.domain.event.entity.Event;
 import com.kbe5.rento.domain.event.entity.GeofenceEvent;

@@ -3,7 +3,7 @@ package com.kbe5.rento.domain.event.entity;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.kbe5.rento.common.exception.DeviceException;
 import com.kbe5.rento.domain.device.enums.DeviceResultCode;
-import com.kbe5.rento.domain.device.enums.GpsCondition;
+import com.kbe5.rento.domain.event.enums.GpsCondition;
 import com.kbe5.rento.domain.event.enums.EventType;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
@@ -29,17 +29,17 @@ public abstract class Event {
     private LocalDateTime oTime;
 
     @Id
-    Long mdn;
+    private Long mdn;
 
-    String terminalId;
+    private Long driveId;
 
-    Integer makerId;
+    private String terminalId;
 
-    Integer packetVersion;
+    private Integer makerId;
 
-    Integer deviceId;
+    private Integer packetVersion;
 
-    Long driveId;
+    private Integer deviceId;
 
     @Enumerated(EnumType.STRING)
     private GpsCondition gpsCondition;

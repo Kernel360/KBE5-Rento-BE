@@ -16,8 +16,9 @@ public class CycleInfoJdbcRepositoryImpl implements CycleInfoJdbcRepository {
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     private static final String CYCLE_INFO_BULK_INSERT_SQL = "INSERT INTO cycle_info " +
-        "(cycle_info_time, mdn, sec, gps_condition, latitude, longitude, angle, speed, sum, battery) " +
-        "VALUES (:cycleInfoTime, :mdn, :sec, :gpsCondition, :latitude, :longitude, :angle, :speed, :sum, :battery)";
+        "(cycle_info_time, mdn, drive_id, sec, gps_condition, latitude, longitude, angle, speed, sum, battery) " +
+        "VALUES (:cycleInfoTime, :mdn, :driveId,:sec, :gpsCondition, :latitude, :longitude, :angle, :speed, :sum, "
+        + ":battery)";
 
 
     @Override
@@ -37,6 +38,7 @@ public class CycleInfoJdbcRepositoryImpl implements CycleInfoJdbcRepository {
         return new MapSqlParameterSource()
             .addValue("cycleInfoTime", cycleInfo.getCycleInfoTime())
             .addValue("mdn", cycleInfo.getMdn())
+            .addValue("driveId", cycleInfo.getDriveId())
             .addValue("sec", cycleInfo.getSec())
             .addValue("gpsCondition", cycleInfo.getGpsCondition().name())
             .addValue("latitude", cycleInfo.getLatitude())

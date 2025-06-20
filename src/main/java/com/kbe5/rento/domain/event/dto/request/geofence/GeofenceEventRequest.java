@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.kbe5.rento.common.datetime.EventLocalDateTimeDeserializer;
-import com.kbe5.rento.domain.device.enums.GpsCondition;
+import com.kbe5.rento.domain.event.enums.GpsCondition;
 import com.kbe5.rento.domain.event.entity.GeofenceEvent;
 import com.kbe5.rento.domain.event.enums.EventType;
 import jakarta.persistence.EnumType;

@@ -1,4 +1,4 @@
-package com.kbe5.rento.domain.device.enums;
+package com.kbe5.rento.domain.event.enums;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.Arrays;

@@ -60,9 +60,9 @@ public record CycleEventRequest(
             .build();
     }
 
-    public List<CycleInfo> toCycleInfoEntities(DeviceToken deviceToken) {
+    public List<CycleInfo> toCycleInfoEntities(DeviceToken token) {
         return this.cycleInfoRequests().stream()
-            .map(req -> req.toEntity(this.oTime(), deviceToken))
+            .map(req -> req.toEntity(this.oTime(), token))
             .toList();
     }
 }
