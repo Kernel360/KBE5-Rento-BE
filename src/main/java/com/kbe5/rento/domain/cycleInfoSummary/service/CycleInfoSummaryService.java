@@ -33,7 +33,7 @@ public class CycleInfoSummaryService {
         List<CycleInfo> cycleInfo = info.stream()
                 .filter(ci -> {
                     long diff = Duration.between(baseTime, ci.getCycleInfoTime()).getSeconds();
-                    return diff >= 0 && diff % 5 == 0;  // 0,5,10,15…초
+                    return diff >= 0 && diff % 5 == 0;
                 })
                 .sorted(Comparator.comparing(CycleInfo::getCycleInfoTime))
                 .toList();
