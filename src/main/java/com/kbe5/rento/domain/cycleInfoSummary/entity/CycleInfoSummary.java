@@ -4,7 +4,6 @@ import com.kbe5.rento.domain.event.entity.CycleInfo;
 import com.kbe5.rento.domain.event.enums.GpsCondition;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
