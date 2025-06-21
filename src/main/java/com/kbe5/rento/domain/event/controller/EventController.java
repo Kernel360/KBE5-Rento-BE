@@ -86,9 +86,8 @@ public class EventController {
 
         Long mdn = request.mdn();
 
-        CycleEvent cycleEvent = request.toEntity(deviceToken);
-        List<CycleInfo> cycleInfoList = request.toCycleInfoEntities(deviceToken);
-        cycleEvent.setCycleInfos(cycleInfoList);
+        List<CycleInfo> cycleInfos = request.toCycleInfoEntities(deviceToken);
+        CycleEvent cycleEvent = request.of(deviceToken, cycleInfos);
 
         eventSender.send(cycleEvent, mdn);
 

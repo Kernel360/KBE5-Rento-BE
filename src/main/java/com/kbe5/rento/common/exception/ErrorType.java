@@ -45,7 +45,12 @@ public enum ErrorType {
     DRIVE_NOT_DISTANCE(HttpStatus.BAD_REQUEST, "주행 거리가 없습니다"),
 
     // Geofence
-    GEOFENCE_NOT_FOUND(HttpStatus.NOT_FOUND, "지오펜스를 찾을 수 없습니다.");
+    GEOFENCE_NOT_FOUND(HttpStatus.NOT_FOUND, "지오펜스를 찾을 수 없습니다."),
+
+    // Date
+    NULL_LOCAL_DATE_TIME(HttpStatus.BAD_REQUEST, "LocalDateTime 값이 null 입니다."),
+    BLANK_DATE_STRING(HttpStatus.BAD_REQUEST, "시간 문자열이 비어있거나 null 입니다."),
+    INVALID_DATE_FORMAT(HttpStatus.BAD_REQUEST, "지원하지 않는 날짜 형식입니다.");
 
     private final HttpStatus status;
     private final String message;
