@@ -1,5 +1,8 @@
 package com.kbe5.rento.domain.cycleInfoSummary.service;
 
+import com.kbe5.rento.common.exception.DomainException;
+import com.kbe5.rento.common.exception.ErrorType;
+import com.kbe5.rento.domain.cycleInfoSummary.dto.CycleInfoSummaryResponse;
 import com.kbe5.rento.domain.cycleInfoSummary.entity.CycleInfoSummary;
 import com.kbe5.rento.domain.cycleInfoSummary.repository.CycleInfoSummaryRepository;
 import com.kbe5.rento.domain.event.entity.CycleInfo;
@@ -11,6 +14,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -27,7 +31,7 @@ public class CycleInfoSummaryService {
         LocalDateTime baseTime = info.stream()
                 .map(CycleInfo::getCycleInfoTime)
                 .min(LocalDateTime::compareTo)
-                .orElseThrow(() -> new IllegalArgumentException("Raw points empty for driveId=" + driveId));
+                .orElseThrow(() -> new DomainException(ErrorType.CycleInfo_NOT_FOUNT) );
 
         // 걍 인포 찾고 5초 뒤에거 찾고 찾고 찾고 하면되는거 아닌가?
         List<CycleInfo> cycleInfo = info.stream()
@@ -43,5 +47,21 @@ public class CycleInfoSummaryService {
                 .toList();
 
         cycleInfoSummaryRepository.saveAll(summary);
+    }
+
+    public List<CycleInfoSummaryResponse> gets(Long driveId) {
+        return cycleInfoSummaryRepository.findAllByDriveId(driveId)
+                .stream()
+                .map(summary -> {
+                    try {
+                        return new CycleInfoSummaryResponse(
+                                summary.getLatitude(),
+                                summary.getLongitude()
+                        );
+                    } catch (Exception e) {
+                        throw new DomainException(ErrorType.CycleInfo_NOT_FOUNT);
+                    }
+                })
+                .toList();
     }
 }
