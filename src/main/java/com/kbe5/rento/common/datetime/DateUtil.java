@@ -43,11 +43,8 @@ public class DateUtil {
     }
 
     public static LocalDateTime toCycleInfoEventLocalDateTime(String text) {
-        if (text == null) {
+        if (isBlank(text)) {
             throw new DomainException(BLANK_DATE_STRING);
-        }
-        if (text.trim().equals("")) {
-            return null;
         }
         return LocalDateTime.parse(text, CYCLE_EVENT_FORMATTER);
     }
