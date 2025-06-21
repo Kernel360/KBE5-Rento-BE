@@ -10,6 +10,9 @@ import com.kbe5.domain.manager.entity.Manager;
 import com.kbe5.domain.manager.respository.ManagerRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Recover;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -24,7 +27,13 @@ import java.util.Optional;
 public class FcmService {
 
     private final ManagerRepository managerRepository;
+    private final DriveRepository driveRepository;
+    private final FirebaseMessaging firebaseMessaging;
 
+    @Retryable(
+            retryFor = FirebaseMessagingException.class,
+            backoff = @Backoff(delay = 1000, multiplier = 2)
+    ) //재시도 간격 1초, 지수백오프 2배 (1초, 2초, 4초 기다리기), 기본 시도횟수 3번(디폴트)
     public void send(TokenNotificationRequest tokenNotificationRequest, List<Manager> managers) {
         List<String> tokens = managers.stream()
                 .map(Manager::getFcmToken)
@@ -50,7 +59,7 @@ public class FcmService {
             log.info("Sending message to firebase: {}", message);
 
             try {
-                FirebaseMessaging.getInstance().send(message);
+                firebaseMessaging.send(message);
             } catch (FirebaseMessagingException e) {
                 failedTokens.add(token);
                 log.error("알림 전송에 실패한 토큰: " + token, e);
@@ -65,6 +74,11 @@ public class FcmService {
                 });
             });
         }
+    }
+
+    @Recover //호출을 따로 하지 않아도 Spring이 자동 호출
+    public void recover(FirebaseMessagingException e) {
+        throw new DomainException(ErrorType.FCM_FAILED);
     }
 
     public void getDrive(Drive drive) {
