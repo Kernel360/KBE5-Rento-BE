@@ -18,16 +18,17 @@ import java.math.BigDecimal;
 @Entity
 @SuperBuilder
 @Table(name = "events")
-@IdClass(EventId.class)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(discriminatorType = DiscriminatorType.STRING)
 public abstract class Event {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     private Long mdn;
 
-    @Id
     @JsonProperty("oTime")
     private LocalDateTime oTime;
 

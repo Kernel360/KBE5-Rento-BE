@@ -1,7 +1,11 @@
 package com.kbe5.rento.domain.event.dto.request.cycleinfo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.kbe5.rento.common.datetime.EventLocalDateTimeDeserializer;
+import com.kbe5.rento.common.exception.DeviceException;
 import com.kbe5.rento.domain.device.entity.DeviceToken;
+import com.kbe5.rento.domain.device.enums.DeviceResultCode;
 import com.kbe5.rento.domain.event.entity.CycleEvent;
 import com.kbe5.rento.domain.event.entity.CycleInfo;
 import com.kbe5.rento.domain.event.enums.EventType;
@@ -33,22 +37,27 @@ public record CycleEventRequest(
     @NotNull(message = "{device.did.notnull}")
     Integer deviceId, //1로 고정
 
-    @JsonProperty("oTime")
     @NotNull
+    @JsonProperty("oTime")
+    @JsonDeserialize(using = EventLocalDateTimeDeserializer.class)
     LocalDateTime oTime,
 
-    @JsonProperty("cCnt")
     @NotNull
+    @JsonProperty("cCnt")
     Integer cycleCount,
 
-    @JsonProperty("cList")
     @NotEmpty
+    @JsonProperty("cList")
     List<CycleInfoRequest> cycleInfoRequests
 ) {
 
-    public CycleEvent toEntity(DeviceToken token) {
+    public CycleEvent of(DeviceToken token, List<CycleInfo> cycleInfos) {
+        if (cycleInfos == null || cycleInfos.isEmpty()) {
+            throw new DeviceException(DeviceResultCode.REQUIRED_PARAMETER_ERROR);
+        }
+
         return CycleEvent.builder()
-            .oTime(this.oTime())
+            .oTime(cycleInfos.get(0).getCycleInfoTime())
             .mdn(this.mdn())
             .terminalId(this.terminalId())
             .makerId(this.makerId())
@@ -57,6 +66,7 @@ public record CycleEventRequest(
             .cycleCount(this.cycleCount())
             .eventType(EventType.CYCLE_INFO)
             .driveId(token.getDriveId())
+            .cycleInfos(cycleInfos)
             .build();
     }
 

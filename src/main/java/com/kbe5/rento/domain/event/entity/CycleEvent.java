@@ -23,8 +23,4 @@ public class CycleEvent extends Event{
 
     @Transient
     List<CycleInfo> cycleInfos;
-
-    public void setCycleInfos(List<CycleInfo> cycleInfos) {
-        this.cycleInfos = cycleInfos;
-    }
 }
