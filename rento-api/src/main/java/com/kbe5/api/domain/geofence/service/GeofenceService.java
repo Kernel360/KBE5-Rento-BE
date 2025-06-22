@@ -2,6 +2,7 @@ package com.kbe5.api.domain.geofence.service;
 
 
 import com.kbe5.api.domain.geofence.dto.request.GeofenceUpdateRequest;
+import com.kbe5.api.domain.geofence.vo.GeofenceUpdateVO;
 import com.kbe5.common.exception.DomainException;
 import com.kbe5.common.exception.ErrorType;
 import com.kbe5.domain.geofence.entity.Geofence;
@@ -52,7 +53,8 @@ public class GeofenceService {
         Geofence geofence = geofenceRepository.findById(id)
                 .orElseThrow(() -> new DomainException(ErrorType.GEOFENCE_NOT_FOUND));
 
-        geofence.toUpdate(request);
+        GeofenceUpdateVO vo = new GeofenceUpdateVO(request);
+        vo.update(geofence);
     }
 }
 

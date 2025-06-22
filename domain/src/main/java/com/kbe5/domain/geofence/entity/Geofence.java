@@ -41,14 +41,14 @@ public class Geofence extends BaseEntity {
         this.isActive = isActive;
     }
 
-    public void toUpdate(GeofenceUpdateRequest request) {
-        this.name = request.name();
-        this.companyCode = request.companyCode();
-        this.latitude = request.latitude();
-        this.longitude = request.longitude();
-        this.radius = request.radius();
-        this.eventType = request.eventType();
-        this.description = request.description();
-        this.isActive = request.isActive();
+    public void toUpdate(String name, String companyCode, long latitude, long longitude, int radius, EventType eventType, String description, boolean isActive) {
+        this.name = name;
+        this.companyCode = companyCode;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.radius = radius;
+        this.eventType = eventType;
+        this.description = description;
+        this.isActive = isActive;
     }
 }
