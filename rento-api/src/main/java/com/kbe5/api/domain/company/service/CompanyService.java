@@ -2,6 +2,7 @@ package com.kbe5.api.domain.company.service;
 
 import com.kbe5.api.domain.company.dto.request.CompanyUpdateRequest;
 import com.kbe5.api.domain.company.dto.response.CompanyDeleteResponse;
+import com.kbe5.api.domain.company.vo.CompanyUpdateVO;
 import com.kbe5.common.exception.DomainException;
 import com.kbe5.common.exception.ErrorType;
 import com.kbe5.domain.company.entity.Company;
@@ -47,8 +48,8 @@ public class CompanyService {
     public Company update(Long id, CompanyUpdateRequest request) {
         Company company = companyRepository
                 .findById(id).orElseThrow(() -> new DomainException(ErrorType.COMPANY_NOT_FOUND));
-
-        company.toUpdate(request);
+        CompanyUpdateVO vo = new CompanyUpdateVO(request);
+        vo.update(company);
 
         return company;
     }
