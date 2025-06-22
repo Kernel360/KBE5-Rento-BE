@@ -48,8 +48,8 @@ public class Vehicle extends BaseEntity {
         return new Vehicle(company, info, mileage);
     }
 
-    public void update(VehicleUpdateRequest request) {
-        this.mileage = new VehicleMilleage(request.totalDistanceKm(), request.batteryVoltage());
+    public void update(long totalDistanceKm, String batteryVoltage) {
+        this.mileage = new VehicleMilleage(totalDistanceKm, batteryVoltage);
     }
 
     public void addMdn(Long vehicleId) {

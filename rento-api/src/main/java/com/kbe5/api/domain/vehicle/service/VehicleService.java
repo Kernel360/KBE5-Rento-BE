@@ -1,6 +1,7 @@
 package com.kbe5.api.domain.vehicle.service;
 
 import com.kbe5.api.domain.vehicle.dto.request.VehicleUpdateRequest;
+import com.kbe5.api.domain.vehicle.vo.VehicleUpdateVO;
 import com.kbe5.common.exception.DomainException;
 import com.kbe5.common.exception.ErrorType;
 import com.kbe5.domain.department.entity.Department;
@@ -64,7 +65,8 @@ public class VehicleService {
         Vehicle vehicle = vehicleRepository.findById(vehicleId).orElseThrow(
                 () -> new DomainException(ErrorType.VEHICLE_NOT_FOUND));
 
-        vehicle.update(request);
+        VehicleUpdateVO vo = new VehicleUpdateVO(request);
+        vo.update(vehicle);
     }
 
     public void deleteVehicle(Long vehicleId){

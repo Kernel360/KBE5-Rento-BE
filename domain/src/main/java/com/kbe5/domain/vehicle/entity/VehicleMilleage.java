@@ -1,6 +1,8 @@
 package com.kbe5.domain.vehicle.entity;
 
 
+import com.kbe5.domain.exception.DomainException;
+import com.kbe5.domain.exception.ErrorType;
 import jakarta.persistence.Embeddable;
 import lombok.AccessLevel;
 import lombok.Getter;
