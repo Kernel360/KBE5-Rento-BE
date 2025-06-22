@@ -58,10 +58,10 @@ public class Manager extends BaseEntity {
         this.fcmToken = fcmToken;
     }
 
-    public void toUpdate(ManagerUpdateRequest request) {
-        this.name = request.name();
-        this.phone = request.phone();
-        this.email = request.email();
+    public void toUpdate(String name, String phone, String email) {
+        this.name = name;
+        this.phone = phone;
+        this.email = email;
     }
 
     public void encodePassword(PasswordEncoder encoder) {

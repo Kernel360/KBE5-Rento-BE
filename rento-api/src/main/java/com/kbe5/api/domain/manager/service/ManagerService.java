@@ -2,8 +2,10 @@ package com.kbe5.api.domain.manager.service;
 
 import com.kbe5.api.domain.manager.dto.request.ManagerDeleteRequest;
 import com.kbe5.api.domain.manager.dto.request.ManagerUpdateRequest;
+import com.kbe5.api.domain.manager.vo.ManagerUpdateVO;
 import com.kbe5.common.exception.DomainException;
 import com.kbe5.common.exception.ErrorType;
+import com.kbe5.domain.commonservice.firebase.dto.UpdateFcmTokenRequest;
 import com.kbe5.domain.company.entity.Company;
 import com.kbe5.domain.company.repository.CompanyRepository;
 import com.kbe5.domain.manager.entity.Manager;
@@ -75,7 +77,8 @@ public class ManagerService {
         Manager manager = managerRepository.findById(id)
                 .orElseThrow(() -> new DomainException(ErrorType.MANAGER_NOT_FOUND));
 
-        manager.toUpdate(request);
+        ManagerUpdateVO vo = new ManagerUpdateVO(request);
+        vo.update(manager);
 
         return manager;
     }
