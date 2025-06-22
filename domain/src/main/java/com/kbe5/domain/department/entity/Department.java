@@ -31,8 +31,8 @@ public class Department extends BaseEntity {
         this.numberOfEmployee = numberOfEmployee;
     }
 
-    public void update(DepartmentUpdateRequest departmentUpdateRequest) {
-        this.departmentName = departmentUpdateRequest.departmentName();
+    public void update(String departmentName) {
+        this.departmentName = departmentName;
     }
 
 }

@@ -3,6 +3,7 @@ package com.kbe5.api.domain.department.service;
 
 import com.kbe5.api.domain.department.dto.request.DepartmentUpdateRequest;
 import com.kbe5.api.domain.department.dto.response.DepartmentInfoResponse;
+import com.kbe5.api.domain.department.vo.DepartmentUpdateVO;
 import com.kbe5.common.exception.DomainException;
 import com.kbe5.common.exception.ErrorType;
 import com.kbe5.domain.company.entity.Company;
@@ -10,6 +11,8 @@ import com.kbe5.domain.company.repository.CompanyRepository;
 import com.kbe5.domain.department.entity.Department;
 import com.kbe5.domain.department.repository.DepartmentRepository;
 import com.kbe5.domain.manager.entity.Manager;
+import com.kbe5.domain.member.entity.Member;
+import com.kbe5.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -59,7 +62,8 @@ public class DepartmentService {
 
         validateDuplicateDepartmentName(departmentUpdateRequest.departmentName(), company.getId());
 
-        department.update(departmentUpdateRequest);
+        DepartmentUpdateVO vo = new DepartmentUpdateVO(departmentUpdateRequest);
+        vo.update(department);
 
         return convertToDepartmentDto(department);
     }
