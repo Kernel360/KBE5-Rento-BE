@@ -31,7 +31,7 @@ public class CycleInfoSummaryService {
         LocalDateTime baseTime = info.stream()
                 .map(CycleInfo::getCycleInfoTime)
                 .min(LocalDateTime::compareTo)
-                .orElseThrow(() -> new DomainException(ErrorType.CycleInfo_NOT_FOUNT) );
+                .orElseThrow(() -> new DomainException(ErrorType.CYCLEINFO_NOT_FOUND) );
 
         // 걍 인포 찾고 5초 뒤에거 찾고 찾고 찾고 하면되는거 아닌가?
         List<CycleInfo> cycleInfo = info.stream()
@@ -49,7 +49,7 @@ public class CycleInfoSummaryService {
         cycleInfoSummaryRepository.saveAll(summary);
     }
 
-    public List<CycleInfoSummaryResponse> gets(Long driveId) {
+    public List<CycleInfoSummaryResponse> getList(Long driveId) {
         return cycleInfoSummaryRepository.findAllByDriveId(driveId)
                 .stream()
                 .map(summary -> {
@@ -59,7 +59,7 @@ public class CycleInfoSummaryService {
                                 summary.getLongitude()
                         );
                     } catch (Exception e) {
-                        throw new DomainException(ErrorType.CycleInfo_NOT_FOUNT);
+                        throw new DomainException(ErrorType.CYCLEINFO_NOT_FOUND);
                     }
                 })
                 .toList();

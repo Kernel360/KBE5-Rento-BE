@@ -15,7 +15,7 @@ public class CycleInfoSummaryController {
     private final CycleInfoSummaryService cycleInfoSummaryService;
 
     @GetMapping("/{driveId}")
-    public List<CycleInfoSummaryResponse> gets(@PathVariable Long driveId){
-        return cycleInfoSummaryService.gets(driveId);
+    public List<CycleInfoSummaryResponse> getList(@PathVariable Long driveId){
+        return cycleInfoSummaryService.getList(driveId);
     }
 }

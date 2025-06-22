@@ -48,7 +48,7 @@ public enum ErrorType {
     GEOFENCE_NOT_FOUND(HttpStatus.NOT_FOUND, "지오펜스를 찾을 수 없습니다."),
 
     // CycleInfoSummary
-    CycleInfo_NOT_FOUNT(HttpStatus.NOT_FOUND, "주기 정보가 없습니다.");
+    CYCLEINFO_NOT_FOUND(HttpStatus.NOT_FOUND, "주기 정보가 없습니다.");
 
     private final HttpStatus status;
     private final String message;
