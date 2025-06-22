@@ -1,8 +1,8 @@
 package com.kbe5.rento.domain.event.controller;
 
+import com.kbe5.rento.domain.cycleInfoSummary.service.CycleInfoSummaryService;
 import com.kbe5.rento.domain.device.entity.DeviceToken;
 import com.kbe5.rento.domain.device.enums.DeviceResultCode;
-import com.kbe5.rento.domain.drive.entity.Drive;
 import com.kbe5.rento.domain.drive.service.DriveService;
 import com.kbe5.rento.domain.event.amqp.EventSender;
 import com.kbe5.rento.domain.event.dto.request.cycleinfo.CycleEventRequest;
@@ -14,8 +14,6 @@ import com.kbe5.rento.domain.event.entity.CycleEvent;
 import com.kbe5.rento.domain.event.entity.CycleInfo;
 import com.kbe5.rento.domain.event.entity.GeofenceEvent;
 import com.kbe5.rento.domain.event.entity.OnOffEvent;
-import com.kbe5.rento.domain.firebase.service.FcmService;
-import com.kbe5.rento.domain.manager.respository.ManagerRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -36,7 +34,6 @@ public class EventController {
 
     private final EventSender eventSender;
     private final DriveService driveService;
-    private final FcmService fcmService;
 
     @PostMapping("/on-off/on")
     public ResponseEntity<EventResponse> ignitionOn(
