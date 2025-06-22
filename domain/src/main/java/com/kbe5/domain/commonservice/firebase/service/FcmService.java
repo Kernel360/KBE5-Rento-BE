@@ -1,9 +1,9 @@
-package com.kbe5.api.domain.firebase.service;
+package com.kbe5.domain.commonservice.firebase.service;
 
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingException;
 import com.google.firebase.messaging.Message;
-import com.kbe5.api.domain.firebase.dto.TokenNotificationRequest;
+import com.kbe5.domain.commonservice.firebase.dto.TokenNotificationRequest;
 import com.kbe5.domain.drive.entity.Drive;
 import com.kbe5.domain.drive.entity.DriveStatus;
 import com.kbe5.domain.manager.entity.Manager;
