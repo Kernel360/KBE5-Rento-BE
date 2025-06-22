@@ -3,6 +3,7 @@ package com.kbe5.api.domain.member.service;
 
 import com.kbe5.api.domain.member.dto.request.MemberUpdateRequest;
 import com.kbe5.api.domain.member.dto.response.MemberInfoResponse;
+import com.kbe5.api.domain.member.vo.MemberUpdateVO;
 import com.kbe5.common.exception.DomainException;
 import com.kbe5.common.exception.ErrorType;
 import com.kbe5.domain.company.entity.Company;
@@ -82,14 +83,8 @@ public class MemberService {
             throw new DomainException(ErrorType.DUPLICATE_PHONE_NUMBER);
         }
 
-        member.update(
-                request.name(),
-                request.email(),
-                request.getPosition(),
-                request.loginId(),
-                request.phoneNumber(),
-                department
-        );
+        MemberUpdateVO vo = new MemberUpdateVO(request);
+        vo.toUpdate(member, department);
 
         return MemberInfoResponse.from(member);
     }

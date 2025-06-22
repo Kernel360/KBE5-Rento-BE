@@ -58,13 +58,16 @@ public class Member extends BaseEntity {
         this.companyCode = companyCode;
     }
 
-    public void update(String name, String email, Position position, String loginId, String phoneNumber, Department department) {
+    public void update(String name, String email, Position position,
+                       Department department, String phoneNumber,
+                       String loginId, String companyCode) {
         this.name = name;
         this.email = email;
         this.position = position;
-        this.loginId = loginId;
-        this.phoneNumber = phoneNumber;
         this.department = department;
+        this.phoneNumber = phoneNumber;
+        this.loginId = loginId;
+        this.companyCode = companyCode;
     }
 
     public String getPosition(){
