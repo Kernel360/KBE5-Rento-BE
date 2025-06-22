@@ -1,7 +1,7 @@
 package com.kbe5.adapter.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.kbe5.domain.device.enums.DeviceResultCode;
+import com.kbe5.common.exception.DeviceResultCode;
 
 public record EventResponse(
 

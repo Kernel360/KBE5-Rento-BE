@@ -2,6 +2,8 @@ package com.kbe5.domain.member.entity;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.kbe5.domain.exception.DomainException;
+import com.kbe5.domain.exception.ErrorType;
 
 
 import java.util.Arrays;

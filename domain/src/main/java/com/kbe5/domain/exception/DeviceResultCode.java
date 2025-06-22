@@ -1,4 +1,4 @@
-package com.kbe5.domain.device.enums;
+package com.kbe5.domain.exception;
 
 import lombok.Getter;
 

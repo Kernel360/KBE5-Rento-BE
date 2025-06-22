@@ -2,6 +2,7 @@ package com.kbe5.api.domain.jwt.dto;
 
 
 import com.kbe5.api.domain.jwt.util.JwtUtil;
+import com.kbe5.domain.manager.entity.Manager;
 
 public record JwtManagerArgumentDto(
         Long id,

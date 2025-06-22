@@ -1,8 +1,8 @@
 package com.kbe5.api.domain.device.dto.resonse;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.kbe5.common.exception.DeviceResultCode;
 import com.kbe5.domain.device.entity.DeviceToken;
-import com.kbe5.domain.device.enums.DeviceResultCode;
 
 
 public record DeviceTokenResponse(

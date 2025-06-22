@@ -5,6 +5,8 @@ import com.kbe5.common.exception.DomainException;
 import com.kbe5.common.exception.ErrorType;
 import com.kbe5.domain.drive.entity.Drive;
 import com.kbe5.domain.drive.repository.DriveRepository;
+import com.kbe5.domain.manager.entity.Manager;
+import com.kbe5.domain.vehicle.repository.VehicleRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

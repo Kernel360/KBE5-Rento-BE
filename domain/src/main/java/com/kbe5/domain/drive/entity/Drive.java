@@ -2,6 +2,8 @@ package com.kbe5.domain.drive.entity;
 
 
 import com.kbe5.domain.BaseEntity;
+import com.kbe5.domain.member.entity.Member;
+import com.kbe5.domain.vehicle.entity.Vehicle;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;

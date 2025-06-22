@@ -1,6 +1,5 @@
 package com.kbe5.api.domain.jwt.util;
 
-
 import com.kbe5.api.domain.jwt.dto.JwtManagerArgumentDto;
 import com.kbe5.common.exception.DomainException;
 import com.kbe5.common.exception.ErrorType;

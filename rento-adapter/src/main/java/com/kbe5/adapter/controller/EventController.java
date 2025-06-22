@@ -1,15 +1,15 @@
 package com.kbe5.adapter.controller;
 
-
 import com.kbe5.adapter.amqp.EventSender;
 import com.kbe5.adapter.dto.request.cycleinfo.CycleEventRequest;
 import com.kbe5.adapter.dto.request.geofence.GeofenceEventRequest;
 import com.kbe5.adapter.dto.request.onoff.OffEventRequest;
 import com.kbe5.adapter.dto.request.onoff.OnEventRequest;
 import com.kbe5.adapter.dto.response.EventResponse;
+import com.kbe5.common.exception.DeviceResultCode;
+import com.kbe5.domain.commonservice.DriveService;
+import com.kbe5.domain.commonservice.firebase.service.FcmService;
 import com.kbe5.domain.device.entity.DeviceToken;
-import com.kbe5.domain.device.enums.DeviceResultCode;
-import com.kbe5.domain.drive.entity.Drive;
 import com.kbe5.domain.event.entity.CycleEvent;
 import com.kbe5.domain.event.entity.CycleInfo;
 import com.kbe5.domain.event.entity.GeofenceEvent;
@@ -47,8 +47,8 @@ public class EventController {
         driveService.driveStart(deviceToken.getDriveId());
 
         //todo:이부분 성능문제 해결필요
-        Drive drive = driveService.getDriveDetail(deviceToken.getDriveId());
-        fcmService.getDrive(drive);
+//        Drive drive = driveService.getDriveDetail(deviceToken.getDriveId());
+//        fcmService.getDrive(drive);
 
         OnOffEvent onOffEvent = request.toEntity(deviceToken);
         eventSender.send(onOffEvent, mdn);
@@ -66,8 +66,8 @@ public class EventController {
         driveService.driveEnd(deviceToken.getDriveId(), request.currentAccumulatedDistance());
 
         //todo:이부분 성능문제 해결필요
-        Drive drive = driveService.getDriveDetail(deviceToken.getDriveId());
-        fcmService.getDrive(drive);
+//        Drive drive = driveService.getDriveDetail(deviceToken.getDriveId());
+//        fcmService.getDrive(drive);
 
         OnOffEvent onOffEvent = request.toEntity(deviceToken);
         eventSender.send(onOffEvent, mdn);

@@ -2,7 +2,10 @@ package com.kbe5.api.config;
 
 
 import com.kbe5.api.domain.jwt.device.DeviceTokenFilter;
+import com.kbe5.api.domain.jwt.util.JwtFilter;
 import com.kbe5.api.domain.jwt.util.JwtUtil;
+import com.kbe5.api.filter.LoginAuthenticationFilter;
+import com.kbe5.domain.manager.respository.ManagerRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;

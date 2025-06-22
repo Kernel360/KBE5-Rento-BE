@@ -2,9 +2,10 @@ package com.kbe5.domain.event.entity;
 
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.kbe5.domain.device.enums.DeviceResultCode;
 import com.kbe5.domain.event.enums.EventType;
 import com.kbe5.domain.event.enums.GpsCondition;
+import com.kbe5.domain.exception.DeviceException;
+import com.kbe5.domain.exception.DeviceResultCode;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;

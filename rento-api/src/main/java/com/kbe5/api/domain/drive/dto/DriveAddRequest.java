@@ -3,6 +3,8 @@ package com.kbe5.api.domain.drive.dto;
 
 import com.kbe5.domain.drive.entity.Drive;
 import com.kbe5.domain.drive.entity.DriveType;
+import com.kbe5.domain.member.entity.Member;
+import com.kbe5.domain.vehicle.entity.Vehicle;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.format.annotation.DateTimeFormat;

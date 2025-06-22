@@ -1,4 +1,4 @@
-package com.kbe5.common.exception;
+package com.kbe5.domain.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
