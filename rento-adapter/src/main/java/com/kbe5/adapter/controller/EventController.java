@@ -34,7 +34,7 @@ public class EventController {
 
     private final EventSender eventSender;
     private final DriveService driveService;
-    private final FcmService fcmService;
+    private final NotificationSender notificationSender;
 
     @PostMapping("/on-off/on")
     public ResponseEntity<EventResponse> ignitionOn(
@@ -48,6 +48,9 @@ public class EventController {
 
         OnOffEvent onOffEvent = request.toEntity(deviceToken);
         eventSender.send(onOffEvent, mdn);
+
+        //fcm 알림 발송 큐
+        notificationSender.send(deviceToken.getDriveId());
 
         return ResponseEntity.ok(EventResponse.fromEntity(DeviceResultCode.SUCCESS, mdn));
     }
@@ -64,6 +67,8 @@ public class EventController {
         OnOffEvent onOffEvent = request.toEntity(deviceToken);
         eventSender.send(onOffEvent, mdn);
 
+        //fcm 알림 발송 큐
+        notificationSender.send(deviceToken.getDriveId());
 
         return ResponseEntity.ok(EventResponse.fromEntity(DeviceResultCode.SUCCESS, mdn));
     }

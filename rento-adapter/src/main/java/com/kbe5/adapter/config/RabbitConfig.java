@@ -14,8 +14,14 @@ public class RabbitConfig {
 
     //큐 정의
     @Bean
-    public Queue hello() {
+    public Queue cycleInfo() {
         return new Queue("cycle-info");
+    }
+
+    //알림 큐 정의
+    @Bean
+    public Queue notification() {
+        return new Queue("notification");
     }
 
     @Bean

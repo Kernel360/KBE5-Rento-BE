@@ -3,11 +3,15 @@ package com.kbe5.domain.commonservice.firebase.service;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingException;
 import com.google.firebase.messaging.Message;
-import com.kbe5.domain.commonservice.firebase.dto.TokenNotificationRequest;
-import com.kbe5.domain.drive.entity.Drive;
-import com.kbe5.domain.drive.entity.DriveStatus;
-import com.kbe5.domain.manager.entity.Manager;
-import com.kbe5.domain.manager.respository.ManagerRepository;
+import com.kbe5.rento.common.exception.DomainException;
+import com.kbe5.rento.common.exception.ErrorType;
+import com.kbe5.rento.domain.drive.entity.Drive;
+import com.kbe5.rento.domain.drive.entity.DriveStatus;
+import com.kbe5.rento.domain.drive.repository.DriveRepository;
+import com.kbe5.rento.domain.event.entity.Event;
+import com.kbe5.rento.domain.firebase.dto.TokenNotificationRequest;
+import com.kbe5.rento.domain.manager.entity.Manager;
+import com.kbe5.rento.domain.manager.respository.ManagerRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.retry.annotation.Backoff;
@@ -81,7 +85,10 @@ public class FcmService {
         throw new DomainException(ErrorType.FCM_FAILED);
     }
 
-    public void getDrive(Drive drive) {
+    public void getDrive(Long driveId) {
+        Drive drive = driveRepository.findById(driveId)
+                .orElseThrow(()->new DomainException(ErrorType.DRIVE_NOT_FOUND));
+
         // 자동차 번호
         String vehicleNumber = drive.getVehicle().getInfo().vehicleNumber();
         // 회사의 모든 매니저
