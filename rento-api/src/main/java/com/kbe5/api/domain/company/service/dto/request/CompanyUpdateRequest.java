@@ -1,4 +1,4 @@
-package com.kbe5.api.domain.company.dto.request;
+package com.kbe5.api.domain.company.service.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
