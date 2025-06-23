@@ -45,14 +45,14 @@ jobs:
           docker tag rento-api:latest ${{ secrets.ECR_REPOSITORY_API }}:latest
           docker push ${{ secrets.ECR_REPOSITORY_API }}:latest
 
-      # ───── Build and Push rento-domain ─────
-      - name: Build Docker image for rento-domain
-        run: docker build -t rento-domain ./rento-domain
+      # ───── Build and Push rento-adapter ─────
+      - name: Build Docker image for rento-adapter
+        run: docker build -t rento-adapter ./rento-adapter
 
-      - name: Tag and Push renot-domain
+      - name: Tag and Push rento-adapter
         run: |
-          docker tag rento-domain:latest ${{ secrets.ECR_REPOSITORY_DOMAIN }}:latest
-          docker push ${{ secrets.ECR_REPOSITORY_DIMAIN }}:latest
+          docker tag rento-adapter:latest ${{ secrets.ECR_REPOSITORY_ADAPTER }}:latest
+          docker push ${{ secrets.ECR_REPOSITORY_ADAPTER }}:latest
 
       # ───── Deploy to EC2 ─────
       - name: Deploy both modules on EC2
@@ -66,61 +66,46 @@ jobs:
             export DB_NAME="${{ secrets.DB_NAME }}"
             export DB_USER="${{ secrets.DB_USER }}"
             export DB_PASS="${{ secrets.DB_PASS }}"
-
             export REDIS_HOST="${{ secrets.REDIS_HOST }}"
             export REDIS_PORT="${{ secrets.REDIS_PORT }}"
-
             export AWS_ACCESS_KEY_ID="${{ secrets.AWS_ACCESS_KEY_ID }}"
             export AWS_SECRET_ACCESS_KEY="${{ secrets.AWS_SECRET_ACCESS_KEY }}"
 
-            # firebase 디렉토리 생성
             mkdir -p /home/ubuntu/firebase
-
-            # firebase config 파일 저장
             echo '${{ secrets.FIREBASE_CONFIG }}' > /home/ubuntu/firebase/rento-firebase.json
 
             aws ecr get-login-password --region ap-northeast-2 | \
               docker login --username AWS --password-stdin 528782700548.dkr.ecr.ap-northeast-2.amazonaws.com
 
-            # module-api 배포
+            # rento-api 배포
             docker stop rento-api || true
             docker rm rento-api || true
             docker pull ${{ secrets.ECR_REPOSITORY_API }}:latest
-
             docker run -d \
               --name rento-api \
               --network mynet \
               -p 8080:8080 \
               -v /home/ubuntu/firebase:/app/firebase \
-              -e DB_HOST="\$DB_HOST" \
-              -e DB_PORT="\$DB_PORT" \
-              -e DB_NAME="\$DB_NAME" \
-              -e DB_USER="\$DB_USER" \
-              -e DB_PASS="\$DB_PASS" \
-              -e REDIS_HOST="\$REDIS_HOST" \
-              -e REDIS_PORT="\$REDIS_PORT" \
               -e SPRING_PROFILES_ACTIVE=deploy \
               -e FIREBASE_PATH="/app/firebase/rento-firebase.json" \
+              -e DB_HOST="\$DB_HOST" -e DB_PORT="\$DB_PORT" \
+              -e DB_NAME="\$DB_NAME" -e DB_USER="\$DB_USER" -e DB_PASS="\$DB_PASS" \
+              -e REDIS_HOST="\$REDIS_HOST" -e REDIS_PORT="\$REDIS_PORT" \
               ${{ secrets.ECR_REPOSITORY_API }}:latest
 
-            # module-domain 배포
-            docker stop rento-domain || true
-            docker rm rento-domain || true
-            docker pull ${{ secrets.ECR_REPOSITORY_DOMAIN }}:latest
-
+            # rento-adapter 배포
+            docker stop rento-adapter || true
+            docker rm rento-adapter || true
+            docker pull ${{ secrets.ECR_REPOSITORY_ADAPTER }}:latest
             docker run -d \
-              --name rento-domain \
+              --name rento-adapter \
               --network mynet \
               -p 8081:8080 \
               -v /home/ubuntu/firebase:/app/firebase \
-              -e DB_HOST="\$DB_HOST" \
-              -e DB_PORT="\$DB_PORT" \
-              -e DB_NAME="\$DB_NAME" \
-              -e DB_USER="\$DB_USER" \
-              -e DB_PASS="\$DB_PASS" \
-              -e REDIS_HOST="\$REDIS_HOST" \
-              -e REDIS_PORT="\$REDIS_PORT" \
               -e SPRING_PROFILES_ACTIVE=deploy \
               -e FIREBASE_PATH="/app/firebase/rento-firebase.json" \
-              ${{ secrets.ECR_REPOSITORY_DOMAIN }}:latest
+              -e DB_HOST="\$DB_HOST" -e DB_PORT="\$DB_PORT" \
+              -e DB_NAME="\$DB_NAME" -e DB_USER="\$DB_USER" -e DB_PASS="\$DB_PASS" \
+              -e REDIS_HOST="\$REDIS_HOST" -e REDIS_PORT="\$REDIS_PORT" \
+              ${{ secrets.ECR_REPOSITORY_ADAPTER }}:latest
           EOF
