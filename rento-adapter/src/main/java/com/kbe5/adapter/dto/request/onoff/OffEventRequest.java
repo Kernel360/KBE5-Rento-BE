@@ -16,67 +16,67 @@ import java.time.LocalDateTime;
 
 public record OffEventRequest(
 
-        @JsonProperty("mdn")
+    @JsonProperty("mdn")
     @NotNull(message = "{device.mdn.notnull}")
     Long mdn, //차량 번호
 
-        @JsonProperty("tid")
+    @JsonProperty("tid")
     @NotBlank(message = "{device.tid.notblank}")
     String terminalId, // A001로 고정
 
-        @JsonProperty("mid")
+    @JsonProperty("mid")
     @NotNull(message = "{device.mid.notnull}")
     Integer makerId, // 6으로 고정
 
-        @Min(0)
+    @Min(0)
     @Max(65535)
     @JsonProperty("pv")
     @NotNull(message = "{device.pv.notnull}")
     Integer packetVersion, // 5로 고정
 
-        @JsonProperty("did")
+    @JsonProperty("did")
     @NotNull(message = "{device.did.notnull}")
     Integer deviceId, //1로 고정
 
-        @NotNull(message = "{device.onTime.notnull}")
+    @NotNull(message = "{device.onTime.notnull}")
     @JsonDeserialize(using = EventLocalDateTimeDeserializer.class)
     LocalDateTime onTime,
 
-        @NotNull(message = "{device.offTime.notnull}")
+    @NotNull(message = "{device.offTime.notnull}")
     @JsonDeserialize(using = EventLocalDateTimeDeserializer.class)
     LocalDateTime offTime,
 
-        @JsonProperty("gcd")
+    @JsonProperty("gcd")
     @NotNull(message = "{device.gpsCondition.notnull}")
         GpsCondition gpsCondition, // GPS 상태
 
-        @DecimalMin("-90.0")
+    @DecimalMin("-90.0")
     @DecimalMax("90.0")
     @JsonProperty("lat")
     @NotNull(message = "{device.event.lat.notnull}")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "#.######") // 소수점 6자리
     BigDecimal latitude,
 
-        @DecimalMin("-180.0")
+    @DecimalMin("-180.0")
     @DecimalMax("180.0")
     @JsonProperty("lon")
     @NotNull(message = "{device.event.lon.notnull}")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "#.######") // 소수점 6자리
     BigDecimal longitude,
 
-        @Min(0)
+    @Min(0)
     @Max(365)
     @JsonProperty("ang")
     @NotNull(message = "{device.event.angle.notnull}")
     Integer angle,
 
-        @Min(0)
+    @Min(0)
     @Max(255)
     @JsonProperty("spd")
     @NotNull(message = "{device.event.speed.notnull}")
     Integer speed,
 
-        @Min(0)
+    @Min(0)
     @Max(9999999)
     @JsonProperty("sum")
     @NotNull(message = "{device.currentAccumulatedDistance.notnull}")

@@ -47,11 +47,13 @@ public enum ErrorType {
 
     // Geofence
     GEOFENCE_NOT_FOUND(HttpStatus.NOT_FOUND, "지오펜스를 찾을 수 없습니다."),
-    // CycleInfoSummary
-    CYCLEINFO_NOT_FOUND(HttpStatus.NOT_FOUND, "주기 정보가 없습니다."),
-
     //FCM
-    FCM_FAILED(HttpStatus.BAD_REQUEST, "FCM 알림 전송에 실패하였습니다");
+    FCM_FAILED(HttpStatus.BAD_REQUEST, "FCM 알림 전송에 실패하였습니다"),
+    CYCLEINFO_NOT_FOUND(HttpStatus.NOT_FOUND, "주기 정보가 없습니다."),
+    // Date
+    NULL_LOCAL_DATE_TIME(HttpStatus.BAD_REQUEST, "LocalDateTime 값이 null 입니다."),
+    BLANK_DATE_STRING(HttpStatus.BAD_REQUEST, "시간 문자열이 비어있거나 null 입니다."),
+    INVALID_DATE_FORMAT(HttpStatus.BAD_REQUEST, "지원하지 않는 날짜 형식입니다.");
 
     private final HttpStatus status;
     private final String message;
