@@ -1,7 +1,9 @@
 package com.kbe5.api.domain.company.service;
 
-import com.kbe5.api.domain.company.dto.request.CompanyUpdateRequest;
-import com.kbe5.api.domain.company.dto.response.CompanyDeleteResponse;
+import com.kbe5.api.domain.company.service.dto.request.CompanyRegisterRequest;
+import com.kbe5.api.domain.company.service.dto.request.CompanyUpdateRequest;
+import com.kbe5.api.domain.company.service.dto.response.CompanyDeleteResponse;
+import com.kbe5.api.domain.company.service.mapper.CompanyMapper;
 import com.kbe5.api.domain.company.vo.CompanyUpdateVO;
 import com.kbe5.common.exception.DomainException;
 import com.kbe5.common.exception.ErrorType;
@@ -20,10 +22,10 @@ public class CompanyService {
 
     private final CompanyRepository companyRepository;
 
-    public Company register(Company company) {
-        company = companyRepository.save(company);
-
-        makeCompanyCode(company);
+    public Company register(CompanyRegisterRequest request) {
+        Company company = CompanyMapper.toEntity(request);
+        companyRepository.save(company);
+        company.assignCompanyCode();
 
         return company;
     }
@@ -40,10 +42,6 @@ public class CompanyService {
                 .orElseThrow(() -> new DomainException(ErrorType.COMPANY_NOT_FOUND));
     }
 
-    private void makeCompanyCode(Company company) {
-        company.assignCompanyCode("C" + company.getId());
-        companyRepository.save(company);
-    }
 
     public Company update(Long id, CompanyUpdateRequest request) {
         Company company = companyRepository

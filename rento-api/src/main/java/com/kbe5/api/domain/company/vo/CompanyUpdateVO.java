@@ -1,6 +1,6 @@
 package com.kbe5.api.domain.company.vo;
 
-import com.kbe5.api.domain.company.dto.request.CompanyUpdateRequest;
+import com.kbe5.api.domain.company.service.dto.request.CompanyUpdateRequest;
 import com.kbe5.domain.company.entity.Company;
 import lombok.Getter;
 
