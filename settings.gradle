@@ -1,6 +1,5 @@
-rootProject.name = 'rento'
-include 'rento-emultor'
+rootProject.name = 'rento-mm'
 include 'rento-api'
-include 'rento-log'
-include 'rento-common'
-
+include 'rento-adapter'
+include 'common'
+include 'domain'
