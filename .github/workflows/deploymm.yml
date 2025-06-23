@@ -37,19 +37,19 @@ jobs:
             docker login --username AWS --password-stdin 528782700548.dkr.ecr.ap-northeast-2.amazonaws.com
 
       # ───── Build and Push module-api ─────
-      - name: Build Docker image for module-api
-        run: docker build -t rento-api ./module-api
+      - name: Build Docker image for rento-api
+        run: docker build -t rento-api ./rento-api
 
-      - name: Tag and Push module-api
+      - name: Tag and Push rento-api
         run: |
           docker tag rento-api:latest ${{ secrets.ECR_REPOSITORY_API }}:latest
           docker push ${{ secrets.ECR_REPOSITORY_API }}:latest
 
       # ───── Build and Push module-admin ─────
-      - name: Build Docker image for module-admin
-        run: docker build -t rento-admin ./module-admin
+      - name: Build Docker image for rento-admin
+        run: docker build -t rento-admin ./rento-admin
 
-      - name: Tag and Push module-admin
+      - name: Tag and Push renot-admin
         run: |
           docker tag rento-admin:latest ${{ secrets.ECR_REPOSITORY_ADMIN }}:latest
           docker push ${{ secrets.ECR_REPOSITORY_ADMIN }}:latest
