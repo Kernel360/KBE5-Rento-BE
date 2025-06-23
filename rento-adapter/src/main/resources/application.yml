@@ -1,7 +1,6 @@
 spring:
   config:
-    import:
-      - optional:file:.env
+    import: "optional:file:.env[.properties]"
   profiles:
     active: local
   jpa:
@@ -12,3 +11,5 @@ spring:
   messages:
     basename: messages
     encoding: UTF-8
+server:
+  port: 8081
