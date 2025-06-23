@@ -1,6 +1,7 @@
 package com.kbe5.adapter.controller;
 
 import com.kbe5.adapter.amqp.EventSender;
+import com.kbe5.adapter.amqp.NotificationSender;
 import com.kbe5.adapter.dto.request.cycleinfo.CycleEventRequest;
 import com.kbe5.adapter.dto.request.geofence.GeofenceEventRequest;
 import com.kbe5.adapter.dto.request.onoff.OffEventRequest;
@@ -38,8 +39,8 @@ public class EventController {
 
     @PostMapping("/on-off/on")
     public ResponseEntity<EventResponse> ignitionOn(
-        @AuthenticationPrincipal DeviceToken deviceToken,
-        @RequestBody @Validated OnEventRequest request
+            @AuthenticationPrincipal DeviceToken deviceToken,
+            @RequestBody @Validated OnEventRequest request
     ){
 
         Long mdn = request.mdn();
@@ -57,8 +58,8 @@ public class EventController {
 
     @PostMapping("/on-off/off")
     public ResponseEntity<EventResponse> ignitionOff(
-        @AuthenticationPrincipal DeviceToken deviceToken,
-        @RequestBody @Validated OffEventRequest request) {
+            @AuthenticationPrincipal DeviceToken deviceToken,
+            @RequestBody @Validated OffEventRequest request) {
 
         Long mdn = request.mdn();
 
@@ -75,8 +76,8 @@ public class EventController {
 
     @PostMapping("/cycle-info")
     public ResponseEntity<EventResponse> emitCycleInfo(
-        @AuthenticationPrincipal DeviceToken deviceToken,
-        @RequestBody @Validated CycleEventRequest request
+            @AuthenticationPrincipal DeviceToken deviceToken,
+            @RequestBody @Validated CycleEventRequest request
     ) {
 
         Long mdn = request.mdn();
@@ -92,8 +93,8 @@ public class EventController {
 
     @PostMapping("/geofences")
     public ResponseEntity<EventResponse> receiveGeofenceEvent (
-        @AuthenticationPrincipal DeviceToken deviceToken,
-        @RequestBody @Validated GeofenceEventRequest request) {
+            @AuthenticationPrincipal DeviceToken deviceToken,
+            @RequestBody @Validated GeofenceEventRequest request) {
 
         GeofenceEvent geofenceEvent = request.toEntity(deviceToken.getDriveId());
         eventSender.send(geofenceEvent, request.mdn());
@@ -101,3 +102,4 @@ public class EventController {
         return ResponseEntity.ok(EventResponse.fromEntity(DeviceResultCode.SUCCESS, request.mdn()));
     }
 }
+

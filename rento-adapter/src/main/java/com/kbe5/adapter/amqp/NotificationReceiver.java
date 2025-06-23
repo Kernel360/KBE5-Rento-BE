@@ -1,6 +1,6 @@
-package com.kbe5.rento.domain.firebase.amqp;
+package com.kbe5.adapter.amqp;
 
-import com.kbe5.rento.domain.firebase.service.FcmService;
+import com.kbe5.domain.commonservice.firebase.service.FcmService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.RabbitHandler;
@@ -22,4 +22,3 @@ public class NotificationReceiver {
         fcmService.getDrive(driveId);
     }
 }
-
