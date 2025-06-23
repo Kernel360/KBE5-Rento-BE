@@ -2,6 +2,8 @@ package com.kbe5.adapter.dto.request.cycleinfo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import com.kbe5.common.exception.DeviceException;
+import com.kbe5.common.exception.DeviceResultCode;
 import com.kbe5.domain.device.entity.DeviceToken;
 import com.kbe5.domain.event.entity.CycleEvent;
 import com.kbe5.domain.event.entity.CycleInfo;
@@ -47,9 +49,13 @@ public record CycleEventRequest(
     List<CycleInfoRequest> cycleInfoRequests
 ) {
 
-    public CycleEvent toEntity(DeviceToken token) {
+    public CycleEvent of(DeviceToken token, List<CycleInfo> cycleInfos) {
+        if (cycleInfos == null || cycleInfos.isEmpty()) {
+            throw new DeviceException(DeviceResultCode.REQUIRED_PARAMETER_ERROR);
+        }
+
         return CycleEvent.builder()
-            .oTime(this.oTime())
+            .oTime(cycleInfos.get(0).getCycleInfoTime())
             .mdn(this.mdn())
             .terminalId(this.terminalId())
             .makerId(this.makerId())
@@ -58,6 +64,7 @@ public record CycleEventRequest(
             .cycleCount(this.cycleCount())
             .eventType(EventType.CYCLE_INFO)
             .driveId(token.getDriveId())
+            .cycleInfos(cycleInfos)
             .build();
     }
 
