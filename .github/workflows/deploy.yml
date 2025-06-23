@@ -42,7 +42,7 @@ jobs:
 
       - name: Tag and Push rento-api
         run: |
-              docker tag rento-api:latest ${{ secrets.ECR_REPOSITORY }}:latest
+              docker tag rento-api:latest ${{ secrets.ECR_REPOSITORY_API }}:latest
               docker push ${{ secrets.ECR_REPOSITORY }}:latest
 
       # ───── Build and Push rento-adapter ─────
@@ -51,7 +51,7 @@ jobs:
 
       - name: Tag and Push rento-adapter
         run: |
-          docker tag rento-api:latest ${{ secrets.ECR_REPOSITORY }}:latest
+          docker tag rento-api:latest ${{ secrets.ECR_REPOSITORY_ADAPTER }}:latest
           docker push ${{ secrets.ECR_REPOSITORY }}:latest
 
       # ───── Deploy to EC2 ─────
