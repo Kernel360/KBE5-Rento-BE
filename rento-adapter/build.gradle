@@ -33,7 +33,7 @@ dependencies {
     compileOnly 'org.projectlombok:lombok'
 
     // Security
-    implementation 'org.springframework.boot:spring-boot-starter-security'
+//    implementation 'org.springframework.boot:spring-boot-starter-security'
 
     // https://mvnrepository.com/artifact/org.springframework/spring-jdbc
     implementation 'org.springframework:spring-jdbc:6.2.7'
