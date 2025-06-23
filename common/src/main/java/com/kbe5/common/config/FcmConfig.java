@@ -17,7 +17,7 @@ import java.io.InputStream;
 
 @Slf4j
 @Component
-public class FCMInitializer {
+public class FcmConfig {
 
     @Value("${fcm.firebase_config_path}")
     private String firebaseConfigPath;
