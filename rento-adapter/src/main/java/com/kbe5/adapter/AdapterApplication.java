@@ -7,7 +7,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication(scanBasePackages = {
         "com.kbe5.common",
-        "com.kbe5.domain"
+        "com.kbe5.domain",
+        "com.kbe5.adapter"
 }
 )
 @EnableJpaRepositories(basePackages = "com.kbe5.domain")
