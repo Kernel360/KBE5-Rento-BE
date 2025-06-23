@@ -1,9 +1,9 @@
-package com.kbe5.rento.domain.stream.dto;
+package com.kbe5.api.domain.stream.dto;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-public record StreamInfoResquest(
+public record StreamInfoRequest(
         Long driveId,
         LocalDateTime timestamp,
         BigDecimal latitude,
@@ -14,3 +14,4 @@ public record StreamInfoResquest(
 
 
 }
+

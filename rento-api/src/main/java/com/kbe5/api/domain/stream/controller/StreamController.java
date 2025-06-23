@@ -1,4 +1,5 @@
-package com.kbe5.rento.domain.stream.controller;
+package com.kbe5.api.domain.stream.controller;
+
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RequestMapping;

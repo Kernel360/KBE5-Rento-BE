@@ -1,6 +1,7 @@
-package com.kbe5.rento.domain.stream.service;
+package com.kbe5.api.domain.stream.service;
 
-import com.kbe5.rento.domain.stream.dto.StreamInfoResquest;
+
+import com.kbe5.api.domain.stream.dto.StreamInfoRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -16,7 +17,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 @Service
 @RequiredArgsConstructor
 public class StreamService {
-    
+
     // 전체 차량 리스너
     private final List<SseEmitter> emitters = new CopyOnWriteArrayList<>();
     // 차량ID별 리스너
@@ -50,7 +51,7 @@ public class StreamService {
     /**
      * 전체 차량 이벤트 브로드캐스트
      */
-    public void pushAll(StreamInfoResquest resquest) {
+    public void pushAll(StreamInfoRequest resquest) {
         List<SseEmitter> dead = new ArrayList<>();
         for (SseEmitter em : emitters) {
             try {
@@ -66,7 +67,7 @@ public class StreamService {
     /**
      * 특정 차량 이벤트만 브로드캐스트
      */
-    public void pushToDrive(Long driveId, StreamInfoResquest resquest) {
+    public void pushToDrive(Long driveId, StreamInfoRequest resquest) {
         List<SseEmitter> list = driveEmitters.getOrDefault(driveId, Collections.emptyList());
         List<SseEmitter> dead = new ArrayList<>();
         for (SseEmitter em : list) {
