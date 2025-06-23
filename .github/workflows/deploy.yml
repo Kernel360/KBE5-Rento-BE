@@ -1,4 +1,4 @@
-name: Gradle CI/CD to AWS ECR
+name: Rento Multi-Module CI/CD to EC2
 
 on:
   push:
@@ -12,7 +12,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Set up JDK
+      - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
@@ -21,7 +21,7 @@ jobs:
       - name: Grant permission to gradlew
         run: chmod +x ./gradlew
 
-      - name: Build with Gradle
+      - name: Build all modules
         run: ./gradlew clean build -x test
 
       - name: Configure AWS Credentials
@@ -33,18 +33,29 @@ jobs:
 
       - name: Login to Amazon ECR
         run: |
-          aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS --password-stdin 528782700548.dkr.ecr.ap-northeast-2.amazonaws.com
+          aws ecr get-login-password --region ap-northeast-2 | \
+            docker login --username AWS --password-stdin 528782700548.dkr.ecr.ap-northeast-2.amazonaws.com
 
-      - name: Build Docker image
-        run: docker build -t rento-server .
+      # ───── Build and Push rento-api ─────
+      - name: Build Docker image for rento-api
+        run: docker build -t rento-api ./rento-api
 
-      - name: Tag Docker image
-        run: docker tag rento-server:latest ${{ secrets.ECR_REPOSITORY }}:latest
+      - name: Tag and Push rento-api
+        run: |
+          docker tag rento-api:latest ${{ secrets.ECR_REPOSITORY_API }}:latest
+          docker push ${{ secrets.ECR_REPOSITORY_API }}:latest
 
-      - name: Push to Amazon ECR
-        run: docker push ${{ secrets.ECR_REPOSITORY }}:latest
+      # ───── Build and Push rento-admin ─────
+      - name: Build Docker image for rento-admin
+        run: docker build -t rento-admin ./rento-admin
 
-      - name: Deploy on EC2
+      - name: Tag and Push renot-admin
+        run: |
+          docker tag rento-admin:latest ${{ secrets.ECR_REPOSITORY_ADMIN }}:latest
+          docker push ${{ secrets.ECR_REPOSITORY_ADMIN }}:latest
+
+      # ───── Deploy to EC2 ─────
+      - name: Deploy both modules on EC2
         run: |
           echo "${{ secrets.EC2_KEY }}" | base64 -d > ec2.pem
           chmod 600 ec2.pem
@@ -56,35 +67,60 @@ jobs:
             export DB_USER="${{ secrets.DB_USER }}"
             export DB_PASS="${{ secrets.DB_PASS }}"
 
-            export AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}
-            export AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}
+            export REDIS_HOST="${{ secrets.REDIS_HOST }}"
+            export REDIS_PORT="${{ secrets.REDIS_PORT }}"
 
-            # firebase 디렉토리 없으면 생성 (절대 경로 사용)
+            export AWS_ACCESS_KEY_ID="${{ secrets.AWS_ACCESS_KEY_ID }}"
+            export AWS_SECRET_ACCESS_KEY="${{ secrets.AWS_SECRET_ACCESS_KEY }}"
+
+            # firebase 디렉토리 생성
             mkdir -p /home/ubuntu/firebase
 
-            # firebase config 파일 생성 (절대 경로 사용)
-            echo '${{ secrets.FIREBASE_CONFIG }}' > /home/ubuntu/firebase/rento-f1d61-firebase-adminsdk-fbsvc-bd76cc388d.json
+            # firebase config 파일 저장
+            echo '${{ secrets.FIREBASE_CONFIG }}' > /home/ubuntu/firebase/rento-firebase.json
 
             aws ecr get-login-password --region ap-northeast-2 | \
               docker login --username AWS --password-stdin 528782700548.dkr.ecr.ap-northeast-2.amazonaws.com
 
-            docker stop rento-server || true
-            docker rm rento-server || true
-            docker pull 528782700548.dkr.ecr.ap-northeast-2.amazonaws.com/rento-server:latest
+            # module-api 배포
+            docker stop rento-api || true
+            docker rm rento-api || true
+            docker pull ${{ secrets.ECR_REPOSITORY_API }}:latest
 
             docker run -d \
-              --name rento-server \
+              --name rento-api \
               --network mynet \
-              -p 80:8080 \
+              -p 8080:8080 \
               -v /home/ubuntu/firebase:/app/firebase \
               -e DB_HOST="\$DB_HOST" \
               -e DB_PORT="\$DB_PORT" \
               -e DB_NAME="\$DB_NAME" \
               -e DB_USER="\$DB_USER" \
               -e DB_PASS="\$DB_PASS" \
-              -e REDIS_HOST="${{ secrets.REDIS_HOST }}" \
-              -e REDIS_PORT="${{ secrets.REDIS_PORT }}" \
+              -e REDIS_HOST="\$REDIS_HOST" \
+              -e REDIS_PORT="\$REDIS_PORT" \
               -e SPRING_PROFILES_ACTIVE=deploy \
-              -e FIREBASE_PATH="/app/firebase/rento-f1d61-firebase-adminsdk-fbsvc-bd76cc388d.json" \
-              528782700548.dkr.ecr.ap-northeast-2.amazonaws.com/rento-server:latest
+              -e FIREBASE_PATH="/app/firebase/rento-firebase.json" \
+              ${{ secrets.ECR_REPOSITORY_API }}:latest
+
+            # module-admin 배포
+            docker stop rento-admin || true
+            docker rm rento-admin || true
+            docker pull ${{ secrets.ECR_REPOSITORY_ADMIN }}:latest
+
+            docker run -d \
+              --name rento-admin \
+              --network mynet \
+              -p 8081:8080 \
+              -v /home/ubuntu/firebase:/app/firebase \
+              -e DB_HOST="\$DB_HOST" \
+              -e DB_PORT="\$DB_PORT" \
+              -e DB_NAME="\$DB_NAME" \
+              -e DB_USER="\$DB_USER" \
+              -e DB_PASS="\$DB_PASS" \
+              -e REDIS_HOST="\$REDIS_HOST" \
+              -e REDIS_PORT="\$REDIS_PORT" \
+              -e SPRING_PROFILES_ACTIVE=deploy \
+              -e FIREBASE_PATH="/app/firebase/rento-firebase.json" \
+              ${{ secrets.ECR_REPOSITORY_ADMIN }}:latest
           EOF
