@@ -1,6 +1,7 @@
 package com.kbe5.adapter.service;
 
 
+import com.kbe5.api.domain.stream.service.StreamService;
 import com.kbe5.domain.event.entity.CycleEvent;
 import com.kbe5.domain.event.entity.CycleInfo;
 import com.kbe5.domain.event.entity.Event;
@@ -20,6 +21,8 @@ public class CycleInfoHandler implements EventHandler {
 
     private final CycleInfoRepository cycleInfoRepository;
 
+    private final StreamService streamService;
+
     @Override
     public EventType getEventType() {
         return EventType.CYCLE_INFO;
@@ -35,6 +38,11 @@ public class CycleInfoHandler implements EventHandler {
         
         if (isNotNullAndNotEmpty(cycleInfo)){
             cycleInfoRepository.bulkInsert(cycleInfo);
+
+            cycleInfoList.forEach(info -> {
+                StreamInfoRequest request = StreamInfoRequest.of(info);
+                streamService.pushAll(request); // 전체 브로드캐스트
+            });
         }
     }
 
