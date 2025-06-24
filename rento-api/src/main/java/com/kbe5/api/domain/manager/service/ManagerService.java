@@ -12,6 +12,7 @@ import com.kbe5.domain.manager.entity.Manager;
 import com.kbe5.domain.manager.enums.ManagerRole;
 import com.kbe5.domain.manager.respository.ManagerRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,6 +27,7 @@ public class ManagerService {
     private final ManagerRepository managerRepository;
     private final CompanyRepository companyRepository;
     private final PasswordEncoder encoder;
+    private final RedisTemplate<String, String> redisTemplate;
 
     public Manager signUp(Manager manager) {
         Company company = companyRepository.findByCompanyCode(manager.getCompanyCode())
@@ -60,17 +62,20 @@ public class ManagerService {
         return ManagerList;
     }
 
-    @Transactional
-    public void logout(Long managerId){
-//        JwtRefresh jwtRefresh = jwtRefreshRepository.findByManagerId(managerId)
-//                .orElseThrow(() -> new DomainException(ErrorType.REFRESH_TOKEN_NOT_FOUND));
-//
-//        Manager manager = managerRepository.findById(managerId).orElseThrow(() -> new DomainException(ErrorType.MANAGER_NOT_FOUND));
-//
-//        manager.assignFcmToken(null);
-//        managerRepository.save(manager);
-//
-//        jwtRefreshRepository.delete(jwtRefresh);
+    public void logout(Long managerId) {
+        Manager manager = managerRepository.findById(managerId)
+                .orElseThrow(() -> new DomainException(ErrorType.MANAGER_NOT_FOUND));
+
+        String uuid = manager.getUuid();
+
+        if (uuid != null && redisTemplate.hasKey(uuid)) {
+            Boolean deleted = redisTemplate.delete(uuid);
+            if (!deleted) {
+                throw new DomainException(ErrorType.FAILED_DELETE_FROM_REDIS);
+            }
+        } else {
+            throw new DomainException(ErrorType.FAILED_DELETE_FROM_REDIS);
+        }
     }
 
     public Manager update(Long id, ManagerUpdateRequest request) {
