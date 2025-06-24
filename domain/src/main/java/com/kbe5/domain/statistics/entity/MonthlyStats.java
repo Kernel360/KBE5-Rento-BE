@@ -50,14 +50,4 @@ public class MonthlyStats extends BaseEntity {
         this.commuteRatio = commuteRatio;
         this.nonBusinessRatio = nonBusinessRatio;
     }
-
-    public void updateStats(MonthlyStats newStats) {
-        this.totalDistance = newStats.getTotalDistance();
-        this.totalDrivingTime = newStats.getTotalDrivingTime();
-        this.totalDrivingCnt = newStats.getTotalDrivingCnt();
-        this.avgSpeed = newStats.getAvgSpeed();
-        this.businessRatio = newStats.getBusinessRatio();
-        this.commuteRatio = newStats.getCommuteRatio();
-        this.nonBusinessRatio = newStats.getNonBusinessRatio();
-    }
 }
