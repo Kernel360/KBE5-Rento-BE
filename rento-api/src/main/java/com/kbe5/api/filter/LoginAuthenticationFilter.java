@@ -66,7 +66,7 @@ public class LoginAuthenticationFilter extends UsernamePasswordAuthenticationFil
         String accessToken = jwtUtil.createJwt("access", managerArgumentDto, JwtProperties.ACCESS_EXPIRED_TIME);
         String refreshToken = jwtUtil.createJwt("refresh", managerArgumentDto, JwtProperties.REFRESH_EXPIRED_TIME);
 
-        jwtUtil.saveRefreshTokenToRedis(managerArgumentDto.id(), refreshToken);
+        jwtUtil.saveRefreshTokenToRedis(managerArgumentDto.uuid(), refreshToken);
 
         response.addHeader("AccessToken",accessToken);
         response.addHeader("RefreshToken", refreshToken);

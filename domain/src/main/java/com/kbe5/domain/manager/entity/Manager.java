@@ -11,11 +11,16 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.UUID;
+
 @Entity
 @Getter
 @Table(name = "managers")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Manager extends BaseEntity {
+
+    @Column(nullable = false, unique = true, updatable = false)
+    private String uuid = UUID.randomUUID().toString();
 
     @ManyToOne
     @JoinColumn(name = "company_id", nullable = false)

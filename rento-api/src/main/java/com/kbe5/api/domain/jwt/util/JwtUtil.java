@@ -43,8 +43,8 @@ public class JwtUtil {
         return parseClaim(token, "category", String.class);
     }
 
-    public Long getId(String token) {
-        return parseClaim(token, "id", Long.class);
+    public String getUuid(String token) {
+        return parseClaim(token, "uuid", String.class);
     }
 
     public String getName(String token) {
@@ -98,7 +98,7 @@ public class JwtUtil {
     public String createJwt(String category, JwtManagerArgumentDto dto, Long expiredMs) {
         return Jwts.builder()
                 .claim("category", category)
-                .claim("id", dto.id())
+                .claim("uuid", dto.uuid())
                 .claim("loginId", dto.loginId())
                 .claim("role", dto.role())
                 .claim("companyId", dto.companyId())
@@ -125,40 +125,38 @@ public class JwtUtil {
             throw new DomainException(ErrorType.INVALID_TOKEN);
         }
 
-        if (isExpired(refresh) || !redisTemplate.hasKey(managerArgumentDto.id().toString())) {
+        if (isExpired(refresh) || !redisTemplate.hasKey(managerArgumentDto.uuid())) {
             //Todo: 로그아웃 로직 구현
             throw new DomainException(ErrorType.EXPIRED_TOKEN);
         }
 
-        if (!getRefreshFromRedis(managerArgumentDto.id()).equals(refresh)) {
+        if (!getRefreshFromRedis(managerArgumentDto.uuid()).equals(refresh)) {
             throw new DomainException(ErrorType.INVALID_TOKEN);
         }
 
         String newAccess = createJwt("access", managerArgumentDto, JwtProperties.ACCESS_EXPIRED_TIME);
         String newRefresh = createJwt("refresh", managerArgumentDto, JwtProperties.REFRESH_EXPIRED_TIME);
 
-        saveRefreshTokenToRedis(managerArgumentDto.id(), newRefresh);
+        saveRefreshTokenToRedis(managerArgumentDto.uuid(), newRefresh);
 
         response.setHeader("AccessToken", newAccess);
         response.setHeader("RefreshToken", newRefresh);
     }
 
-    public void saveRefreshTokenToRedis(Long id, String refreshToken) {
+    public void saveRefreshTokenToRedis(String uuid, String refreshToken) {
         ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
 
-        String key = id.toString();
-
         valueOperations.set(
-                key,
+                uuid,
                 refreshToken,
                 JwtProperties.REFRESH_EXPIRED_TIME,
                 TimeUnit.MILLISECONDS
         );
     }
 
-    public String getRefreshFromRedis(Long id) {
+    public String getRefreshFromRedis(String uuid) {
         ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
 
-        return valueOperations.get(id.toString());
+        return valueOperations.get(uuid);
     }
 }
