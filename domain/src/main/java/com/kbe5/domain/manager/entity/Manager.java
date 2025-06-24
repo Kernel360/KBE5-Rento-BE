@@ -65,7 +65,7 @@ public class Manager extends BaseEntity {
 
     @PrePersist
     public void generateUuid() {
-        if (uuid == null) {
+        if (uuid == null || uuid.trim().isEmpty()) {
             uuid = UUID.randomUUID().toString();
         }
     }
