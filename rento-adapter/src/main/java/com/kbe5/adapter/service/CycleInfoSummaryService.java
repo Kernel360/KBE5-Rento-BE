@@ -1,8 +1,8 @@
-package com.kbe5.domain.commonservice.cycleinfosummary;
+package com.kbe5.adapter.service;
 
 
 
-import com.kbe5.domain.commonservice.cycleinfosummary.dto.CycleInfoSummaryResponse;
+import com.kbe5.adapter.dto.response.CycleInfoSummaryResponse;
 import com.kbe5.domain.cycleinfosummary.entity.CycleInfoSummary;
 import com.kbe5.domain.cycleinfosummary.repository.CycleInfoSummaryRepository;
 import com.kbe5.domain.event.entity.CycleInfo;

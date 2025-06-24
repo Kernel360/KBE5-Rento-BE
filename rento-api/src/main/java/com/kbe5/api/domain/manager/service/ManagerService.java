@@ -5,7 +5,7 @@ import com.kbe5.api.domain.manager.dto.request.ManagerUpdateRequest;
 import com.kbe5.api.domain.manager.vo.ManagerUpdateVO;
 import com.kbe5.common.exception.DomainException;
 import com.kbe5.common.exception.ErrorType;
-import com.kbe5.domain.commonservice.firebase.dto.UpdateFcmTokenRequest;
+import com.kbe5.infra.firebase.dto.UpdateFcmTokenRequest;
 import com.kbe5.domain.company.entity.Company;
 import com.kbe5.domain.company.repository.CompanyRepository;
 import com.kbe5.domain.manager.entity.Manager;

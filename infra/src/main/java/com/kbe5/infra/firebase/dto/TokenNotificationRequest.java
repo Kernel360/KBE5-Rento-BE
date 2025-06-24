@@ -1,4 +1,4 @@
-package com.kbe5.domain.commonservice.firebase.dto;
+package com.kbe5.infra.firebase.dto;
 
 public record TokenNotificationRequest(
     String title,
