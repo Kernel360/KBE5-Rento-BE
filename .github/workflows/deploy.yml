@@ -100,7 +100,7 @@ jobs:
             docker run -d \
               --name rento-adapter \
               --network mynet \
-              -p 8081:8080 \
+              -p 8081:8081 \
               -v /home/ubuntu/firebase:/app/firebase \
               -e SPRING_PROFILES_ACTIVE=deploy \
               -e FIREBASE_PATH="/app/firebase/rento-firebase.json" \
