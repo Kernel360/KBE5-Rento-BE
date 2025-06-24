@@ -37,7 +37,6 @@ public class EventController {
 
     private final EventSender eventSender;
     private final DriveService driveService;
-    private final FcmService fcmService;
     private final DeviceTokenService deviceTokenService;
     private final NotificationSender notificationSender;
 
@@ -55,7 +54,7 @@ public class EventController {
         eventSender.send(onOffEvent, mdn);
 
         //fcm 알림 발송 큐
-        notificationSender.send(deviceToken.getDriveId());
+        //notificationSender.send(deviceToken.getDriveId());
 
         return ResponseEntity.ok(EventResponse.fromEntity(DeviceResultCode.SUCCESS, mdn));
     }
@@ -74,7 +73,7 @@ public class EventController {
         eventSender.send(onOffEvent, mdn);
 
         //fcm 알림 발송 큐
-        notificationSender.send(deviceToken.getDriveId());
+        //notificationSender.send(deviceToken.getDriveId());
 
         return ResponseEntity.ok(EventResponse.fromEntity(DeviceResultCode.SUCCESS, mdn));
     }
