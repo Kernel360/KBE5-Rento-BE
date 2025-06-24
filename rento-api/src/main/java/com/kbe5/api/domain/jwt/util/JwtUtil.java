@@ -1,6 +1,7 @@
 package com.kbe5.api.domain.jwt.util;
 
 import com.kbe5.api.domain.jwt.dto.JwtManagerArgumentDto;
+import com.kbe5.api.domain.jwt.enums.MaskCategory;
 import com.kbe5.common.exception.DomainException;
 import com.kbe5.common.exception.ErrorType;
 import com.kbe5.common.response.error.ErrorResponse;
@@ -20,6 +21,7 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
@@ -100,11 +102,11 @@ public class JwtUtil {
         return Jwts.builder()
                 .claim("category", category)
                 .claim("uuid", dto.uuid())
-                .claim("loginId", dto.loginId())
+                .claim("loginId", maskJwtInfo(MaskCategory.LOGIN_ID, dto.loginId()))
                 .claim("role", dto.role())
                 .claim("companyId", dto.companyId())
                 .claim("companyCode", dto.companyCode())
-                .claim("email", dto.email())
+                .claim("email", maskJwtInfo(MaskCategory.EMAIL, dto.email()))
                 .claim("name", dto.name())
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + expiredMs))
@@ -158,5 +160,23 @@ public class JwtUtil {
         ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
 
         return valueOperations.get(uuid);
+    }
+
+    private String maskJwtInfo(MaskCategory category, String value) {
+        if (category == MaskCategory.LOGIN_ID) {
+            return value.substring(0, 3) + "*".repeat(4);
+        }
+
+        if (category == MaskCategory.EMAIL) {
+            int atIndex = value.indexOf("@");
+            if (atIndex <= 0) return "****";
+
+            String idPart = value.substring(0, atIndex);
+            String domainPart = value.substring(atIndex);
+
+            return idPart.charAt(0) + "***" + domainPart;
+        }
+
+        return value;
     }
 }
