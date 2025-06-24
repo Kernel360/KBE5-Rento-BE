@@ -3,9 +3,11 @@ package com.kbe5.common.config;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
+import com.google.firebase.messaging.FirebaseMessaging;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
 
@@ -15,7 +17,7 @@ import java.io.InputStream;
 
 @Slf4j
 @Component
-public class FCMInitializer {
+public class FcmConfig {
 
     @Value("${fcm.firebase_config_path}")
     private String firebaseConfigPath;
@@ -44,5 +46,10 @@ public class FCMInitializer {
         } else {
             return new ClassPathResource(firebaseConfigPath).getInputStream();
         }
+    }
+
+    @Bean
+    public FirebaseMessaging firebaseMessaging() {
+        return FirebaseMessaging.getInstance(FirebaseApp.getInstance());
     }
 }

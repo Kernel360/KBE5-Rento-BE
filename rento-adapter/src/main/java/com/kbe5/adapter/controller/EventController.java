@@ -1,6 +1,7 @@
 package com.kbe5.adapter.controller;
 
 import com.kbe5.adapter.amqp.EventSender;
+import com.kbe5.adapter.amqp.NotificationSender;
 import com.kbe5.adapter.dto.request.cycleinfo.CycleEventRequest;
 import com.kbe5.adapter.dto.request.geofence.GeofenceEventRequest;
 import com.kbe5.adapter.dto.request.onoff.OffEventRequest;
@@ -36,8 +37,8 @@ public class EventController {
 
     private final EventSender eventSender;
     private final DriveService driveService;
-    private final FcmService fcmService;
     private final DeviceTokenService deviceTokenService;
+    private final NotificationSender notificationSender;
 
     @PostMapping("/on-off/on")
     public ResponseEntity<EventResponse> ignitionOn(
@@ -49,12 +50,11 @@ public class EventController {
 
         driveService.driveStart(deviceToken.getDriveId());
 
-        //todo:이부분 성능문제 해결필요
-        Drive drive = driveService.getDriveDetail(deviceToken.getDriveId());
-        fcmService.getDrive(drive);
-
         OnOffEvent onOffEvent = request.toEntity(deviceToken);
         eventSender.send(onOffEvent, mdn);
+
+        //fcm 알림 발송 큐
+        //notificationSender.send(deviceToken.getDriveId());
 
         return ResponseEntity.ok(EventResponse.fromEntity(DeviceResultCode.SUCCESS, mdn));
     }
@@ -69,13 +69,11 @@ public class EventController {
 
         driveService.driveEnd(deviceToken.getDriveId(), request.currentAccumulatedDistance());
 
-        //todo:이부분 성능문제 해결필요
-//        Drive drive = driveService.getDriveDetail(deviceToken.getDriveId());
-//        fcmService.getDrive(drive);
-
         OnOffEvent onOffEvent = request.toEntity(deviceToken);
         eventSender.send(onOffEvent, mdn);
 
+        //fcm 알림 발송 큐
+        //notificationSender.send(deviceToken.getDriveId());
 
         return ResponseEntity.ok(EventResponse.fromEntity(DeviceResultCode.SUCCESS, mdn));
     }
@@ -108,3 +106,4 @@ public class EventController {
         return ResponseEntity.ok(EventResponse.fromEntity(DeviceResultCode.SUCCESS, request.mdn()));
     }
 }
+

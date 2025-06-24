@@ -47,7 +47,8 @@ public enum ErrorType {
 
     // Geofence
     GEOFENCE_NOT_FOUND(HttpStatus.NOT_FOUND, "지오펜스를 찾을 수 없습니다."),
-    // CycleInfoSummary
+    //FCM
+    FCM_FAILED(HttpStatus.BAD_REQUEST, "FCM 알림 전송에 실패하였습니다"),
     CYCLEINFO_NOT_FOUND(HttpStatus.NOT_FOUND, "주기 정보가 없습니다."),
     // Date
     NULL_LOCAL_DATE_TIME(HttpStatus.BAD_REQUEST, "LocalDateTime 값이 null 입니다."),
