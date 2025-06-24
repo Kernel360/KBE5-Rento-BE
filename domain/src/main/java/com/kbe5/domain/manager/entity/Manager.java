@@ -11,11 +11,16 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.UUID;
+
 @Entity
 @Getter
 @Table(name = "managers")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Manager extends BaseEntity {
+
+    @Column(nullable = false, unique = true, updatable = false)
+    private String uuid;
 
     @ManyToOne
     @JoinColumn(name = "company_id", nullable = false)
@@ -56,6 +61,13 @@ public class Manager extends BaseEntity {
         this.companyCode = companyCode;
         this.role = role;
         this.fcmToken = fcmToken;
+    }
+
+    @PrePersist
+    public void generateUuid() {
+        if (uuid == null || uuid.trim().isEmpty()) {
+            uuid = UUID.randomUUID().toString();
+        }
     }
 
     public void toUpdate(String name, String phone, String email) {
