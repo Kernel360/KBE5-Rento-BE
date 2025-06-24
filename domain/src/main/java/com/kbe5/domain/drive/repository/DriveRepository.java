@@ -2,6 +2,7 @@ package com.kbe5.domain.drive.repository;
 
 import com.kbe5.domain.company.entity.Company;
 import com.kbe5.domain.drive.entity.Drive;
+import com.kbe5.domain.drive.entity.DriveStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -22,4 +23,6 @@ public interface DriveRepository extends JpaRepository<Drive, Long> {
     Long findIdByMdnAndStartDateBetween(@Param("mdn") Long mdn,
                                         @Param("startDate") LocalDateTime startDate
     );
+
+    List<Drive> findByDriveStatus(DriveStatus driveStatus);
 }
