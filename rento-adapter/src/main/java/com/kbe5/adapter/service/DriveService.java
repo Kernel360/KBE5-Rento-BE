@@ -1,4 +1,4 @@
-package com.kbe5.domain.commonservice;
+package com.kbe5.adapter.service;
 
 
 

@@ -1,4 +1,4 @@
-package com.kbe5.domain.commonservice.cycleinfosummary.dto;
+package com.kbe5.api.domain.cycleinfosummary.dto;
 
 
 import com.kbe5.domain.cycleinfosummary.entity.CycleInfoSummary;

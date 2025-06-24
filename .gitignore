@@ -257,3 +257,4 @@ gradle-app.setting
 # End of https://www.toptal.com/developers/gitignore/api/windows,macos,intellij+all,git,java,maven,gradle,visualstudiocode
 /rento-api/src/main/resources/firebase/rento-f1d61-firebase-adminsdk-fbsvc-bd76cc388d.json
 /rento-adapter/src/main/resources/firebase/rento-f1d61-firebase-adminsdk-fbsvc-bd76cc388d.json
+/infra/src/main/resources/firebase/rento-f1d61-firebase-adminsdk-fbsvc-bd76cc388d.json

@@ -1,7 +1,6 @@
 package com.kbe5.adapter.service;
 
 
-import com.kbe5.domain.commonservice.cycleinfosummary.CycleInfoSummaryService;
 import com.kbe5.domain.event.entity.Event;
 import com.kbe5.domain.event.enums.EventType;
 import com.kbe5.domain.event.repository.EventRepository;

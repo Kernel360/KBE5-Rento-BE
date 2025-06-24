@@ -1,6 +1,6 @@
 package com.kbe5.adapter.amqp;
 
-import com.kbe5.domain.commonservice.firebase.service.FcmService;
+import com.kbe5.infra.firebase.service.FcmService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.RabbitHandler;

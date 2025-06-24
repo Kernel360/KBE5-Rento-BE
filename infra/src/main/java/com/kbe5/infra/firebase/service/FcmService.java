@@ -1,9 +1,8 @@
-package com.kbe5.domain.commonservice.firebase.service;
+package com.kbe5.infra.firebase.service;
 
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingException;
 import com.google.firebase.messaging.Message;
-import com.kbe5.domain.commonservice.firebase.dto.TokenNotificationRequest;
 import com.kbe5.domain.drive.entity.Drive;
 import com.kbe5.domain.drive.entity.DriveStatus;
 import com.kbe5.domain.drive.repository.DriveRepository;
@@ -11,11 +10,12 @@ import com.kbe5.domain.exception.DomainException;
 import com.kbe5.domain.exception.ErrorType;
 import com.kbe5.domain.manager.entity.Manager;
 import com.kbe5.domain.manager.respository.ManagerRepository;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import com.kbe5.infra.firebase.dto.TokenNotificationRequest;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Recover;
 import org.springframework.retry.annotation.Retryable;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
