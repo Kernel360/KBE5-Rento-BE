@@ -3,6 +3,7 @@ package com.kbe5.api.domain.jwt.util;
 import com.kbe5.api.domain.jwt.dto.JwtManagerArgumentDto;
 import com.kbe5.common.exception.DomainException;
 import com.kbe5.common.exception.ErrorType;
+import com.kbe5.common.response.error.ErrorResponse;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
@@ -126,8 +127,7 @@ public class JwtUtil {
         }
 
         if (isExpired(refresh) || !redisTemplate.hasKey(managerArgumentDto.uuid())) {
-            //Todo: 로그아웃 로직 구현
-            throw new DomainException(ErrorType.EXPIRED_TOKEN);
+            throw new DomainException(ErrorType.EXPIRED_TOKEN_REFRESH);
         }
 
         if (!getRefreshFromRedis(managerArgumentDto.uuid()).equals(refresh)) {
