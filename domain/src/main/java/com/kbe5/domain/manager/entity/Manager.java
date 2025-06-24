@@ -20,7 +20,7 @@ import java.util.UUID;
 public class Manager extends BaseEntity {
 
     @Column(nullable = false, unique = true, updatable = false)
-    private String uuid = UUID.randomUUID().toString();
+    private String uuid;
 
     @ManyToOne
     @JoinColumn(name = "company_id", nullable = false)
@@ -61,6 +61,13 @@ public class Manager extends BaseEntity {
         this.companyCode = companyCode;
         this.role = role;
         this.fcmToken = fcmToken;
+    }
+
+    @PrePersist
+    public void generateUuid() {
+        if (uuid == null) {
+            uuid = UUID.randomUUID().toString();
+        }
     }
 
     public void toUpdate(String name, String phone, String email) {
