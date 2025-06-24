@@ -12,7 +12,7 @@ import com.kbe5.api.domain.manager.service.ManagerService;
 import com.kbe5.common.apiresponse.ResEntityFactory;
 import com.kbe5.common.response.api.ApiResponse;
 import com.kbe5.common.response.api.ApiResultCode;
-import com.kbe5.domain.commonservice.firebase.dto.UpdateFcmTokenRequest;
+import com.kbe5.infra.firebase.dto.UpdateFcmTokenRequest;
 import com.kbe5.domain.manager.entity.Manager;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

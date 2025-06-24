@@ -1,7 +1,7 @@
 package com.kbe5.api.domain.cycleinfosummary.controller;
 
 
-import com.kbe5.domain.commonservice.cycleinfosummary.dto.CycleInfoSummaryResponse;
+import com.kbe5.api.domain.cycleinfosummary.dto.CycleInfoSummaryResponse;
 import com.kbe5.api.domain.cycleinfosummary.service.CycleInfoSummaryService;
 import com.kbe5.common.apiresponse.ResEntityFactory;
 import com.kbe5.common.response.api.ApiResponse;

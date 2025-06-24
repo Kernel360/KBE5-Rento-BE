@@ -1,7 +1,7 @@
 package com.kbe5.api.domain.cycleinfosummary.service;
 
 
-import com.kbe5.domain.commonservice.cycleinfosummary.dto.CycleInfoSummaryResponse;
+import com.kbe5.api.domain.cycleinfosummary.dto.CycleInfoSummaryResponse;
 import com.kbe5.common.exception.DomainException;
 import com.kbe5.common.exception.ErrorType;
 import com.kbe5.domain.cycleinfosummary.entity.CycleInfoSummary;
