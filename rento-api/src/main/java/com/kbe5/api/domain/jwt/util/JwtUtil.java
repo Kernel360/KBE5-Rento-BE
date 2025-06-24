@@ -165,7 +165,9 @@ public class JwtUtil {
     private String maskJwtInfo(MaskCategory category, String value) {
         if (category == MaskCategory.LOGIN_ID) {
             return value.substring(0, 3) + "*".repeat(4);
-        } else if (category == MaskCategory.EMAIL) {
+        }
+
+        if (category == MaskCategory.EMAIL) {
             int atIndex = value.indexOf("@");
             if (atIndex <= 0) return "****";
 
@@ -174,6 +176,7 @@ public class JwtUtil {
 
             return idPart.charAt(0) + "***" + domainPart;
         }
+
         return value;
     }
 }
