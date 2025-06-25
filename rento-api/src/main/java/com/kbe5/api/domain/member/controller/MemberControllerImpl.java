@@ -73,10 +73,6 @@ public class MemberControllerImpl implements MemberController {
                 .stream()
                 .map(MemberInfoResponse::from)
                 .toList()
-//        return ResEntityFactory.toResponse(ApiResultCode.SUCCESS, memberService.getMemberList(companyCode)
-//                .stream()
-//                .map(MemberInfoResponse::from)
-//                .toList()
         );
     }
 
