@@ -1,5 +1,7 @@
 package com.kbe5.common.util;
 
+import com.kbe5.common.exception.DomainException;
+import com.kbe5.common.exception.ErrorType;
 import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -32,7 +34,7 @@ public class Aes256Util {
 
             return Base64.encodeBase64String(encrypted);
         } catch (GeneralSecurityException e) {
-            throw new RuntimeException("암호화 중 오류 발생", e);
+            throw new DomainException(ErrorType.FAILED_DECRYPT);
         }
     }
 
@@ -46,7 +48,7 @@ public class Aes256Util {
 
             return new String(decrypted, StandardCharsets.UTF_8);
         } catch (GeneralSecurityException e) {
-            throw new RuntimeException("복호화 중 오류 발생", e);
+            throw new DomainException(ErrorType.FAILED_DECRYPT);
         }
     }
 }
