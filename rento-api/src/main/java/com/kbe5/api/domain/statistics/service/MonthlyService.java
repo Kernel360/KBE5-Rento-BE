@@ -105,7 +105,11 @@ public class MonthlyService {
 
         int totalDrivingCnt = monthlyDrives.size();
 
-        double avgSpeed = Math.round((double)totalDistance / (totalDrivingTime/60.0));
+        double totalDistanceKm = totalDistance / 1000.0;
+        double totalDrivingTimeHours = totalDrivingTime / 60.0;
+
+        double avgSpeed = totalDrivingTimeHours > 0 ? totalDistanceKm / totalDrivingTimeHours : 0.0;
+        avgSpeed = Math.round(avgSpeed * 10) / 10.0; // 소수점 1자리 반올림
 
         long businessCnt = monthlyDrives.stream()
                 .mapToLong(drive -> DriveType.BUSINESS.equals(drive.getDriveType()) ? 1 : 0)
