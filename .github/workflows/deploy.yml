@@ -88,6 +88,7 @@ jobs:
               --network mynet \
               -p 8080:8080 \
               -v /home/ubuntu/firebase:/app/firebase \
+              -v /home/ubuntu/log/api:/app/log/api \
               -e SPRING_PROFILES_ACTIVE=deploy \
               -e FIREBASE_PATH="/app/firebase/rento-firebase.json" \
               -e DB_HOST="\$DB_HOST" -e DB_PORT="\$DB_PORT" \
@@ -106,6 +107,7 @@ jobs:
               --network mynet \
               -p 8081:8081 \
               -v /home/ubuntu/firebase:/app/firebase \
+              -v /home/ubuntu/log/adapter:/app/log/adapter \
               -e SPRING_PROFILES_ACTIVE=deploy \
               -e FIREBASE_PATH="/app/firebase/rento-firebase.json" \
               -e DB_HOST="\$DB_HOST" -e DB_PORT="\$DB_PORT" \
