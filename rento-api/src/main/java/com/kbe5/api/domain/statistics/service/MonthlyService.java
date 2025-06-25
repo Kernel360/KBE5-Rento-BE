@@ -1,12 +1,9 @@
 package com.kbe5.api.domain.statistics.service;
 
-import com.kbe5.api.domain.statistics.dto.MonthlyStatsRequest;
 import com.kbe5.domain.drive.entity.Drive;
 import com.kbe5.domain.drive.entity.DriveStatus;
 import com.kbe5.domain.drive.entity.DriveType;
 import com.kbe5.domain.drive.repository.DriveRepository;
-import com.kbe5.domain.exception.DomainException;
-import com.kbe5.domain.exception.ErrorType;
 import com.kbe5.domain.statistics.entity.MonthlyStats;
 import com.kbe5.domain.statistics.repository.MonthlyStatsRepository;
 import lombok.RequiredArgsConstructor;
@@ -29,10 +26,7 @@ public class MonthlyService {
     private final DriveRepository driveRepository;
 
     @Transactional(readOnly = true)
-    public Optional<MonthlyStats> getStats(MonthlyStatsRequest monthlyStatsRequest) {
-        String companyCode = monthlyStatsRequest.companyCode();
-        int year = monthlyStatsRequest.year();
-        int month = monthlyStatsRequest.month();
+    public Optional<MonthlyStats> getStats(String companyCode, int year, int month) {
 
         return monthlyStatsRepository.findByCompanyCodeAndYearAndMonth(companyCode, year, month);
     }
