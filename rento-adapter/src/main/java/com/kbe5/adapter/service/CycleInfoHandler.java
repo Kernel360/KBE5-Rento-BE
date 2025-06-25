@@ -1,7 +1,7 @@
 package com.kbe5.adapter.service;
 
 
-import com.kbe5.domain.commonservice.StreamService;
+import com.kbe5.adapter.amqp.StreamSender;
 import com.kbe5.domain.event.entity.CycleEvent;
 import com.kbe5.domain.event.entity.CycleInfo;
 import com.kbe5.domain.event.entity.Event;
@@ -24,8 +24,7 @@ public class CycleInfoHandler implements EventHandler {
 
     private final CycleInfoRepository cycleInfoRepository;
 
-    private final StreamService streamService;
-
+    private final StreamSender streamSender;
 
     @Override
     public EventType getEventType() {
@@ -40,6 +39,13 @@ public class CycleInfoHandler implements EventHandler {
 
         eventRepository.save(cycleEvent);
 
+        if (isNotNullAndNotEmpty(cycleInfo)){
+            cycleInfoRepository.bulkInsert(cycleInfo);
+
+            // 스트리밍 큐에 메시지 발행
+            log.info("스트림 큐로 메시지 발행 시작");
+            cycleInfo.forEach(streamSender::send);
+        }
     }
 
     private boolean isNotNullAndNotEmpty(List<CycleInfo> cycleInfo) {

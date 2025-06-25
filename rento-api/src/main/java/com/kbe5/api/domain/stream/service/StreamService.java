@@ -1,12 +1,16 @@
-package com.kbe5.domain.commonservice;
+package com.kbe5.api.domain.stream.service;
 
-
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.kbe5.domain.event.entity.CycleInfo;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.http.MediaType;
+import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
@@ -28,12 +32,23 @@ public class StreamService {
     // Heartbeat을 위한 스케줄러 -> 살아있는지 확인용으로 쓰레드 하나 잡아야함?
     private final ScheduledExecutorService heartbeatScheduler = Executors.newScheduledThreadPool(1);
 
+    private final ObjectMapper objectMapper = new ObjectMapper()
+            .registerModule(new JavaTimeModule())
+            .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+
+
+    /**
+     * 연결 유지를 위해 핑 보내기
+     */
     @PostConstruct
     public void initHeartbeat() {
         // 30초마다 heartbeat 전송(일반적임 길면 안좋고, 짧아도 안좋음) -> 30초는 타임 아웃이랑 겹칠수도 있어서 15~20초가 적당하다는데?
         heartbeatScheduler.scheduleAtFixedRate(this::sendHeartbeat, 15, 15, TimeUnit.SECONDS);
     }
 
+    /**
+     * 핑을 위한 스레드 정리
+     */
     @PreDestroy
     public void cleanup() {
         heartbeatScheduler.shutdown();
@@ -47,6 +62,14 @@ public class StreamService {
         }
     }
 
+    @RabbitListener(
+            queues = "cycle-info-stream",
+            containerFactory = "rabbitListenerContainerFactory")
+    public void receiveAndPush(@Payload CycleInfo cycleInfo) {
+        log.debug("스트림 큐 수신: {}", cycleInfo);
+        pushToAllManagers(cycleInfo);
+    }
+
     /**
      * 매니저별 구독
      */
@@ -57,13 +80,13 @@ public class StreamService {
         managerEmitters
                 .computeIfAbsent(managerId, _ -> new CopyOnWriteArrayList<>())
                 .add(emitter);
-        log.info("Subscribed to manager id: {}", managerId);
-        log.info("Subscribed to manager: {}", managerEmitters);
+        log.info("매니저 id: {}", managerId);
+        log.info("구독 중인 매니저: {}", managerEmitters);
         // 연결 해제 시 정리
         emitter.onCompletion(() -> removeManagerEmitter(emitter, managerId));
         emitter.onTimeout(() -> removeManagerEmitter(emitter, managerId));
         emitter.onError(throwable -> {
-            log.error("SSE error for manager {}: {}", managerId, throwable.getMessage());
+            log.error("연결 끊긴 매니저 {}: {}", managerId, throwable.getMessage());
             removeManagerEmitter(emitter, managerId);
         });
 
@@ -73,29 +96,9 @@ public class StreamService {
                     .name("connected")
                     .data("Connected to stream"));
         } catch (Exception e) {
-            log.error("Failed to send initial message to manager {}: {}", managerId, e.getMessage());
+            log.error("발송 안된 매니저 {}: {}", managerId, e.getMessage());
             removeManagerEmitter(emitter, managerId);
         }
-
-        return emitter;
-    }
-
-    /**
-     * 특정 drive 구독
-     */
-    public SseEmitter subscribeForDrive(Long driveId) {
-        SseEmitter emitter = new SseEmitter(0L);
-
-        driveEmitters
-                .computeIfAbsent(driveId, _ -> new CopyOnWriteArrayList<>())
-                .add(emitter);
-
-        emitter.onCompletion(() -> removeDriveEmitter(emitter, driveId));
-        emitter.onTimeout(() -> removeDriveEmitter(emitter, driveId));
-        emitter.onError(throwable -> {
-            log.error("SSE error for drive {}: {}", driveId, throwable.getMessage());
-            removeDriveEmitter(emitter, driveId);
-        });
 
         return emitter;
     }
@@ -104,7 +107,6 @@ public class StreamService {
      * 모든 매니저에게 브로드캐스트 -> 추후 해당 업체의 매니저들에게만 주도록 수정
      */
     public void pushToAllManagers(CycleInfo cycleInfo) {
-        log.info("매니저 인포 사이즈: {}", managerEmitters);
         managerEmitters.forEach((managerId, _) -> {
             pushToManager(managerId, cycleInfo);
         });
@@ -114,7 +116,6 @@ public class StreamService {
      * 특정 매니저에게만 전송
      */
     public void pushToManager(Long managerId, CycleInfo cycleInfo) {
-        log.info("매니저 인포 사이즈: {}", managerEmitters.get(managerId));
         List<SseEmitter> emitters = managerEmitters.get(managerId);
         if (emitters == null || emitters.isEmpty()) {
             return;
@@ -124,20 +125,23 @@ public class StreamService {
 
         for (SseEmitter emitter : emitters) {
             try {
+                // 명시적으로 JSON 직렬화
+                String jsonData = objectMapper.writeValueAsString(cycleInfo);
+
                 emitter.send(SseEmitter.event()
                         .name("cycle-info")
-                        .data(cycleInfo, MediaType.APPLICATION_JSON));
-                log.debug("SSE sent to manager {}: {}", managerId, cycleInfo);
+                        .data(jsonData, MediaType.APPLICATION_JSON));
+                log.debug("매니저에게 발송 {}: {}", managerId, jsonData); // JSON 확인용
             } catch (IOException e) {
-                log.warn("Failed to send SSE to manager {}: {}", managerId, e.getMessage());
+                log.warn("발송 실패 매니저 {}: {}", managerId, e.getMessage());
                 deadEmitters.add(emitter);
             } catch (Exception e) {
-                log.error("Unexpected error sending SSE to manager {}: {}", managerId, e.getMessage());
+                log.error("서버 오류로 인한 발송 실패 매니저 {}: {}", managerId, e.getMessage());
                 deadEmitters.add(emitter);
             }
         }
 
-        // 실패한 emitter들 제거
+        // 실패한 매니저들 제거
         emitters.removeAll(deadEmitters);
         if (emitters.isEmpty()) {
             managerEmitters.remove(managerId);
@@ -145,38 +149,7 @@ public class StreamService {
     }
 
     /**
-     * 특정 drive에 관심있는 클라이언트들에게 전송
-     */
-    public void pushToDrive(Long driveId, CycleInfo cycleInfo) {
-        List<SseEmitter> emitters = driveEmitters.get(driveId);
-        if (emitters == null || emitters.isEmpty()) {
-            return;
-        }
-
-        List<SseEmitter> deadEmitters = new ArrayList<>();
-
-        for (SseEmitter emitter : emitters) {
-            try {
-                emitter.send(SseEmitter.event()
-                        .name("drive-cycle-info")
-                        .data(cycleInfo, MediaType.APPLICATION_JSON));
-            } catch (IOException e) {
-                log.warn("Failed to send SSE to drive {}: {}", driveId, e.getMessage());
-                deadEmitters.add(emitter);
-            } catch (Exception e) {
-                log.error("Unexpected error sending SSE to drive {}: {}", driveId, e.getMessage());
-                deadEmitters.add(emitter);
-            }
-        }
-
-        emitters.removeAll(deadEmitters);
-        if (emitters.isEmpty()) {
-            driveEmitters.remove(driveId);
-        }
-    }
-
-    /**
-     * 매니저 emitter 제거
+     * 연결 끊긴 매니저 emitter 제거
      */
     private void removeManagerEmitter(SseEmitter emitter, Long managerId) {
         List<SseEmitter> emitters = managerEmitters.get(managerId);
@@ -186,36 +159,7 @@ public class StreamService {
                 managerEmitters.remove(managerId);
             }
         }
-        log.debug("Removed SSE connection for manager: {}", managerId);
-    }
-
-    /**
-     * Drive emitter 제거
-     */
-    private void removeDriveEmitter(SseEmitter emitter, Long driveId) {
-        List<SseEmitter> emitters = driveEmitters.get(driveId);
-        if (emitters != null) {
-            emitters.remove(emitter);
-            if (emitters.isEmpty()) {
-                driveEmitters.remove(driveId);
-            }
-        }
-        log.debug("Removed SSE connection for drive: {}", driveId);
-    }
-
-    /**
-     * 현재 연결된 클라이언트 수 조회
-     */
-    public int getManagerConnectionCount() {
-        return managerEmitters.values().stream()
-                .mapToInt(List::size)
-                .sum();
-    }
-
-    public int getDriveConnectionCount() {
-        return driveEmitters.values().stream()
-                .mapToInt(List::size)
-                .sum();
+        log.debug("연결 끊긴 매니저: {}", managerId);
     }
 
     /**
@@ -223,7 +167,6 @@ public class StreamService {
      */
     private void sendHeartbeat() {
         sendHeartbeatToManagers();
-        sendHeartbeatToDrives();
     }
 
     /**
@@ -241,10 +184,10 @@ public class StreamService {
                             .name("heartbeat")
                             .data("ping"));
                 } catch (IOException e) {
-                    log.debug("Heartbeat failed for manager {}: {}", managerId, e.getMessage());
+                    log.debug("핑 보내기 실패 매니저 {}: {}", managerId, e.getMessage());
                     deadEmitters.add(emitter);
                 } catch (Exception e) {
-                    log.warn("Unexpected error during heartbeat for manager {}: {}", managerId, e.getMessage());
+                    log.warn("서버 오류로 핑보내기 실패 매니저 {}: {}", managerId, e.getMessage());
                     deadEmitters.add(emitter);
                 }
             }
@@ -260,43 +203,7 @@ public class StreamService {
         managersToRemove.forEach(managerEmitters::remove);
 
         if (!managersToRemove.isEmpty()) {
-            log.info("Removed {} inactive manager connections during heartbeat", managersToRemove.size());
-        }
-    }
-
-    /**
-     * Drive 구독자들에게 heartbeat 전송
-     */
-    private void sendHeartbeatToDrives() {
-        List<Long> drivesToRemove = new ArrayList<>();
-
-        driveEmitters.forEach((driveId, emitters) -> {
-            List<SseEmitter> deadEmitters = new ArrayList<>();
-
-            for (SseEmitter emitter : emitters) {
-                try {
-                    emitter.send(SseEmitter.event()
-                            .name("heartbeat")
-                            .data("ping"));
-                } catch (IOException e) {
-                    log.debug("Heartbeat failed for drive {}: {}", driveId, e.getMessage());
-                    deadEmitters.add(emitter);
-                } catch (Exception e) {
-                    log.warn("Unexpected error during heartbeat for drive {}: {}", driveId, e.getMessage());
-                    deadEmitters.add(emitter);
-                }
-            }
-
-            emitters.removeAll(deadEmitters);
-            if (emitters.isEmpty()) {
-                drivesToRemove.add(driveId);
-            }
-        });
-
-        drivesToRemove.forEach(driveEmitters::remove);
-
-        if (!drivesToRemove.isEmpty()) {
-            log.info("Removed {} inactive drive connections during heartbeat", drivesToRemove.size());
+            log.info("핑 안보내지는 매니저 size { }", managersToRemove.size());
         }
     }
 }
