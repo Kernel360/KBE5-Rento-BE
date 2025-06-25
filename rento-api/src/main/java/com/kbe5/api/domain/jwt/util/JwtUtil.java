@@ -1,10 +1,11 @@
 package com.kbe5.api.domain.jwt.util;
 
 import com.kbe5.api.domain.jwt.dto.JwtManagerArgumentDto;
-import com.kbe5.api.domain.jwt.enums.MaskCategory;
+import com.kbe5.api.domain.jwt.dto.request.PayloadDecryptRequest;
+import com.kbe5.api.domain.jwt.dto.response.PayloadDecryptResponse;
 import com.kbe5.common.exception.DomainException;
 import com.kbe5.common.exception.ErrorType;
-import com.kbe5.common.response.error.ErrorResponse;
+import com.kbe5.common.util.Aes256Util;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
@@ -13,6 +14,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Component;
@@ -21,7 +23,6 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
-import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
@@ -29,12 +30,15 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 public class JwtUtil {
 
+    @Value("${JWT_KEY}")
+    private String jwtKey;
     private SecretKey secretKey;
     private final RedisTemplate<String, String> redisTemplate;
+    private final Aes256Util aes256Util;
 
     @PostConstruct
     public void init() {
-        this.secretKey = new SecretKeySpec(JwtProperties.JWT_TOKEN.getBytes(StandardCharsets.UTF_8),
+        this.secretKey = new SecretKeySpec(jwtKey.getBytes(StandardCharsets.UTF_8),
                 Jwts.SIG.HS256.key().build().getAlgorithm());
     }
 
@@ -102,12 +106,10 @@ public class JwtUtil {
         return Jwts.builder()
                 .claim("category", category)
                 .claim("uuid", dto.uuid())
-                .claim("loginId", maskJwtInfo(MaskCategory.LOGIN_ID, dto.loginId()))
+                .claim("loginId", aes256Util.AES_Encode(dto.loginId()))
                 .claim("role", dto.role())
-                .claim("companyId", dto.companyId())
                 .claim("companyCode", dto.companyCode())
-                .claim("email", maskJwtInfo(MaskCategory.EMAIL, dto.email()))
-                .claim("name", dto.name())
+                .claim("email", aes256Util.AES_Encode(dto.email()))
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + expiredMs))
                 .signWith(secretKey)
@@ -162,21 +164,7 @@ public class JwtUtil {
         return valueOperations.get(uuid);
     }
 
-    private String maskJwtInfo(MaskCategory category, String value) {
-        if (category == MaskCategory.LOGIN_ID) {
-            return value.substring(0, 3) + "*".repeat(4);
-        }
-
-        if (category == MaskCategory.EMAIL) {
-            int atIndex = value.indexOf("@");
-            if (atIndex <= 0) return "****";
-
-            String idPart = value.substring(0, atIndex);
-            String domainPart = value.substring(atIndex);
-
-            return idPart.charAt(0) + "***" + domainPart;
-        }
-
-        return value;
+    public PayloadDecryptResponse getDecryptData(PayloadDecryptRequest request) {
+        return new PayloadDecryptResponse(aes256Util.AES_Decode(request.claim()));
     }
 }

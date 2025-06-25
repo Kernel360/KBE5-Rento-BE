@@ -4,6 +4,7 @@ import com.kbe5.api.domain.manager.dto.details.CustomManagerDetails;
 import com.kbe5.api.domain.manager.service.CustomMangerDetailsService;
 import com.kbe5.common.exception.ErrorType;
 import com.kbe5.common.response.error.ErrorResponse;
+import com.kbe5.common.util.Aes256Util;
 import com.kbe5.domain.manager.respository.ManagerRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -22,10 +23,12 @@ public class JwtFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
     private final ManagerRepository managerRepository;
+    private final Aes256Util aes256Util;
 
-    public JwtFilter(JwtUtil jwtUtil, ManagerRepository managerRepository) {
+    public JwtFilter(JwtUtil jwtUtil, ManagerRepository managerRepository, Aes256Util aes256Util) {
         this.jwtUtil = jwtUtil;
         this.managerRepository = managerRepository;
+        this.aes256Util = aes256Util;
     }
 
     @Override
@@ -52,7 +55,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
         CustomManagerDetails customManagerDetails =
                 (CustomManagerDetails) new CustomMangerDetailsService(managerRepository)
-                        .loadUserByUsername(jwtUtil.getLoginId(accessToken));
+                        .loadUserByUsername(aes256Util.AES_Decode(jwtUtil.getLoginId(accessToken)));
 
         Authentication authToken = new UsernamePasswordAuthenticationToken(
                 customManagerDetails, null, customManagerDetails.getAuthorities());

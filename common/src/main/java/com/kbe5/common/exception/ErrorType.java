@@ -59,7 +59,10 @@ public enum ErrorType {
     INVALID_DATE_FORMAT(HttpStatus.BAD_REQUEST, "지원하지 않는 날짜 형식입니다."),
 
     // Redis
-    FAILED_DELETE_FROM_REDIS(HttpStatus.INTERNAL_SERVER_ERROR, "로그아웃 처리 중 서버 오류가 발생했습니다.");
+    FAILED_DELETE_FROM_REDIS(HttpStatus.INTERNAL_SERVER_ERROR, "로그아웃 처리 중 서버 오류가 발생했습니다."),
+
+    // AES256
+    FAILED_DECRYPT(HttpStatus.INTERNAL_SERVER_ERROR, "암호화 중 에러가 발생했습니다.");
 
     private final HttpStatus status;
     private final String message;
