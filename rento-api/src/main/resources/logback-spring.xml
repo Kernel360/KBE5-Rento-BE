@@ -9,20 +9,17 @@
     <springProfile name="local">
         <!--console info 이상 -->
         <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
-            <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-                <level>INFO</level>
-            </filter>
             <encoder>
                 <pattern>${CONSOLE_LOG_PATTERN}</pattern>
             </encoder>
         </appender>
 
-        <!--file warn 이상-->
-        <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-            <file>./log/api/app.log</file>
+        <!-- WARN레벨 appender-->
+        <appender name="FILE_WARN" class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <file>./log/api/external-warn.log</file>
             <append>true</append>
             <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-                <fileNamePattern>./log/api/%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+                <fileNamePattern>./log/api/external-warn.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
                 <maxFileSize>25MB</maxFileSize>
                 <maxHistory>30</maxHistory>
             </rollingPolicy>
@@ -34,44 +31,84 @@
             </encoder>
         </appender>
 
+        <!-- TRACE레벨 appender (오직 com.kbe5 전용) -->
+        <appender name="FILE_TRACE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <file>./log/api/app-trace.log</file>
+            <append>true</append>
+            <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+                <fileNamePattern>./log/api/app-trace.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+                <maxFileSize>25MB</maxFileSize>
+                <maxHistory>30</maxHistory>
+            </rollingPolicy>
+            <encoder>
+                <pattern>${FILE_LOG_PATTERN}</pattern>
+            </encoder>
+        </appender>
+
+        <logger name="com.kbe5" level="TRACE" additivity="false">
+            <appender-ref ref="FILE_TRACE"/>
+        </logger>
+
+        <root level="WARN">
+            <appender-ref ref="FILE_WARN"/>
+        </root>
+
         <root level="INFO">
             <appender-ref ref="CONSOLE"/>
-            <appender-ref ref="FILE"/>
         </root>
+
     </springProfile>
 
     <!--배포 프로파일-->
     <springProfile name="deploy">
         <!--console info 이상 -->
         <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
-            <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-                <level>WARN</level>
-            </filter>
             <encoder>
                 <pattern>${CONSOLE_LOG_PATTERN}</pattern>
             </encoder>
         </appender>
 
-        <!--file warn 이상-->
-        <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-            <file>./log/api/app.log</file>
+        <!-- WARN레벨 appender-->
+        <appender name="FILE_WARN" class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <file>./log/api/external-warn.log</file>
             <append>true</append>
             <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-                <fileNamePattern>./log/api/%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+                <fileNamePattern>./log/api/external-warn.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
                 <maxFileSize>25MB</maxFileSize>
                 <maxHistory>30</maxHistory>
             </rollingPolicy>
             <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-                <level>TRACE</level>
+                <level>WARN</level>
             </filter>
             <encoder>
                 <pattern>${FILE_LOG_PATTERN}</pattern>
             </encoder>
         </appender>
 
-        <root level="TRACE">
+        <!-- TRACE레벨 appender (오직 com.kbe5 전용) -->
+        <appender name="FILE_TRACE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <file>./log/api/app-trace.log</file>
+            <append>true</append>
+            <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+                <fileNamePattern>./log/api/app-trace.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+                <maxFileSize>25MB</maxFileSize>
+                <maxHistory>30</maxHistory>
+            </rollingPolicy>
+            <encoder>
+                <pattern>${FILE_LOG_PATTERN}</pattern>
+            </encoder>
+        </appender>
+
+        <logger name="com.kbe5" level="TRACE" additivity="false">
+            <appender-ref ref="FILE_TRACE"/>
+        </logger>
+
+        <root level="WARN">
+            <appender-ref ref="FILE_WARN"/>
+        </root>
+
+        <root level="WARN">
             <appender-ref ref="CONSOLE"/>
-            <appender-ref ref="FILE"/>
         </root>
 
     </springProfile>
