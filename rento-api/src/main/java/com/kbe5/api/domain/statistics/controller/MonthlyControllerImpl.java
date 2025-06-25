@@ -14,14 +14,19 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/monthly")
-public class MonthlyControllerImpl {
+public class MonthlyControllerImpl implements MonthlyController {
     private final MonthlyService monthlyService;
 
     @GetMapping("/stats")
-    public ResponseEntity<ApiResponse<MonthlyStatsResponse>> getStats(@RequestBody MonthlyStatsRequest request) {
+    public ResponseEntity<ApiResponse<MonthlyStatsResponse>> getStats(
+            @RequestParam String companyCode,
+            @RequestParam int year,
+            @RequestParam int month) {
 
-        return ResEntityFactory.toResponse(ApiResultCode.SUCCESS,
-                MonthlyStatsResponse.fromEntity(monthlyService.getStats(request)));
+        MonthlyStatsRequest request = new MonthlyStatsRequest(companyCode, year, month);
 
+        return monthlyService.getStats(request)
+                .map(stats -> ResEntityFactory.toResponse(ApiResultCode.SUCCESS, MonthlyStatsResponse.fromEntity(stats)))
+                .orElse(ResponseEntity.noContent().build()); // 204 No Content
     }
 }

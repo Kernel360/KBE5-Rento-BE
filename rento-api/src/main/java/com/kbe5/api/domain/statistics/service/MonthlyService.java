@@ -29,13 +29,12 @@ public class MonthlyService {
     private final DriveRepository driveRepository;
 
     @Transactional(readOnly = true)
-    public MonthlyStats getStats(MonthlyStatsRequest monthlyStatsRequest) {
+    public Optional<MonthlyStats> getStats(MonthlyStatsRequest monthlyStatsRequest) {
         String companyCode = monthlyStatsRequest.companyCode();
         int year = monthlyStatsRequest.year();
         int month = monthlyStatsRequest.month();
 
-        return monthlyStatsRepository.findByCompanyCodeAndYearAndMonth(companyCode, year, month)
-                .orElseThrow(()->new DomainException(ErrorType.MONTHLY_STAT_NOT_FOUND));
+        return monthlyStatsRepository.findByCompanyCodeAndYearAndMonth(companyCode, year, month);
     }
 
     @Transactional
