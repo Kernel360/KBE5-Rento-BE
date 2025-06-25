@@ -70,10 +70,10 @@
 
         <!-- WARN레벨 appender-->
         <appender name="FILE_WARN" class="ch.qos.logback.core.rolling.RollingFileAppender">
-            <file>./log/api/external-warn.log</file>
+            <file>/app/log/api/external-warn.log</file>
             <append>true</append>
             <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-                <fileNamePattern>./log/api/external-warn.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+                <fileNamePattern>/app/log/api/external-warn.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
                 <maxFileSize>25MB</maxFileSize>
                 <maxHistory>30</maxHistory>
             </rollingPolicy>
@@ -87,10 +87,10 @@
 
         <!-- TRACE레벨 appender (오직 com.kbe5 전용) -->
         <appender name="FILE_TRACE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-            <file>./log/api/app-trace.log</file>
+            <file>/app/log/api/app-trace.log</file>
             <append>true</append>
             <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-                <fileNamePattern>./log/api/app-trace.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+                <fileNamePattern>/app/log/api/app-trace.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
                 <maxFileSize>25MB</maxFileSize>
                 <maxHistory>30</maxHistory>
             </rollingPolicy>
