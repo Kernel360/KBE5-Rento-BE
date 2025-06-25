@@ -9,10 +9,10 @@ import com.kbe5.domain.exception.DomainException;
 import com.kbe5.domain.exception.ErrorType;
 import com.kbe5.domain.statistics.entity.MonthlyStats;
 import com.kbe5.domain.statistics.repository.MonthlyStatsRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
 import java.time.YearMonth;
@@ -28,6 +28,7 @@ public class MonthlyService {
     private final MonthlyStatsRepository monthlyStatsRepository;
     private final DriveRepository driveRepository;
 
+    @Transactional(readOnly = true)
     public MonthlyStats getStats(MonthlyStatsRequest monthlyStatsRequest) {
         String companyCode = monthlyStatsRequest.companyCode();
         int year = monthlyStatsRequest.year();
@@ -74,11 +75,20 @@ public class MonthlyService {
                     companyCode, yearMonth.getYear(), yearMonth.getMonthValue()
             );
 
+            YearMonth now = YearMonth.now();
+
             if (existingStats.isPresent()) {
-                //이미 값이 있으면 그냥 건너뛰기
-                log.info("회사 {} 의 {}/{} 통계 이미 존재, 건너뜀", companyCode, yearMonth.getYear(), yearMonth.getMonthValue());
+                if(yearMonth.equals(now)) {
+                    //현재 달이면 덮어쓰기
+                    MonthlyStats stats = existingStats.get();
+                    stats.update(newStats);
+                    log.info("회사 {}의 {}/{} 통계 갱신 완료", companyCode, yearMonth.getYear(), yearMonth.getMonthValue());
+                } else {
+                    //과거 달이면 건너뛰기
+                    log.info("회사 {} 의 {}/{} 통계 이미 존재(과거), 갱신 안함", companyCode, yearMonth.getYear(), yearMonth.getMonthValue());
+                }
             } else {
-                // 없으면 생성
+                // 없으면 생성 (현재든 과거든)
                 monthlyStatsRepository.save(newStats);
                 log.info("회사 {} 의 {}/{} 통계 생성 완료", companyCode, yearMonth.getYear(), yearMonth.getMonthValue());
             }

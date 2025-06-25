@@ -1,8 +1,5 @@
 package com.kbe5.api.domain.statistics.service;
 
-
-import com.kbe5.domain.event.repository.CycleInfoRepository;
-import com.kbe5.domain.event.repository.EventRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
