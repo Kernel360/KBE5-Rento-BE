@@ -116,4 +116,6 @@ jobs:
               -e AES_KEY="${{ secrets.AES_KEY }}" \
               -e JWT_KEY="${{ secrets.JWT_KEY }}" \
               ${{ secrets.ECR_REPOSITORY_ADAPTER }}:latest
+
+            docker image prune -f
           EOF
