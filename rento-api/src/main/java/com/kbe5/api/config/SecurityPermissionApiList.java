@@ -28,7 +28,7 @@ public class SecurityPermissionApiList {
             "/api/managers/logout",
 
             // refresh
-            "/api/managers/refresh",
+            "/api/tokens/refresh",
 
             // device
             "/api/devices", //regiset
