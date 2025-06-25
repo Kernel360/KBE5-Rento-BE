@@ -51,7 +51,10 @@ public enum ErrorType {
     CYCLEINFO_NOT_FOUND(HttpStatus.NOT_FOUND, "주기 정보가 없습니다."),
 
     //FCM
-    FCM_FAILED(HttpStatus.BAD_REQUEST, "FCM 알림 전송에 실패하였습니다");
+    FCM_FAILED(HttpStatus.BAD_REQUEST, "FCM 알림 전송에 실패하였습니다"),
+
+    //MonthlyStat
+    MONTHLY_STAT_NOT_FOUND(HttpStatus.NOT_FOUND, "월별 통계를 찾을 수 없습니다");
 
     private final HttpStatus status;
     private final String message;
