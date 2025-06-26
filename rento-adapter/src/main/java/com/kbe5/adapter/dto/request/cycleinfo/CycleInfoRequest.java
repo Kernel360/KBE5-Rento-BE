@@ -64,7 +64,7 @@ public record CycleInfoRequest(
     public CycleInfo of(LocalDateTime oTime, Long mdn, DeviceToken deviceToken) {
         return CycleInfo.builder()
             .cycleInfoTime(oTime.plusSeconds(this.sec()))
-            .mdn(deviceToken.getMdn())
+            .mdn(mdn)
             .driveId(deviceToken.getDriveId())
             .sec(this.sec())
             .gpsCondition(this.gpsCondition())
