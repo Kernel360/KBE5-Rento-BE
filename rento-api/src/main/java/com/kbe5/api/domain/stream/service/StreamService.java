@@ -77,7 +77,7 @@ public class StreamService {
 
         // 매니저별 리스트에만 추가
         managerEmitters
-                .computeIfAbsent(managerId, _ -> new CopyOnWriteArrayList<>())
+                .computeIfAbsent(managerId, __ -> new CopyOnWriteArrayList<>())
                 .add(emitter);
         log.info("매니저 id: {}", managerId);
         log.info("구독 중인 매니저: {}", managerEmitters);
@@ -106,7 +106,7 @@ public class StreamService {
      * 모든 매니저에게 브로드캐스트 -> 추후 해당 업체의 매니저들에게만 주도록 수정
      */
     public void pushToAllManagers(CycleInfo cycleInfo) {
-        managerEmitters.forEach((managerId, _) -> {
+        managerEmitters.forEach((managerId, __) -> {
             pushToManager(managerId, cycleInfo);
         });
     }
