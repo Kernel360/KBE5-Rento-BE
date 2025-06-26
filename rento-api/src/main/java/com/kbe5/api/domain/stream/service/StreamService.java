@@ -20,8 +20,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.*;
 
-@Service
 @Slf4j
+@Service
 @RequiredArgsConstructor
 public class StreamService {
 
@@ -63,8 +63,7 @@ public class StreamService {
     }
 
     @RabbitListener(
-            queues = "cycle-info-stream",
-            containerFactory = "rabbitListenerContainerFactory")
+            queues = "cycle-info-stream")
     public void receiveAndPush(@Payload CycleInfo cycleInfo) {
         log.debug("스트림 큐 수신: {}", cycleInfo);
         pushToAllManagers(cycleInfo);

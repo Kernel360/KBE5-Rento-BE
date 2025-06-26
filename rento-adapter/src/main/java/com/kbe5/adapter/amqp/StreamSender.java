@@ -14,7 +14,7 @@ public class StreamSender {
     private final RabbitTemplate rabbitTemplate;
 
     public void send(CycleInfo ci) {
-        rabbitTemplate.convertAndSend("", "실시간 관제", ci);
+        rabbitTemplate.convertAndSend("", "cycle-info-stream", ci);
         log.debug("실시간 관제 데이터 보내기: {}", ci);
     }
 }

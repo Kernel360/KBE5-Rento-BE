@@ -72,7 +72,6 @@ public class SecurityConfig {
         // 인가 설정
         http.authorizeHttpRequests(auth -> auth
                 .requestMatchers(SecurityPermissionApiList.PUBLIC_URLS).permitAll()
-                .requestMatchers(GET, "/api/stream/**").permitAll() // sse 서비스를 위해 풀어주기
                 .requestMatchers("/admin").hasRole("ADMIN") // 추 후 시스템 관리자 구현 및 권한 설정 시 사용
                 .anyRequest().authenticated());
 

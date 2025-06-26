@@ -7,6 +7,7 @@ import com.kbe5.api.domain.manager.service.CustomMangerDetailsService;
 import com.kbe5.api.domain.stream.service.StreamService;
 import com.kbe5.common.exception.DomainException;
 import com.kbe5.common.exception.ErrorType;
+import com.kbe5.common.util.Aes256Util;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
@@ -24,6 +25,8 @@ public class StreamController {
 
     private final StreamService streamService;
 
+    private final Aes256Util aes256Util;
+
     private final CustomMangerDetailsService customMangerDetailsService;
     private final JwtUtil jwtUtil;
 
@@ -34,11 +37,12 @@ public class StreamController {
         if (token == null || token.isBlank() ||
                 jwtUtil.isExpired(token) ||
                 !"access".equals(jwtUtil.getCategory(token))) {
-            throw new DomainException(ErrorType.INVALID_TOKEN);
+            throw new DomainException(ErrorType.EXPIRED_TOKEN_ACCESS);
         }
 
         // 토큰에서 loginId 꺼내서 UserDetails 로드
-        String loginId = jwtUtil.getLoginId(token);
+        String loginId = aes256Util.AES_Decode(jwtUtil.getLoginId(token));
+
         CustomManagerDetails userDetails =
                 (CustomManagerDetails) customMangerDetailsService.loadUserByUsername(loginId);
 

@@ -27,7 +27,10 @@ public class ApiRabbitConfig {
         Jackson2JsonMessageConverter converter = new Jackson2JsonMessageConverter(objectMapper);
 
         DefaultJackson2JavaTypeMapper typeMapper = new DefaultJackson2JavaTypeMapper();
-        typeMapper.setTrustedPackages("*"); // 운영 시에는 실제 패키지만 명시하세요.
+        typeMapper.setTrustedPackages(
+                "com.kbe5.adapter.amqp",
+                "com.kbe5.api.domain.stream"
+        );
         converter.setClassMapper(typeMapper);
 
         return converter;
