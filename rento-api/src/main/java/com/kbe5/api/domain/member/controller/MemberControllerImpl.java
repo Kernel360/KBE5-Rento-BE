@@ -14,6 +14,8 @@ import com.kbe5.domain.member.entity.Member;
 import com.kbe5.domain.member.entity.Position;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
@@ -65,15 +67,11 @@ public class MemberControllerImpl implements MemberController {
 
     @Override
     @GetMapping
-    public ResponseEntity<ApiResponse<List<MemberInfoResponse>>> getUsers(@RequestParam String companyCode) {
+    public ResponseEntity<ApiResponse<PagedModel<MemberInfoResponse>>> getUsers(@RequestParam String companyCode, Pageable pageable) {
         log.info("company code is : {}", companyCode);
-        List<Member> memberList = memberService.getMemberList(companyCode);
-        log.info("member size : {}",memberList.size());
-        return ResEntityFactory.toResponse(ApiResultCode.SUCCESS, memberList
-                .stream()
-                .map(MemberInfoResponse::from)
-                .toList()
-        );
+        return ResEntityFactory.toResponse(ApiResultCode.SUCCESS,
+                new PagedModel<>(memberService.getMemberList(companyCode, pageable)
+                .map(MemberInfoResponse::from)));
     }
 
     @Override
