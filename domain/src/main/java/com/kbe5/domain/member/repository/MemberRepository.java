@@ -1,6 +1,8 @@
 package com.kbe5.domain.member.repository;
 
 import com.kbe5.domain.member.entity.Member;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -8,7 +10,7 @@ import java.util.List;
 public interface MemberRepository extends JpaRepository<Member, Long> {
     List<Member> findAllByDepartmentId(Long id);
 
-    List<Member> findAllByCompanyId(Long id);
+    Page<Member> findAllByCompanyId(Long id, Pageable pageable);
     
     boolean existsByLoginId(String loginId);
 

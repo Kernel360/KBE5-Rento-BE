@@ -5,6 +5,8 @@ import com.kbe5.api.domain.member.dto.request.MemberRegisterRequest;
 import com.kbe5.api.domain.member.dto.request.MemberUpdateRequest;
 import com.kbe5.api.domain.member.dto.response.MemberInfoResponse;
 import com.kbe5.common.response.api.ApiResponse;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedModel;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
@@ -18,7 +20,7 @@ public interface MemberController {
     //사용자 삭제
     ResponseEntity<ApiResponse<String>> delete(CustomManagerDetails managerDetails, Long userId);
     //사용자 목록 조회
-    ResponseEntity<ApiResponse<List<MemberInfoResponse>>> getUsers(String company);
+    ResponseEntity<ApiResponse<PagedModel<MemberInfoResponse>>> getUsers(String company, Pageable pageable);
     //사용자 상세 조회
     ResponseEntity<ApiResponse<MemberInfoResponse>> getUser(Long userId);
 
