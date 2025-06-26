@@ -3,7 +3,6 @@
 
     <property name="CONSOLE_LOG_PATTERN" value="%green(%d{yyyy-MM-dd HH:mm:ss.SSS}) %magenta([%thread]) %highlight(%5level) %cyan(%logger) - %msg%n" />
     <property name="FILE_LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %5level %logger - %msg%n" />
-    <property name="FILE_NAME_PATTERN" value="./log/adapter/%d{yyyy-MM-dd}.%i.log" />
 
     <!--로컬 프로파일 -->
     <springProfile name="local">
@@ -13,45 +12,6 @@
                 <pattern>${CONSOLE_LOG_PATTERN}</pattern>
             </encoder>
         </appender>
-
-        <!-- WARN레벨 appender-->
-        <appender name="FILE_WARN" class="ch.qos.logback.core.rolling.RollingFileAppender">
-            <file>./log/adapter/external-warn.log</file>
-            <append>true</append>
-            <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-                <fileNamePattern>./log/adapter/external-warn.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
-                <maxFileSize>25MB</maxFileSize>
-                <maxHistory>30</maxHistory>
-            </rollingPolicy>
-            <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-                <level>WARN</level>
-            </filter>
-            <encoder>
-                <pattern>${FILE_LOG_PATTERN}</pattern>
-            </encoder>
-        </appender>
-
-        <!-- TRACE레벨 appender (오직 com.kbe5 전용) -->
-        <appender name="FILE_TRACE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-            <file>./log/adapter/app-trace.log</file>
-            <append>true</append>
-            <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-                <fileNamePattern>./log/adapter/app-trace.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
-                <maxFileSize>25MB</maxFileSize>
-                <maxHistory>30</maxHistory>
-            </rollingPolicy>
-            <encoder>
-                <pattern>${FILE_LOG_PATTERN}</pattern>
-            </encoder>
-        </appender>
-
-        <logger name="com.kbe5" level="TRACE" additivity="true">
-            <appender-ref ref="FILE_TRACE"/>
-        </logger>
-
-        <root level="WARN">
-            <appender-ref ref="FILE_WARN"/>
-        </root>
 
         <root level="INFO">
             <appender-ref ref="CONSOLE"/>
@@ -70,16 +30,14 @@
 
         <!-- WARN레벨 appender-->
         <appender name="FILE_WARN" class="ch.qos.logback.core.rolling.RollingFileAppender">
-            <file>/app/log/adapter/external-warn.log</file>
+            <file>/app/log/api/external-warn/external-warn.log</file>
             <append>true</append>
             <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-                <fileNamePattern>/app/log/adapter/external-warn.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
-                <maxFileSize>25MB</maxFileSize>
-                <maxHistory>30</maxHistory>
+                <fileNamePattern>/app/log/api/external-warn/external-warn.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+                <maxFileSize>50MB</maxFileSize>
+                <maxHistory>14</maxHistory>
+                <totalSizeCap>3GB</totalSizeCap>
             </rollingPolicy>
-            <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-                <level>WARN</level>
-            </filter>
             <encoder>
                 <pattern>${FILE_LOG_PATTERN}</pattern>
             </encoder>
@@ -87,12 +45,13 @@
 
         <!-- TRACE레벨 appender (오직 com.kbe5 전용) -->
         <appender name="FILE_TRACE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-            <file>/app/log/adapter/app-trace.log</file>
+            <file>/app/log/api/kbe5/app-trace.log</file>
             <append>true</append>
             <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-                <fileNamePattern>/app/log/adapter/app-trace.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+                <fileNamePattern>/app/log/api/kbe5/app-trace.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
                 <maxFileSize>25MB</maxFileSize>
-                <maxHistory>30</maxHistory>
+                <maxHistory>14</maxHistory>
+                <totalSizeCap>2GB</totalSizeCap>
             </rollingPolicy>
             <encoder>
                 <pattern>${FILE_LOG_PATTERN}</pattern>
@@ -105,9 +64,6 @@
 
         <root level="WARN">
             <appender-ref ref="FILE_WARN"/>
-        </root>
-
-        <root level="WARN">
             <appender-ref ref="CONSOLE"/>
         </root>
 
