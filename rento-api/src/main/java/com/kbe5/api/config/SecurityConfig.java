@@ -1,6 +1,7 @@
 package com.kbe5.api.config;
 
 
+import com.google.cloud.storage.HttpMethod;
 import com.kbe5.api.domain.jwt.device.DeviceTokenFilter;
 import com.kbe5.api.domain.jwt.util.JwtFilter;
 import com.kbe5.api.domain.jwt.util.JwtUtil;
@@ -27,6 +28,8 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
 import java.util.List;
+
+import static org.springframework.http.HttpMethod.GET;
 
 @Slf4j
 @Configuration

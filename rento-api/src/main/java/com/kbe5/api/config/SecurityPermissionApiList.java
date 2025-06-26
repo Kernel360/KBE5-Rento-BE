@@ -43,5 +43,8 @@ public class SecurityPermissionApiList {
             "/swagger-ui/index.html",
             "/v3/api-docs",
             "/v3/api-docs/**",
+
+            // stream
+            "/api/stream/**"
     };
 }

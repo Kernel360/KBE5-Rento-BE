@@ -45,7 +45,7 @@
             </encoder>
         </appender>
 
-        <logger name="com.kbe5" level="TRACE" additivity="false">
+        <logger name="com.kbe5" level="TRACE" additivity="true">
             <appender-ref ref="FILE_TRACE"/>
         </logger>
 
