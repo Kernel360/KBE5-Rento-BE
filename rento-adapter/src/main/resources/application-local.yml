@@ -36,6 +36,7 @@ spring:
       port: 6379
 
 server:
+  port: 8081
   tomcat:
     threads:
       max: 200
@@ -44,3 +45,4 @@ server:
 
 fcm:
   firebase_config_path: firebase/rento-f1d61-firebase-adminsdk-fbsvc-bd76cc388d.json
+

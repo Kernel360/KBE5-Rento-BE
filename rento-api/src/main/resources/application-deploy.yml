@@ -39,3 +39,6 @@ spring:
 
 fcm:
   firebase_config_path: ${FIREBASE_PATH}
+
+server:
+  port: 8080
