@@ -71,6 +71,7 @@ jobs:
             export REDIS_HOST="${{ secrets.REDIS_HOST }}"
             export REDIS_PORT="${{ secrets.REDIS_PORT }}"
             export RABBITMQ_HOST="${{ secrets.RABBITMQ_HOST }}"
+            export RABBITMQ_PORT="${{ secrets.RABBITMQ_PORT }}"
             export RABBITMQ_USER_NAME="${{ secrets.RABBITMQ_USER_NAME }}"
             export RABBITMQ_PASSWORD="${{ secrets.RABBITMQ_PASSWORD }}"
             export AWS_ACCESS_KEY_ID="${{ secrets.AWS_ACCESS_KEY_ID }}"
@@ -99,9 +100,10 @@ jobs:
               -e DB_HOST="\$DB_HOST" -e DB_PORT="\$DB_PORT" \
               -e DB_NAME="\$DB_NAME" -e DB_USER="\$DB_USER" -e DB_PASS="\$DB_PASS" \
               -e REDIS_HOST="\$REDIS_HOST" -e REDIS_PORT="\$REDIS_PORT" \
-              -e RABBITMQ_HOST="$RABBITMQ_HOST" \
-              -e RABBITMQ_USER_NAME="$RABBITMQ_USER_NAME" \
-              -e RABBITMQ_PASSWORD="$RABBITMQ_PASSWORD" \
+              -e RABBITMQ_HOST="${{ secrets.RABBITMQ_HOST }}" \
+              -e RABBITMQ_PORT="${{ secrets.RABBITMQ_PORT }}" \
+              -e RABBITMQ_USER_NAME="${{ secrets.RABBITMQ_USER_NAME }}" \
+              -e RABBITMQ_PASSWORD="${{ secrets.RABBITMQ_PASSWORD }}" \
               -e AES_KEY="${{ secrets.AES_KEY }}" \
               -e JWT_KEY="${{ secrets.JWT_KEY }}" \
               ${{ secrets.ECR_REPOSITORY_API }}:latest
@@ -126,6 +128,7 @@ jobs:
             export REDIS_HOST="${{ secrets.REDIS_HOST }}"
             export REDIS_PORT="${{ secrets.REDIS_PORT }}"
             export RABBITMQ_HOST="${{ secrets.RABBITMQ_HOST }}"
+            export RABBITMQ_PORT="${{ secrets.RABBITMQ_PORT }}"
             export RABBITMQ_USER_NAME="${{ secrets.RABBITMQ_USER_NAME }}"
             export RABBITMQ_PASSWORD="${{ secrets.RABBITMQ_PASSWORD }}"
             export AWS_ACCESS_KEY_ID="${{ secrets.AWS_ACCESS_KEY_ID }}"
@@ -154,9 +157,10 @@ jobs:
               -e DB_HOST="\$DB_HOST" -e DB_PORT="\$DB_PORT" \
               -e DB_NAME="\$DB_NAME" -e DB_USER="\$DB_USER" -e DB_PASS="\$DB_PASS" \
               -e REDIS_HOST="\$REDIS_HOST" -e REDIS_PORT="\$REDIS_PORT" \
-              -e RABBITMQ_HOST="$RABBITMQ_HOST" \
-              -e RABBITMQ_USER_NAME="$RABBITMQ_USER_NAME" \
-              -e RABBITMQ_PASSWORD="$RABBITMQ_PASSWORD" \
+              -e RABBITMQ_HOST="${{ secrets.RABBITMQ_HOST }}" \
+              -e RABBITMQ_PORT="${{ secrets.RABBITMQ_PORT }}" \
+              -e RABBITMQ_USER_NAME="${{ secrets.RABBITMQ_USER_NAME }}" \
+              -e RABBITMQ_PASSWORD="${{ secrets.RABBITMQ_PASSWORD }}" \
               -e AES_KEY="${{ secrets.AES_KEY }}" \
               -e JWT_KEY="${{ secrets.JWT_KEY }}" \
               ${{ secrets.ECR_REPOSITORY_ADAPTER }}:latest
