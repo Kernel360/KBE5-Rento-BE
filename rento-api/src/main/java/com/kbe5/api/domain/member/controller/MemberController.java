@@ -9,8 +9,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedModel;
 import org.springframework.http.ResponseEntity;
 
-import java.util.List;
-
 public interface MemberController {
 
     //사용자 추가
@@ -20,7 +18,12 @@ public interface MemberController {
     //사용자 삭제
     ResponseEntity<ApiResponse<String>> delete(CustomManagerDetails managerDetails, Long userId);
     //사용자 목록 조회
-    ResponseEntity<ApiResponse<PagedModel<MemberInfoResponse>>> getUsers(String company, Pageable pageable);
+    ResponseEntity<ApiResponse<PagedModel<MemberInfoResponse>>> getUsers(
+            CustomManagerDetails managerDetails,
+            String position,
+            Long departmentId,
+            String keyword,
+            Pageable pageable);
     //사용자 상세 조회
     ResponseEntity<ApiResponse<MemberInfoResponse>> getUser(Long userId);
 
