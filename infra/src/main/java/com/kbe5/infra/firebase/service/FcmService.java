@@ -89,7 +89,7 @@ public class FcmService {
                 .orElseThrow(()->new DomainException(ErrorType.DRIVE_NOT_FOUND));
 
         // 자동차 번호
-        String vehicleNumber = drive.getVehicle().getInfo().vehicleNumber();
+        String vehicleNumber = drive.getVehicle().getInfo().getVehicleNumber();
         // 회사의 모든 매니저
         List<Manager> managers = managerRepository.findAllByCompany(drive.getVehicle().getCompany());
         // 현재 시간
