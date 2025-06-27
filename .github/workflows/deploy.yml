@@ -149,7 +149,7 @@ jobs:
               --log-driver json-file \
               --log-opt max-size=10m \
               --log-opt max-file=3 \
-              -p 8081:8081 \
+              -p 8080:8080 \
               -v /home/ubuntu/firebase:/app/firebase \
               -v /home/ubuntu/log/adapter:/app/log/adapter \
               -e SPRING_PROFILES_ACTIVE=deploy \
