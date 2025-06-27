@@ -33,6 +33,8 @@ spring:
     port: 5671
     username: ${RABBITMQ_USER_NAME}
     password: ${RABBITMQ_PASSWORD}
+    ssl:
+      enabled: true
 
 fcm:
   firebase_config_path: ${FIREBASE_PATH}
