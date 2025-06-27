@@ -54,13 +54,13 @@ jobs:
           docker tag rento-adapter:latest ${{ secrets.ECR_REPOSITORY_ADAPTER }}:latest
           docker push ${{ secrets.ECR_REPOSITORY_ADAPTER }}:latest
 
-      # ───── Deploy to EC2 ─────
-      - name: Deploy both modules on EC2
+      # ───── Deploy rento-api on EC2 (Instance 1) ─────
+      - name: Deploy rento-api on EC2
         run: |
           echo "${{ secrets.EC2_KEY }}" | base64 -d > ec2.pem
           chmod 600 ec2.pem
-
-          ssh -o StrictHostKeyChecking=no -i ec2.pem ubuntu@${{ secrets.EC2_HOST }} << EOF
+      
+          ssh -o StrictHostKeyChecking=no -i ec2.pem ubuntu@${{ secrets.EC2_HOST_API }} << EOF
             export DB_HOST="${{ secrets.DB_HOST }}"
             export DB_PORT="${{ secrets.DB_PORT }}"
             export DB_NAME="${{ secrets.DB_NAME }}"
@@ -70,16 +70,18 @@ jobs:
             export JWT_KEY="${{ secrets.JWT_KEY }}"
             export REDIS_HOST="${{ secrets.REDIS_HOST }}"
             export REDIS_PORT="${{ secrets.REDIS_PORT }}"
+            export RABBITMQ_HOST="${{ secrets.RABBITMQ_HOST }}"
+            export RABBITMQ_USER_NAME="${{ secrets.RABBITMQ_USER_NAME }}"
+            export RABBITMQ_PASSWORD="${{ secrets.RABBITMQ_PASSWORD }}"
             export AWS_ACCESS_KEY_ID="${{ secrets.AWS_ACCESS_KEY_ID }}"
             export AWS_SECRET_ACCESS_KEY="${{ secrets.AWS_SECRET_ACCESS_KEY }}"
-
+      
             mkdir -p /home/ubuntu/firebase
             echo '${{ secrets.FIREBASE_CONFIG }}' > /home/ubuntu/firebase/rento-firebase.json
-
+      
             aws ecr get-login-password --region ap-northeast-2 | \
               docker login --username AWS --password-stdin 528782700548.dkr.ecr.ap-northeast-2.amazonaws.com
-
-            # rento-api 배포
+      
             docker stop rento-api || true
             docker rm rento-api || true
             docker pull ${{ secrets.ECR_REPOSITORY_API }}:latest
@@ -97,11 +99,44 @@ jobs:
               -e DB_HOST="\$DB_HOST" -e DB_PORT="\$DB_PORT" \
               -e DB_NAME="\$DB_NAME" -e DB_USER="\$DB_USER" -e DB_PASS="\$DB_PASS" \
               -e REDIS_HOST="\$REDIS_HOST" -e REDIS_PORT="\$REDIS_PORT" \
+              -e RABBITMQ_HOST="$RABBITMQ_HOST" \
+              -e RABBITMQ_USER_NAME="$RABBITMQ_USER_NAME" \
+              -e RABBITMQ_PASSWORD="$RABBITMQ_PASSWORD" \
               -e AES_KEY="${{ secrets.AES_KEY }}" \
               -e JWT_KEY="${{ secrets.JWT_KEY }}" \
               ${{ secrets.ECR_REPOSITORY_API }}:latest
+      
+            docker image prune -f
+          EOF
 
-            # rento-adapter 배포
+  # ───── Deploy rento-adapter on EC2 (Instance 2) ─────
+      - name: Deploy rento-adapter on second EC2
+        run: |
+          echo "${{ secrets.EC2_KEY }}" | base64 -d > ec2.pem
+          chmod 600 ec2.pem
+        
+          ssh -o StrictHostKeyChecking=no -i ec2.pem ubuntu@${{ secrets.EC2_HOST_ADAPTER }} << EOF
+            export DB_HOST="${{ secrets.DB_HOST }}"
+            export DB_PORT="${{ secrets.DB_PORT }}"
+            export DB_NAME="${{ secrets.DB_NAME }}"
+            export DB_USER="${{ secrets.DB_USER }}"
+            export DB_PASS="${{ secrets.DB_PASS }}"
+            export AES_KEY="${{ secrets.AES_KEY }}"
+            export JWT_KEY="${{ secrets.JWT_KEY }}"
+            export REDIS_HOST="${{ secrets.REDIS_HOST }}"
+            export REDIS_PORT="${{ secrets.REDIS_PORT }}"
+            export RABBITMQ_HOST="${{ secrets.RABBITMQ_HOST }}"
+            export RABBITMQ_USER_NAME="${{ secrets.RABBITMQ_USER_NAME }}"
+            export RABBITMQ_PASSWORD="${{ secrets.RABBITMQ_PASSWORD }}"
+            export AWS_ACCESS_KEY_ID="${{ secrets.AWS_ACCESS_KEY_ID }}"
+            export AWS_SECRET_ACCESS_KEY="${{ secrets.AWS_SECRET_ACCESS_KEY }}"
+        
+            mkdir -p /home/ubuntu/firebase
+            echo '${{ secrets.FIREBASE_CONFIG }}' > /home/ubuntu/firebase/rento-firebase.json
+        
+            aws ecr get-login-password --region ap-northeast-2 | \
+              docker login --username AWS --password-stdin 528782700548.dkr.ecr.ap-northeast-2.amazonaws.com
+        
             docker stop rento-adapter || true
             docker rm rento-adapter || true
             docker pull ${{ secrets.ECR_REPOSITORY_ADAPTER }}:latest
@@ -119,9 +154,12 @@ jobs:
               -e DB_HOST="\$DB_HOST" -e DB_PORT="\$DB_PORT" \
               -e DB_NAME="\$DB_NAME" -e DB_USER="\$DB_USER" -e DB_PASS="\$DB_PASS" \
               -e REDIS_HOST="\$REDIS_HOST" -e REDIS_PORT="\$REDIS_PORT" \
+              -e RABBITMQ_HOST="$RABBITMQ_HOST" \
+              -e RABBITMQ_USER_NAME="$RABBITMQ_USER_NAME" \
+              -e RABBITMQ_PASSWORD="$RABBITMQ_PASSWORD" \
               -e AES_KEY="${{ secrets.AES_KEY }}" \
               -e JWT_KEY="${{ secrets.JWT_KEY }}" \
               ${{ secrets.ECR_REPOSITORY_ADAPTER }}:latest
-
+        
             docker image prune -f
           EOF
