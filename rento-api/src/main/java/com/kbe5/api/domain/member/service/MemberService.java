@@ -111,10 +111,7 @@ public class MemberService {
             String search,
             Pageable pageable
     ) {
-        Company company = companyRepository.findByCompanyCode(manager.getCompany().getCompanyCode())
-                .orElseThrow(() -> new DomainException(ErrorType.COMPANY_NOT_FOUND));
-
-        return memberRepository.findMembersByConditions(company.getId(),position, departmentId, search, pageable);
+        return memberRepository.findMembersByConditions(manager.getCompany().getId(), position, departmentId, search, pageable);
     }
 
     @Transactional(readOnly = true)
