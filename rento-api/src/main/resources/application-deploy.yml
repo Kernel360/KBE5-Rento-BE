@@ -29,10 +29,10 @@ spring:
       port: ${REDIS_PORT}
 
   rabbitmq:
-    host: rabbitmq
-    port: 5672
-    username: guest
-    password: guest
+    host: ${RABBITMQ_HOST}
+    port: 5671
+    username: ${RABBITMQ_USER_NAME}
+    password: ${RABBITMQ_PASSWORD}
 
 fcm:
   firebase_config_path: ${FIREBASE_PATH}
