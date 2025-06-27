@@ -36,8 +36,12 @@
                 <fileNamePattern>/app/log/adapter/external-warn/external-warn.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
                 <maxFileSize>50MB</maxFileSize>
                 <maxHistory>14</maxHistory>
-                <totalSizeCap>3GB</totalSizeCap>
+                <totalSizeCap>1GB</totalSizeCap>
             </rollingPolicy>
+            <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+                <level>INFO</level>
+            </filter>
+
             <encoder>
                 <pattern>${FILE_LOG_PATTERN}</pattern>
             </encoder>
@@ -51,7 +55,7 @@
                 <fileNamePattern>/app/log/adapter/kbe5/app-trace.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
                 <maxFileSize>25MB</maxFileSize>
                 <maxHistory>14</maxHistory>
-                <totalSizeCap>2GB</totalSizeCap>
+                <totalSizeCap>1GB</totalSizeCap>
             </rollingPolicy>
             <encoder>
                 <pattern>${FILE_LOG_PATTERN}</pattern>
@@ -62,7 +66,7 @@
             <appender-ref ref="FILE_TRACE"/>
         </logger>
 
-        <root level="WARN">
+        <root level="INFO">
             <appender-ref ref="FILE_WARN"/>
             <appender-ref ref="CONSOLE"/>
         </root>
