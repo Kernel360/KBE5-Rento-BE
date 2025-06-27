@@ -31,7 +31,7 @@ public class VehicleService {
 
         var existenceVehicle = vehicleRepository.findByInfo_VehicleNumber(vehicle.getInfo().getVehicleNumber());
 
-        if(existenceVehicle.isEmpty()) {
+        if(existenceVehicle.isPresent()) {
             throw new DomainException(ErrorType.SAME_VEHICLE_NUMBER);
         }
 
