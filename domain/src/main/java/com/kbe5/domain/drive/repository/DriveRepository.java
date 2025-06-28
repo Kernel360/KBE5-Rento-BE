@@ -25,4 +25,25 @@ public interface DriveRepository extends JpaRepository<Drive, Long> {
     );
 
     List<Drive> findByDriveStatus(DriveStatus driveStatus);
+
+    @Query("""
+    select d
+      from Drive d
+        where d.startDate < :end
+          and d.endDate   > :start
+  """)
+    Boolean existsByDriveId(
+            @Param("start") LocalDateTime start,
+            @Param("end")   LocalDateTime end);
+
+    @Query("""
+    select d
+      from Drive d
+     where d.vehicle.id = :vehicleId
+       and :start between d.startDate and d.endDate
+""")
+    Boolean existsByVehicle(
+            @Param("vehicleId") Long vehicleId,
+            @Param("start") LocalDateTime start
+    );
 }

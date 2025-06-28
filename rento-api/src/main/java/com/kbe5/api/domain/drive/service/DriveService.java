@@ -6,6 +6,7 @@ import com.kbe5.common.exception.ErrorType;
 import com.kbe5.domain.drive.entity.Drive;
 import com.kbe5.domain.drive.repository.DriveRepository;
 import com.kbe5.domain.manager.entity.Manager;
+import com.kbe5.domain.vehicle.entity.Vehicle;
 import com.kbe5.domain.vehicle.repository.VehicleRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -27,8 +28,17 @@ public class DriveService {
         if(drive.getVehicle().getCompany() != drive.getMember().getCompany()){
             throw new DomainException(ErrorType.USER_VEHICLE_COMPANY_MISMATCH);}
 
-        var vehicle = vehicleRepository.findById(drive.getVehicle().getId()).orElseThrow(()
+        Vehicle vehicle = vehicleRepository.findById(drive.getVehicle().getId()).orElseThrow(()
         -> new DomainException(ErrorType.VEHICLE_NOT_FOUND));
+
+        if(driveRepository.existsByDriveId(drive.getStartDate(), drive.getEndDate()) != null){
+            throw new DomainException(ErrorType.DRIVE_OVERLAP);
+        }
+
+        if(driveRepository.existsByVehicle(vehicle.getId(), drive.getStartDate()) != null){
+            throw new DomainException(ErrorType.DRIVE_IS_FOUND);
+        }
+
         driveRepository.save(drive);
 
         vehicle.reservation();
