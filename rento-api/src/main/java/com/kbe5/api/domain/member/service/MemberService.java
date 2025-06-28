@@ -12,6 +12,7 @@ import com.kbe5.domain.department.entity.Department;
 import com.kbe5.domain.department.repository.DepartmentRepository;
 import com.kbe5.domain.manager.entity.Manager;
 import com.kbe5.domain.member.entity.Member;
+import com.kbe5.domain.member.entity.Position;
 import com.kbe5.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -19,8 +20,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -105,11 +104,14 @@ public class MemberService {
     }
 
     @Transactional(readOnly = true)
-    public Page<Member> getMemberList(String companyCode, Pageable pageable) {
-        Company company = companyRepository.findByCompanyCode(companyCode)
-                .orElseThrow(() -> new DomainException(ErrorType.COMPANY_NOT_FOUND));
-
-        return memberRepository.findAllByCompanyId(company.getId(), pageable);
+    public Page<Member> getMemberList(
+            Manager manager,
+            Position position,
+            Long departmentId,
+            String search,
+            Pageable pageable
+    ) {
+        return memberRepository.findMembersByConditions(manager.getCompany().getId(), position, departmentId, search, pageable);
     }
 
     @Transactional(readOnly = true)

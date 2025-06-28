@@ -67,10 +67,18 @@ public class MemberControllerImpl implements MemberController {
 
     @Override
     @GetMapping
-    public ResponseEntity<ApiResponse<PagedModel<MemberInfoResponse>>> getUsers(@RequestParam String companyCode, Pageable pageable) {
-        log.info("company code is : {}", companyCode);
+    public ResponseEntity<ApiResponse<PagedModel<MemberInfoResponse>>> getUsers(
+            @AuthenticationPrincipal CustomManagerDetails customManagerDetails,
+            @RequestParam(required = false) String position,
+            @RequestParam(required = false) Long departmentId,
+            @RequestParam(required = false) String keyword,
+            Pageable pageable) {
+
+        Manager manager = customManagerDetails.getManager();
+        Position newPosition = position != null ? Position.fromValue(position) : null;
+
         return ResEntityFactory.toResponse(ApiResultCode.SUCCESS,
-                new PagedModel<>(memberService.getMemberList(companyCode, pageable)
+                new PagedModel<>(memberService.getMemberList(manager, newPosition, departmentId, keyword , pageable)
                 .map(MemberInfoResponse::from)));
     }
 
