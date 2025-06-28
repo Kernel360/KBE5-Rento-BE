@@ -65,6 +65,16 @@ public class VehicleControllerImpl implements VehicleController{
                         .map(VehicleResponse::fromEntity)));
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<ApiResponse<PagedModel<VehicleResponse>>> search(
+            @AuthenticationPrincipal CustomManagerDetails customManagerDetails,
+            @RequestParam String vehicleNumber,
+            Pageable pageable) {
+        return ResEntityFactory.toResponse(ApiResultCode.SUCCESS,
+                new PagedModel<>(vehicleService.searchVehicle(customManagerDetails.getManager(),
+                        vehicleNumber, pageable).map(VehicleResponse::fromEntity)));
+    }
+
     @Override
     @GetMapping("/{vehicleId}")
     public ResponseEntity<ApiResponse<VehicleDetailResponse>> getVehicle(@PathVariable Long vehicleId) {

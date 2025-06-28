@@ -24,14 +24,17 @@ public class VehicleService {
     private final VehicleRepository vehicleRepository;
     private final DepartmentRepository departmentRepository;
 
-    public Vehicle addVehicle(Vehicle vehicle, Long departmentId) {
+    public void addVehicle(Vehicle vehicle, Long departmentId) {
         Department department = departmentRepository.findById(departmentId).orElseThrow(
                 () -> new DomainException(ErrorType.DEPARTMENT_NOT_FOUND)
         );
+
+       vehicleRepository.findByInfo_VehicleNumber(vehicle.getInfo().getVehicleNumber()).orElseThrow(
+                       () -> new DomainException(ErrorType.SAME_VEHICLE_NUMBER));
+
         vehicle.addDepartment(department);
         var res = vehicleRepository.save(vehicle);
         res.addMdn(res.getId());
-        return res;
     }
 
     public Page<Vehicle> getVehicleList(
@@ -40,21 +43,29 @@ public class VehicleService {
             boolean onlyFree,
             Pageable pageable
     ) {
-        Long companyInd = manager.getCompany().getId();
+        Long companyId = manager.getCompany().getId();
 
         if (departmentId == null && !onlyFree) {
-            return vehicleRepository.findAllByCompanyId(companyInd, pageable);
+            return vehicleRepository.findAllByCompanyId(companyId, pageable);
         }
         else if (departmentId != null && !onlyFree) {
-            return vehicleRepository.findAllByCompanyIdAndDepartmentId(companyInd, departmentId, pageable);
+            return vehicleRepository.findAllByCompanyIdAndDepartmentId(companyId, departmentId, pageable);
         }
         else if (departmentId == null && onlyFree) {
-            return vehicleRepository.findFreeByCompanyId(companyInd, VehicleStatus.RESERVATION ,pageable);
+            return vehicleRepository.findFreeByCompanyId(companyId, VehicleStatus.RESERVATION ,pageable);
         }
         else {
-            return vehicleRepository.findFreeByCompanyIdAndDepartmentId(companyInd, departmentId, VehicleStatus.RESERVATION, pageable);
+            return vehicleRepository.findFreeByCompanyIdAndDepartmentId(companyId, departmentId, VehicleStatus.RESERVATION, pageable);
         }
     }
+
+    public Page<Vehicle> searchVehicle(Manager manager, String vehicleNumber, Pageable pageable) {
+        Long companyId = manager.getCompany().getId();
+
+        return vehicleRepository.findVehicleByCompanyIdAndInfo_VehicleNumber(companyId,
+                vehicleNumber, pageable);
+    }
+
 
     public Vehicle getVehicle(Long vehicleId){
         return vehicleRepository.findById(vehicleId).orElseThrow(
