@@ -45,6 +45,8 @@ public enum ErrorType {
     DRIVE_NOT_FOUND(HttpStatus.NOT_FOUND, "운행을 찾지 못했습니다."),
     USER_VEHICLE_COMPANY_MISMATCH(HttpStatus.BAD_REQUEST, "업체가 일치하지 않습니다"),
     DRIVE_NOT_DISTANCE(HttpStatus.BAD_REQUEST, "주행 거리가 없습니다"),
+    DRIVE_OVERLAP(HttpStatus.BAD_REQUEST, "시간을 잘못 입력했습니다"),
+    DRIVE_IS_FOUND(HttpStatus.BAD_REQUEST, "해당 시간에는 운행이 존재합니다"),
 
     // Geofence
     GEOFENCE_NOT_FOUND(HttpStatus.NOT_FOUND, "지오펜스를 찾을 수 없습니다."),
