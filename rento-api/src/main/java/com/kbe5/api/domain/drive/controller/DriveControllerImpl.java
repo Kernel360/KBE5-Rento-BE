@@ -58,4 +58,15 @@ public class DriveControllerImpl implements DriveController {
         return ResEntityFactory.toResponse(ApiResultCode.SUCCESS,
                 DriveDetailResponse.fromEntity(driveService.getDriveDetail(driveId)));
     }
+
+    @GetMapping("/driving")
+    public ResponseEntity<ApiResponse<List<DriveResponse>>> getDriving(
+            @AuthenticationPrincipal CustomManagerDetails manager,
+            @RequestParam(required=false) String vehicleNumber) {
+        return ResEntityFactory.toResponse(ApiResultCode.SUCCESS,
+                driveService.findstream(manager.getManager(), vehicleNumber)
+                        .stream()
+                        .map(DriveResponse::fromEntity)
+                        .toList());
+    }
 }

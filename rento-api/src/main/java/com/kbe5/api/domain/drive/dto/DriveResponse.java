@@ -10,7 +10,9 @@ import java.time.LocalDateTime;
 @Builder
 public record DriveResponse(
         Long id,
-        
+
+        Long mdn,
+
         String memberName,
 
         String vehicleNumber,
@@ -28,6 +30,7 @@ public record DriveResponse(
     public static DriveResponse fromEntity(Drive drive){
         return DriveResponse.builder()
                 .id(drive.getId())
+                .mdn(drive.getMdn())
                 .memberName(drive.getMember().getName())
                 .vehicleNumber(drive.getVehicle().getInfo().getVehicleNumber())
                 .startDate(drive.getStartDate())
