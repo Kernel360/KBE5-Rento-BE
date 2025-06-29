@@ -18,7 +18,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/cycleInfoSummary")
-public class CycleInfoSummaryController {
+public class CycleInfoSummaryControllerImpl implements CycleInfoController{
 
     private final CycleInfoSummaryService cycleInfoSummaryService;
 

@@ -9,13 +9,13 @@ public class SecurityPermissionApiList {
 
             "/health",
             "/actuator/**",
+
             // Reservation APIs
             "/api/reservations",
             "/api/reservations/{reservationId}",
 
             // Company APIs
-            "/api/companies/register",
-            "/api/companies/check-bizNumber",
+            "/api/companies/**",
 
             // h2
             "/h2-console/**",
