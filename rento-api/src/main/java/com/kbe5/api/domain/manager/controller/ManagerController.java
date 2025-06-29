@@ -31,20 +31,20 @@ public interface ManagerController {
     ResponseEntity<ApiResponse<ManagerSignUpResponse>> signUp(ManagerSignUpRequest request);
 
     @Operation(summary = "매니저 상세 정보 조회", description = "매니저 상세 정보를 조회합니다.")
-    @Parameter(name = "managerId", description = "조회할 매니저 ID", example = "1", required = true)
-    ResponseEntity<ApiResponse<ManagerResponse>> getManagerDetail(Long managerId);
+    @Parameter(name = "id", description = "조회할 매니저 ID", example = "1", required = true)
+    ResponseEntity<ApiResponse<ManagerResponse>> getManagerDetail(Long id);
 
     @Operation(summary = "매니저 목록 조회", description = "매니저 목록을 조회합니다.")
     @Parameter(name = "companyCode", description = "조회할 회사 코드입니다.")
     ResponseEntity<ApiResponse<List<ManagerResponse>>> getManagerList(String companyCode);
 
     @Operation(summary = "매니저 정보 수정", description = "매니저 정보를 수정합니다.")
-    @Parameter(name = "managerId", description = "수정할 매니저 ID", example = "1", required = true)
+    @Parameter(name = "id", description = "수정할 매니저 ID", example = "1", required = true)
     @RequestBody(description = "매니저 수정 정보 요청", required = true)
-    ResponseEntity<ApiResponse<ManagerUpdateResponse>> update(Long managerId, ManagerUpdateRequest request) ;
+    ResponseEntity<ApiResponse<ManagerUpdateResponse>> update(Long id, ManagerUpdateRequest request) ;
 
     @Operation(summary = "매니저 삭제", description = "매니저를 삭제합니다.")
-    @Parameter(name = "managerId", description = "삭제할 매니저 ID", example = "1", required = true)
+    @Parameter(name = "id", description = "삭제할 매니저 ID", example = "1", required = true)
     @RequestBody(description = "매니저 삭제 정보 요청", required = true)
     ResponseEntity<ApiResponse<ManagerDeleteResponse>> delete(Long id, ManagerDeleteRequest request);
 

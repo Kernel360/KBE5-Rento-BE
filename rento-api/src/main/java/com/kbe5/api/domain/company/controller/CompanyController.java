@@ -24,22 +24,22 @@ public interface CompanyController {
     ResponseEntity<ApiResponse<CompanyRegisterResponse>> register(CompanyRegisterRequest request);
 
     @Operation(summary = "회사 상세 정보 조회", description = "회사의 상세 정보를 조회합니다.")
-    @Parameter(name = "companyId", description = "조회할 회사 ID", example = "1", required = true)
-    ResponseEntity<ApiResponse<CompanyResponse>> getCompanyDetail(Long companyId);
+    @Parameter(name = "id", description = "조회할 회사 ID", example = "1", required = true)
+    ResponseEntity<ApiResponse<CompanyResponse>> getCompanyDetail(Long id);
 
     @Operation(summary = "회사 목록 조회", description = "회사 목록을 조회합니다.")
     ResponseEntity<ApiResponse<List<CompanyResponse>>> getCompanyList();
 
     @Operation(summary = "회사 수정", description = "회사 정보를 수정합니다.")
-    @Parameter(name = "companyId", description = "수정할 회사 ID", example = "1", required = true)
+    @Parameter(name = "id", description = "수정할 회사 ID", example = "1", required = true)
     @RequestBody(description = "회사 수정 정보 요청", required = true)
-    ResponseEntity<ApiResponse<CompanyUpdateResponse>> updateCompanyInfo(Long companyId, CompanyUpdateRequest request);
+    ResponseEntity<ApiResponse<CompanyUpdateResponse>> updateCompanyInfo(Long id, CompanyUpdateRequest request);
 
     @Operation(summary = "회사 사업자 번호 중복 체크", description = "사업자 번호를 중복체크합니다.")
     @RequestBody(description = "중복확인할 사업자번호", required = true)
     ResponseEntity<ApiResponse<Boolean>> checkAvailableBizNumber(CompanyBiznumberRequest request);
 
     @Operation(summary = "회사 삭제", description = "회사를 삭제합니다.")
-    @Parameter(name = "companyId", description = "삭제할 회사 ID", example = "1", required = true)
-    ResponseEntity<ApiResponse<CompanyDeleteResponse>> companyDelete(Long companyId);
+    @Parameter(name = "id", description = "삭제할 회사 ID", example = "1", required = true)
+    ResponseEntity<ApiResponse<CompanyDeleteResponse>> companyDelete(Long id);
 }
