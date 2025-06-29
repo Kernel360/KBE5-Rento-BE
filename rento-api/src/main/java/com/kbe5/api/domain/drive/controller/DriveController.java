@@ -11,6 +11,8 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -31,4 +33,8 @@ public interface DriveController {
     @Operation(summary = "운행 상세 조회", description = "운행 상세를 조회합니다.")
     @Parameter(name = "driveId", description = "운행 상세 조회할 ID", example = "1", required = true)
     ResponseEntity<ApiResponse<DriveDetailResponse>> getDriveDetail(Long driveId);
+
+    @Operation(summary = "운행중인 차량 목록 조회", description = "운행 중인 차량 목록을 조회합니다.")
+    @Parameter(name = "vehicleNumber", description = "필요시 검색할 차량 번호", example = "123가1234")
+    ResponseEntity<ApiResponse<List<DriveResponse>>> getDriving(CustomManagerDetails manager, String vehicleNumber);
 }
