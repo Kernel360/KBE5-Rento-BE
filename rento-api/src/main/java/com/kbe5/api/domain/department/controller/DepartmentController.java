@@ -32,7 +32,7 @@ public interface DepartmentController {
     ResponseEntity<ApiResponse<List<DepartmentInfoResponse>>> getAllDepartments(CustomManagerDetails manager);
     //부서 수정
     @Operation(summary = "부서 수정", description = "기존 부서를 수정합니다")
-    @Parameter(name = "departmentID", description = "부서ID", example = "1")
+    @Parameter(name = "departmentId", description = "부서ID", example = "1")
     @RequestBody(
             description = "부서 수정 요청 정보",
             required = true
