@@ -3,6 +3,7 @@ package com.kbe5.api.domain.stream.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.kbe5.api.domain.vehicle.service.VehicleService;
 import com.kbe5.domain.event.entity.CycleInfo;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
@@ -19,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -27,7 +29,12 @@ public class StreamService {
 
     // 매니저별 리스너만 관리 (전체 리스트 제거)
     private final Map<Long, List<SseEmitter>> managerEmitters = new ConcurrentHashMap<>();
-    private final Map<Long, List<SseEmitter>> driveEmitters = new ConcurrentHashMap<>();
+
+    private final Map<Long, Long> managerCompanyEmitters = new ConcurrentHashMap<>();
+
+    // 캐싱 용도
+    private final Map<Long, Long> vehicleCompanyCache = new ConcurrentHashMap<>();
+
 
     // Heartbeat을 위한 스케줄러 -> 살아있는지 확인용으로 쓰레드 하나 잡아야함?
     private final ScheduledExecutorService heartbeatScheduler = Executors.newScheduledThreadPool(1);
@@ -36,6 +43,7 @@ public class StreamService {
             .registerModule(new JavaTimeModule())
             .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
 
+    private final VehicleService vehicleService;
 
     /**
      * 연결 유지를 위해 핑 보내기
@@ -65,20 +73,41 @@ public class StreamService {
     @RabbitListener(
             queues = "cycle-info-stream")
     public void receiveAndPush(@Payload CycleInfo cycleInfo) {
-        log.debug("스트림 큐 수신: {}", cycleInfo);
-        pushToAllManagers(cycleInfo);
+        Long companyId = getCompanyIdByMdn(cycleInfo.getMdn());
+
+        if (companyId != null) {
+            pushToCompanyManagers(cycleInfo, companyId);
+        } else {
+            log.warn("업체를 찾을 수 없는 차량 mdn: {}", cycleInfo.getMdn());
+        }
+    }
+
+    private Long getCompanyIdByMdn(Long mdn) {
+        return vehicleCompanyCache.computeIfAbsent(mdn, key -> {
+            try {
+                Long companyId = vehicleService.getCompanyIdByMdn(key);
+                log.debug("차량 mdn {} -> 업체 ID {} 캐시 저장", key, companyId);
+                return companyId;
+            } catch (Exception e) {
+                log.error("차량 mdn {}로 업체 조회 실패: {}", key, e.getMessage());
+                return null;
+            }
+        });
     }
 
     /**
      * 매니저별 구독
      */
-    public SseEmitter subscribe(Long managerId) {
+    public SseEmitter subscribe(Long managerId, Long companyId) {
         SseEmitter emitter = new SseEmitter(0L);
 
         // 매니저별 리스트에만 추가
         managerEmitters
                 .computeIfAbsent(managerId, __ -> new CopyOnWriteArrayList<>())
                 .add(emitter);
+
+        managerCompanyEmitters.put(managerId, companyId);
+
         log.info("매니저 id: {}", managerId);
         log.info("구독 중인 매니저: {}", managerEmitters);
         // 연결 해제 시 정리
@@ -102,13 +131,22 @@ public class StreamService {
         return emitter;
     }
 
+
     /**
-     * 모든 매니저에게 브로드캐스트 -> 추후 해당 업체의 매니저들에게만 주도록 수정
+     * 특정 업체의 매니저들에게만 브로드캐스트
      */
-    public void pushToAllManagers(CycleInfo cycleInfo) {
-        managerEmitters.forEach((managerId, __) -> {
-            pushToManager(managerId, cycleInfo);
-        });
+    public void pushToCompanyManagers(CycleInfo cycleInfo, Long companyId) {
+        log.debug("업체 {} CycleInfo 전송 시작", companyId);
+        log.debug("현재 매니저-업체 매핑: {}", managerCompanyEmitters);
+
+        List<Long> targetManagers = managerCompanyEmitters.entrySet().stream()
+                .filter(entry -> companyId.equals(entry.getValue()))
+                .map(Map.Entry::getKey)
+                .collect(Collectors.toList());
+
+        log.debug("대상 매니저들: {}", targetManagers);
+
+        targetManagers.forEach(managerId -> pushToManager(managerId, cycleInfo));
     }
 
     /**
