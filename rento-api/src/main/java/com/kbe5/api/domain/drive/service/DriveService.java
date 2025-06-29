@@ -4,6 +4,7 @@ package com.kbe5.api.domain.drive.service;
 import com.kbe5.common.exception.DomainException;
 import com.kbe5.common.exception.ErrorType;
 import com.kbe5.domain.drive.entity.Drive;
+import com.kbe5.domain.drive.entity.DriveStatus;
 import com.kbe5.domain.drive.repository.DriveRepository;
 import com.kbe5.domain.manager.entity.Manager;
 import com.kbe5.domain.vehicle.entity.Vehicle;
@@ -96,5 +97,11 @@ public class DriveService {
             throw new DomainException(ErrorType.DRIVE_NOT_FOUND);
         }
         return driveid;
+    }
+
+    public List<Drive> findstream(Manager manager, String vehicleNumber){
+        return driveRepository.findByCompanyAndStatusAndVehicleNumber(manager.getCompany(),
+                DriveStatus.DRIVING,
+                vehicleNumber);
     }
 }

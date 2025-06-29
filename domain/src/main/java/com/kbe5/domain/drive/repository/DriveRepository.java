@@ -46,4 +46,17 @@ public interface DriveRepository extends JpaRepository<Drive, Long> {
             @Param("vehicleId") Long vehicleId,
             @Param("start") LocalDateTime start
     );
+
+    @Query("""
+    select d
+      from Drive d
+        where d.member.company    = :company
+          and d.driveStatus       = :status
+            and (:vehNum    is null or d.vehicle.info.vehicleNumber = :vehNum)
+  """)
+    List<Drive> findByCompanyAndStatusAndVehicleNumber(
+            @Param("company")     Company     company,
+            @Param("status")      DriveStatus status,
+            @Param("vehNum")      String      vehicleNumber    // null 이면 차량번호 조건 무시
+    );
 }
