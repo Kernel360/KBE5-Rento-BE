@@ -5,10 +5,12 @@ import com.kbe5.api.domain.geofence.dto.request.GeofenceRegisterRequest;
 import com.kbe5.api.domain.geofence.dto.request.GeofenceUpdateRequest;
 import com.kbe5.api.domain.geofence.dto.response.GeofenceInfoResponse;
 import com.kbe5.common.response.api.ApiResponse;
+import io.swagger.v3.oas.annotations.Hidden;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
+@Hidden
 public interface GeofenceController {
 
     public ResponseEntity<ApiResponse<Void>> register(GeofenceRegisterRequest request);

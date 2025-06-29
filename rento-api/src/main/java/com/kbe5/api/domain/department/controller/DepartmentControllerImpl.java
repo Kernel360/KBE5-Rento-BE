@@ -47,8 +47,12 @@ public class DepartmentControllerImpl implements DepartmentController {
     //부서 목록 조회
     @Override
     @GetMapping
-    public ResponseEntity<ApiResponse<List<DepartmentInfoResponse>>> getAllDepartments(@RequestParam String companyCode) {
-        List<DepartmentInfoResponse> departments = departmentService.getDepartments(companyCode);
+    public ResponseEntity<ApiResponse<List<DepartmentInfoResponse>>> getAllDepartments(
+            @AuthenticationPrincipal CustomManagerDetails customManagerDetails
+    ) {
+        List<DepartmentInfoResponse> departments = departmentService.getDepartments(
+                customManagerDetails.getManager().getCompanyCode()
+        );
 
         return ResEntityFactory.toResponse(ApiResultCode.SUCCESS, departments);
     }
