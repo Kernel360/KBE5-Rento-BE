@@ -19,6 +19,7 @@ public class SwaggerConfig {
 
         return new OpenAPI()
                 .components(new Components())
+                .addServersItem(new Server().url("http://localhost:8080"))
                 .addServersItem(new Server().url("https://api.rento.world"))
                 .info(info);
     }
