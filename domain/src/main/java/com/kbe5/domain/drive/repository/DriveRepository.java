@@ -25,26 +25,28 @@ public interface DriveRepository extends JpaRepository<Drive, Long> {
     );
 
     List<Drive> findByDriveStatus(DriveStatus driveStatus);
-
     @Query("""
-    select d
-      from Drive d
-        where d.startDate < :end
-          and d.endDate   > :start
-  """)
-    Boolean existsByDriveId(
-            @Param("start") LocalDateTime start,
-            @Param("end")   LocalDateTime end);
-
-    @Query("""
-    select d
-      from Drive d
-     where d.vehicle.id = :vehicleId
-       and :start between d.startDate and d.endDate
+  select case when count(d) > 0 then true else false end
+  from Drive d
+  where d.startDate <= :end
+    and d.endDate   >= :start
 """)
-    Boolean existsByVehicle(
+    boolean existsByDateOverlap(
+            @Param("start") LocalDateTime start,
+            @Param("end")   LocalDateTime end
+    );
+
+    @Query("""
+  select case when count(d) > 0 then true else false end
+  from Drive d
+  where d.vehicle.id = :vehicleId
+    and :start between d.startDate and d.endDate
+    or :end between d.startDate and d.endDate
+""")
+    boolean existsByVehicleOverlap(
             @Param("vehicleId") Long vehicleId,
-            @Param("start") LocalDateTime start
+            @Param("start")     LocalDateTime start,
+            @Param("end")       LocalDateTime end
     );
 
     @Query("""

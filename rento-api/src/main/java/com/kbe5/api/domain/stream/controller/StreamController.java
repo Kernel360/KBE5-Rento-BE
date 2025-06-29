@@ -49,9 +49,11 @@ public class StreamController {
                 (CustomManagerDetails) customMangerDetailsService.loadUserByUsername(loginId);
 
         Long managerId = userDetails.getManager().getId();
+        Long companyId = userDetails.getManager().getCompany().getId();
+
         log.info("[StreamController] manager={} SSE 구독 시작", managerId);
 
-        SseEmitter emitter = streamService.subscribe(managerId);
+        SseEmitter emitter = streamService.subscribe(managerId, companyId);
 
         emitter.onCompletion(() ->
                 log.info("SSE 완료 매니저{}", managerId)

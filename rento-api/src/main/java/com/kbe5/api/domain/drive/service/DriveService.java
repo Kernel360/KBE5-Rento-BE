@@ -32,11 +32,11 @@ public class DriveService {
         Vehicle vehicle = vehicleRepository.findById(drive.getVehicle().getId()).orElseThrow(()
         -> new DomainException(ErrorType.VEHICLE_NOT_FOUND));
 
-        if(driveRepository.existsByDriveId(drive.getStartDate(), drive.getEndDate()) != null){
+        if(!driveRepository.existsByDateOverlap(drive.getStartDate(), drive.getEndDate())){
             throw new DomainException(ErrorType.DRIVE_OVERLAP);
         }
 
-        if(driveRepository.existsByVehicle(vehicle.getId(), drive.getStartDate()) != null){
+        if(!driveRepository.existsByVehicleOverlap(vehicle.getId(), drive.getStartDate(), drive.getEndDate())){
             throw new DomainException(ErrorType.DRIVE_IS_FOUND);
         }
 

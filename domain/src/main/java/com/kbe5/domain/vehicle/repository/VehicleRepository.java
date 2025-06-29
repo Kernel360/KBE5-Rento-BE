@@ -57,4 +57,11 @@ public interface VehicleRepository extends JpaRepository<Vehicle, Long> {
         Page<Vehicle> findVehicleByCompanyIdAndInfo_VehicleNumber(@Param("cid") Long companyId,
                                                                   @Param("vnum") String vehicleNumber,
                                                                   Pageable pageable);
+
+        @Query("""
+      select v.company.id
+      from Vehicle v
+      where v.mileage.mdn = :mdn
+    """)
+        Optional<Long> findCompanyIdByMdn(@Param("mdn") Long mdn);
 }

@@ -85,5 +85,9 @@ public class VehicleService {
     }
 
 
-    // todo: 자동차 번호로 검색 기능 -> 해당 업체의 자동차가 아니면 검색으로 안나와야함 5.23
+    public Long getCompanyIdByMdn(Long mdn){
+        return vehicleRepository.findCompanyIdByMdn(mdn).orElseThrow(
+                () -> new DomainException(ErrorType.VEHICLE_NOT_FOUND)
+        );
+    }
 }
