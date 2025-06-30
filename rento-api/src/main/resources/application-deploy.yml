@@ -1,8 +1,8 @@
 
 logging:
   level:
-    org.hibernate.SQL: DEBUG
-    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+    root: ERROR
+    com.kbe5.api: INFO
 
 spring:
   config:
