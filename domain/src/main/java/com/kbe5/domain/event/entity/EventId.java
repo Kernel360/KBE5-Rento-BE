@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class EventId implements Serializable {
 
-    private Long mdn;
+    private String uuid;
 
-    private LocalDateTime oTime;
+    private LocalDateTime createTime;
 }

@@ -7,6 +7,7 @@ import com.kbe5.domain.event.enums.GpsCondition;
 import com.kbe5.domain.exception.DeviceException;
 import com.kbe5.domain.exception.DeviceResultCode;
 import jakarta.persistence.*;
+import java.util.UUID;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,9 +27,13 @@ import java.time.LocalDateTime;
 public abstract class Event {
 
     @Id
-    private Long mdn;
+    private UUID uuid;
 
     @Id
+    private LocalDateTime createTime;
+
+    private Long mdn;
+
     @JsonProperty("oTime")
     private LocalDateTime oTime;
 

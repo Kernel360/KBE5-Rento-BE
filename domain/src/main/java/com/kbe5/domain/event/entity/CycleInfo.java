@@ -1,7 +1,9 @@
 package com.kbe5.domain.event.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.kbe5.domain.event.enums.GpsCondition;
 import jakarta.persistence.*;
+import java.util.UUID;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,9 +20,13 @@ import java.time.LocalDateTime;
 public class CycleInfo {
 
     @Id
-    private Long mdn;
+    private UUID uuid;
 
     @Id
+    private LocalDateTime createTime;
+
+    private Long mdn;
+
     private LocalDateTime cycleInfoTime;
 
     private Long driveId;
@@ -48,6 +54,8 @@ public class CycleInfo {
     public CycleInfo(LocalDateTime cycleInfoTime, Long mdn, Long driveId, Integer sec,
         GpsCondition gpsCondition, BigDecimal latitude, BigDecimal longitude, Integer angle, Integer speed, Long sum,
         Integer battery) {
+        this.createTime = LocalDateTime.now();
+        this.uuid = UUID.randomUUID();
         this.cycleInfoTime = cycleInfoTime;
         this.mdn = mdn;
         this.driveId = driveId;

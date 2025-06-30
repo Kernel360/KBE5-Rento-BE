@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 public class CycleInfoId implements Serializable {
 
 
-    private Long mdn;
+    private String uuid;
 
-    private LocalDateTime cycleInfoTime;
+    private LocalDateTime createTime;
 }
