@@ -15,6 +15,9 @@ spring:
     username: ${DB_USER}
     password: ${DB_PASS}
 
+  jackson:
+    time-zone: Asia/Seoul
+
   jpa:
     show-sql: true
     properties:
