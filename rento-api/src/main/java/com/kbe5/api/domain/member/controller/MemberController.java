@@ -59,15 +59,15 @@ public interface MemberController {
     //아이디 중복 체크
     @Operation(summary = "아이디 중복 체크", description = "회원 등록/수정 시 아이디 중복체크를 합니다.")
     @Parameter(name = "loginId", description = "중복 검사할 아이디입니다.", example = "test")
-    ResponseEntity<ApiResponse<Boolean>> checkId(String loginId);
+    ResponseEntity<ApiResponse<Boolean>> checkId(CustomManagerDetails customManagerDetails, String loginId);
 
     //이메일 중복 체크
     @Operation(summary = "이메일 중복 체크", description = "회원 등록/수정 시 이메일 중복체크를 합니다.")
     @Parameter(name = "email", description = "중복 검사할 이메일입니다.", example = "test@test.com")
-    ResponseEntity<ApiResponse<Boolean>> checkEmail(String email);
+    ResponseEntity<ApiResponse<Boolean>> checkEmail(CustomManagerDetails customManagerDetails, String email);
 
     //전화번호 충복 체크
     @Operation(summary = "전화번호 중복 체크", description = "회원 등록/수정 시 전화번호 중복체크를 합니다.")
     @Parameter(name = "phoneNumber", description = "중복 검사할 전화번호입니다", example = "010-1234-5678")
-    ResponseEntity<ApiResponse<Boolean>> checkPhoneNumber(String phoneNumber);
+    ResponseEntity<ApiResponse<Boolean>> checkPhoneNumber(CustomManagerDetails customManagerDetails, String phoneNumber);
 }
