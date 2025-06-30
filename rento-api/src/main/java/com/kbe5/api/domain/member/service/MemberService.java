@@ -6,7 +6,6 @@ import com.kbe5.api.domain.member.dto.response.MemberInfoResponse;
 import com.kbe5.api.domain.member.vo.MemberUpdateVO;
 import com.kbe5.common.exception.DomainException;
 import com.kbe5.common.exception.ErrorType;
-import com.kbe5.domain.company.entity.Company;
 import com.kbe5.domain.company.repository.CompanyRepository;
 import com.kbe5.domain.department.entity.Department;
 import com.kbe5.domain.department.repository.DepartmentRepository;
@@ -47,13 +46,13 @@ public class MemberService {
     }
 
     private void validateDuplicate(Member member) {
-        if (isExistPhoneNumber(member.getPhoneNumber())) {
+        if (isExistPhoneNumber(member.getCompanyCode(), member.getPhoneNumber())) {
             throw new DomainException(ErrorType.DUPLICATE_PHONE_NUMBER);
         }
-        if (isExistEmail(member.getEmail())) {
+        if (isExistEmail(member.getCompanyCode(), member.getEmail())) {
             throw new DomainException(ErrorType.DUPLICATE_EMAIL);
         }
-        if (isExistLoginId(member.getLoginId())) {
+        if (isExistLoginId(member.getCompanyCode(), member.getLoginId())) {
             throw new DomainException(ErrorType.DUPLICATE_LOGIN_ID);
         }
     }
@@ -120,16 +119,15 @@ public class MemberService {
                 .orElseThrow(() -> new DomainException(ErrorType.MEMBER_NOT_FOUND));
     }
 
-    //todo: 기업별로도 확인하기
-    public boolean isExistLoginId(String loginId) {
-        return memberRepository.existsByLoginId(loginId);
+    public boolean isExistLoginId(String companyCode, String loginId) {
+        return memberRepository.existsByCompanyCodeAndLoginId(companyCode, loginId);
     }
 
-    public boolean isExistEmail(String email) {
-        return memberRepository.existsByEmail(email);
+    public boolean isExistEmail(String companyCode, String email) {
+        return memberRepository.existsByCompanyCodeAndEmail(companyCode, email);
     }
 
-    public boolean isExistPhoneNumber(String phoneNumber) {
-        return memberRepository.existsByPhoneNumber(phoneNumber);
+    public boolean isExistPhoneNumber(String companyCode, String phoneNumber) {
+        return memberRepository.existsByCompanyCodeAndPhoneNumber(companyCode, phoneNumber);
     }
 }
