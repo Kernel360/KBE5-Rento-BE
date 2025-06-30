@@ -99,11 +99,7 @@ jobs:
               -e TZ=Asia/Seoul \
               -e SPRING_PROFILES_ACTIVE=deploy \
               -e FIREBASE_PATH="/app/firebase/rento-firebase.json" \
-              -e JAVA_TOOL_OPTIONS="\
-                -javaagent:/pinpoint-agent/pinpoint-bootstrap-3.0.0.jar \
-                -Dpinpoint.agentId=agent-adapter \
-                -Dpinpoint.applicationName=rento-adapter \
-                -Dpinpoint.collector.ip=172.31.37.140" \
+              -e JAVA_TOOL_OPTIONS="-javaagent:/pinpoint-agent/pinpoint-bootstrap-3.0.0.jar -Dpinpoint.agentId=agent-adapter -Dpinpoint.applicationName=rento-adapter -Dpinpoint.collector.ip=172.31.37.140" \
               -e DB_HOST="\$DB_HOST" -e DB_PORT="\$DB_PORT" \
               -e DB_NAME="\$DB_NAME" -e DB_USER="\$DB_USER" -e DB_PASS="\$DB_PASS" \
               -e REDIS_HOST="\$REDIS_HOST" -e REDIS_PORT="\$REDIS_PORT" \
@@ -162,11 +158,7 @@ jobs:
               -v /home/ubuntu/pinpoint-agent-3.0.0:/pinpoint-agent \
               -e SPRING_PROFILES_ACTIVE=deploy \
               -e FIREBASE_PATH="/app/firebase/rento-firebase.json" \
-              -e JAVA_TOOL_OPTIONS="\
-                -javaagent:/pinpoint-agent/pinpoint-bootstrap-3.0.0.jar \
-                -Dpinpoint.agentId=agent-adapter \
-                -Dpinpoint.applicationName=rento-adapter \
-                -Dpinpoint.collector.ip=172.31.37.140" \
+              -e JAVA_TOOL_OPTIONS="-javaagent:/pinpoint-agent/pinpoint-bootstrap-3.0.0.jar -Dpinpoint.agentId=agent-adapter -Dpinpoint.applicationName=rento-adapter -Dpinpoint.collector.ip=172.31.37.140" \
               -e DB_HOST="\$DB_HOST" -e DB_PORT="\$DB_PORT" \
               -e DB_NAME="\$DB_NAME" -e DB_USER="\$DB_USER" -e DB_PASS="\$DB_PASS" \
               -e REDIS_HOST="\$REDIS_HOST" -e REDIS_PORT="\$REDIS_PORT" \
