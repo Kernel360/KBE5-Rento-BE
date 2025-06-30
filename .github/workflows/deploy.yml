@@ -94,7 +94,7 @@ jobs:
               --log-opt max-file=3 \
               -p 8080:8080 \
               -v /home/ubuntu/firebase:/app/firebase \
-              -v /home/ubuntu/log/api:/app/log/api \
+              -v /home/ubuntu/log:/app/log \
               -e SPRING_PROFILES_ACTIVE=deploy \
               -e FIREBASE_PATH="/app/firebase/rento-firebase.json" \
               -e DB_HOST="\$DB_HOST" -e DB_PORT="\$DB_PORT" \
@@ -151,7 +151,7 @@ jobs:
               --log-opt max-file=3 \
               -p 8080:8080 \
               -v /home/ubuntu/firebase:/app/firebase \
-              -v /home/ubuntu/log/adapter:/app/log/adapter \
+              -v /home/ubuntu/log:/app/log \
               -e SPRING_PROFILES_ACTIVE=deploy \
               -e FIREBASE_PATH="/app/firebase/rento-firebase.json" \
               -e DB_HOST="\$DB_HOST" -e DB_PORT="\$DB_PORT" \
