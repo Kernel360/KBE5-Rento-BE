@@ -9,6 +9,7 @@ import com.kbe5.common.exception.ErrorType;
 import com.kbe5.domain.company.repository.CompanyRepository;
 import com.kbe5.domain.department.entity.Department;
 import com.kbe5.domain.department.repository.DepartmentRepository;
+import com.kbe5.domain.drive.repository.DriveRepository;
 import com.kbe5.domain.manager.entity.Manager;
 import com.kbe5.domain.member.entity.Member;
 import com.kbe5.domain.member.entity.Position;
@@ -28,6 +29,7 @@ public class MemberService {
     private final DepartmentRepository departmentRepository;
     private final PasswordEncoder passwordEncoder;
     private final CompanyRepository companyRepository;
+    private final DriveRepository driveRepository;
 
     @Transactional
     public Member register(Member member, Long departmentId) {
@@ -59,16 +61,12 @@ public class MemberService {
 
 
     @Transactional
-    public MemberInfoResponse update(Manager manager, MemberUpdateRequest request, Long memberId) {
+    public MemberInfoResponse update(MemberUpdateRequest request, Long memberId) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new DomainException(ErrorType.MEMBER_NOT_FOUND));
 
         Department department = departmentRepository.findById(request.departmentId())
                 .orElseThrow(() -> new DomainException(ErrorType.DEPARTMENT_NOT_FOUND));
-
-        if (!manager.getCompany().getId().equals(member.getCompany().getId())) {
-            throw new DomainException(ErrorType.NOT_AUTHORIZED);
-        }
 
         // 중복 체크 (자기 자신은 제외)
         if (memberRepository.existsByEmailAndIdNot(request.email(), memberId)) {
@@ -89,17 +87,16 @@ public class MemberService {
         return MemberInfoResponse.from(member);
     }
 
-
     @Transactional
-    public void delete(Manager manager, Long memberId) {
+    public void delete(Long memberId) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new DomainException(ErrorType.MEMBER_NOT_FOUND));
 
-        if(!manager.getCompany().getId().equals(member.getCompany().getId())) {
-            throw new DomainException(ErrorType.NOT_AUTHORIZED);
+        if (driveRepository.existsOngoingDriveByMemberId(memberId)) {
+            throw new DomainException(ErrorType.MEMBER_HAS_ACTIVE_DRIVES);
         }
 
-        memberRepository.delete(member);
+        member.delete();
     }
 
     @Transactional(readOnly = true)

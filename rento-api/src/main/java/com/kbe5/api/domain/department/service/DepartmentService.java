@@ -49,16 +49,12 @@ public class DepartmentService {
     }
 
     @Transactional
-    public DepartmentInfoResponse updateDepartment(Manager manager, Long departmentId, DepartmentUpdateRequest departmentUpdateRequest) {
+    public DepartmentInfoResponse updateDepartment(Long departmentId, DepartmentUpdateRequest departmentUpdateRequest) {
         Department department = departmentRepository.findById(departmentId)
                 .orElseThrow(() -> new DomainException(ErrorType.DEPARTMENT_NOT_FOUND));
 
         Company company = companyRepository.findByCompanyCode(departmentUpdateRequest.companyCode())
                 .orElseThrow(() -> new DomainException(ErrorType.COMPANY_NOT_FOUND));
-
-        if (!manager.getCompany().getId().equals(company.getId())) {
-            throw new DomainException(ErrorType.NOT_AUTHORIZED);
-        }
 
         validateDuplicateDepartmentName(departmentUpdateRequest.departmentName(), company.getId());
 
@@ -69,7 +65,7 @@ public class DepartmentService {
     }
 
     @Transactional
-    public void delete(Manager manager, Long departmentId) {
+    public void delete(Long departmentId) {
         List<Member> members = memberRepository.findAllByDepartmentId(departmentId);
 
         if(!members.isEmpty()) {
@@ -79,10 +75,6 @@ public class DepartmentService {
         Department department = departmentRepository.findById(departmentId).orElseThrow(
                 () -> new DomainException(ErrorType.DEPARTMENT_NOT_FOUND)
         );
-
-        if (!manager.getCompany().getId().equals(department.getCompany().getId())) {
-            throw new DomainException(ErrorType.NOT_AUTHORIZED);
-        }
 
         departmentRepository.delete(department);
     }

@@ -6,6 +6,7 @@ import com.kbe5.common.exception.DomainException;
 import com.kbe5.common.exception.ErrorType;
 import com.kbe5.domain.department.entity.Department;
 import com.kbe5.domain.department.repository.DepartmentRepository;
+import com.kbe5.domain.drive.repository.DriveRepository;
 import com.kbe5.domain.manager.entity.Manager;
 import com.kbe5.domain.vehicle.entity.Vehicle;
 import com.kbe5.domain.vehicle.entity.VehicleStatus;
@@ -23,6 +24,7 @@ public class VehicleService {
 
     private final VehicleRepository vehicleRepository;
     private final DepartmentRepository departmentRepository;
+    private final DriveRepository driveRepository;
 
     public void addVehicle(Vehicle vehicle, Long departmentId) {
         Department department = departmentRepository.findById(departmentId).orElseThrow(
@@ -84,7 +86,15 @@ public class VehicleService {
     }
 
     public void deleteVehicle(Long vehicleId){
-        vehicleRepository.deleteById(vehicleId);
+        Vehicle vehicle = vehicleRepository.findById(vehicleId).orElseThrow(
+                () -> new DomainException(ErrorType.VEHICLE_NOT_FOUND)
+        );
+
+        if (driveRepository.existsOngoingDriveByVehicleId(vehicleId)) {
+            throw new DomainException(ErrorType.VEHICLE_HAS_ACTIVE_DRIVES);
+        }
+
+        vehicle.delete();
     }
 
 

@@ -67,4 +67,21 @@ public interface DriveRepository extends JpaRepository<Drive, Long> {
             @Param("vehNum") String vehicleNumber,
             DriveStatus status
     );
+
+
+    @Query("""
+    SELECT COUNT(d) > 0 
+    FROM Drive d 
+    WHERE d.member.id = :memberId 
+      AND (d.driveStatus = 'READY' OR d.driveStatus = 'DRIVING')
+""")
+    boolean existsOngoingDriveByMemberId(@Param("memberId")Long memberId);
+
+    @Query("""
+    SELECT COUNT(d) > 0 
+    FROM Drive d 
+    WHERE d.vehicle.id = :vehicleId 
+      AND (d.driveStatus = 'READY' OR d.driveStatus = 'DRIVING')
+""")
+    boolean existsOngoingDriveByVehicleId(@Param("vehicleId") Long vehicleId);
 }

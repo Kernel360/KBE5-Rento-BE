@@ -11,7 +11,8 @@ public record VehicleResponse(
         String brand,
         String modelName,
         VehicleStatus status,
-        Long totalDistanceKm
+        Long totalDistanceKm,
+        boolean delete
 ) {
     public static VehicleResponse fromEntity(Vehicle vehicle) {
         return VehicleResponse.builder()
@@ -21,6 +22,7 @@ public record VehicleResponse(
                 .modelName(vehicle.getInfo().getModelName())
                 .status(vehicle.getStatus())
                 .totalDistanceKm(vehicle.getMileage().getTotalDistanceKm())
+                .delete(vehicle.isDeleteStatus())
                 .build();
     }
 

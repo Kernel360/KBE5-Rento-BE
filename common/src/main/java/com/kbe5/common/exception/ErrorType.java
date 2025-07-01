@@ -12,7 +12,6 @@ public enum ErrorType {
     DEPARTMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "부서를 찾을 수 없습니다"),
     DUPLICATE_DEPARTMENT_NAME(HttpStatus.BAD_REQUEST, "이미 존재하는 부서 이름입니다."),
     ALREADY_MEMBER(HttpStatus.BAD_REQUEST, "해당 부서에 소속된 직원이 있어 삭제할 수 없습니다."),
-    NOT_AUTHORIZED(HttpStatus.BAD_REQUEST, "해당 권한이 없습니다"),
 
     // VALIDATION
     VALIDATION_ERROR(HttpStatus.BAD_REQUEST, "값을 잘못 입력했습니다."),
@@ -64,7 +63,9 @@ public enum ErrorType {
     FAILED_DELETE_FROM_REDIS(HttpStatus.INTERNAL_SERVER_ERROR, "로그아웃 처리 중 서버 오류가 발생했습니다."),
 
     // AES256
-    FAILED_DECRYPT(HttpStatus.INTERNAL_SERVER_ERROR, "암호화 중 에러가 발생했습니다.");
+    FAILED_DECRYPT(HttpStatus.INTERNAL_SERVER_ERROR, "암호화 중 에러가 발생했습니다."),
+    MEMBER_HAS_ACTIVE_DRIVES(HttpStatus.BAD_REQUEST, "해당 사용자에 운행 예약/실시간 운행이 존재합니다."),
+    VEHICLE_HAS_ACTIVE_DRIVES(HttpStatus.BAD_REQUEST, "해당 차량에 운행 예약/실시간 운행이 존재합니다.");
 
     private final HttpStatus status;
     private final String message;
