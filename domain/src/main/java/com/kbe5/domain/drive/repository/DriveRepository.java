@@ -44,17 +44,16 @@ public interface DriveRepository extends JpaRepository<Drive, Long> {
             @Param("end")       LocalDateTime end
     );
 
-    @Query("""
+@Query("""
     select d
       from Drive d
-        where d.member.company    = :company
-            and d.deleteStatus = :status
-              and (:vehNum is null or d.vehicle.info.vehicleNumber like concat('%', :vehNum, '%'))
-              
-  """)
-    List<Drive> findByCompanyAndStatusAndVehicleNumber(
-            @Param("company") Company company,
-            @Param("vehNum") String vehicleNumber,
-            DriveStatus status
-    );
+     where d.member.company = :company
+       and d.driveStatus = :status
+       and (:vehNum is null or d.vehicle.info.vehicleNumber like concat('%', :vehNum, '%'))
+""")
+List<Drive> findByCompanyAndStatusAndVehicleNumber(
+        @Param("company") Company company,
+        @Param("status") DriveStatus status,
+        @Param("vehNum") String vehicleNumber
+);
 }
