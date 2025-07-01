@@ -36,10 +36,9 @@ public class DriveControllerImpl implements DriveController {
     }
 
     @Override
-    @PatchMapping("/cancel/{driveId}")
+    @DeleteMapping("/cancel/{driveId}")
     public ResponseEntity<ApiResponse<String>> driveCancel(@PathVariable Long driveId) {
         driveService.driveCancel(driveId);
-
         return ResEntityFactory.toResponse(ApiResultCode.SUCCESS,"운행이 취소되었습니다");
     }
 
