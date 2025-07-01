@@ -19,8 +19,7 @@ public class CycleInfoJdbcRepositoryImpl implements CycleInfoJdbcRepository {
     private static final String CYCLE_INFO_BULK_INSERT_SQL = "INSERT INTO cycle_info " +
         "(tsid, cycle_info_time, mdn, drive_id, sec, gps_condition, latitude, longitude, angle, speed, sum, battery) " +
         "VALUES (:tsid, :cycleInfoTime, :mdn, :driveId,:sec, :gpsCondition, :latitude, :longitude, :angle, :speed, "
-        + ":sum, "
-        + ":battery)";
+        + ":sum, :battery)";
 
 
     @Override
