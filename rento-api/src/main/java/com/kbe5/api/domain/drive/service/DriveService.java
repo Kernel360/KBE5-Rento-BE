@@ -72,8 +72,8 @@ public class DriveService {
     }
 
     // 운행 목록 조회
-    public Page<Drive> getDriveList(Manager manager, Pageable pageable){
-        return driveRepository.findByMember_Company(manager.getCompany(), pageable);
+    public Page<Drive> getDriveList(Manager manager, LocalDateTime startDate, LocalDateTime endDate, Pageable pageable){
+        return driveRepository.findByCompanyAndOptionalDateRange(manager.getCompany(), startDate, endDate, pageable);
     }
 
     // 운행 상세
