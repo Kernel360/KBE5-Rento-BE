@@ -29,8 +29,11 @@ public class VehicleService {
                 () -> new DomainException(ErrorType.DEPARTMENT_NOT_FOUND)
         );
 
-       vehicleRepository.findByInfo_VehicleNumber(vehicle.getInfo().getVehicleNumber()).orElseThrow(
-                       () -> new DomainException(ErrorType.SAME_VEHICLE_NUMBER));
+       vehicleRepository.findByInfo_VehicleNumber(vehicle.getInfo().getVehicleNumber()).ifPresent(
+               v -> {
+                   throw new DomainException(ErrorType.SAME_VEHICLE_NUMBER);
+               }
+       );
 
         vehicle.addDepartment(department);
         var res = vehicleRepository.save(vehicle);
