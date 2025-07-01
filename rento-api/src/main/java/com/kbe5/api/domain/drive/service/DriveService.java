@@ -44,9 +44,6 @@ public class DriveService {
         }
 
         driveRepository.save(drive);
-
-        vehicle.reservation();
-
         drive.addMdn(vehicle.getMileage().getMdn());
     }
 
@@ -71,11 +68,7 @@ public class DriveService {
 
     // 운행 취소
     public void driveCancel(Long driveId){
-        Drive drive = driveRepository.findById(driveId).orElseThrow(
-                () -> new DomainException(ErrorType.DRIVE_NOT_FOUND));
-
-        drive.getVehicle().cancel();
-        drive.delete();
+        driveRepository.deleteById(driveId);
     }
 
     // 운행 목록 조회
@@ -103,6 +96,7 @@ public class DriveService {
 
     public List<Drive> findStream(Manager manager, String vehicleNumber){
         return driveRepository.findByCompanyAndStatusAndVehicleNumber(manager.getCompany(),
-                vehicleNumber);
+                vehicleNumber, DriveStatus.DRIVING);
     }
+
 }

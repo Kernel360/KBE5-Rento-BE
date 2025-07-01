@@ -33,7 +33,7 @@ public class DriveService {
         drive.driveEnd();
 
         drive.getVehicle().cancel();
-        drive.addDistance(distance);
         drive.getVehicle().addDistance(distance);
+        drive.addDistance(distance);
     }
 }

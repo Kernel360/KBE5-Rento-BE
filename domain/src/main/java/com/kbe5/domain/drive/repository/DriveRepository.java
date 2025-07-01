@@ -22,6 +22,8 @@ public interface DriveRepository extends JpaRepository<Drive, Long> {
       FROM Drive d
       WHERE d.mdn = :mdn
         AND d.startDate <= :startDate
+            ORDER BY d.startDate DESC
+                 LIMIT 1
     """)
     Long findIdByMdnAndStartDateBetween(@Param("mdn") Long mdn,
                                         @Param("startDate") LocalDateTime startDate
@@ -46,10 +48,13 @@ public interface DriveRepository extends JpaRepository<Drive, Long> {
     select d
       from Drive d
         where d.member.company    = :company
-            and (:vehNum    is null or d.vehicle.info.vehicleNumber = :vehNum)
+            and d.deleteStatus = :status
+              and (:vehNum is null or d.vehicle.info.vehicleNumber like concat('%', :vehNum, '%'))
+              
   """)
     List<Drive> findByCompanyAndStatusAndVehicleNumber(
-            @Param("company")     Company     company,
-            @Param("vehNum")      String      vehicleNumber    // null 이면 차량번호 조건 무시
+            @Param("company") Company company,
+            @Param("vehNum") String vehicleNumber,
+            DriveStatus status
     );
 }

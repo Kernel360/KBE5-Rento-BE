@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 
-@Service("commonCycleinfoSummaryService")
+@Service("commonCycleInfoSummaryService")
 @RequiredArgsConstructor
 public class CycleInfoSummaryService {
 
