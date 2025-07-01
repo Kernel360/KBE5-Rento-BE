@@ -95,6 +95,7 @@ jobs:
               -p 8080:8080 \
               -v /home/ubuntu/firebase:/app/firebase \
               -v /home/ubuntu/log:/app/log \
+              -e TZ=Asia/Seoul \
               -e SPRING_PROFILES_ACTIVE=deploy \
               -e FIREBASE_PATH="/app/firebase/rento-firebase.json" \
               -e DB_HOST="\$DB_HOST" -e DB_PORT="\$DB_PORT" \

@@ -55,7 +55,7 @@ public interface DriveRepository extends JpaRepository<Drive, Long> {
             @Param("end")       LocalDateTime end
     );
 
-    @Query("""
+@Query("""
     select d
       from Drive d
         where d.member.company = :company

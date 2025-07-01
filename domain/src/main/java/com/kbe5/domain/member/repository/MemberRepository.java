@@ -29,15 +29,15 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
             @Param("search") String search,
             Pageable pageable);
 
-    boolean existsByLoginId(String loginId);
-
-    boolean existsByEmail(String email);
-
-    boolean existsByPhoneNumber(String phoneNumber);
-
     boolean existsByEmailAndIdNot(String email, Long memberId);
 
     boolean existsByLoginIdAndIdNot(String loginId, Long memberId);
 
     boolean existsByPhoneNumberAndIdNot(String phoneNumber, Long memberId);
+
+    boolean existsByCompanyCodeAndLoginId(String companyCode, String loginId);
+
+    boolean existsByCompanyCodeAndEmail(String companyCode, String email);
+
+    boolean existsByCompanyCodeAndPhoneNumber(String companyCode, String phoneNumber);
 }
