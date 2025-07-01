@@ -61,16 +61,12 @@ public class MemberService {
 
 
     @Transactional
-    public MemberInfoResponse update(Manager manager, MemberUpdateRequest request, Long memberId) {
+    public MemberInfoResponse update(MemberUpdateRequest request, Long memberId) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new DomainException(ErrorType.MEMBER_NOT_FOUND));
 
         Department department = departmentRepository.findById(request.departmentId())
                 .orElseThrow(() -> new DomainException(ErrorType.DEPARTMENT_NOT_FOUND));
-
-        if (!manager.getCompany().getId().equals(member.getCompany().getId())) {
-            throw new DomainException(ErrorType.NOT_AUTHORIZED);
-        }
 
         // 중복 체크 (자기 자신은 제외)
         if (memberRepository.existsByEmailAndIdNot(request.email(), memberId)) {

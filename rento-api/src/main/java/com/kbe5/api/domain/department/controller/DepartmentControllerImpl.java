@@ -65,9 +65,7 @@ public class DepartmentControllerImpl implements DepartmentController {
             @PathVariable Long departmentId,
             @Validated @RequestBody DepartmentUpdateRequest departmentUpdateRequest
     ) {
-        Manager manager = customManagerDetails.getManager();
-
-        DepartmentInfoResponse response = departmentService.updateDepartment(manager, departmentId, departmentUpdateRequest);
+        DepartmentInfoResponse response = departmentService.updateDepartment(departmentId, departmentUpdateRequest);
 
         return ResEntityFactory.toResponse(ApiResultCode.SUCCESS, response);
     }
@@ -78,9 +76,8 @@ public class DepartmentControllerImpl implements DepartmentController {
     public ResponseEntity<ApiResponse<String>> deleteDepartment(
             @AuthenticationPrincipal CustomManagerDetails customManagerDetails,
             @PathVariable Long departmentId) {
-        Manager manager = customManagerDetails.getManager();
 
-        departmentService.delete(manager, departmentId);
+        departmentService.delete(departmentId);
 
         return ResEntityFactory.toResponse(ApiResultCode.SUCCESS, "success");
     }

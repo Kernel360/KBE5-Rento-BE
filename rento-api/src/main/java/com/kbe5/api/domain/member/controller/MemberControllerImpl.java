@@ -47,9 +47,8 @@ public class MemberControllerImpl implements MemberController {
             @PathVariable Long memberId,
             @RequestBody @Validated MemberUpdateRequest request
     ) {
-        Manager manager = customManagerDetails.getManager();
 
-        return ResEntityFactory.toResponse(ApiResultCode.SUCCESS, memberService.update(manager, request ,memberId));
+        return ResEntityFactory.toResponse(ApiResultCode.SUCCESS, memberService.update(request ,memberId));
     }
 
     @Override
