@@ -15,15 +15,26 @@ import java.util.List;
 public interface DriveRepository extends JpaRepository<Drive, Long> {
 
 
-    Page<Drive> findByMember_Company(Company company, Pageable pageable);
+    @Query("""
+    select d
+    from Drive d
+    where d.member.company = :company
+     and ( :start is null or d.startDate >= :start )
+     and ( :end   is null or d.startDate <= :end   )
+    """)
+    Page<Drive> findByCompanyAndOptionalDateRange(
+            @Param("company") Company company,
+            @Param("start")   LocalDateTime start,
+            @Param("end")     LocalDateTime end,
+            Pageable pageable
+    );
 
     @Query("""
       SELECT d.id
       FROM Drive d
       WHERE d.mdn = :mdn
         AND d.startDate <= :startDate
-            ORDER BY d.startDate DESC
-                 LIMIT 1
+            ORDER BY d.startDate ASC LIMIT 1
     """)
     Long findIdByMdnAndStartDateBetween(@Param("mdn") Long mdn,
                                         @Param("startDate") LocalDateTime startDate
@@ -47,13 +58,13 @@ public interface DriveRepository extends JpaRepository<Drive, Long> {
 @Query("""
     select d
       from Drive d
-     where d.member.company = :company
-       and d.driveStatus = :status
-       and (:vehNum is null or d.vehicle.info.vehicleNumber like concat('%', :vehNum, '%'))
-""")
-List<Drive> findByCompanyAndStatusAndVehicleNumber(
-        @Param("company") Company company,
-        @Param("status") DriveStatus status,
-        @Param("vehNum") String vehicleNumber
-);
+        where d.member.company = :company
+            and d.driveStatus = :status
+              and (:vehNum is null or d.vehicle.info.vehicleNumber like concat('%', :vehNum, '%'))
+  """)
+    List<Drive> findByCompanyAndStatusAndVehicleNumber(
+            @Param("company") Company company,
+            @Param("vehNum") String vehicleNumber,
+            DriveStatus status
+    );
 }

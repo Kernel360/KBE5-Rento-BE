@@ -17,6 +17,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -45,9 +46,9 @@ public class DriveControllerImpl implements DriveController {
     @Override
     @GetMapping
     public ResponseEntity<ApiResponse<PagedModel<DriveResponse>>> getDriveList(
-            @AuthenticationPrincipal CustomManagerDetails manager, Pageable pageable) {
+            @AuthenticationPrincipal CustomManagerDetails manager, LocalDateTime startDate, LocalDateTime endDate, Pageable pageable) {
         return ResEntityFactory.toResponse(ApiResultCode.SUCCESS,
-                new PagedModel<>(driveService.getDriveList(manager.getManager(), pageable)
+                new PagedModel<>(driveService.getDriveList(manager.getManager(), startDate, endDate, pageable)
                         .map(DriveResponse::fromEntity)));
     }
 
