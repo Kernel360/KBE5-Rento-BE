@@ -5,6 +5,8 @@ logging:
     com.kbe5.api: INFO
 
 spring:
+  jackson:
+    time-zone: Asia/Seoul
   config:
     activate:
       on-profile: deploy

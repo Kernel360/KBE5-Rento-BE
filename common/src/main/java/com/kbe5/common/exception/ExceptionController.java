@@ -1,6 +1,7 @@
 package com.kbe5.common.exception;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -27,9 +28,15 @@ public class ExceptionController {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ExceptionResponse> methodArgumentNotValidExceptionHandler(MethodArgumentNotValidException e) {
-        log.warn("ValidationException: {}", e.getMessage());
+        // 첫 번째 필드 에러 메시지를 꺼냄
+        String errorMessage = e.getBindingResult()
+                .getFieldErrors()
+                .stream()
+                .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                .findFirst()
+                .orElse(ErrorType.VALIDATION_ERROR.getMessage()); // 기본 메시지
 
-        return ResponseEntity.badRequest().body(new ExceptionResponse(ErrorType.VALIDATION_ERROR.getMessage()));
+        return ResponseEntity.badRequest().body(new ExceptionResponse(errorMessage));
 
     }
 
