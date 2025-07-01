@@ -99,19 +99,30 @@ public class MemberControllerImpl implements MemberController {
     //아이디 중복 체크
     @GetMapping("/check-id/{loginId}")
     public ResponseEntity<ApiResponse<Boolean>> checkId(
+            @AuthenticationPrincipal CustomManagerDetails customManagerDetails,
             @PathVariable String loginId) {
-        return ResEntityFactory.toResponse(ApiResultCode.SUCCESS, !memberService.isExistLoginId(loginId));
+        String companyCode = customManagerDetails.getManager().getCompanyCode();
+
+        return ResEntityFactory.toResponse(ApiResultCode.SUCCESS, !memberService.isExistLoginId(companyCode, loginId));
     }
 
     //이메일 중복 체크
     @GetMapping("/check-email/{email}")
-    public ResponseEntity<ApiResponse<Boolean>> checkEmail(@PathVariable String email) {
-        return ResEntityFactory.toResponse(ApiResultCode.SUCCESS, !memberService.isExistEmail(email));
+    public ResponseEntity<ApiResponse<Boolean>> checkEmail(
+            @AuthenticationPrincipal CustomManagerDetails customManagerDetails,
+            @PathVariable String email) {
+        String companyCode = customManagerDetails.getManager().getCompanyCode();
+
+        return ResEntityFactory.toResponse(ApiResultCode.SUCCESS, !memberService.isExistEmail(companyCode, email));
     }
 
     //전화번호 중복 체크
     @GetMapping("/check-phone/{phoneNumber}")
-    public ResponseEntity<ApiResponse<Boolean>> checkPhoneNumber(@PathVariable String phoneNumber) {
-        return ResEntityFactory.toResponse(ApiResultCode.SUCCESS, !memberService.isExistPhoneNumber(phoneNumber));
+    public ResponseEntity<ApiResponse<Boolean>> checkPhoneNumber(
+            @AuthenticationPrincipal CustomManagerDetails customManagerDetails,
+            @PathVariable String phoneNumber) {
+        String companyCode = customManagerDetails.getManager().getCompanyCode();
+
+        return ResEntityFactory.toResponse(ApiResultCode.SUCCESS, !memberService.isExistPhoneNumber(companyCode, phoneNumber));
     }
 }

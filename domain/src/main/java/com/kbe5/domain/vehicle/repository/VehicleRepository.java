@@ -1,6 +1,5 @@
 package com.kbe5.domain.vehicle.repository;
 
-import com.kbe5.domain.company.entity.Company;
 import com.kbe5.domain.vehicle.entity.Vehicle;
 import com.kbe5.domain.vehicle.entity.VehicleStatus;
 import org.springframework.data.domain.Page;
@@ -9,12 +8,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import java.util.List;
 import java.util.Optional;
 
 public interface VehicleRepository extends JpaRepository<Vehicle, Long> {
 
-        List<Vehicle> findByCompany(Company company);
         Optional<Vehicle> findByInfo_VehicleNumber(String vehicleNumber);
 
         Page<Vehicle> findAllByCompanyId(Long companyId, Pageable pageable);
