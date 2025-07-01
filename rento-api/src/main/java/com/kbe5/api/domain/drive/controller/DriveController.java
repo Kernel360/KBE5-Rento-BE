@@ -10,6 +10,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -28,7 +30,7 @@ public interface DriveController {
     ResponseEntity<ApiResponse<String>> driveCancel(Long driveId);
 
     @Operation(summary = "운행 목록 조회", description = "운행 목록을 조회합니다.")
-    ResponseEntity<ApiResponse<List<DriveResponse>>> getDriveList(CustomManagerDetails manager);
+    ResponseEntity<ApiResponse<PagedModel<DriveResponse>>> getDriveList(CustomManagerDetails manager, Pageable pageable);
 
     @Operation(summary = "운행 상세 조회", description = "운행 상세를 조회합니다.")
     @Parameter(name = "driveId", description = "운행 상세 조회할 ID", example = "1", required = true)
