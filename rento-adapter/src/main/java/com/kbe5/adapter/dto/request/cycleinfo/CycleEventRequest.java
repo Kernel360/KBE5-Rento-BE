@@ -14,6 +14,7 @@ import jakarta.validation.constraints.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 public record CycleEventRequest(
     @JsonProperty("mdn")
@@ -58,6 +59,7 @@ public record CycleEventRequest(
         }
 
         return CycleEvent.builder()
+            .createdAt(LocalDateTime.now())
             .oTime(cycleInfos.get(0).getCycleInfoTime())
             .mdn(this.mdn())
             .terminalId(this.terminalId())

@@ -5,8 +5,6 @@ logging:
     com.kbe5.api: INFO
 
 spring:
-  jackson:
-    time-zone: Asia/Seoul
   config:
     activate:
       on-profile: deploy
@@ -25,7 +23,7 @@ spring:
     properties:
       hibernate.jdbc.time_zone: Asia/Seoul
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
 
   data:
     redis:

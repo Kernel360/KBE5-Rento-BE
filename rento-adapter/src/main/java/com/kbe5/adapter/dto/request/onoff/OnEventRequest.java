@@ -13,6 +13,7 @@ import jakarta.validation.constraints.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 public record OnEventRequest(
 
@@ -83,6 +84,7 @@ public record OnEventRequest(
 ) {
     public OnOffEvent toEntity(DeviceToken token) {
         return OnOffEvent.builder()
+            .createdAt(LocalDateTime.now())
             .oTime(this.onTime())
             .mdn(this.mdn())
             .terminalId(this.terminalId())
