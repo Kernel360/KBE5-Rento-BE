@@ -96,7 +96,7 @@ public class DriveService {
 
     public List<Drive> findStream(Manager manager, String vehicleNumber){
         return driveRepository.findByCompanyAndStatusAndVehicleNumber(manager.getCompany(),
-                DriveStatus.DRIVING, vehicleNumber);
+                vehicleNumber, DriveStatus.DRIVING);
     }
 
 }
