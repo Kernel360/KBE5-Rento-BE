@@ -32,6 +32,8 @@ public class DeviceControllerImpl implements DeviceController{
     public ResponseEntity<DeviceRegisterResponse> registerDevice(
         @RequestBody @Validated DeviceRegisterRequest request) {
 
+        log.info("디바이스 등록: {}", request);
+
         Device device = request.toEntity();
 
         Device registerDevice = deviceService.registerDevice(device);
@@ -45,6 +47,8 @@ public class DeviceControllerImpl implements DeviceController{
     public ResponseEntity<DeviceTokenResponse> issueToken(
         @RequestBody @Validated DeviceTokenRequest deviceTokenRequest) {
 
+        log.info("디바이스 토큰 요청: {}", deviceTokenRequest.toString());
+
         DeviceToken deviceToken = deviceService.issueToken(deviceTokenRequest.mdn());
 
         return ResponseEntity.ok(DeviceTokenResponse.of(DeviceResultCode.SUCCESS, deviceToken));
@@ -53,6 +57,8 @@ public class DeviceControllerImpl implements DeviceController{
     @PostMapping("/get-set-info")
     public ResponseEntity<DeviceSettingResponse> getSetInfo(@RequestBody @Validated
                                                             DeviceSettingRequest request) {
+        log.info("디바이스 설정 정보: {}", request.toString());
+
         return ResponseEntity.ok(deviceService.getDeviceSetInfo(request.mdn()));
     }
 }
