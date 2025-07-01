@@ -64,7 +64,8 @@ public enum ErrorType {
     FAILED_DELETE_FROM_REDIS(HttpStatus.INTERNAL_SERVER_ERROR, "로그아웃 처리 중 서버 오류가 발생했습니다."),
 
     // AES256
-    FAILED_DECRYPT(HttpStatus.INTERNAL_SERVER_ERROR, "암호화 중 에러가 발생했습니다.");
+    FAILED_DECRYPT(HttpStatus.INTERNAL_SERVER_ERROR, "암호화 중 에러가 발생했습니다."),
+    MEMBER_HAS_ACTIVE_DRIVES(HttpStatus.BAD_REQUEST, "해당 사용자에 운행 예약/실시간 운행이 존재합니다." );
 
     private final HttpStatus status;
     private final String message;

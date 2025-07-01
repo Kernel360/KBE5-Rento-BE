@@ -60,7 +60,7 @@ public class MemberControllerImpl implements MemberController {
     ) {
         Manager manager = customManagerDetails.getManager();
 
-        memberService.delete(manager, memberId);
+        memberService.delete(memberId);
 
         return ResEntityFactory.toResponse(ApiResultCode.SUCCESS, "성공적으로 삭제되었습니다.");
     }
