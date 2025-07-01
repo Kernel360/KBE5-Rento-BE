@@ -15,15 +15,11 @@ import java.time.LocalDateTime;
 @Getter
 @Entity
 @Table(name = "cycle_info")
-@IdClass(CycleInfoId.class)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CycleInfo {
 
     @Id
-    private UUID uuid;
-
-    @Id
-    private LocalDateTime createTime;
+    private Long tsid;
 
     private Long mdn;
 
@@ -51,11 +47,10 @@ public class CycleInfo {
     private Integer battery;
 
     @Builder
-    public CycleInfo(LocalDateTime cycleInfoTime, Long mdn, Long driveId, Integer sec,
+    public CycleInfo(Long tsid, LocalDateTime cycleInfoTime, Long mdn, Long driveId, Integer sec,
         GpsCondition gpsCondition, BigDecimal latitude, BigDecimal longitude, Integer angle, Integer speed, Long sum,
         Integer battery) {
-        this.createTime = LocalDateTime.now();
-        this.uuid = UUID.randomUUID();
+        this.tsid = tsid;
         this.cycleInfoTime = cycleInfoTime;
         this.mdn = mdn;
         this.driveId = driveId;

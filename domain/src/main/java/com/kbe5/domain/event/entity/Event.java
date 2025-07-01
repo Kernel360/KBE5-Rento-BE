@@ -26,11 +26,13 @@ import java.time.LocalDateTime;
 @DiscriminatorColumn(discriminatorType = DiscriminatorType.STRING)
 public abstract class Event {
 
-    @Id
-    private UUID uuid;
 
     @Id
-    private LocalDateTime createTime;
+    private LocalDateTime createdAt;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID uuid;
 
     private Long mdn;
 

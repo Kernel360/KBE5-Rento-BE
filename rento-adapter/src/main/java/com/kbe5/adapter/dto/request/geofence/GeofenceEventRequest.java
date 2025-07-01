@@ -94,8 +94,7 @@ public record GeofenceEventRequest(
 ) {
     public GeofenceEvent toEntity(Long driveId) {
         return GeofenceEvent.builder()
-            .uuid(UUID.randomUUID())
-            .createTime(LocalDateTime.now())
+            .createdAt(LocalDateTime.now())
             .oTime(this.oTime())
             .mdn(this.mdn())
             .terminalId(this.terminalId())

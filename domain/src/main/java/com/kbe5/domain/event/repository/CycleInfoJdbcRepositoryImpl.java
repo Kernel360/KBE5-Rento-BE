@@ -1,6 +1,7 @@
 package com.kbe5.domain.event.repository;
 
 import com.kbe5.domain.event.entity.CycleInfo;
+import io.hypersistence.tsid.TSID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -16,8 +17,9 @@ public class CycleInfoJdbcRepositoryImpl implements CycleInfoJdbcRepository {
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     private static final String CYCLE_INFO_BULK_INSERT_SQL = "INSERT INTO cycle_info " +
-        "(cycle_info_time, mdn, drive_id, sec, gps_condition, latitude, longitude, angle, speed, sum, battery) " +
-        "VALUES (:cycleInfoTime, :mdn, :driveId,:sec, :gpsCondition, :latitude, :longitude, :angle, :speed, :sum, "
+        "(tsid, cycle_info_time, mdn, drive_id, sec, gps_condition, latitude, longitude, angle, speed, sum, battery) " +
+        "VALUES (:tsid, :cycleInfoTime, :mdn, :driveId,:sec, :gpsCondition, :latitude, :longitude, :angle, :speed, "
+        + ":sum, "
         + ":battery)";
 
 
@@ -36,6 +38,7 @@ public class CycleInfoJdbcRepositoryImpl implements CycleInfoJdbcRepository {
 
     private SqlParameterSource makeCycleInfoParameterSource(CycleInfo cycleInfo) {
         return new MapSqlParameterSource()
+            .addValue("tsid", TSID.Factory.getTsid().toLong())
             .addValue("cycleInfoTime", cycleInfo.getCycleInfoTime())
             .addValue("mdn", cycleInfo.getMdn())
             .addValue("driveId", cycleInfo.getDriveId())

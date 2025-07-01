@@ -85,8 +85,7 @@ public record OffEventRequest(
 
     public OnOffEvent toEntity(DeviceToken token) {
         return OnOffEvent.builder()
-            .uuid(UUID.randomUUID())
-            .createTime(LocalDateTime.now())
+            .createdAt(LocalDateTime.now())
             .oTime(this.offTime())
             .mdn(this.mdn())
             .gpsCondition(this.gpsCondition())

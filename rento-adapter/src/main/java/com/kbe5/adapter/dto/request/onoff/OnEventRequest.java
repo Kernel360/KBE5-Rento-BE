@@ -84,8 +84,7 @@ public record OnEventRequest(
 ) {
     public OnOffEvent toEntity(DeviceToken token) {
         return OnOffEvent.builder()
-            .uuid(UUID.randomUUID())
-            .createTime(LocalDateTime.now())
+            .createdAt(LocalDateTime.now())
             .oTime(this.onTime())
             .mdn(this.mdn())
             .terminalId(this.terminalId())

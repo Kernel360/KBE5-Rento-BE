@@ -59,8 +59,7 @@ public record CycleEventRequest(
         }
 
         return CycleEvent.builder()
-            .uuid(UUID.randomUUID())
-            .createTime(LocalDateTime.now())
+            .createdAt(LocalDateTime.now())
             .oTime(cycleInfos.get(0).getCycleInfoTime())
             .mdn(this.mdn())
             .terminalId(this.terminalId())
