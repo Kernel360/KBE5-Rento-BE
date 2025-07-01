@@ -83,5 +83,5 @@ public interface DriveRepository extends JpaRepository<Drive, Long> {
     WHERE d.vehicle.id = :vehicleId 
       AND (d.driveStatus = 'READY' OR d.driveStatus = 'DRIVING')
 """)
-    boolean existsOngoingDriveByVehicleId(Long vehicleId);
+    boolean existsOngoingDriveByVehicleId(@Param("vehicleId") Long vehicleId);
 }
