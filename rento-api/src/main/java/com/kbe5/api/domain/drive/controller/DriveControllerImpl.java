@@ -10,6 +10,8 @@ import com.kbe5.common.response.api.ApiResponse;
 import com.kbe5.common.response.api.ApiResultCode;
 import com.kbe5.domain.drive.entity.Drive;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
@@ -43,13 +45,11 @@ public class DriveControllerImpl implements DriveController {
 
     @Override
     @GetMapping
-    public ResponseEntity<ApiResponse<List<DriveResponse>>> getDriveList(
-            @AuthenticationPrincipal CustomManagerDetails manager) {
-        return ResEntityFactory.toResponse(ApiResultCode.SUCCESS, driveService
-                        .getDriveList(manager.getManager())
-                        .stream()
-                        .map(DriveResponse::fromEntity)
-                        .toList());
+    public ResponseEntity<ApiResponse<PagedModel<DriveResponse>>> getDriveList(
+            @AuthenticationPrincipal CustomManagerDetails manager, Pageable pageable) {
+        return ResEntityFactory.toResponse(ApiResultCode.SUCCESS,
+                new PagedModel<>(driveService.getDriveList(manager.getManager(), pageable)
+                        .map(DriveResponse::fromEntity)));
     }
 
     @Override
@@ -64,7 +64,7 @@ public class DriveControllerImpl implements DriveController {
             @AuthenticationPrincipal CustomManagerDetails manager,
             @RequestParam(required=false) String vehicleNumber) {
         return ResEntityFactory.toResponse(ApiResultCode.SUCCESS,
-                driveService.findstream(manager.getManager(), vehicleNumber)
+                driveService.findStream(manager.getManager(), vehicleNumber)
                         .stream()
                         .map(DriveResponse::fromEntity)
                         .toList());

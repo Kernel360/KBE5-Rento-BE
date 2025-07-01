@@ -11,6 +11,8 @@ import com.kbe5.domain.vehicle.entity.Vehicle;
 import com.kbe5.domain.vehicle.repository.VehicleRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -32,7 +34,8 @@ public class DriveService {
         Vehicle vehicle = vehicleRepository.findById(drive.getVehicle().getId()).orElseThrow(()
         -> new DomainException(ErrorType.VEHICLE_NOT_FOUND));
 
-        if(driveRepository.existsByDateOverlap(drive.getStartDate(), drive.getEndDate())){
+        if(drive.getEndDate().isBefore(drive.getStartDate())
+                || drive.getEndDate().isEqual(drive.getStartDate())){
             throw new DomainException(ErrorType.DRIVE_OVERLAP);
         }
 
@@ -76,9 +79,8 @@ public class DriveService {
     }
 
     // 운행 목록 조회
-    // todo: 운행 목록은 업체 기준으로 찾아준다 -> 업체 코드
-    public List<Drive> getDriveList(Manager manager){
-        return driveRepository.findByMember_Company(manager.getCompany());
+    public Page<Drive> getDriveList(Manager manager, Pageable pageable){
+        return driveRepository.findByMember_Company(manager.getCompany(), pageable);
     }
 
     // 운행 상세
@@ -91,17 +93,16 @@ public class DriveService {
     // 이벤트를 위한 해당 차량 찾기
     public Long findDriveForEvent(Long mdn, LocalDateTime onTime){
 
-        Long driveid = driveRepository.findIdByMdnAndStartDateBetween(mdn, onTime);
+        Long driveId = driveRepository.findIdByMdnAndStartDateBetween(mdn, onTime);
 
-        if(driveid == null){
+        if(driveId == null){
             throw new DomainException(ErrorType.DRIVE_NOT_FOUND);
         }
-        return driveid;
+        return driveId;
     }
 
-    public List<Drive> findstream(Manager manager, String vehicleNumber){
+    public List<Drive> findStream(Manager manager, String vehicleNumber){
         return driveRepository.findByCompanyAndStatusAndVehicleNumber(manager.getCompany(),
-                DriveStatus.DRIVING,
                 vehicleNumber);
     }
 }
