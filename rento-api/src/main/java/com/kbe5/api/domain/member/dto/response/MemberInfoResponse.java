@@ -11,8 +11,7 @@ public record MemberInfoResponse(
         String login_id,
         String phoneNumber,
         Long departmentId,
-        String departmentName,
-        boolean delete
+        String departmentName
 ) {
     public static MemberInfoResponse from(Member member) {
         return new MemberInfoResponse(
@@ -23,8 +22,7 @@ public record MemberInfoResponse(
                 member.getLoginId(),
                 member.getPhoneNumber(),
                 member.getDepartment().getId(),
-                member.getDepartment().getDepartmentName(),
-                member.isDeleteStatus()
+                member.getDepartment().getDepartmentName()
         );
     }
 

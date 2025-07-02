@@ -52,6 +52,7 @@ public interface VehicleRepository extends JpaRepository<Vehicle, Long> {
         @Query("""
         SELECT v FROM Vehicle v
                 WHERE v.company.id = :cid AND v.info.vehicleNumber like concat('%', :vnum ,'%')
+                AND v.deleteStatus = false
         """)
         Page<Vehicle> findVehicleByCompanyIdAndInfo_VehicleNumber(@Param("cid") Long companyId,
                                                                   @Param("vnum") String vehicleNumber,

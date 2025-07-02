@@ -13,16 +13,19 @@ import java.util.List;
 public interface MemberRepository extends JpaRepository<Member, Long> {
     List<Member> findAllByDepartmentId(Long id);
 
-    @Query("SELECT m FROM Member m " +
-            "WHERE m.company.id = :companyId " +
-            "AND (:position IS NULL OR m.position = :position) " +
-            "AND (:departmentId IS NULL OR m.department.id = :departmentId) " +
-            "AND (:search IS NULL OR :search = '' OR " +
-            "     LOWER(m.name) LIKE LOWER(CONCAT('%', :search, '%')) OR " +
-            "     LOWER(m.email) LIKE LOWER(CONCAT('%', :search, '%'))" +
-            "AND m.deleteStatus = false" +
-            ") " +
-            "ORDER BY m.createdAt DESC")
+    @Query("""
+            SELECT m FROM Member m
+            WHERE m.company.id = :companyId
+            AND (:position IS NULL OR m.position = :position)
+            AND (:departmentId IS NULL OR m.department.id = :departmentId)
+            AND (
+                :search IS NULL OR :search = '' OR
+                LOWER(m.name) LIKE LOWER(CONCAT('%', :search, '%')) OR
+                LOWER(m.email) LIKE LOWER(CONCAT('%', :search, '%'))
+            )
+            AND m.deleteStatus = false
+            ORDER BY m.createdAt DESC
+    """)
     Page<Member> findMembersByConditions(
             @Param("companyId") Long companyId,
             @Param("position") Position position,
