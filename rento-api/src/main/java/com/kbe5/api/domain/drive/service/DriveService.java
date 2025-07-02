@@ -43,6 +43,11 @@ public class DriveService {
             throw new DomainException(ErrorType.DRIVE_IS_FOUND);
         }
 
+        LocalDateTime minimumTime = LocalDateTime.now().plusMinutes(5); //5분의 여유 타임 주기
+        if(drive.getStartDate().isBefore(minimumTime)){
+            throw new DomainException(ErrorType.PAST_TIME);
+        }
+
         driveRepository.save(drive);
         drive.addMdn(vehicle.getMileage().getMdn());
     }
