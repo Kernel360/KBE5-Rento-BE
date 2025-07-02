@@ -28,6 +28,7 @@ public enum ErrorType {
     INVALID_POSITION(HttpStatus.BAD_REQUEST, "존재하지 않은 직책입니다."),
     DUPLICATE_EMAIL(HttpStatus.BAD_REQUEST, "이미 존재하는 이메일입니다." ),
     DUPLICATE_LOGIN_ID(HttpStatus.BAD_REQUEST, "이미 존재하는 아이디입니다." ),
+    MEMBER_HAS_ACTIVE_DRIVES(HttpStatus.BAD_REQUEST, "해당 사용자에 운행 예약/실시간 운행이 존재합니다."),
 
     // SECURITY
     INVALID_TOKEN(HttpStatus.UNAUTHORIZED, "토큰이 없거나 잘못된 형식입니다."),
@@ -39,6 +40,8 @@ public enum ErrorType {
     // VEHICLE
     SAME_VEHICLE_NUMBER(HttpStatus.BAD_REQUEST, "이미 등록된 차량 번호입니다."),
     VEHICLE_NOT_FOUND(HttpStatus.NOT_FOUND, "차량을 찾을 수 없습니다"),
+    VEHICLE_HAS_ACTIVE_DRIVES(HttpStatus.BAD_REQUEST, "해당 차량에 운행 예약/실시간 운행이 존재합니다."),
+
 
     // Drive
     DRIVE_NOT_FOUND(HttpStatus.NOT_FOUND, "운행을 찾지 못했습니다."),
@@ -46,6 +49,7 @@ public enum ErrorType {
     DRIVE_NOT_DISTANCE(HttpStatus.BAD_REQUEST, "주행 거리가 없습니다"),
     DRIVE_OVERLAP(HttpStatus.BAD_REQUEST, "시간을 잘못 입력했습니다"),
     DRIVE_IS_FOUND(HttpStatus.BAD_REQUEST, "해당 시간에는 운행이 존재합니다"),
+    PAST_TIME(HttpStatus.BAD_REQUEST, "현재보다 이전 시간에는 예약할 수 없습니다."),
 
     // Geofence
     GEOFENCE_NOT_FOUND(HttpStatus.NOT_FOUND, "지오펜스를 찾을 수 없습니다."),
@@ -63,9 +67,7 @@ public enum ErrorType {
     FAILED_DELETE_FROM_REDIS(HttpStatus.INTERNAL_SERVER_ERROR, "로그아웃 처리 중 서버 오류가 발생했습니다."),
 
     // AES256
-    FAILED_DECRYPT(HttpStatus.INTERNAL_SERVER_ERROR, "암호화 중 에러가 발생했습니다."),
-    MEMBER_HAS_ACTIVE_DRIVES(HttpStatus.BAD_REQUEST, "해당 사용자에 운행 예약/실시간 운행이 존재합니다."),
-    VEHICLE_HAS_ACTIVE_DRIVES(HttpStatus.BAD_REQUEST, "해당 차량에 운행 예약/실시간 운행이 존재합니다.");
+    FAILED_DECRYPT(HttpStatus.INTERNAL_SERVER_ERROR, "암호화 중 에러가 발생했습니다.");
 
     private final HttpStatus status;
     private final String message;
