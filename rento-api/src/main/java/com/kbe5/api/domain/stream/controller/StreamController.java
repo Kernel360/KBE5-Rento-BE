@@ -27,8 +27,6 @@ public class StreamController {
 
     private final StreamService streamService;
 
-    private final Aes256Util aes256Util;
-
     private final CustomMangerDetailsService customMangerDetailsService;
     private final JwtUtil jwtUtil;
 
