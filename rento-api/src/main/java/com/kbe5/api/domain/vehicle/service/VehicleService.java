@@ -51,10 +51,10 @@ public class VehicleService {
         Long companyId = manager.getCompany().getId();
 
         if (departmentId == null && !onlyFree) {
-            return vehicleRepository.findAllByCompanyId(companyId, pageable);
+            return vehicleRepository.findAllByCompanyIdAndDeleteStatus(companyId, pageable, false);
         }
         else if (departmentId != null && !onlyFree) {
-            return vehicleRepository.findAllByCompanyIdAndDepartmentId(companyId, departmentId, pageable);
+            return vehicleRepository.findAllByCompanyIdAndDepartmentIdAndDeleteStatus(companyId, departmentId, pageable, false);
         }
         else if (departmentId == null && onlyFree) {
             return vehicleRepository.findFreeByCompanyId(companyId, VehicleStatus.RESERVATION ,pageable);
