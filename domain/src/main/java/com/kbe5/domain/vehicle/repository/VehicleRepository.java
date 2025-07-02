@@ -14,9 +14,9 @@ public interface VehicleRepository extends JpaRepository<Vehicle, Long> {
 
         Optional<Vehicle> findByInfo_VehicleNumber(String vehicleNumber);
 
-        Page<Vehicle> findAllByCompanyId(Long companyId, Pageable pageable);
+        Page<Vehicle> findAllByCompanyIdAndDeleteStatus(Long companyId, Pageable pageable, boolean deleteStatus);
 
-        Page<Vehicle> findAllByCompanyIdAndDepartmentId(Long companyId, Long departmentId, Pageable pageable);
+        Page<Vehicle> findAllByCompanyIdAndDepartmentIdAndDeleteStatus(Long companyId, Long departmentId, Pageable pageable, boolean deleteStatus);
 
         @Query("""
       SELECT v FROM Vehicle v
@@ -24,6 +24,7 @@ public interface VehicleRepository extends JpaRepository<Vehicle, Long> {
          AND v.id NOT IN (
            SELECT v.id FROM Vehicle v WHERE v.status = :status
          )
+         AND v.deleteStatus = false
     """)
         Page<Vehicle> findFreeByCompanyId(
                 @Param("cid") Long companyId,
@@ -38,6 +39,7 @@ public interface VehicleRepository extends JpaRepository<Vehicle, Long> {
          AND v.id NOT IN (
            SELECT v.id FROM Vehicle v WHERE v.status = :status
          )
+         AND v.deleteStatus = false
     """)
         Page<Vehicle> findFreeByCompanyIdAndDepartmentId(
                 @Param("cid") Long companyId,

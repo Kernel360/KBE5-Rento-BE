@@ -20,6 +20,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
             "AND (:search IS NULL OR :search = '' OR " +
             "     LOWER(m.name) LIKE LOWER(CONCAT('%', :search, '%')) OR " +
             "     LOWER(m.email) LIKE LOWER(CONCAT('%', :search, '%'))" +
+            "AND m.deleteStatus = false" +
             ") " +
             "ORDER BY m.createdAt DESC")
     Page<Member> findMembersByConditions(
