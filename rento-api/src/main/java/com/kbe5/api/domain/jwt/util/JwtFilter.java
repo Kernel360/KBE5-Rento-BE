@@ -55,7 +55,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
         CustomManagerDetails customManagerDetails =
                 (CustomManagerDetails) new CustomMangerDetailsService(managerRepository)
-                        .loadUserByUsername(aes256Util.AES_Decode(jwtUtil.getLoginId(accessToken)));
+                        .loadUserByUsername(jwtUtil.getLoginId(accessToken));
 
         Authentication authToken = new UsernamePasswordAuthenticationToken(
                 customManagerDetails, null, customManagerDetails.getAuthorities());

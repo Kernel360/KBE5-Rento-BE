@@ -59,7 +59,7 @@ public class JwtUtil {
     }
 
     public String getLoginId(String token) {
-        return parseClaim(token, "loginId", String.class);
+        return aes256Util.AES_Decode(parseClaim(token, "loginId", String.class));
     }
 
     public String getEmail(String token) {

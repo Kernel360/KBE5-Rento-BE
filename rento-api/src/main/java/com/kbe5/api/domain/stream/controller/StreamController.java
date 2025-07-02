@@ -43,7 +43,7 @@ public class StreamController {
         }
 
         // 토큰에서 loginId 꺼내서 UserDetails 로드
-        String loginId = aes256Util.AES_Decode(jwtUtil.getLoginId(token));
+        String loginId = jwtUtil.getLoginId(token);
 
         CustomManagerDetails userDetails =
                 (CustomManagerDetails) customMangerDetailsService.loadUserByUsername(loginId);
