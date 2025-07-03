@@ -103,5 +103,4 @@ public class DriveService {
         return driveRepository.findByCompanyAndStatusAndVehicleNumber(manager.getCompany(),
                 vehicleNumber, DriveStatus.DRIVING);
     }
-
 }

@@ -35,7 +35,7 @@ public interface DriveRepository extends JpaRepository<Drive, Long> {
       WHERE d.mdn = :mdn
         AND d.startDate <= :startDate
             ORDER BY d.startDate ASC LIMIT 1
-    """)
+    """)// 상태값 추가하기
     Long findIdByMdnAndStartDateBetween(@Param("mdn") Long mdn,
                                         @Param("startDate") LocalDateTime startDate
     );
