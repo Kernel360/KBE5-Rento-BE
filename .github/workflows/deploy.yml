@@ -108,7 +108,7 @@ jobs:
               -e RABBITMQ_PASSWORD="${{ secrets.RABBITMQ_PASSWORD }}" \
               -e AES_KEY="${{ secrets.AES_KEY }}" \
               -e JWT_KEY="${{ secrets.JWT_KEY }}" \
-              -e JAVA_TOOL_OPTIONS="-javaagent:/pinpoint-agent/pinpoint-bootstrap-3.0.0.jar -Dpinpoint.agentId=adapter-api -Dpinpoint.applicationName=rento-api-dep" \
+              -e JAVA_TOOL_OPTIONS="-javaagent:/pinpoint-agent/pinpoint-bootstrap-3.0.3.jar -Dpinpoint.agentId=adapter-api -Dpinpoint.applicationName=rento-api-dep" \
               ${{ secrets.ECR_REPOSITORY_API }}:latest
       
             docker image prune -f
