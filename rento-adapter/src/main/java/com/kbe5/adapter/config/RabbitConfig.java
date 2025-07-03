@@ -26,12 +26,6 @@ public class RabbitConfig {
         return new Queue("notification");
     }
 
-    // 실시간 관제를 위한 큐
-    @Bean
-    public Queue cycleInfoStream() {
-        return new Queue("cycle-info-stream");
-    }
-
     @Bean
     public MessageConverter converter() {
         return new Jackson2JsonMessageConverter();

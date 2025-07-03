@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.kbe5.api.domain.vehicle.service.VehicleService;
+import com.kbe5.domain.event.entity.CycleEvent;
 import com.kbe5.domain.event.entity.CycleInfo;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
@@ -71,14 +72,20 @@ public class StreamService {
     }
 
     @RabbitListener(
-            queues = "cycle-info-stream")
-    public void receiveAndPush(@Payload CycleInfo cycleInfo) {
-        Long companyId = getCompanyIdByMdn(cycleInfo.getMdn());
+            queues = "cycle-info")
+    public void receiveAndPush(@Payload CycleEvent cycleEvent) {
 
-        if (companyId != null) {
-            pushToCompanyManagers(cycleInfo, companyId);
-        } else {
-            log.warn("업체를 찾을 수 없는 차량 mdn: {}", cycleInfo.getMdn());
+        List<CycleInfo> cycleInfos = cycleEvent.getCycleInfos();
+
+        if (cycleInfos != null && !cycleInfos.isEmpty()) {
+            cycleInfos.forEach(cycleInfo -> {
+                Long companyId = getCompanyIdByMdn(cycleInfo.getMdn());
+                if (companyId != null) {
+                    pushToCompanyManagers(cycleInfo, companyId);
+                } else {
+                    log.warn("업체를 찾을 수 없는 차량 mdn: {}", cycleInfo.getMdn());
+                }
+            });
         }
     }
 

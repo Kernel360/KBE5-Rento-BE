@@ -41,10 +41,6 @@ public class CycleInfoHandler implements EventHandler {
 
         if (isNotNullAndNotEmpty(cycleInfo)){
             cycleInfoRepository.bulkInsert(cycleInfo);
-
-            // 스트리밍 큐에 메시지 발행
-            log.info("스트림 큐로 메시지 발행 시작");
-            cycleInfo.forEach(streamSender::send);
         }
     }
 
