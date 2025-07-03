@@ -95,7 +95,7 @@ jobs:
               -p 8080:8080 \
               -v /home/ubuntu/firebase:/app/firebase \
               -v /home/ubuntu/log:/app/log \
-              -v /home/ubuntu/pinpoint-agent-3.0.0:/pinpoint-agent \
+              -v /home/ubuntu/pinpoint-agent-3.0.3:/pinpoint-agent \
               -e TZ=Asia/Seoul \
               -e SPRING_PROFILES_ACTIVE=deploy \
               -e FIREBASE_PATH="/app/firebase/rento-firebase.json" \
