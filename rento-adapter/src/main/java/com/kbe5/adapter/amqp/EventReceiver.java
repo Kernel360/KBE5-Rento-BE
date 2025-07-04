@@ -20,23 +20,6 @@ public class EventReceiver {
 
     private final EventService eventService;
 
-    //event 발생시 기본
-//    @RabbitHandler
-//    public void receive(Event event, Channel channel, Message message) throws IOException {
-//        long deliveryTag = message.getMessageProperties().getDeliveryTag();
-//        try {
-//            log.info("Received : {}", event.getClass().getName());
-//            eventService.processEvent(event);
-//
-//            // 처리 성공 -> ack
-//            channel.basicAck(deliveryTag, false);
-//        } catch (Exception e) {
-//            log.error("Failed to process event: {}", e.getMessage(), e);
-//
-//            // 처리 실패 -> 재시도 위해 nack
-//            channel.basicNack(deliveryTag, false, true); // true: 다시 큐로
-//        }
-//    }
     @RabbitHandler
     public void receive(Event event) throws IOException {
         log.info("Received : {}", event.getClass().getName());
