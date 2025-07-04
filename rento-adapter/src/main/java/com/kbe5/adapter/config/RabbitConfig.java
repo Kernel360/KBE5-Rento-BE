@@ -38,15 +38,6 @@ public class RabbitConfig {
         RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
         rabbitTemplate.setMessageConverter(converter());
 
-        rabbitTemplate.setConfirmCallback((correlationData, ack, cause) -> {
-            if (ack) {
-                log.info("✅ RabbitMQ 브로커가 메시지를 정상적으로 받았습니다. {}", correlationData);
-            } else {
-                log.error("🚨 RabbitMQ 브로커가 메시지를 받지 못했습니다. 원인: {}", cause);
-                // 여기서 슬랙 알림, DB 로깅, 재시도 등 가능
-            }
-        });
-
         return rabbitTemplate;
     }
 }
