@@ -106,4 +106,3 @@ public class EventController {
         return ResponseEntity.ok(EventResponse.fromEntity(DeviceResultCode.SUCCESS, request.mdn()));
     }
 }
-
