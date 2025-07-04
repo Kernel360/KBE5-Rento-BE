@@ -38,11 +38,6 @@ spring:
     virtual-host: /
     ssl:
       enabled: true
-    listener:
-      simple:
-        acknowledge-mode: manual
-    publisher-confirm-type: correlated
-
 
 fcm:
   firebase_config_path: ${FIREBASE_PATH}
