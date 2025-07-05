@@ -23,6 +23,7 @@ import java.util.List;
 public class DepartmentServiceImpl implements DepartmentService {
     private final DepartmentStore departmentStore;
     private final DepartmentReader departmentReader;
+    //todo: MemberReader로 바꾸기
     private final MemberRepository memberRepository;
 
     @Override
@@ -55,7 +56,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     @Override
     @Transactional
-    public boolean delete(Long departmentId) {
+    public void delete(Long departmentId) {
         //todo: member ddd로 변환하기
         List<Member> members = memberRepository.findAllByDepartmentId(departmentId);
 
@@ -65,8 +66,6 @@ public class DepartmentServiceImpl implements DepartmentService {
 
         Department department = departmentReader.getDepartmentById(departmentId);
         departmentStore.delete(department);
-
-        return true;
     }
 
     private DepartmentInfo createDepartment(Department department) {
