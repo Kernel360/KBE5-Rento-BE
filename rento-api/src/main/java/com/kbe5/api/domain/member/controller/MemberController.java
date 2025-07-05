@@ -12,6 +12,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedModel;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.validation.annotation.Validated;
 
 import java.util.List;
 
@@ -21,7 +23,9 @@ public interface MemberController {
     //사용자 추가
     @Operation(summary = "회원 등록", description = "새로운 회원을 등록합니다")
     @RequestBody(description = "회원 등록 요청 정보", required = true)
-    ResponseEntity<ApiResponse<String>> register(MemberRegisterRequest request);
+    ResponseEntity<ApiResponse<String>> register(
+            CustomManagerDetails customManagerDetails,
+            MemberRegisterRequest request);
 
     //사용자 수정
     @Operation(summary = "회원 수정", description = "기존 회원을 수정합니다")

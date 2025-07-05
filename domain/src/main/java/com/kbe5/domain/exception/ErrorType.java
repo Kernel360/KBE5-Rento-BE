@@ -54,7 +54,10 @@ public enum ErrorType {
     FCM_FAILED(HttpStatus.BAD_REQUEST, "FCM 알림 전송에 실패하였습니다"),
 
     //MonthlyStat
-    MONTHLY_STAT_NOT_FOUND(HttpStatus.NOT_FOUND, "월별 통계를 찾을 수 없습니다");
+    MONTHLY_STAT_NOT_FOUND(HttpStatus.NOT_FOUND, "월별 통계를 찾을 수 없습니다"),
+
+    //Member_Drive
+    MEMBER_HAS_ACTIVE_DRIVES(HttpStatus.BAD_REQUEST, "해당 사용자에 운행 예약/실시간 운행이 존재합니다.");
 
     private final HttpStatus status;
     private final String message;
