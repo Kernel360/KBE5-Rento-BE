@@ -44,8 +44,4 @@ public class EventService {
         }
     }
 
-    public List<Event> getList() {
-
-        return eventRepository.findAll();
-    }
 }
