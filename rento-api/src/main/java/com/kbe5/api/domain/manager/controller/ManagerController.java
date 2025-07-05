@@ -1,7 +1,7 @@
 package com.kbe5.api.domain.manager.controller;
 
 
-import com.kbe5.api.domain.manager.dto.details.CustomManagerDetails;
+import com.kbe5.infra.security.CustomManagerDetails;
 import com.kbe5.api.domain.manager.dto.request.ManagerDeleteRequest;
 import com.kbe5.api.domain.manager.dto.request.ManagerSignUpRequest;
 import com.kbe5.api.domain.manager.dto.request.ManagerUpdateRequest;
