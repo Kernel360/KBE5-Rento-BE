@@ -28,7 +28,7 @@ public class ConsumerRabbitConfig {
 
         DefaultJackson2JavaTypeMapper typeMapper = new DefaultJackson2JavaTypeMapper();
         typeMapper.setTrustedPackages(
-                "com.kbe5.adapter.amqp",
+                "com.kbe5.sub.amqp",
                 "com.kbe5.api.domain.stream"
         );
         converter.setClassMapper(typeMapper);
