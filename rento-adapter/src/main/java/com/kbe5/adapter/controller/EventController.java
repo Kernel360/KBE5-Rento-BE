@@ -2,6 +2,7 @@ package com.kbe5.adapter.controller;
 
 import com.kbe5.adapter.amqp.EventSender;
 import com.kbe5.adapter.amqp.NotificationSender;
+import com.kbe5.adapter.amqp.StreamSender;
 import com.kbe5.adapter.dto.request.cycleinfo.CycleEventRequest;
 import com.kbe5.adapter.dto.request.geofence.GeofenceEventRequest;
 import com.kbe5.adapter.dto.request.onoff.OffEventRequest;
@@ -39,6 +40,7 @@ public class EventController {
     private final DriveService driveService;
     private final DeviceTokenService deviceTokenService;
     private final NotificationSender notificationSender;
+    private final StreamSender streamSender;
 
     @PostMapping("/on-off/on")
     public ResponseEntity<EventResponse> ignitionOn(
@@ -90,6 +92,7 @@ public class EventController {
         CycleEvent cycleEvent = request.of(deviceToken, cycleInfos);
 
         eventSender.send(cycleEvent, mdn);
+        cycleInfos.forEach(streamSender::send);
 
         return ResponseEntity.ok(EventResponse.fromEntity(DeviceResultCode.SUCCESS, mdn));
     }

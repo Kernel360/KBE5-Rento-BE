@@ -29,6 +29,9 @@ public class RabbitConfig {
     }
 
     @Bean
+    public Queue streamInfo() { return new Queue("cycle-info-stream"); }
+
+    @Bean
     public MessageConverter converter() {
         return new Jackson2JsonMessageConverter();
     }

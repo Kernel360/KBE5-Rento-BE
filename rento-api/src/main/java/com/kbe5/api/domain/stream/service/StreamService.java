@@ -72,20 +72,14 @@ public class StreamService {
     }
 
     @RabbitListener(
-            queues = "cycle-info")
-    public void receiveAndPush(@Payload CycleEvent cycleEvent) {
+            queues = "cycle-info-stream")
+    public void receiveAndPush(@Payload CycleInfo cycleInfo) {
+        Long companyId = getCompanyIdByMdn(cycleInfo.getMdn());
 
-        List<CycleInfo> cycleInfos = cycleEvent.getCycleInfos();
-
-        if (cycleInfos != null && !cycleInfos.isEmpty()) {
-            cycleInfos.forEach(cycleInfo -> {
-                Long companyId = getCompanyIdByMdn(cycleInfo.getMdn());
-                if (companyId != null) {
-                    pushToCompanyManagers(cycleInfo, companyId);
-                } else {
-                    log.warn("업체를 찾을 수 없는 차량 mdn: {}", cycleInfo.getMdn());
-                }
-            });
+        if (companyId != null) {
+            pushToCompanyManagers(cycleInfo, companyId);
+        } else {
+            log.warn("업체를 찾을 수 없는 차량 mdn: {}", cycleInfo.getMdn());
         }
     }
 
