@@ -1,4 +1,4 @@
-package com.kbe5.api.config;
+package com.kbe5.infra.rabbitmq.config;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Configuration;
 
 @EnableRabbit
 @Configuration
-public class ApiRabbitConfig {
+public class ConsumerRabbitConfig {
 
     @Bean
     public Jackson2JsonMessageConverter messageConverter() {

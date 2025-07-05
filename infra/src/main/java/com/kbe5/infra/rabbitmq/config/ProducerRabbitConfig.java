@@ -1,4 +1,4 @@
-package com.kbe5.adapter.config;
+package com.kbe5.infra.rabbitmq.config;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.AmqpTemplate;
@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Configuration;
 @Slf4j
 @EnableRabbit
 @Configuration
-public class RabbitConfig {
+public class ProducerRabbitConfig {
 
     //큐 정의
     @Bean
