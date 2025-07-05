@@ -1,11 +1,11 @@
-package com.kbe5.api.domain.jwt.util;
+package com.kbe5.infra.jwt.util;
 
-import com.kbe5.api.domain.manager.dto.details.CustomManagerDetails;
-import com.kbe5.api.domain.manager.service.CustomMangerDetailsService;
 import com.kbe5.common.exception.ErrorType;
 import com.kbe5.common.response.error.ErrorResponse;
 import com.kbe5.common.util.Aes256Util;
 import com.kbe5.domain.manager.respository.ManagerRepository;
+import com.kbe5.infra.security.CustomManagerDetails;
+import com.kbe5.infra.security.CustomMangerDetailsService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

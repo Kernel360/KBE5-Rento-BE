@@ -1,8 +1,8 @@
-package com.kbe5.api.domain.jwt.util;
+package com.kbe5.infra.jwt.util;
 
-import com.kbe5.api.domain.jwt.dto.JwtManagerArgumentDto;
-import com.kbe5.api.domain.jwt.dto.request.PayloadDecryptRequest;
-import com.kbe5.api.domain.jwt.dto.response.PayloadDecryptResponse;
+import com.kbe5.infra.jwt.dto.JwtManagerArgumentDto;
+import com.kbe5.infra.jwt.dto.request.PayloadDecryptRequest;
+import com.kbe5.infra.jwt.dto.response.PayloadDecryptResponse;
 import com.kbe5.common.exception.DomainException;
 import com.kbe5.common.exception.ErrorType;
 import com.kbe5.common.util.Aes256Util;

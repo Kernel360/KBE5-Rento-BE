@@ -1,11 +1,11 @@
-package com.kbe5.api.config;
+package com.kbe5.infra.config;
 
-
-import com.google.cloud.storage.HttpMethod;
-import com.kbe5.api.domain.jwt.device.DeviceTokenFilter;
-import com.kbe5.api.domain.jwt.util.JwtFilter;
-import com.kbe5.api.domain.jwt.util.JwtUtil;
-import com.kbe5.api.filter.LoginAuthenticationFilter;
+//
+//import com.kbe5.infra.jwt.device.DeviceTokenFilter;
+import com.kbe5.infra.jwt.util.JwtFilter;
+import com.kbe5.infra.jwt.util.JwtUtil;
+import com.kbe5.infra.security.SecurityPermissionApiList;
+import com.kbe5.infra.security.filter.LoginAuthenticationFilter;
 import com.kbe5.common.util.Aes256Util;
 import com.kbe5.domain.manager.respository.ManagerRepository;
 import lombok.RequiredArgsConstructor;
@@ -29,8 +29,6 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.springframework.http.HttpMethod.GET;
-
 @Slf4j
 @Configuration
 @EnableWebSecurity
@@ -40,7 +38,7 @@ public class SecurityConfig {
     private final AuthenticationConfiguration authenticationConfiguration;
     private final JwtUtil jwtUtil;
     private final ManagerRepository managerRepository;
-    private final DeviceTokenFilter deviceTokenFilter;
+//    private final DeviceTokenFilter deviceTokenFilter;
     private final Aes256Util aes256Util;
 
     @Bean
@@ -76,7 +74,7 @@ public class SecurityConfig {
                 .anyRequest().authenticated());
 
         // LoginFilter 추가
-        http.addFilterBefore(deviceTokenFilter, LoginAuthenticationFilter.class);
+//        http.addFilterBefore(deviceTokenFilter, LoginAuthenticationFilter.class);
         http.addFilterBefore(new JwtFilter(jwtUtil, managerRepository, aes256Util), LoginAuthenticationFilter.class);
         http.addFilterAt(new LoginAuthenticationFilter(authenticationManager(authenticationConfiguration), jwtUtil),
                 UsernamePasswordAuthenticationFilter.class);

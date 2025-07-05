@@ -1,4 +1,4 @@
-package com.kbe5.api.domain.jwt.util;
+package com.kbe5.infra.jwt.util;
 
 public class JwtProperties {
 

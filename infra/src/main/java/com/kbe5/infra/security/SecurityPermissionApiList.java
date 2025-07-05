@@ -1,4 +1,4 @@
-package com.kbe5.api.config;
+package com.kbe5.infra.security;
 
 public class SecurityPermissionApiList {
 

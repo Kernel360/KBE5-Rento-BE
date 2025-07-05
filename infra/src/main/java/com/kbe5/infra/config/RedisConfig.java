@@ -1,4 +1,4 @@
-package com.kbe5.api.config;
+package com.kbe5.infra.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

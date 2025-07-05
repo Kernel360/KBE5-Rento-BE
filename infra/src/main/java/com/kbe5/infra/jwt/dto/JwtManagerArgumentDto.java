@@ -1,7 +1,7 @@
-package com.kbe5.api.domain.jwt.dto;
+package com.kbe5.infra.jwt.dto;
 
 
-import com.kbe5.api.domain.jwt.util.JwtUtil;
+import com.kbe5.infra.jwt.util.JwtUtil;
 import com.kbe5.domain.manager.entity.Manager;
 
 public record JwtManagerArgumentDto(
