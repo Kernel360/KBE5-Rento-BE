@@ -9,5 +9,5 @@ public interface DepartmentService {
     DepartmentInfo registerDepartment(DepartmentCommand.Register command);
     List<DepartmentInfo> getDepartments(Long companyId);
     DepartmentInfo updateDepartment(Long departmentId, DepartmentCommand.Update departmentUpdateRequest);
-    boolean delete(Long departmentId);
+    void delete(Long departmentId);
 }

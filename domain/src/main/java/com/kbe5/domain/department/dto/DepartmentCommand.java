@@ -26,12 +26,5 @@ public class DepartmentCommand {
     public static class Update {
         private final Long companyId;
         private final String departmentName;
-
-        public Department toEntity() {
-            return Department.builder()
-                    .departmentName(departmentName)
-                    .companyId(companyId)
-                    .build();
-        }
     }
 }
