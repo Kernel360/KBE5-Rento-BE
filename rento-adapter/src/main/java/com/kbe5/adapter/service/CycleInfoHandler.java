@@ -1,7 +1,6 @@
 package com.kbe5.adapter.service;
 
 
-import com.kbe5.adapter.amqp.StreamSender;
 import com.kbe5.domain.event.entity.CycleEvent;
 import com.kbe5.domain.event.entity.CycleInfo;
 import com.kbe5.domain.event.entity.Event;
@@ -23,8 +22,6 @@ public class CycleInfoHandler implements EventHandler {
     private final EventRepository eventRepository;
 
     private final CycleInfoRepository cycleInfoRepository;
-
-    private final StreamSender streamSender;
 
     @Override
     public EventType getEventType() {
