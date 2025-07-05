@@ -1,4 +1,4 @@
-package com.kbe5.api.domain.manager.dto.response;
+package com.kbe5.infra.infrastructure.manager.dto;
 
 
 import com.kbe5.domain.manager.entity.Manager;
