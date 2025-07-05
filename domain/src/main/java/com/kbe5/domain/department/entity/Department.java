@@ -20,13 +20,11 @@ public class Department extends BaseEntity {
     @Column(name = "number_of_employee", columnDefinition = "INT DEFAULT 0")
     private int numberOfEmployee;
 
-    @ManyToOne
-    @JoinColumn(name = "company_id")
-    private Company company;
+    private Long companyId;
 
     @Builder
-    private Department(String departmentName, Company company, int numberOfEmployee) {
-        this.company = company;
+    private Department(String departmentName, Long companyId, int numberOfEmployee) {
+        this.companyId = companyId;
         this.departmentName = departmentName;
         this.numberOfEmployee = numberOfEmployee;
     }
@@ -34,5 +32,4 @@ public class Department extends BaseEntity {
     public void update(String departmentName) {
         this.departmentName = departmentName;
     }
-
 }
