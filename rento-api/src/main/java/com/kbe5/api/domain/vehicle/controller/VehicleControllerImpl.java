@@ -1,6 +1,6 @@
 package com.kbe5.api.domain.vehicle.controller;
 
-import com.kbe5.api.domain.manager.dto.details.CustomManagerDetails;
+import com.kbe5.infra.security.CustomManagerDetails;
 import com.kbe5.api.domain.vehicle.dto.request.VehicleAddRequest;
 import com.kbe5.api.domain.vehicle.dto.request.VehicleUpdateRequest;
 import com.kbe5.api.domain.vehicle.dto.response.VehicleDetailResponse;

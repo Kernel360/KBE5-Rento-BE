@@ -1,8 +1,8 @@
-package com.kbe5.api.domain.jwt.dto.request;
+package com.kbe5.infra.jwt.dto.response;
 
 import jakarta.validation.constraints.NotBlank;
 
-public record PayloadDecryptRequest(
+public record PayloadDecryptResponse(
 
         @NotBlank
         String claim

@@ -1,4 +1,4 @@
-package com.kbe5.api.domain.jwt.device;
+package com.kbe5.infra.jwt.device;
 
 import com.kbe5.domain.device.entity.DeviceToken;
 import org.springframework.security.authentication.AbstractAuthenticationToken;

@@ -1,7 +1,6 @@
-package com.kbe5.api.domain.manager.service;
+package com.kbe5.infra.security;
 
 
-import com.kbe5.api.domain.manager.dto.details.CustomManagerDetails;
 import com.kbe5.common.exception.DomainException;
 import com.kbe5.common.exception.ErrorType;
 import com.kbe5.domain.manager.entity.Manager;

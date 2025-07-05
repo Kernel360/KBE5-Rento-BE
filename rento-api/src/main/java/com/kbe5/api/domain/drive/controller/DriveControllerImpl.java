@@ -4,7 +4,7 @@ import com.kbe5.api.domain.drive.dto.DriveAddRequest;
 import com.kbe5.api.domain.drive.dto.DriveDetailResponse;
 import com.kbe5.api.domain.drive.dto.DriveResponse;
 import com.kbe5.api.domain.drive.service.DriveService;
-import com.kbe5.api.domain.manager.dto.details.CustomManagerDetails;
+import com.kbe5.infra.security.CustomManagerDetails;
 import com.kbe5.common.apiresponse.ResEntityFactory;
 import com.kbe5.common.response.api.ApiResponse;
 import com.kbe5.common.response.api.ApiResultCode;

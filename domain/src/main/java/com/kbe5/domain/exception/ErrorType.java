@@ -50,6 +50,9 @@ public enum ErrorType {
     // CycleInfoSummary
     CYCLEINFO_NOT_FOUND(HttpStatus.NOT_FOUND, "주기 정보가 없습니다."),
 
+    // Redis
+    FAILED_DELETE_FROM_REDIS(HttpStatus.INTERNAL_SERVER_ERROR, "로그아웃 처리 중 서버 오류가 발생했습니다."),
+
     //FCM
     FCM_FAILED(HttpStatus.BAD_REQUEST, "FCM 알림 전송에 실패하였습니다"),
 

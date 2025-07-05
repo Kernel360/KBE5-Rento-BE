@@ -5,7 +5,7 @@ import com.kbe5.api.domain.department.dto.request.DepartmentRegisterRequest;
 import com.kbe5.api.domain.department.dto.request.DepartmentUpdateRequest;
 import com.kbe5.api.domain.department.dto.response.DepartmentInfoResponse;
 import com.kbe5.api.domain.department.service.DepartmentService;
-import com.kbe5.api.domain.manager.dto.details.CustomManagerDetails;
+import com.kbe5.infra.security.CustomManagerDetails;
 import com.kbe5.common.apiresponse.ResEntityFactory;
 import com.kbe5.common.response.api.ApiResponse;
 import com.kbe5.common.response.api.ApiResultCode;

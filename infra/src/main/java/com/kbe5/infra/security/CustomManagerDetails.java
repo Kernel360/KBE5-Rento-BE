@@ -1,4 +1,4 @@
-package com.kbe5.api.domain.manager.dto.details;
+package com.kbe5.infra.security;
 
 import com.kbe5.domain.manager.entity.Manager;
 import lombok.Getter;
