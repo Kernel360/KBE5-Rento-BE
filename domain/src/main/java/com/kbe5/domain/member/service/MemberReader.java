@@ -5,6 +5,8 @@ import com.kbe5.domain.member.entity.Position;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
+
 public interface MemberReader {
     Page<Member> getMembersByConditions(Long id, Position position, Long departmentId, String search, Pageable pageable);
 
@@ -15,4 +17,6 @@ public interface MemberReader {
     boolean existsByCompanyCodeAndEmail(String companyCode, String email);
 
     boolean existsByCompanyCodeAndPhoneNumber(String companyCode, String phoneNumber);
+
+    List<Member> findAllByDepartmentId(Long departmentId);
 }
