@@ -12,6 +12,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Slf4j
 @Component
 @RequiredArgsConstructor
@@ -43,5 +45,10 @@ public class MemberReadImpl implements MemberReader {
     @Override
     public boolean existsByCompanyCodeAndPhoneNumber(String companyCode, String phoneNumber) {
         return memberRepository.existsByCompanyCodeAndPhoneNumber(companyCode, phoneNumber);
+    }
+
+    @Override
+    public List<Member> findAllByDepartmentId(Long departmentId) {
+        return memberRepository.findAllByDepartmentId(departmentId);
     }
 }

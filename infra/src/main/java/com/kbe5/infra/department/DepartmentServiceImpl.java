@@ -10,6 +10,7 @@ import com.kbe5.domain.exception.DomainException;
 import com.kbe5.domain.exception.ErrorType;
 import com.kbe5.domain.member.entity.Member;
 import com.kbe5.domain.member.repository.MemberRepository;
+import com.kbe5.domain.member.service.MemberReader;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -23,8 +24,7 @@ import java.util.List;
 public class DepartmentServiceImpl implements DepartmentService {
     private final DepartmentStore departmentStore;
     private final DepartmentReader departmentReader;
-    //todo: MemberReader로 바꾸기
-    private final MemberRepository memberRepository;
+    private final MemberReader memberReader;
 
     @Override
     @Transactional
@@ -57,8 +57,7 @@ public class DepartmentServiceImpl implements DepartmentService {
     @Override
     @Transactional
     public void delete(Long departmentId) {
-        //todo: member ddd로 변환하기
-        List<Member> members = memberRepository.findAllByDepartmentId(departmentId);
+        List<Member> members = memberReader.findAllByDepartmentId(departmentId);
 
         if(!members.isEmpty()) {
             throw new DomainException(ErrorType.ALREADY_MEMBER);
@@ -69,8 +68,7 @@ public class DepartmentServiceImpl implements DepartmentService {
     }
 
     private DepartmentInfo createDepartment(Department department) {
-        //todo: Member ddd로 변환
-        List<Member> members = memberRepository.findAllByDepartmentId(department.getId());
+        List<Member> members = memberReader.findAllByDepartmentId(department.getId());
 
         return DepartmentInfo.builder()
                 .departmentId(department.getId())
