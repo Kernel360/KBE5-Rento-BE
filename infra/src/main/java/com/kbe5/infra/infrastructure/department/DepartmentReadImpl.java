@@ -1,4 +1,4 @@
-package com.kbe5.infra.department;
+package com.kbe5.infra.infrastructure.department;
 
 import com.kbe5.domain.department.entity.Department;
 import com.kbe5.domain.department.repository.DepartmentRepository;

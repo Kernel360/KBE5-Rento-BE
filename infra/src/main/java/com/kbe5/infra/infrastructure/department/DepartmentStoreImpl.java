@@ -1,4 +1,4 @@
-package com.kbe5.infra.department;
+package com.kbe5.infra.infrastructure.department;
 
 import com.kbe5.domain.company.entity.Company;
 import com.kbe5.domain.company.repository.CompanyRepository;
