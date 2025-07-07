@@ -1,4 +1,4 @@
-package com.kbe5.api;
+package com.kbe5.pub;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -13,12 +13,14 @@ import org.springframework.scheduling.annotation.EnableScheduling;
         "com.kbe5.common",
         "com.kbe5.domain",
         "com.kbe5.infra",
-        "com.kbe5.api"
+        "com.kbe5.pub"
 })
 @EntityScan(basePackages = "com.kbe5.domain")
 @EnableJpaRepositories(basePackages = "com.kbe5.domain")
-public class ApiApplication {
+class PubApplication {
+
     public static void main(String[] args) {
-        SpringApplication.run(ApiApplication.class, args);
+        SpringApplication.run(PubApplication.class, args);
     }
+
 }

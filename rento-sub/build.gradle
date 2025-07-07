@@ -14,28 +14,22 @@ configurations {
 }
 
 dependencies {
-
+    implementation project(':common')
     implementation project(':domain')
-
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-
-
-    implementation 'io.github.cdimascio:java-dotenv:5.2.2'
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation project(':infra')
 
     compileOnly 'org.projectlombok:lombok'
-    annotationProcessor 'org.projectlombok:lombok'
-
-    implementation 'org.springframework.retry:spring-retry'
-    implementation 'org.springframework.boot:spring-boot-starter-aop'
 
     // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-amqp
     implementation 'org.springframework.boot:spring-boot-starter-amqp:3.5.0'
 
-    implementation("com.google.firebase:firebase-admin:9.2.0")
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 
-    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    runtimeOnly 'com.mysql:mysql-connector-j'
 
+    annotationProcessor 'org.projectlombok:lombok'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     testImplementation 'org.assertj:assertj-core:3.24.2'
 }
@@ -45,9 +39,9 @@ test {
 }
 
 bootJar {
-    enabled = false
+    enabled = true
 }
 
 jar {
-    enabled = true
+    enabled = false
 }
