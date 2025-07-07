@@ -4,12 +4,17 @@ package com.kbe5.api.domain.department.controller;
 import com.kbe5.api.domain.department.dto.request.DepartmentRegisterRequest;
 import com.kbe5.api.domain.department.dto.request.DepartmentUpdateRequest;
 import com.kbe5.api.domain.department.dto.response.DepartmentInfoResponse;
-import com.kbe5.api.domain.department.service.DepartmentService;
+import com.kbe5.api.domain.department.mapper.DepartmentRequestMapper;
+import com.kbe5.api.domain.department.mapper.DepartmentResponseMapper;
 import com.kbe5.api.domain.manager.dto.details.CustomManagerDetails;
 import com.kbe5.common.apiresponse.ResEntityFactory;
 import com.kbe5.common.response.api.ApiResponse;
 import com.kbe5.common.response.api.ApiResultCode;
+import com.kbe5.domain.department.dto.DepartmentInfo;
+import com.kbe5.domain.department.service.DepartmentService;
+import com.kbe5.domain.department.dto.DepartmentInfo;
 import com.kbe5.domain.department.entity.Department;
+import com.kbe5.domain.department.service.DepartmentService;
 import com.kbe5.domain.manager.entity.Manager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +30,8 @@ import java.util.List;
 public class DepartmentControllerImpl implements DepartmentController {
 
     private final DepartmentService departmentService;
+    private final DepartmentRequestMapper requestMapper;
+    private final DepartmentResponseMapper responseMapper;
 
     //부서 등록
     @Override
@@ -35,12 +42,12 @@ public class DepartmentControllerImpl implements DepartmentController {
     ) {
         Manager manager = customManagerDetails.getManager();
 
-        Department createdDepartment = departmentService.register(
-                DepartmentRegisterRequest.of(departmentRegisterRequest, manager.getCompany())
+        DepartmentInfo departmentInfo = departmentService.registerDepartment(
+                requestMapper.toRegisterCommand(departmentRegisterRequest, manager.getCompany().getId())
         );
 
         return ResEntityFactory.toResponse(
-                ApiResultCode.SUCCESS, createdDepartment.getDepartmentName() + "성공적으로 등록되었습니다."
+                ApiResultCode.SUCCESS, departmentInfo.getDepartmentName() + "성공적으로 등록되었습니다."
         );
     }
 
@@ -50,9 +57,10 @@ public class DepartmentControllerImpl implements DepartmentController {
     public ResponseEntity<ApiResponse<List<DepartmentInfoResponse>>> getAllDepartments(
             @AuthenticationPrincipal CustomManagerDetails customManagerDetails
     ) {
-        List<DepartmentInfoResponse> departments = departmentService.getDepartments(
-                customManagerDetails.getManager().getCompanyCode()
-        );
+        List<DepartmentInfo> departmentInfos = departmentService.getDepartments(
+                customManagerDetails.getManager().getCompany().getId());
+
+        List<DepartmentInfoResponse> departments = responseMapper.toResponseList(departmentInfos);
 
         return ResEntityFactory.toResponse(ApiResultCode.SUCCESS, departments);
     }
@@ -65,7 +73,12 @@ public class DepartmentControllerImpl implements DepartmentController {
             @PathVariable Long departmentId,
             @Validated @RequestBody DepartmentUpdateRequest departmentUpdateRequest
     ) {
-        DepartmentInfoResponse response = departmentService.updateDepartment(departmentId, departmentUpdateRequest);
+        DepartmentInfo departmentInfo = departmentService.updateDepartment(
+                departmentId,
+                requestMapper.toUpdateCommand(departmentUpdateRequest, customManagerDetails.getManager().getCompany().getId())
+        );
+
+        DepartmentInfoResponse response = responseMapper.toResponse(departmentInfo);
 
         return ResEntityFactory.toResponse(ApiResultCode.SUCCESS, response);
     }
