@@ -1,9 +1,8 @@
 package com.kbe5.api.domain.company.controller;
 
-import com.kbe5.api.domain.company.dto.request.CompanyBiznumberRequest;
+import com.kbe5.api.domain.company.dto.request.companyBizNumberRequest;
 import com.kbe5.api.domain.company.dto.request.CompanyRegisterRequest;
 import com.kbe5.api.domain.company.dto.request.CompanyUpdateRequest;
-import com.kbe5.api.domain.company.dto.response.CompanyDeleteResponse;
 import com.kbe5.api.domain.company.dto.response.CompanyRegisterResponse;
 import com.kbe5.api.domain.company.dto.response.CompanyResponse;
 import com.kbe5.api.domain.company.dto.response.CompanyUpdateResponse;
@@ -37,9 +36,9 @@ public interface CompanyController {
 
     @Operation(summary = "회사 사업자 번호 중복 체크", description = "사업자 번호를 중복체크합니다.")
     @RequestBody(description = "중복확인할 사업자번호", required = true)
-    ResponseEntity<ApiResponse<Boolean>> checkAvailableBizNumber(CompanyBiznumberRequest request);
+    ResponseEntity<ApiResponse<Boolean>> checkAvailableBizNumber(companyBizNumberRequest request);
 
     @Operation(summary = "회사 삭제", description = "회사를 삭제합니다.")
     @Parameter(name = "id", description = "삭제할 회사 ID", example = "1", required = true)
-    ResponseEntity<ApiResponse<CompanyDeleteResponse>> companyDelete(Long id);
+    ResponseEntity<ApiResponse<Boolean>> companyDelete(Long id);
 }
