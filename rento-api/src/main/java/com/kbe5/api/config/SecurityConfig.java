@@ -1,5 +1,8 @@
 package com.kbe5.api.config;
 
+
+import com.google.cloud.storage.HttpMethod;
+import com.kbe5.api.domain.jwt.device.DeviceTokenFilter;
 import com.kbe5.api.domain.jwt.util.JwtFilter;
 import com.kbe5.api.domain.jwt.util.JwtUtil;
 import com.kbe5.api.filter.LoginAuthenticationFilter;
@@ -37,6 +40,7 @@ public class SecurityConfig {
     private final AuthenticationConfiguration authenticationConfiguration;
     private final JwtUtil jwtUtil;
     private final ManagerRepository managerRepository;
+    private final DeviceTokenFilter deviceTokenFilter;
     private final Aes256Util aes256Util;
 
     @Bean
@@ -72,12 +76,14 @@ public class SecurityConfig {
                 .anyRequest().authenticated());
 
         // LoginFilter 추가
+        http.addFilterBefore(deviceTokenFilter, LoginAuthenticationFilter.class);
         http.addFilterBefore(new JwtFilter(jwtUtil, managerRepository, aes256Util), LoginAuthenticationFilter.class);
         http.addFilterAt(new LoginAuthenticationFilter(authenticationManager(authenticationConfiguration), jwtUtil),
                 UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
+
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
