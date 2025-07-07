@@ -1,4 +1,4 @@
-package com.kbe5.infra.member;
+package com.kbe5.infra.infrastructure.member;
 
 import com.kbe5.domain.department.entity.Department;
 import com.kbe5.domain.department.service.DepartmentReader;

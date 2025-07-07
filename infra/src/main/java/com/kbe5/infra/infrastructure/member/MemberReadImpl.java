@@ -1,4 +1,4 @@
-package com.kbe5.infra.member;
+package com.kbe5.infra.infrastructure.member;
 
 import com.kbe5.domain.exception.DomainException;
 import com.kbe5.domain.exception.ErrorType;
