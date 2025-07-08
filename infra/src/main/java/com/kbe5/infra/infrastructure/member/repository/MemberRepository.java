@@ -33,11 +33,11 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
             @Param("search") String search,
             Pageable pageable);
 
-    boolean existsByEmailAndIdNot(String email, Long memberId);
+    boolean existsByCompanyCodeAndLoginIdAndIdNot(String companyCode, String loginId, Long excludeId);
 
-    boolean existsByLoginIdAndIdNot(String loginId, Long memberId);
+    boolean existsByCompanyCodeAndEmailAndIdNot(String companyCode, String email, Long excludeId);
 
-    boolean existsByPhoneNumberAndIdNot(String phoneNumber, Long memberId);
+    boolean existsByCompanyCodeAndPhoneNumberAndIdNot(String companyCode, String phoneNumber, Long excludeId);
 
     boolean existsByCompanyCodeAndLoginId(String companyCode, String loginId);
 

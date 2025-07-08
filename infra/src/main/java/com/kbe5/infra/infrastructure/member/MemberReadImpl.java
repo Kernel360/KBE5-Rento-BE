@@ -51,4 +51,19 @@ public class MemberReadImpl implements MemberReader {
     public List<Member> findAllByDepartmentId(Long departmentId) {
         return memberRepository.findAllByDepartmentId(departmentId);
     }
+
+    @Override
+    public boolean existsByCompanyCodeAndLoginIdExcludingId(String companyCode, String loginId, Long excludeId) {
+        return memberRepository.existsByCompanyCodeAndLoginIdAndIdNot(companyCode, loginId, excludeId);
+    }
+
+    @Override
+    public boolean existsByCompanyCodeAndEmailExcludingId(String companyCode, String email, Long excludeId) {
+        return memberRepository.existsByCompanyCodeAndEmailAndIdNot(companyCode, email, excludeId);
+    }
+
+    @Override
+    public boolean existsByCompanyCodeAndPhoneNumberExcludingId(String companyCode, String phoneNumber, Long excludeId) {
+        return memberRepository.existsByCompanyCodeAndPhoneNumberAndIdNot(companyCode, phoneNumber, excludeId);
+    }
 }

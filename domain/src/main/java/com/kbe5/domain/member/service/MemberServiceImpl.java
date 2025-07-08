@@ -70,6 +70,8 @@ public class MemberServiceImpl implements MemberService {
         Member member = memberReader.getMemberById(memberId);
         Department department = departmentReader.getDepartmentById(member.getDepartment().getId());
 
+        validateDuplicateForUpdate(memberId, memberCommand);
+
         member.update(
                 memberCommand.getName(),
                 memberCommand.getEmail(),
@@ -99,6 +101,25 @@ public class MemberServiceImpl implements MemberService {
             throw new DomainException(ErrorType.DUPLICATE_EMAIL);
         }
         if (isExistLoginId(member.getCompanyCode(), member.getLoginId())) {
+            throw new DomainException(ErrorType.DUPLICATE_LOGIN_ID);
+        }
+    }
+
+    private void validateDuplicateForUpdate(Long memberId, MemberCommand.Update memberCommand) {
+        String companyCode = memberCommand.getCompanyCode();
+
+        if (memberReader.existsByCompanyCodeAndPhoneNumberExcludingId(
+                companyCode, memberCommand.getPhoneNumber(), memberId)) {
+            throw new DomainException(ErrorType.DUPLICATE_PHONE_NUMBER);
+        }
+
+        if (memberReader.existsByCompanyCodeAndEmailExcludingId(
+                companyCode, memberCommand.getEmail(), memberId)) {
+            throw new DomainException(ErrorType.DUPLICATE_EMAIL);
+        }
+
+        if (memberReader.existsByCompanyCodeAndLoginIdExcludingId(
+                companyCode, memberCommand.getLoginId(), memberId)) {
             throw new DomainException(ErrorType.DUPLICATE_LOGIN_ID);
         }
     }
