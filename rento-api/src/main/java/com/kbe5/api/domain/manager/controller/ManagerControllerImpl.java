@@ -1,6 +1,5 @@
 package com.kbe5.api.domain.manager.controller;
 
-import com.kbe5.api.domain.manager.dto.details.CustomManagerDetails;
 import com.kbe5.api.domain.manager.dto.request.ManagerDeleteRequest;
 import com.kbe5.api.domain.manager.dto.request.ManagerSignUpRequest;
 import com.kbe5.api.domain.manager.dto.request.ManagerUpdateRequest;
@@ -8,12 +7,17 @@ import com.kbe5.api.domain.manager.dto.response.ManagerDeleteResponse;
 import com.kbe5.api.domain.manager.dto.response.ManagerResponse;
 import com.kbe5.api.domain.manager.dto.response.ManagerSignUpResponse;
 import com.kbe5.api.domain.manager.dto.response.ManagerUpdateResponse;
-import com.kbe5.api.domain.manager.service.ManagerService;
+import com.kbe5.api.domain.manager.mapper.ManagerRequestMapper;
+import com.kbe5.api.domain.manager.mapper.ManagerResponseMapper;
 import com.kbe5.common.apiresponse.ResEntityFactory;
 import com.kbe5.common.response.api.ApiResponse;
 import com.kbe5.common.response.api.ApiResultCode;
+import com.kbe5.domain.manager.dto.ManagerCommand;
+import com.kbe5.domain.manager.dto.ManagerInfo;
 import com.kbe5.domain.manager.entity.Manager;
+import com.kbe5.domain.manager.service.ManagerService;
 import com.kbe5.infra.firebase.dto.UpdateFcmTokenRequest;
+import com.kbe5.infra.security.details.CustomManagerDetails;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -31,47 +35,55 @@ public class ManagerControllerImpl implements ManagerController {
 
     @PostMapping("/sign-up")
     public ResponseEntity<ApiResponse<ManagerSignUpResponse>> signUp(@RequestBody @Valid ManagerSignUpRequest request) {
-        Manager manager = ManagerSignUpRequest.toEntity(request);
+        ManagerCommand.Register command = ManagerRequestMapper.toCommand(request);
+        ManagerInfo info = managerService.signUpManager(command);
         return ResEntityFactory.toResponse(ApiResultCode.SUCCESS,
-                ManagerSignUpResponse.fromEntity(managerService.signUp(manager)));
+                ManagerResponseMapper.toSignUpResponse(info));
     }
 
     @GetMapping("/detail/{id}")
     public ResponseEntity<ApiResponse<ManagerResponse>> getManagerDetail(@PathVariable Long id) {
+        ManagerInfo info = managerService.getManagerInfo(id);
         return ResEntityFactory.toResponse(ApiResultCode.SUCCESS,
-                ManagerResponse.fromEntity(managerService.getManagerDetail(id)));
+                ManagerResponseMapper.toResponse(info));
     }
 
     @GetMapping("/list/{companyCode}")
     public ResponseEntity<ApiResponse<List<ManagerResponse>>> getManagerList(@PathVariable String companyCode) {
+        List<ManagerInfo> infoList = managerService.getManagerList(companyCode);
         return ResEntityFactory.toResponse(ApiResultCode.SUCCESS,
-                ManagerResponse.fromEntity(managerService.getManagerList(companyCode)));
+                ManagerResponseMapper.toResponseList(infoList));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<ApiResponse<ManagerUpdateResponse>> update(@PathVariable Long id,
                                                                      @RequestBody @Valid ManagerUpdateRequest request) {
+        ManagerCommand.Update command = ManagerRequestMapper.toCommand(request);
+        ManagerInfo info = managerService.updateManager(id, command);
         return ResEntityFactory.toResponse(ApiResultCode.SUCCESS,
-                 ManagerUpdateResponse.fromEntity(managerService.update(id, request)));
+                 ManagerResponseMapper.toUpdateResponse(info));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<ApiResponse<ManagerDeleteResponse>> delete(@PathVariable Long id,
                                                                      @RequestBody @Valid ManagerDeleteRequest request) {
+        ManagerCommand.Delete command = ManagerRequestMapper.toCommand(request);
+        boolean result = managerService.deleteManager(id, command);
         return ResEntityFactory.toResponse(ApiResultCode.SUCCESS,
-                 ManagerDeleteResponse.fromEntity(managerService.delete(id, request)));
+                 ManagerResponseMapper.toDeleteResponse(result));
     }
 
     @GetMapping("/check-loginId/{loginId}")
     public ResponseEntity<ApiResponse<Boolean>> checkAvailableLoginId(@PathVariable String loginId) {
+
         return ResEntityFactory.toResponse(ApiResultCode.SUCCESS,
-                !managerService.isExistsLoginId(loginId));
+                !managerService.isExistLoginId(loginId));
     }
 
     @GetMapping("/check-email/{email}")
     public ResponseEntity<ApiResponse<Boolean>> checkAvailableEmail(@PathVariable String email) {
         return ResEntityFactory.toResponse(ApiResultCode.SUCCESS,
-                !managerService.isExistsEmail(email));
+                !managerService.isExistEmail(email));
     }
 
     @PostMapping("/logout")
@@ -90,9 +102,8 @@ public class ManagerControllerImpl implements ManagerController {
             @AuthenticationPrincipal CustomManagerDetails customManagerDetails
             ){
         Long managerId = customManagerDetails.getManager().getId();
-
-        managerService.updateFcmToken(managerId, tokenRequest);
-
+        ManagerCommand.UpdateFcmToken command = ManagerRequestMapper.toCommand(tokenRequest);
+        managerService.updateFcmToken(managerId, command);
         return ResEntityFactory.toResponse(ApiResultCode.SUCCESS, "FCM Token이 성공적으로 저장되었습니다.");
     }
 }

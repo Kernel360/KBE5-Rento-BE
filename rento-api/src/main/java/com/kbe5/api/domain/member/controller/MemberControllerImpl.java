@@ -1,7 +1,5 @@
 package com.kbe5.api.domain.member.controller;
 
-
-import com.kbe5.api.domain.manager.dto.details.CustomManagerDetails;
 import com.kbe5.api.domain.member.dto.request.MemberRegisterRequest;
 import com.kbe5.api.domain.member.dto.request.MemberUpdateRequest;
 import com.kbe5.api.domain.member.dto.response.MemberInfoResponse;
@@ -14,6 +12,7 @@ import com.kbe5.domain.manager.entity.Manager;
 import com.kbe5.domain.member.dto.MemberInfo;
 import com.kbe5.domain.member.entity.Position;
 import com.kbe5.domain.member.service.MemberService;
+import com.kbe5.infra.security.details.CustomManagerDetails;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;

@@ -1,13 +1,11 @@
 package com.kbe5.api.domain.vehicle.controller;
 
-
-import com.kbe5.api.domain.manager.dto.details.CustomManagerDetails;
 import com.kbe5.api.domain.vehicle.dto.request.VehicleAddRequest;
 import com.kbe5.api.domain.vehicle.dto.request.VehicleUpdateRequest;
 import com.kbe5.api.domain.vehicle.dto.response.VehicleDetailResponse;
 import com.kbe5.api.domain.vehicle.dto.response.VehicleResponse;
 import com.kbe5.common.response.api.ApiResponse;
-import io.swagger.v3.oas.annotations.Hidden;
+import com.kbe5.infra.security.details.CustomManagerDetails;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
@@ -15,9 +13,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedModel;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
 
 @Tag(name = "차랑 서비스 API", description = "차량 등록, 수정, 삭제, 목록 조회, 상세 조회 기능, 및 검색을 제공합니다.")
 public interface VehicleController {
