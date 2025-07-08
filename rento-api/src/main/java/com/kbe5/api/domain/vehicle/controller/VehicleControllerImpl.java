@@ -37,11 +37,12 @@ public class VehicleControllerImpl implements VehicleController{
             @RequestBody @Validated VehicleAddRequest request) {
 
         VehicleAddCommand command = vehicleRequestMapper.toAddCommand(request);
+        Long companyId = customManagerDetails.getManager().getCompany().getId();
 
         vehicleService.addVehicle(
                 command,
                 request.departmentId(),
-                customManagerDetails.getManager().getCompany()
+                companyId
         );
 
         return ResEntityFactory.toResponse(ApiResultCode.SUCCESS, "차량 등록 완료");
@@ -69,11 +70,15 @@ public class VehicleControllerImpl implements VehicleController{
     @Override
     @GetMapping()
     public ResponseEntity<ApiResponse<PagedModel<VehicleResponse>>> getVehicleList(
-            @AuthenticationPrincipal CustomManagerDetails customManagerDetails, Long departmentId,
-            boolean onlyFree, Pageable pageable) {
+            @AuthenticationPrincipal CustomManagerDetails customManagerDetails,
+            Long departmentId,
+            boolean onlyFree,
+            Pageable pageable
+    ) {
+        Long companyId = customManagerDetails.getManager().getCompany().getId();
 
         return ResEntityFactory.toResponse(ApiResultCode.SUCCESS,
-                new PagedModel<>(vehicleService.getVehicleList(customManagerDetails.getManager(), departmentId,
+                new PagedModel<>(vehicleService.getVehicleList(companyId, departmentId,
                                 onlyFree, pageable)
                         .map(vehicleResponseMapper::toVehicleResponse)));
     }
@@ -82,10 +87,16 @@ public class VehicleControllerImpl implements VehicleController{
     public ResponseEntity<ApiResponse<PagedModel<VehicleResponse>>> search(
             @AuthenticationPrincipal CustomManagerDetails customManagerDetails,
             @RequestParam String vehicleNumber,
-            Pageable pageable) {
+            Pageable pageable
+    ) {
+        Long companyId = customManagerDetails.getManager().getCompany().getId();
+
         return ResEntityFactory.toResponse(ApiResultCode.SUCCESS,
-                new PagedModel<>(vehicleService.searchVehicle(customManagerDetails.getManager(),
-                        vehicleNumber, pageable).map(vehicleResponseMapper::toVehicleResponse)));
+                new PagedModel<>(vehicleService.searchVehicle(
+                        companyId,
+                        vehicleNumber,
+                        pageable
+                ).map(vehicleResponseMapper::toVehicleResponse)));
     }
 
     @Override

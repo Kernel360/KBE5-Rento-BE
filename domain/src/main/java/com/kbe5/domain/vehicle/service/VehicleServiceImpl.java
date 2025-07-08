@@ -1,6 +1,7 @@
 package com.kbe5.domain.vehicle.service;
 
 import com.kbe5.domain.company.entity.Company;
+import com.kbe5.domain.company.service.CompanyReader;
 import com.kbe5.domain.department.entity.Department;
 import com.kbe5.domain.department.service.DepartmentReader;
 import com.kbe5.domain.manager.entity.Manager;
@@ -23,11 +24,13 @@ public class VehicleServiceImpl implements VehicleService {
     private final VehicleStore vehicleStore;
     private final VehicleReader vehicleReader;
     private final DepartmentReader departmentReader;
+    private final CompanyReader companyReader;
 
     @Override
     @Transactional
-    public void addVehicle(VehicleAddCommand command, Long departmentId, Company company) {
+    public void addVehicle(VehicleAddCommand command, Long departmentId, Long companyId) {
         Department department = departmentReader.getDepartmentById(departmentId);
+        Company company = companyReader.findById(companyId);
 
         vehicleReader.getVehicleNumber(command.getVehicleNumber());
 
@@ -36,10 +39,10 @@ public class VehicleServiceImpl implements VehicleService {
     }
 
     @Override
-    public Page<VehicleInfo> getVehicleList(Manager manager, Long departmentId, boolean onlyFree, Pageable pageable) {
+    public Page<VehicleInfo> getVehicleList(Long companyId, Long departmentId, boolean onlyFree, Pageable pageable) {
 
         Page<Vehicle> vehicleList =  vehicleReader.getVehicleListWithFilter(
-                manager.getCompany().getId(),
+                companyId,
                 departmentId,
                 onlyFree,
                 pageable
@@ -49,9 +52,9 @@ public class VehicleServiceImpl implements VehicleService {
     }
 
     @Override
-    public Page<VehicleInfo> searchVehicle(Manager manager, String vehicleNumber, Pageable pageable) {
+    public Page<VehicleInfo> searchVehicle(Long companyId, String vehicleNumber, Pageable pageable) {
         Page<Vehicle> vehicleList = vehicleReader.getVehicleSearch(
-                manager.getCompany().getId(),
+                companyId,
                 vehicleNumber,
                 pageable
         );

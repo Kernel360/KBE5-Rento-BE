@@ -10,15 +10,15 @@ import org.springframework.data.domain.Pageable;
 
 public interface VehicleService {
 
-    void addVehicle(VehicleAddCommand command, Long departmentId, Company company);
+    void addVehicle(VehicleAddCommand command, Long departmentId, Long companyId);
     Page<VehicleInfo> getVehicleList(
-            Manager manager,
+            Long companyId,
             Long departmentId,
             boolean onlyFree,
             Pageable pageable
     );
     Page<VehicleInfo> searchVehicle(
-            Manager manager,
+            Long companyId,
             String vehicleNumber,
             Pageable pageable
     );
