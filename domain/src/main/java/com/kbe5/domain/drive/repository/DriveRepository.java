@@ -60,7 +60,7 @@ public interface DriveRepository extends JpaRepository<Drive, Long> {
       from Drive d
         where d.member.company = :company
             and d.driveStatus = :status
-              and (:vehNum is null or d.vehicle.info.vehicleNumber like concat('%', :vehNum, '%'))
+              and (:vehNum is null or d.vehicle.information.vehicleNumber like concat('%', :vehNum, '%'))
   """)
     List<Drive> findByCompanyAndStatusAndVehicleNumber(
             @Param("company") Company company,

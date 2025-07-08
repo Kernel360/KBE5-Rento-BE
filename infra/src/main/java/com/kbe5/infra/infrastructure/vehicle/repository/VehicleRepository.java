@@ -12,14 +12,14 @@ import java.util.Optional;
 
 public interface VehicleRepository extends JpaRepository<Vehicle, Long> {
 
-    Optional<Vehicle> findByInfo_VehicleNumber(String vehicleNumber);
+    Optional<Vehicle> findByInformation_VehicleNumber(String vehicleNumber);
 
     @Query("""
       select v.company.id
       from Vehicle v
       where v.mileage.mdn = :mdn
     """)
-    Optional<Long> findCompanyIdByMdn(@Param("mdn") Long mdn);
+    Optional<Long> findByCompanyIdByMdn(@Param("mdn") Long mdn);
 
 
     Page<Vehicle> findAllByCompanyIdAndDeleteStatus(Long companyId, Pageable pageable, boolean deleteStatus);
@@ -58,10 +58,10 @@ public interface VehicleRepository extends JpaRepository<Vehicle, Long> {
 
     @Query("""
         SELECT v FROM Vehicle v
-                WHERE v.company.id = :cid AND v.info.vehicleNumber like concat('%', :vnum ,'%')
+                WHERE v.company.id = :cid AND v.information.vehicleNumber like concat('%', :vnum ,'%')
                 AND v.deleteStatus = false
         """)
-    Page<Vehicle> findVehicleByCompanyIdAndInfo_VehicleNumber(@Param("cid") Long companyId,
+    Page<Vehicle> findByVehicleByCompanyIdAndInformation_VehicleNumber(@Param("cid") Long companyId,
                                                               @Param("vnum") String vehicleNumber,
                                                               Pageable pageable);
 
