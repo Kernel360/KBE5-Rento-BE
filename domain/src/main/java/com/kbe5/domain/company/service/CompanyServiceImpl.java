@@ -1,11 +1,8 @@
-package com.kbe5.infra.infrastructure.company;
+package com.kbe5.domain.company.service;
 
 import com.kbe5.domain.company.dto.CompanyCommand;
 import com.kbe5.domain.company.dto.CompanyInfo;
 import com.kbe5.domain.company.entity.Company;
-import com.kbe5.domain.company.service.CompanyReader;
-import com.kbe5.domain.company.service.CompanyService;
-import com.kbe5.domain.company.service.CompanyStore;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;

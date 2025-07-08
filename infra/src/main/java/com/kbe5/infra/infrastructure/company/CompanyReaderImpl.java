@@ -1,7 +1,7 @@
 package com.kbe5.infra.infrastructure.company;
 
 import com.kbe5.domain.company.entity.Company;
-import com.kbe5.domain.company.repository.CompanyRepository;
+import com.kbe5.infra.infrastructure.company.repository.CompanyRepository;
 import com.kbe5.domain.company.service.CompanyReader;
 import com.kbe5.domain.exception.DomainException;
 import com.kbe5.domain.exception.ErrorType;
