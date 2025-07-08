@@ -1,4 +1,4 @@
-package com.kbe5.domain.company.repository;
+package com.kbe5.infra.infrastructure.company.repository;
 
 import com.kbe5.domain.company.entity.Company;
 import org.springframework.data.jpa.repository.JpaRepository;
