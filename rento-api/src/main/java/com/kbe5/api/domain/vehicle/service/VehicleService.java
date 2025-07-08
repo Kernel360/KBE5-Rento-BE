@@ -10,7 +10,7 @@ import com.kbe5.domain.manager.entity.Manager;
 import com.kbe5.domain.vehicle.entity.Vehicle;
 import com.kbe5.domain.vehicle.entity.VehicleStatus;
 import com.kbe5.domain.vehicle.repository.VehicleRepository;
-import com.kbe5.domain.department.repository.DepartmentRepository;
+import com.kbe5.infra.infrastructure.department.repository.DepartmentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

@@ -4,7 +4,7 @@ import com.kbe5.domain.exception.DomainException;
 import com.kbe5.domain.exception.ErrorType;
 import com.kbe5.domain.member.entity.Member;
 import com.kbe5.domain.member.entity.Position;
-import com.kbe5.domain.member.repository.MemberRepository;
+import com.kbe5.infra.infrastructure.member.repository.MemberRepository;
 import com.kbe5.domain.member.service.MemberReader;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -50,5 +50,20 @@ public class MemberReadImpl implements MemberReader {
     @Override
     public List<Member> findAllByDepartmentId(Long departmentId) {
         return memberRepository.findAllByDepartmentId(departmentId);
+    }
+
+    @Override
+    public boolean existsByCompanyCodeAndLoginIdExcludingId(String companyCode, String loginId, Long excludeId) {
+        return memberRepository.existsByCompanyCodeAndLoginIdAndIdNot(companyCode, loginId, excludeId);
+    }
+
+    @Override
+    public boolean existsByCompanyCodeAndEmailExcludingId(String companyCode, String email, Long excludeId) {
+        return memberRepository.existsByCompanyCodeAndEmailAndIdNot(companyCode, email, excludeId);
+    }
+
+    @Override
+    public boolean existsByCompanyCodeAndPhoneNumberExcludingId(String companyCode, String phoneNumber, Long excludeId) {
+        return memberRepository.existsByCompanyCodeAndPhoneNumberAndIdNot(companyCode, phoneNumber, excludeId);
     }
 }
