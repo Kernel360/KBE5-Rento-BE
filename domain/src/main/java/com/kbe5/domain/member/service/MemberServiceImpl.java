@@ -40,13 +40,13 @@ public class MemberServiceImpl implements MemberService {
     @Override
     @Transactional(readOnly = true)
     public Page<MemberInfo> getMembers(
-            Manager manager,
+            Long companyId,
             Position position,
             Long departmentId,
             String search,
             Pageable pageable) {
         Page<Member> memberList = memberReader.getMembersByConditions(
-                manager.getCompany().getId(),
+                companyId,
                 position,
                 departmentId,
                 search,
