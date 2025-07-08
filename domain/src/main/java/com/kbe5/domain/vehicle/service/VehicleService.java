@@ -1,7 +1,5 @@
 package com.kbe5.domain.vehicle.service;
 
-import com.kbe5.domain.company.entity.Company;
-import com.kbe5.domain.manager.entity.Manager;
 import com.kbe5.domain.vehicle.dto.VehicleAddCommand;
 import com.kbe5.domain.vehicle.dto.VehicleUpdateCommand;
 import com.kbe5.domain.vehicle.entity.VehicleInfo;
