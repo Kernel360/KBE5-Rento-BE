@@ -6,11 +6,13 @@ import com.kbe5.domain.manager.entity.Manager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Slf4j
 @Component
+@Transactional
 @RequiredArgsConstructor
 public class ManagerServiceImpl implements ManagerService {
 
@@ -26,6 +28,7 @@ public class ManagerServiceImpl implements ManagerService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public ManagerInfo getManagerInfo(Long id) {
         Manager manager = managerReader.getManagerById(id);
 
@@ -33,6 +36,7 @@ public class ManagerServiceImpl implements ManagerService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<ManagerInfo> getManagerList(String companyCode) {
         List<Manager> managerList = managerReader.getManagersByCompanyCode(companyCode);
 
