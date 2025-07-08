@@ -1,15 +1,11 @@
-package com.kbe5.infra.infrastructure.department;
+package com.kbe5.domain.department.service;
 
 import com.kbe5.domain.department.dto.DepartmentCommand;
 import com.kbe5.domain.department.dto.DepartmentInfo;
 import com.kbe5.domain.department.entity.Department;
-import com.kbe5.domain.department.service.DepartmentReader;
-import com.kbe5.domain.department.service.DepartmentService;
-import com.kbe5.domain.department.service.DepartmentStore;
 import com.kbe5.domain.exception.DomainException;
 import com.kbe5.domain.exception.ErrorType;
 import com.kbe5.domain.member.entity.Member;
-import com.kbe5.domain.member.repository.MemberRepository;
 import com.kbe5.domain.member.service.MemberReader;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -48,10 +44,10 @@ public class DepartmentServiceImpl implements DepartmentService {
     @Override
     @Transactional
     public DepartmentInfo updateDepartment(Long departmentId, DepartmentCommand.Update command) {
-        Department department = departmentReader.getDepartmentById(departmentId);
         departmentStore.update(command, departmentId);
 
-        return DepartmentInfo.fromEntity(department);
+        Department updatedDepartment = departmentReader.getDepartmentById(departmentId);
+        return DepartmentInfo.fromEntity(updatedDepartment);
     }
 
     @Override

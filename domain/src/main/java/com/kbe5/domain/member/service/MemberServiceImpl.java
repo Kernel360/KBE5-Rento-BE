@@ -1,4 +1,4 @@
-package com.kbe5.infra.infrastructure.member;
+package com.kbe5.domain.member.service;
 
 import com.kbe5.domain.department.entity.Department;
 import com.kbe5.domain.department.service.DepartmentReader;
@@ -9,9 +9,6 @@ import com.kbe5.domain.member.dto.MemberCommand;
 import com.kbe5.domain.member.dto.MemberInfo;
 import com.kbe5.domain.member.entity.Member;
 import com.kbe5.domain.member.entity.Position;
-import com.kbe5.domain.member.service.MemberReader;
-import com.kbe5.domain.member.service.MemberService;
-import com.kbe5.domain.member.service.MemberStore;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -73,6 +70,8 @@ public class MemberServiceImpl implements MemberService {
         Member member = memberReader.getMemberById(memberId);
         Department department = departmentReader.getDepartmentById(member.getDepartment().getId());
 
+        validateDuplicateForUpdate(memberId, memberCommand);
+
         member.update(
                 memberCommand.getName(),
                 memberCommand.getEmail(),
@@ -102,6 +101,25 @@ public class MemberServiceImpl implements MemberService {
             throw new DomainException(ErrorType.DUPLICATE_EMAIL);
         }
         if (isExistLoginId(member.getCompanyCode(), member.getLoginId())) {
+            throw new DomainException(ErrorType.DUPLICATE_LOGIN_ID);
+        }
+    }
+
+    private void validateDuplicateForUpdate(Long memberId, MemberCommand.Update memberCommand) {
+        String companyCode = memberCommand.getCompanyCode();
+
+        if (memberReader.existsByCompanyCodeAndPhoneNumberExcludingId(
+                companyCode, memberCommand.getPhoneNumber(), memberId)) {
+            throw new DomainException(ErrorType.DUPLICATE_PHONE_NUMBER);
+        }
+
+        if (memberReader.existsByCompanyCodeAndEmailExcludingId(
+                companyCode, memberCommand.getEmail(), memberId)) {
+            throw new DomainException(ErrorType.DUPLICATE_EMAIL);
+        }
+
+        if (memberReader.existsByCompanyCodeAndLoginIdExcludingId(
+                companyCode, memberCommand.getLoginId(), memberId)) {
             throw new DomainException(ErrorType.DUPLICATE_LOGIN_ID);
         }
     }

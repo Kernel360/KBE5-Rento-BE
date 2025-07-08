@@ -1,14 +1,13 @@
 package com.kbe5.infra.infrastructure.member;
 
-import com.kbe5.domain.company.repository.CompanyRepository;
+import com.kbe5.domain.company.service.CompanyReader;
 import com.kbe5.domain.department.entity.Department;
-import com.kbe5.domain.department.repository.DepartmentRepository;
 import com.kbe5.domain.drive.repository.DriveRepository;
 import com.kbe5.domain.exception.DomainException;
 import com.kbe5.domain.exception.ErrorType;
 import com.kbe5.domain.member.entity.Member;
-import com.kbe5.domain.member.repository.MemberRepository;
 import com.kbe5.domain.member.service.MemberStore;
+import com.kbe5.infra.infrastructure.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -21,15 +20,13 @@ import org.springframework.stereotype.Component;
 public class MemberStoreImpl implements MemberStore {
 
     private final MemberRepository memberRepository;
-    private final DepartmentRepository departmentRepository;
     private final PasswordEncoder passwordEncoder;
-    private final CompanyRepository companyRepository;
+    private final CompanyReader companyReader;
     private final DriveRepository driveRepository;
 
     @Override
     public Member store(Member member, Department department) {
-        member.assignCompany(companyRepository.findByCompanyCode(member.getCompanyCode())
-                .orElseThrow(() -> new DomainException(ErrorType.COMPANY_NOT_FOUND)));
+        member.assignCompany(companyReader.findByCompanyCode(member.getCompanyCode()));
         member.encodePassword(passwordEncoder);
         member.assignDepartment(department);
 
