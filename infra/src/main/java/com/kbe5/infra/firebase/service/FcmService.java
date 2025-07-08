@@ -9,7 +9,7 @@ import com.kbe5.domain.drive.repository.DriveRepository;
 import com.kbe5.domain.exception.DomainException;
 import com.kbe5.domain.exception.ErrorType;
 import com.kbe5.domain.manager.entity.Manager;
-import com.kbe5.domain.manager.respository.ManagerRepository;
+import com.kbe5.infra.infrastructure.manager.respository.ManagerRepository;
 import com.kbe5.infra.firebase.dto.TokenNotificationRequest;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Recover;

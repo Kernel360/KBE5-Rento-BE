@@ -1,10 +1,10 @@
 package com.kbe5.api.domain.member.controller;
 
-import com.kbe5.api.domain.manager.dto.details.CustomManagerDetails;
 import com.kbe5.api.domain.member.dto.request.MemberRegisterRequest;
 import com.kbe5.api.domain.member.dto.request.MemberUpdateRequest;
 import com.kbe5.api.domain.member.dto.response.MemberInfoResponse;
 import com.kbe5.common.response.api.ApiResponse;
+import com.kbe5.infra.security.details.CustomManagerDetails;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
@@ -12,8 +12,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedModel;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.validation.annotation.Validated;
 
 import java.util.List;
 

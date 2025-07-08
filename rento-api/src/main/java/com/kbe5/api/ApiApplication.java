@@ -16,7 +16,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
         "com.kbe5.api"
 })
 @EntityScan(basePackages = "com.kbe5.domain")
-@EnableJpaRepositories(basePackages = "com.kbe5.domain")
+@EnableJpaRepositories(basePackages = { "com.kbe5.domain", "com.kbe5.infra"})
 public class ApiApplication {
     public static void main(String[] args) {
         SpringApplication.run(ApiApplication.class, args);
