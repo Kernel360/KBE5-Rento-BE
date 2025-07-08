@@ -1,4 +1,4 @@
-package com.kbe5.domain.member.repository;
+package com.kbe5.infra.infrastructure.member.repository;
 
 import com.kbe5.domain.member.entity.Member;
 import com.kbe5.domain.member.entity.Position;
