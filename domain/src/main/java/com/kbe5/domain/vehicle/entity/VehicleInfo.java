@@ -18,9 +18,11 @@ public class VehicleInfo {
 
     public static VehicleInfo fromEntity(Vehicle vehicle) {
         return VehicleInfo.builder()
+                .id(vehicle.getId())
                 .company(vehicle.getCompany())
                 .department(vehicle.getDepartment())
                 .information(vehicle.getInformation())
+                .mileage(vehicle.getMileage())
                 .status(vehicle.getStatus())
                 .build();
     }

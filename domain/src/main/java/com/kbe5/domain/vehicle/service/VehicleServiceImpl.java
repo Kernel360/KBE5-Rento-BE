@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 
 // todo: 반환을 info로 하는 것에 대해 고민해보기 7.8
@@ -24,13 +25,13 @@ public class VehicleServiceImpl implements VehicleService {
     private final DepartmentReader departmentReader;
 
     @Override
+    @Transactional
     public void addVehicle(VehicleAddCommand command, Long departmentId, Company company) {
         Department department = departmentReader.getDepartmentById(departmentId);
 
-        Vehicle vehicle = vehicleReader.getVehicleNumber(command.getVehicleNumber());
+        vehicleReader.getVehicleNumber(command.getVehicleNumber());
 
-        vehicle.addDepartment(department);
-        Vehicle initVehicle = vehicleStore.addVehicle(command, company);
+        Vehicle initVehicle = vehicleStore.addVehicle(command, company, department);
         initVehicle.addMdn(initVehicle.getId());
     }
 

@@ -2,7 +2,6 @@ package com.kbe5.infra.infrastructure.vehicle;
 
 import com.kbe5.domain.exception.DomainException;
 import com.kbe5.domain.exception.ErrorType;
-import com.kbe5.domain.manager.entity.Manager;
 import com.kbe5.domain.vehicle.entity.Vehicle;
 import com.kbe5.domain.vehicle.entity.VehicleStatus;
 import com.kbe5.domain.vehicle.service.VehicleReader;
@@ -26,15 +25,16 @@ public class VehicleReaderImpl implements VehicleReader {
     }
 
     @Override
-    public Vehicle getVehicleNumber(String vehicleNumber) {
-        return vehicleRepository.findByInfo_VehicleNumber(vehicleNumber).orElseThrow(
-                () -> new DomainException(ErrorType.SAME_VEHICLE_NUMBER)
-        );
+    public void getVehicleNumber(String vehicleNumber) {
+        vehicleRepository.findByInformation_VehicleNumber(vehicleNumber)
+                .ifPresent(v -> {
+                    throw new DomainException(ErrorType.SAME_VEHICLE_NUMBER);
+                });
     }
 
     @Override
     public Long getVehicleWithMdn(Long mdn) {
-        return vehicleRepository.findCompanyIdByMdn(mdn).orElseThrow(
+        return vehicleRepository.findByCompanyIdByMdn(mdn).orElseThrow(
                 () -> new DomainException(ErrorType.VEHICLE_NOT_FOUND)
         );
     }
@@ -60,7 +60,7 @@ public class VehicleReaderImpl implements VehicleReader {
     @Override
     public Page<Vehicle> getVehicleSearch(Long companyId, String vehicleNumber, Pageable pageable) {
 
-        return vehicleRepository.findVehicleByCompanyIdAndInfo_VehicleNumber(
+        return vehicleRepository.findByVehicleByCompanyIdAndInformation_VehicleNumber(
                 companyId,
                 vehicleNumber,
                 pageable);
