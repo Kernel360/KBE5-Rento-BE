@@ -19,4 +19,10 @@ public interface MemberReader {
     boolean existsByCompanyCodeAndPhoneNumber(String companyCode, String phoneNumber);
 
     List<Member> findAllByDepartmentId(Long departmentId);
+
+    boolean existsByCompanyCodeAndLoginIdExcludingId(String companyCode, String loginId, Long excludeId);
+
+    boolean existsByCompanyCodeAndEmailExcludingId(String companyCode, String email, Long excludeId);
+
+    boolean existsByCompanyCodeAndPhoneNumberExcludingId(String companyCode, String phoneNumber, Long excludeId);
 }

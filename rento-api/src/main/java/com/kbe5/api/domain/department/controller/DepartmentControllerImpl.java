@@ -57,9 +57,7 @@ public class DepartmentControllerImpl implements DepartmentController {
         List<DepartmentInfo> departmentInfos = departmentService.getDepartments(
                 customManagerDetails.getManager().getCompany().getId());
 
-        List<DepartmentInfoResponse> departments = responseMapper.toResponseList(departmentInfos);
-
-        return ResEntityFactory.toResponse(ApiResultCode.SUCCESS, departments);
+        return ResEntityFactory.toResponse(ApiResultCode.SUCCESS, responseMapper.toResponseList(departmentInfos));
     }
 
     //부서 수정
@@ -75,9 +73,7 @@ public class DepartmentControllerImpl implements DepartmentController {
                 requestMapper.toUpdateCommand(departmentUpdateRequest, customManagerDetails.getManager().getCompany().getId())
         );
 
-        DepartmentInfoResponse response = responseMapper.toResponse(departmentInfo);
-
-        return ResEntityFactory.toResponse(ApiResultCode.SUCCESS, response);
+        return ResEntityFactory.toResponse(ApiResultCode.SUCCESS, responseMapper.toResponse(departmentInfo));
     }
 
     //부서 삭제

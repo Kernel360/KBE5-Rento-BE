@@ -1,14 +1,14 @@
 package com.kbe5.infra.infrastructure.department;
 
 import com.kbe5.domain.company.entity.Company;
-import com.kbe5.domain.company.repository.CompanyRepository;
+import com.kbe5.domain.company.service.CompanyReader;
 import com.kbe5.domain.department.dto.DepartmentCommand;
 import com.kbe5.domain.department.entity.Department;
-import com.kbe5.domain.department.repository.DepartmentRepository;
+import com.kbe5.domain.department.service.DepartmentReader;
 import com.kbe5.domain.department.service.DepartmentStore;
 import com.kbe5.domain.exception.DomainException;
 import com.kbe5.domain.exception.ErrorType;
-import jakarta.transaction.Transactional;
+import com.kbe5.infra.infrastructure.department.repository.DepartmentRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -19,26 +19,22 @@ import org.springframework.stereotype.Component;
 public class DepartmentStoreImpl implements DepartmentStore {
 
     private final DepartmentRepository departmentRepository;
-    private final CompanyRepository companyRepository;
+    private final CompanyReader companyReader;
+    private final DepartmentReader departmentReader;
 
     @Override
     public Department store(Department department) {
-        Company company = companyRepository.findById(department.getCompanyId())
-                .orElseThrow(() -> new DomainException(ErrorType.COMPANY_NOT_FOUND));
-
+        Company company = companyReader.findById(department.getCompanyId());
         validateDuplicateDepartmentName(department.getDepartmentName(), company.getId());
 
         return departmentRepository.save(department);
     }
 
     public void update(DepartmentCommand.Update departmentUpdate, Long departmentId) {
-        Company company = companyRepository.findById(departmentUpdate.getCompanyId())
-                .orElseThrow(() -> new DomainException(ErrorType.COMPANY_NOT_FOUND));
-
+        Company company = companyReader.findById(departmentUpdate.getCompanyId());
         validateDuplicateDepartmentName(departmentUpdate.getDepartmentName(), company.getId());
 
-        Department existingDepartment = departmentRepository.findById(departmentId)
-                        .orElseThrow(() -> new DomainException(ErrorType.DEPARTMENT_NOT_FOUND));
+        Department existingDepartment = departmentReader.findById(departmentId);
 
         existingDepartment.update(departmentUpdate.getDepartmentName());
     }
@@ -49,7 +45,7 @@ public class DepartmentStoreImpl implements DepartmentStore {
     }
 
     private void validateDuplicateDepartmentName(String departmentName, Long companyId) {
-        if(departmentRepository.existsByDepartmentNameAndCompanyId(departmentName, companyId)) {
+        if(departmentReader.existsByDepartmentNameAndCompanyId(departmentName, companyId)) {
             throw new DomainException(ErrorType.DUPLICATE_DEPARTMENT_NAME);
         }
     }

@@ -9,14 +9,12 @@ import com.kbe5.common.apiresponse.ResEntityFactory;
 import com.kbe5.common.response.api.ApiResponse;
 import com.kbe5.common.response.api.ApiResultCode;
 import com.kbe5.domain.manager.entity.Manager;
-import com.kbe5.domain.member.dto.MemberCommand;
 import com.kbe5.domain.member.dto.MemberInfo;
 import com.kbe5.domain.member.entity.Position;
 import com.kbe5.domain.member.service.MemberService;
 import com.kbe5.infra.security.details.CustomManagerDetails;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedModel;
 import org.springframework.http.ResponseEntity;
@@ -41,8 +39,7 @@ public class MemberControllerImpl implements MemberController {
     public ResponseEntity<ApiResponse<String>> register(
             @AuthenticationPrincipal CustomManagerDetails customManagerDetails,
             @RequestBody @Validated MemberRegisterRequest request) {
-        MemberCommand.Register command = requestMapper.toRegisterCommand(request);
-        MemberInfo info = memberService.registerMember(command);
+        MemberInfo info = memberService.registerMember(requestMapper.toRegisterCommand(request));
 
         return ResEntityFactory.toResponse(ApiResultCode.SUCCESS, info.getName()+ " 성공적으로 등록되었습니다.");
     }
@@ -54,8 +51,7 @@ public class MemberControllerImpl implements MemberController {
             @PathVariable Long memberId,
             @RequestBody @Validated MemberUpdateRequest request
     ) {
-        MemberCommand.Update command = requestMapper.toUpdateCommand(request);
-        MemberInfo info = memberService.updateMember(memberId, command);
+        MemberInfo info = memberService.updateMember(memberId, requestMapper.toUpdateCommand(request));
 
         return ResEntityFactory.toResponse(ApiResultCode.SUCCESS, responseMapper.toResponse(info));
     }
@@ -83,10 +79,11 @@ public class MemberControllerImpl implements MemberController {
         Manager manager = customManagerDetails.getManager();
         Position newPosition = position != null ? Position.fromValue(position) : null;
 
-        Page<MemberInfo> memberInfos = memberService.getMembers(manager, newPosition, departmentId, keyword, pageable);
-
         return ResEntityFactory.toResponse(ApiResultCode.SUCCESS,
-                new PagedModel<>(responseMapper.toResponseList(memberInfos)));
+                new PagedModel<>(responseMapper.toResponseList(
+                        memberService.getMembers(manager, newPosition, departmentId, keyword, pageable))
+                )
+        );
     }
 
     @Override
