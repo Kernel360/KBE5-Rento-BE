@@ -4,8 +4,8 @@ package com.kbe5.api.domain.drive.controller;
 import com.kbe5.api.domain.drive.dto.DriveAddRequest;
 import com.kbe5.api.domain.drive.dto.DriveDetailResponse;
 import com.kbe5.api.domain.drive.dto.DriveResponse;
-import com.kbe5.api.domain.manager.dto.details.CustomManagerDetails;
 import com.kbe5.common.response.api.ApiResponse;
+import com.kbe5.infra.security.details.CustomManagerDetails;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
@@ -13,8 +13,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedModel;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDateTime;
 import java.util.List;

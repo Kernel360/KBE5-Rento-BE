@@ -1,10 +1,10 @@
 package com.kbe5.api.domain.member.controller;
 
-import com.kbe5.api.domain.manager.dto.details.CustomManagerDetails;
 import com.kbe5.api.domain.member.dto.request.MemberRegisterRequest;
 import com.kbe5.api.domain.member.dto.request.MemberUpdateRequest;
 import com.kbe5.api.domain.member.dto.response.MemberInfoResponse;
 import com.kbe5.common.response.api.ApiResponse;
+import com.kbe5.infra.security.details.CustomManagerDetails;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;

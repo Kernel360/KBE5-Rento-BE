@@ -1,6 +1,5 @@
 package com.kbe5.api.domain.vehicle.controller;
 
-import com.kbe5.api.domain.manager.dto.details.CustomManagerDetails;
 import com.kbe5.api.domain.vehicle.dto.request.VehicleAddRequest;
 import com.kbe5.api.domain.vehicle.dto.request.VehicleUpdateRequest;
 import com.kbe5.api.domain.vehicle.dto.response.VehicleDetailResponse;
@@ -9,6 +8,7 @@ import com.kbe5.api.domain.vehicle.service.VehicleService;
 import com.kbe5.common.apiresponse.ResEntityFactory;
 import com.kbe5.common.response.api.ApiResponse;
 import com.kbe5.common.response.api.ApiResultCode;
+import com.kbe5.infra.security.details.CustomManagerDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedModel;
