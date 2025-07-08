@@ -72,6 +72,7 @@ public class VehicleControllerImpl implements VehicleController{
     public ResponseEntity<ApiResponse<PagedModel<VehicleResponse>>> getVehicleList(
             @AuthenticationPrincipal CustomManagerDetails customManagerDetails, Long departmentId,
             boolean onlyFree, Pageable pageable) {
+        Long companyId = customManagerDetails.getManager().getCompany().getId();
 
         return ResEntityFactory.toResponse(ApiResultCode.SUCCESS,
                 new PagedModel<>(vehicleService.getVehicleList(companyId, departmentId,
