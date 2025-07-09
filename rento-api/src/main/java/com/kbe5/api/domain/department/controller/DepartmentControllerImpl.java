@@ -11,7 +11,8 @@ import com.kbe5.common.response.api.ApiResponse;
 import com.kbe5.common.response.api.ApiResultCode;
 import com.kbe5.domain.department.dto.DepartmentInfo;
 import com.kbe5.domain.department.service.DepartmentService;
-import com.kbe5.domain.manager.entity.Manager;
+import com.kbe5.domain.manager.dto.ManagerInfo;
+import com.kbe5.domain.manager.service.ManagerService;
 import com.kbe5.infra.security.details.CustomManagerDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -29,18 +30,19 @@ public class DepartmentControllerImpl implements DepartmentController {
     private final DepartmentService departmentService;
     private final DepartmentRequestMapper requestMapper;
     private final DepartmentResponseMapper responseMapper;
+    private final ManagerService managerService;
 
-    //부서 등록
     @Override
     @PostMapping
     public ResponseEntity<ApiResponse<String>> registerDepartment(
             @AuthenticationPrincipal CustomManagerDetails customManagerDetails,
             @RequestBody @Validated DepartmentRegisterRequest departmentRegisterRequest
     ) {
-        Manager manager = customManagerDetails.getManager();
+        Long managerId = customManagerDetails.getManager().getId();
+        ManagerInfo info = managerService.getManagerInfo(managerId);
 
         DepartmentInfo departmentInfo = departmentService.registerDepartment(
-                requestMapper.toRegisterCommand(departmentRegisterRequest, manager.getCompany().getId())
+                requestMapper.toRegisterCommand(departmentRegisterRequest, info.getCompanyId())
         );
 
         return ResEntityFactory.toResponse(
@@ -54,8 +56,11 @@ public class DepartmentControllerImpl implements DepartmentController {
     public ResponseEntity<ApiResponse<List<DepartmentInfoResponse>>> getAllDepartments(
             @AuthenticationPrincipal CustomManagerDetails customManagerDetails
     ) {
+        Long managerId = customManagerDetails.getManager().getId();
+        ManagerInfo info = managerService.getManagerInfo(managerId);
+
         List<DepartmentInfo> departmentInfos = departmentService.getDepartments(
-                customManagerDetails.getManager().getCompany().getId());
+                info.getCompanyId());
 
         return ResEntityFactory.toResponse(ApiResultCode.SUCCESS, responseMapper.toResponseList(departmentInfos));
     }
@@ -68,9 +73,12 @@ public class DepartmentControllerImpl implements DepartmentController {
             @PathVariable Long departmentId,
             @Validated @RequestBody DepartmentUpdateRequest departmentUpdateRequest
     ) {
+        Long managerId = customManagerDetails.getManager().getId();
+        ManagerInfo info = managerService.getManagerInfo(managerId);
+
         DepartmentInfo departmentInfo = departmentService.updateDepartment(
                 departmentId,
-                requestMapper.toUpdateCommand(departmentUpdateRequest, customManagerDetails.getManager().getCompany().getId())
+                requestMapper.toUpdateCommand(departmentUpdateRequest, info.getCompanyId())
         );
 
         return ResEntityFactory.toResponse(ApiResultCode.SUCCESS, responseMapper.toResponse(departmentInfo));

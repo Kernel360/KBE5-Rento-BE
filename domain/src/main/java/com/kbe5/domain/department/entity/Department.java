@@ -3,6 +3,7 @@ package com.kbe5.domain.department.entity;
 
 import com.kbe5.domain.BaseEntity;
 import com.kbe5.domain.company.entity.Company;
+import com.kbe5.domain.department.dto.DepartmentInfo;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -23,10 +24,18 @@ public class Department extends BaseEntity {
     private Long companyId;
 
     @Builder
-    private Department(String departmentName, Long companyId, int numberOfEmployee) {
-        this.companyId = companyId;
+    public Department(String departmentName, int numberOfEmployee, Long companyId) {
         this.departmentName = departmentName;
         this.numberOfEmployee = numberOfEmployee;
+        this.companyId = companyId;
+    }
+
+    public DepartmentInfo toDepartmentInfo(int numberOfEmployees) {
+        return DepartmentInfo.builder()
+                .departmentId(this.getId())
+                .departmentName(this.getDepartmentName())
+                .numberOfEmployees(numberOfEmployees)
+                .build();
     }
 
     public void update(String departmentName) {
