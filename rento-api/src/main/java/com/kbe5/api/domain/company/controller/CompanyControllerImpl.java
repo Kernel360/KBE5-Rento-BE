@@ -1,13 +1,13 @@
 package com.kbe5.api.domain.company.controller;
 
 
-import com.kbe5.api.domain.company.dto.request.CompanyBiznumberRequest;
-import com.kbe5.api.domain.company.dto.request.CompanyRegisterRequest;
-import com.kbe5.api.domain.company.dto.request.CompanyUpdateRequest;
-import com.kbe5.api.domain.company.dto.response.CompanyDeleteResponse;
-import com.kbe5.api.domain.company.dto.response.CompanyRegisterResponse;
-import com.kbe5.api.domain.company.dto.response.CompanyResponse;
-import com.kbe5.api.domain.company.dto.response.CompanyUpdateResponse;
+import com.kbe5.api.domain.company.service.dto.request.CompanyBiznumberRequest;
+import com.kbe5.api.domain.company.service.dto.request.CompanyRegisterRequest;
+import com.kbe5.api.domain.company.service.dto.request.CompanyUpdateRequest;
+import com.kbe5.api.domain.company.service.dto.response.CompanyDeleteResponse;
+import com.kbe5.api.domain.company.service.dto.response.CompanyRegisterResponse;
+import com.kbe5.api.domain.company.service.dto.response.CompanyResponse;
+import com.kbe5.api.domain.company.service.dto.response.CompanyUpdateResponse;
 import com.kbe5.api.domain.company.service.CompanyService;
 import com.kbe5.common.apiresponse.ResEntityFactory;
 import com.kbe5.common.response.api.ApiResponse;
@@ -32,10 +32,9 @@ public class CompanyControllerImpl implements CompanyController {
     @PostMapping("/register")
     public ResponseEntity<ApiResponse<CompanyRegisterResponse>> register(@RequestBody @Valid
                                                                          CompanyRegisterRequest request) {
-        Company company = CompanyRegisterRequest.toEntity(request);
 
         return ResEntityFactory.toResponse(ApiResultCode.SUCCESS,
-                CompanyRegisterResponse.fromEntity(companyService.register(company)));
+                CompanyRegisterResponse.fromEntity(companyService.register(request)));
     }
 
     @GetMapping("/{id}")

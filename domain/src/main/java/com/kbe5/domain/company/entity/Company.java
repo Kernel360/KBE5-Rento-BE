@@ -25,8 +25,8 @@ public class Company extends BaseEntity {
     @Column(length = 30)
     private String companyCode;
 
-    @Builder
-    private Company(int bizNumber, String name) {
+
+    public Company(int bizNumber, String name) {
         this.bizNumber = bizNumber;
         this.name = name;
     }
@@ -36,7 +36,7 @@ public class Company extends BaseEntity {
         this.name = name;
     }
 
-    public void assignCompanyCode(String code) {
-        this.companyCode = code;
+    public void assignCompanyCode() {
+        this.companyCode = String.format("C%s", this.getId());
     }
 }

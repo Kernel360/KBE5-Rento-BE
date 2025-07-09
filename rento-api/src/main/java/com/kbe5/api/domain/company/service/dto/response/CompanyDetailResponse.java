@@ -1,4 +1,4 @@
-package com.kbe5.api.domain.company.dto.response;
+package com.kbe5.api.domain.company.service.dto.response;
 
 import com.kbe5.domain.company.entity.Company;
 
