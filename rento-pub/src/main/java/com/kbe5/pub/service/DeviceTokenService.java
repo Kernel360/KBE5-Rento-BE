@@ -3,7 +3,7 @@ package com.kbe5.pub.service;
 import com.kbe5.common.exception.DeviceException;
 import com.kbe5.common.exception.DeviceResultCode;
 import com.kbe5.domain.device.entity.DeviceToken;
-import com.kbe5.domain.device.repository.DeviceTokenRepository;
+import com.kbe5.infra.infrastructure.device.repository.DeviceTokenRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

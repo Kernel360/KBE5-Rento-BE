@@ -30,7 +30,6 @@ public class DeviceServiceImpl implements DeviceService {
 
     private final DeviceStore deviceStore;
     private final DeviceReader deviceReader;
-    private final DeviceTokenStore deviceTokenStore;
     private final DriveService driveService;
 
     @Override
@@ -85,7 +84,7 @@ public class DeviceServiceImpl implements DeviceService {
         Long driveId = driveService.findDriveForEvent(device.getMdn(), LocalDateTime.now());
 
         DeviceToken token = device.issueToken(EXPIRED_MS, driveId);
-        DeviceToken storedDeviceToken = deviceTokenStore.store(token);
+        DeviceToken storedDeviceToken = deviceStore.storeToken(token);
 
         return DeviceInfo.IssueToken.fromEntity(storedDeviceToken);
     }
@@ -93,7 +92,7 @@ public class DeviceServiceImpl implements DeviceService {
     @Override
     @Transactional
     public DeviceInfo.DeleteToken deleteToken(String token) {
-        DeviceToken deletedToken = deviceTokenStore.delete(token);
+        DeviceToken deletedToken = deviceStore.deleteToken(token);
         return DeleteToken.fromEntity(deletedToken);
     }
 }
