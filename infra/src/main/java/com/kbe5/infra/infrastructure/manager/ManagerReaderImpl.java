@@ -1,5 +1,6 @@
 package com.kbe5.infra.infrastructure.manager;
 
+import com.kbe5.domain.company.entity.Company;
 import com.kbe5.domain.exception.DomainException;
 import com.kbe5.domain.exception.ErrorType;
 import com.kbe5.domain.manager.entity.Manager;
@@ -10,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Component
@@ -41,5 +43,15 @@ public class ManagerReaderImpl implements ManagerReader {
     @Override
     public Boolean isExistEmail(String email) {
         return managerRepository.existsByEmail(email);
+    }
+
+    @Override
+    public List<Manager> findAllByCompany(Company company) {
+        return managerRepository.findAllByCompany(company);
+    }
+
+    @Override
+    public Optional<Manager> findByFcmToken(String failedToken) {
+        return managerRepository.findByFcmToken(failedToken);
     }
 }
