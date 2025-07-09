@@ -1,9 +1,9 @@
-package com.kbe5.domain.device.repository;
+package com.kbe5.infra.infrastructure.device.repository;
 
 import com.kbe5.domain.device.entity.Device;
-import org.springframework.data.jpa.repository.JpaRepository;
-
+import com.kbe5.domain.device.entity.DeviceToken;
 import java.util.Optional;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface DeviceRepository extends JpaRepository<Device, Long> {
 
