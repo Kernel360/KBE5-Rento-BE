@@ -1,6 +1,7 @@
 package com.kbe5.domain.drive.service;
 
 import com.kbe5.domain.drive.entity.Drive;
+import com.kbe5.domain.drive.entity.DriveStatus;
 import com.kbe5.domain.manager.entity.Manager;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -24,4 +25,6 @@ public interface DriveReader {
             Pageable pageable
     );
     List<Drive> getDrivingList(Manager manager, String vehicleNumber);
+
+    List<Drive> findByDriveStatus(DriveStatus driveStatus);
 }
