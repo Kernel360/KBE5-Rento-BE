@@ -2,7 +2,7 @@ package com.kbe5.api.domain.vehicle.mapper;
 
 import com.kbe5.api.domain.vehicle.dto.response.VehicleDetailResponse;
 import com.kbe5.api.domain.vehicle.dto.response.VehicleResponse;
-import com.kbe5.domain.vehicle.entity.VehicleInfo;
+import com.kbe5.domain.vehicle.dto.VehicleInfo;
 import org.springframework.stereotype.Component;
 
 @Component
