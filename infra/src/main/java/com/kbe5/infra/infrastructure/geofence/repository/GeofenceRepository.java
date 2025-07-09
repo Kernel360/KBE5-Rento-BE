@@ -1,4 +1,4 @@
-package com.kbe5.domain.geofence.repository;
+package com.kbe5.infra.infrastructure.geofence.repository;
 
 import com.kbe5.domain.geofence.entity.Geofence;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -2,12 +2,15 @@ package com.kbe5.api.domain.geofence.controller;
 
 import com.kbe5.api.domain.geofence.dto.request.GeofenceRegisterRequest;
 import com.kbe5.api.domain.geofence.dto.request.GeofenceUpdateRequest;
-import com.kbe5.api.domain.geofence.dto.response.GeofenceInfoResponse;
-import com.kbe5.api.domain.geofence.service.GeofenceService;
+import com.kbe5.api.domain.geofence.dto.response.GeofenceResponse;
+import com.kbe5.api.domain.geofence.mapper.GeofenceRequestMapper;
+import com.kbe5.api.domain.geofence.mapper.GeofenceResponseMapper;
 import com.kbe5.common.apiresponse.ResEntityFactory;
 import com.kbe5.common.response.api.ApiResponse;
 import com.kbe5.common.response.api.ApiResultCode;
-import com.kbe5.domain.geofence.entity.Geofence;
+import com.kbe5.domain.geofence.dto.GeofenceCommand;
+import com.kbe5.domain.geofence.dto.GeofenceInfo;
+import com.kbe5.domain.geofence.service.GeofenceService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -24,28 +27,28 @@ public class GeofenceControllerImpl implements GeofenceController{
 
     @Override
     @PostMapping("/register")
-    public ResponseEntity<ApiResponse<Void>> register(@RequestBody @Valid
+    public ResponseEntity<ApiResponse<GeofenceResponse>> register(@RequestBody @Valid
                                                       GeofenceRegisterRequest request) {
-        Geofence geofence = GeofenceRegisterRequest.toEntity(request);
-        geofenceService.register(geofence);
+        GeofenceCommand.Register command = GeofenceRequestMapper.toCommand(request);
+        GeofenceInfo info = geofenceService.register(command);
 
-        return ResEntityFactory.toResponse(ApiResultCode.SUCCESS, null);
+        return ResEntityFactory.toResponse(ApiResultCode.SUCCESS, GeofenceResponseMapper.toResponse(info));
     }
 
     @Override
     @GetMapping("/get-list/{companyCode}")
-    public ResponseEntity<ApiResponse<List<GeofenceInfoResponse>>> getList(@PathVariable String companyCode) {
-        List<Geofence> geofenceList = geofenceService.getGeofenceList(companyCode);
+    public ResponseEntity<ApiResponse<List<GeofenceResponse>>> getList(@PathVariable String companyCode) {
+        List<GeofenceInfo> infoList = geofenceService.getGeofenceList(companyCode);
 
-        return ResEntityFactory.toResponse(ApiResultCode.SUCCESS, GeofenceInfoResponse.fromEntity(geofenceList));
+        return ResEntityFactory.toResponse(ApiResultCode.SUCCESS, GeofenceResponseMapper.toResponseList(infoList));
     }
 
     @Override
     @GetMapping("/get-detail/{id}")
-    public ResponseEntity<ApiResponse<GeofenceInfoResponse>> getDetail(@PathVariable Long id) {
+    public ResponseEntity<ApiResponse<GeofenceResponse>> getDetail(@PathVariable Long id) {
+        GeofenceInfo info = geofenceService.getGeofenceDetail(id);
 
-        return ResEntityFactory.toResponse(ApiResultCode.SUCCESS,
-                GeofenceInfoResponse.fromEntity(geofenceService.getGeofenceDetail(id)));
+        return ResEntityFactory.toResponse(ApiResultCode.SUCCESS, GeofenceResponseMapper.toResponse(info));
     }
 
     @Override
@@ -58,10 +61,11 @@ public class GeofenceControllerImpl implements GeofenceController{
 
     @Override
     @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse<Void>> update(@PathVariable Long id,
+    public ResponseEntity<ApiResponse<GeofenceResponse>> update(@PathVariable Long id,
                                                     @RequestBody @Valid GeofenceUpdateRequest request) {
-        geofenceService.update(id, request);
+        GeofenceCommand.Update command = GeofenceRequestMapper.toCommand(request);
+        GeofenceInfo info = geofenceService.update(id, command);
 
-        return ResEntityFactory.toResponse(ApiResultCode.SUCCESS, null);
+        return ResEntityFactory.toResponse(ApiResultCode.SUCCESS, GeofenceResponseMapper.toResponse(info));
     }
 }
