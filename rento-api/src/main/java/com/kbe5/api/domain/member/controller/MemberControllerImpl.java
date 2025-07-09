@@ -8,7 +8,8 @@ import com.kbe5.api.domain.member.mapper.MemberResponseMapper;
 import com.kbe5.common.apiresponse.ResEntityFactory;
 import com.kbe5.common.response.api.ApiResponse;
 import com.kbe5.common.response.api.ApiResultCode;
-import com.kbe5.domain.manager.entity.Manager;
+import com.kbe5.domain.manager.dto.ManagerInfo;
+import com.kbe5.domain.manager.service.ManagerService;
 import com.kbe5.domain.member.dto.MemberInfo;
 import com.kbe5.domain.member.entity.Position;
 import com.kbe5.domain.member.service.MemberService;
@@ -33,6 +34,7 @@ public class MemberControllerImpl implements MemberController {
     private final MemberService memberService;
     private final MemberRequestMapper requestMapper;
     private final MemberResponseMapper responseMapper;
+    private final ManagerService managerService;
 
     @Override
     @PostMapping
@@ -76,12 +78,14 @@ public class MemberControllerImpl implements MemberController {
             @RequestParam(required = false) String keyword,
             Pageable pageable) {
 
-        Manager manager = customManagerDetails.getManager();
+        Long managerId = customManagerDetails.getManager().getId();
+        ManagerInfo info = managerService.getManagerInfo(managerId);
+
         Position newPosition = position != null ? Position.fromValue(position) : null;
 
         return ResEntityFactory.toResponse(ApiResultCode.SUCCESS,
                 new PagedModel<>(responseMapper.toResponseList(
-                        memberService.getMembers(manager, newPosition, departmentId, keyword, pageable))
+                        memberService.getMembers(info.getCompanyId(), newPosition, departmentId, keyword, pageable))
                 )
         );
     }
@@ -104,7 +108,9 @@ public class MemberControllerImpl implements MemberController {
     public ResponseEntity<ApiResponse<Boolean>> checkId(
             @AuthenticationPrincipal CustomManagerDetails customManagerDetails,
             @PathVariable String loginId) {
-        String companyCode = customManagerDetails.getManager().getCompanyCode();
+        Long managerId = customManagerDetails.getManager().getId();
+        ManagerInfo info = managerService.getManagerInfo(managerId);
+        String companyCode = info.getCompanyCode();
 
         return ResEntityFactory.toResponse(ApiResultCode.SUCCESS, !memberService.isExistLoginId(companyCode, loginId));
     }
@@ -114,7 +120,9 @@ public class MemberControllerImpl implements MemberController {
     public ResponseEntity<ApiResponse<Boolean>> checkEmail(
             @AuthenticationPrincipal CustomManagerDetails customManagerDetails,
             @PathVariable String email) {
-        String companyCode = customManagerDetails.getManager().getCompanyCode();
+        Long managerId = customManagerDetails.getManager().getId();
+        ManagerInfo info = managerService.getManagerInfo(managerId);
+        String companyCode = info.getCompanyCode();
 
         return ResEntityFactory.toResponse(ApiResultCode.SUCCESS, !memberService.isExistEmail(companyCode, email));
     }
@@ -124,7 +132,9 @@ public class MemberControllerImpl implements MemberController {
     public ResponseEntity<ApiResponse<Boolean>> checkPhoneNumber(
             @AuthenticationPrincipal CustomManagerDetails customManagerDetails,
             @PathVariable String phoneNumber) {
-        String companyCode = customManagerDetails.getManager().getCompanyCode();
+        Long managerId = customManagerDetails.getManager().getId();
+        ManagerInfo info = managerService.getManagerInfo(managerId);
+        String companyCode = info.getCompanyCode();
 
         return ResEntityFactory.toResponse(ApiResultCode.SUCCESS, !memberService.isExistPhoneNumber(companyCode, phoneNumber));
     }

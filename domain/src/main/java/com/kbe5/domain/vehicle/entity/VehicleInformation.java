@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @Embeddable
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class VehicleInfo {
+public class VehicleInformation {
     private String vehicleNumber;
     private String brand;
     private String modelName;
@@ -19,7 +19,7 @@ public class VehicleInfo {
     @Enumerated(EnumType.STRING)
     private FuelType fuelType;
 
-    public VehicleInfo(String vehicleNumber, String brand, String modelName, VehicleType vehicleType, FuelType fuelType) {
+    public VehicleInformation(String vehicleNumber, String brand, String modelName, VehicleType vehicleType, FuelType fuelType) {
         this.vehicleNumber = vehicleNumber;
         this.brand = brand;
         this.modelName = modelName;

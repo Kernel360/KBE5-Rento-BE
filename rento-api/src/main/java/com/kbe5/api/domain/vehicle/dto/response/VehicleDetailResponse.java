@@ -19,11 +19,11 @@ public record VehicleDetailResponse(
 ) {
     public static VehicleDetailResponse fromEntity(Vehicle vehicle) {
         return VehicleDetailResponse.builder()
-                .vehicleNumber(vehicle.getInfo().getVehicleNumber())
-                .brand(vehicle.getInfo().getBrand())
-                .modelName(vehicle.getInfo().getModelName())
-                .vehicleType(vehicle.getInfo().getVehicleType())
-                .fuelType(vehicle.getInfo().getFuelType())
+                .vehicleNumber(vehicle.getInformation().getVehicleNumber())
+                .brand(vehicle.getInformation().getBrand())
+                .modelName(vehicle.getInformation().getModelName())
+                .vehicleType(vehicle.getInformation().getVehicleType())
+                .fuelType(vehicle.getInformation().getFuelType())
                 .vehicleStatus(vehicle.getStatus())
                 .totalDistanceKm(vehicle.getMileage().getTotalDistanceKm())
                 .batteryVoltage(vehicle.getMileage().getBatteryVoltage())

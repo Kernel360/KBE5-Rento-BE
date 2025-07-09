@@ -5,10 +5,10 @@ import com.google.firebase.messaging.FirebaseMessagingException;
 import com.google.firebase.messaging.Message;
 import com.kbe5.domain.drive.entity.Drive;
 import com.kbe5.domain.drive.entity.DriveStatus;
-import com.kbe5.domain.drive.repository.DriveRepository;
 import com.kbe5.domain.exception.DomainException;
 import com.kbe5.domain.exception.ErrorType;
 import com.kbe5.domain.manager.entity.Manager;
+import com.kbe5.infra.infrastructure.drive.repository.DriveRepository;
 import com.kbe5.infra.infrastructure.manager.respository.ManagerRepository;
 import com.kbe5.infra.firebase.dto.TokenNotificationRequest;
 import org.springframework.retry.annotation.Backoff;
@@ -89,7 +89,7 @@ public class FcmService {
                 .orElseThrow(()->new DomainException(ErrorType.DRIVE_NOT_FOUND));
 
         // 자동차 번호
-        String vehicleNumber = drive.getVehicle().getInfo().getVehicleNumber();
+        String vehicleNumber = drive.getVehicle().getInformation().getVehicleNumber();
         // 회사의 모든 매니저
         List<Manager> managers = managerRepository.findAllByCompany(drive.getVehicle().getCompany());
         // 현재 시간
