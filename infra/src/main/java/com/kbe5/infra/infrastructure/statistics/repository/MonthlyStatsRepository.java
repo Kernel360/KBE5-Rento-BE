@@ -1,4 +1,4 @@
-package com.kbe5.domain.statistics.repository;
+package com.kbe5.infra.infrastructure.statistics.repository;
 
 import com.kbe5.domain.statistics.entity.MonthlyStats;
 import org.springframework.data.jpa.repository.JpaRepository;

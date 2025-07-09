@@ -72,4 +72,9 @@ public class DriveReaderImpl implements DriveReader {
         return driveRepository.findByCompanyAndStatusAndVehicleNumber(manager.getCompany(),
                 vehicleNumber, DriveStatus.DRIVING);
     }
+
+    @Override
+    public List<Drive> findByDriveStatus(DriveStatus driveStatus) {
+        return driveRepository.findByDriveStatus(driveStatus);
+    }
 }

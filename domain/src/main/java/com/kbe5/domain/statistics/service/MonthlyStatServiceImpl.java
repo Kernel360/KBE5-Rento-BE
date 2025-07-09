@@ -1,15 +1,15 @@
-package com.kbe5.api.domain.statistics.service;
+package com.kbe5.domain.statistics.service;
 
 import com.kbe5.domain.drive.entity.Drive;
 import com.kbe5.domain.drive.entity.DriveStatus;
 import com.kbe5.domain.drive.entity.DriveType;
+import com.kbe5.domain.drive.service.DriveReader;
+import com.kbe5.domain.statistics.dto.MonthlyStatInfo;
 import com.kbe5.domain.statistics.entity.MonthlyStats;
-import com.kbe5.domain.statistics.repository.MonthlyStatsRepository;
-import com.kbe5.infra.infrastructure.drive.repository.DriveRepository;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 import java.time.YearMonth;
@@ -21,22 +21,26 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class MonthlyService {
-    private final MonthlyStatsRepository monthlyStatsRepository;
-    private final DriveRepository driveRepository;
+public class MonthlyStatServiceImpl implements MonthlyStatService {
 
+    private final MonthlyStatStore monthlyStatStore;
+    private final MonthlyStatReader monthlyStatReader;
+    private final DriveReader driveReader;
+
+    @Override
     @Transactional(readOnly = true)
-    public Optional<MonthlyStats> getStats(String companyCode, int year, int month) {
-
-        return monthlyStatsRepository.findByCompanyCodeAndYearAndMonth(companyCode, year, month);
+    public Optional<MonthlyStatInfo> getStats(String companyCode, int year, int month) {
+        return monthlyStatReader.findByCompanyCodeAndYearAndMonth(companyCode, year, month)
+                .flatMap(MonthlyStatInfo::fromEntity);
     }
 
+    @Override
     @Transactional
     public void generateMonthlyStats() {
         log.info("월벌 통계 생성 시작");
 
         //운행 완료된 데이터 조회
-        List<Drive> completedDrives = driveRepository.findByDriveStatus(DriveStatus.COMPLETED);
+        List<Drive> completedDrives = driveReader.findByDriveStatus(DriveStatus.COMPLETED);
 
         if(completedDrives.isEmpty()) {
             log.info("완료된 운행 데이터가 없습니다");
@@ -64,7 +68,7 @@ public class MonthlyService {
         driveByYearMonth.forEach((yearMonth, monthlyDrives) -> {
             MonthlyStats newStats = calculateMonthlyStats(companyCode, yearMonth, monthlyDrives);
 
-            Optional<MonthlyStats> existingStats = monthlyStatsRepository.findByCompanyCodeAndYearAndMonth(
+            Optional<MonthlyStats> existingStats = monthlyStatReader.findByCompanyCodeAndYearAndMonth(
                     companyCode, yearMonth.getYear(), yearMonth.getMonthValue()
             );
 
@@ -82,7 +86,7 @@ public class MonthlyService {
                 }
             } else {
                 // 없으면 생성 (현재든 과거든)
-                monthlyStatsRepository.save(newStats);
+                monthlyStatStore.save(newStats);
                 log.info("회사 {} 의 {}/{} 통계 생성 완료", companyCode, yearMonth.getYear(), yearMonth.getMonthValue());
             }
         });
@@ -131,4 +135,5 @@ public class MonthlyService {
                 .nonBusinessRatio(nonBusinessRatio)
                 .build();
     }
+
 }
