@@ -16,8 +16,11 @@ public class DeviceReaderImpl implements DeviceReader {
 
     private final DeviceRepository deviceRepository;
 
-    public boolean existsByMdn(Long mdn){
-        return deviceRepository.findByMdn(mdn).isPresent();
+    private void validateDuplicateDevice(Long mdn) {
+        boolean present = deviceRepository.findByMdn(mdn).isPresent();
+        if (present) {
+            throw new DeviceException(DeviceResultCode.MISMATCHED_MDN);
+        }
     }
 
     @Override

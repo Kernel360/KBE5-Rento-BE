@@ -17,6 +17,6 @@ public interface DeviceController {
 
     ResponseEntity<DeviceTokenResponse> issueToken(DeviceTokenRequest deviceTokenRequest);
 
-    ResponseEntity<DeviceSettingResponse> getSetInfo(DeviceSettingRequest deviceSettingRequest);
+//    ResponseEntity<DeviceSettingResponse> getSetInfo(DeviceSettingRequest deviceSettingRequest);
 
 }
