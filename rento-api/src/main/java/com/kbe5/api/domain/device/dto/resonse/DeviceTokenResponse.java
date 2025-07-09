@@ -21,11 +21,4 @@ public record DeviceTokenResponse(
     @JsonProperty("exPeriod")
     Long exPeriod
 ) {
-
-    public static DeviceTokenResponse of(DeviceResultCode resultCode, DeviceToken deviceToken) {
-
-        return new DeviceTokenResponse(
-            resultCode.getCode(), resultCode.getMessage(), deviceToken.getMdn(), deviceToken.getToken(),
-            deviceToken.getExPeriod());
-    }
 }

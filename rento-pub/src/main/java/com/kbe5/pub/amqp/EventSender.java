@@ -1,6 +1,12 @@
 package com.kbe5.pub.amqp;
 
+import com.kbe5.domain.device.entity.DeviceToken;
+import com.kbe5.domain.event.dto.EventCommand;
+import com.kbe5.domain.event.dto.EventCommand.CycleInfoCommand;
+import com.kbe5.domain.event.entity.CycleEvent;
+import com.kbe5.domain.event.entity.CycleInfo;
 import com.kbe5.domain.event.entity.Event;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.Queue;
@@ -17,17 +23,23 @@ public class EventSender {
 
     private final Queue queue;
 
+    private final StreamSender streamSender;
+
     @Autowired
-    public EventSender(RabbitTemplate template, @Qualifier("cycleInfo") Queue queue) {
+    public EventSender(RabbitTemplate template, @Qualifier("cycleInfo") Queue queue, StreamSender streamSender) {
         this.template = template;
         this.queue = queue;
+        this.streamSender = streamSender;
     }
 
-    public void send(Event event, Long mdn) {
+    public void send(EventCommand.CycleEventCommand command,Long mdn, DeviceToken deviceToken) {
+        List<CycleInfo> cycleInfos = command.toCycleInfoEntities(deviceToken);
+        CycleEvent event = command.of(deviceToken, mdn, cycleInfos);
 
         event.validateMdnMatch(mdn);
 
         log.info("sender : {}",event.getClass().getName());
         template.convertAndSend(queue.getName(), event);
+        cycleInfos.forEach(streamSender::send);
     }
 }

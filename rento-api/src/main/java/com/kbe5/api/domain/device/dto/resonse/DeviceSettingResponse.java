@@ -35,10 +35,5 @@ public record DeviceSettingResponse(
         @JsonProperty("geoList")
         List<GeofenceControlInfoResponse> geofenceControlInfoResponseList
 ) {
-        public static DeviceSettingResponse of(DeviceResultCode resultCode, long mdn, LocalDateTime oTime
-                , int controlCount, int geofenceCount, List<DeviceControlInfoResponse> deviceControlInfoResponseList,
-                                               List<GeofenceControlInfoResponse> geofenceControlInfoResponseList) {
-                return new DeviceSettingResponse(resultCode.getCode(), resultCode.getMessage(), mdn, oTime, controlCount, geofenceCount,
-                        deviceControlInfoResponseList, geofenceControlInfoResponseList);
-        }
+
 }

@@ -2,6 +2,7 @@ package com.kbe5.domain.device.service;
 
 import com.kbe5.domain.device.dto.DeviceCommand;
 import com.kbe5.domain.device.dto.DeviceInfo;
+import com.kbe5.domain.device.entity.DeviceToken;
 
 public interface DeviceService {
 
@@ -24,4 +25,6 @@ public interface DeviceService {
     DeviceInfo.IssueToken issueToken(Long mdn);
 
     DeviceInfo.DeleteToken deleteToken(String token);
+
+    DeviceToken findDeviceToken(String token);
 }

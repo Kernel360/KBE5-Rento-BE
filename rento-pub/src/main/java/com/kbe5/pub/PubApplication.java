@@ -16,7 +16,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
         "com.kbe5.pub"
 })
 @EntityScan(basePackages = "com.kbe5.domain")
-@EnableJpaRepositories(basePackages = "com.kbe5.domain")
+@EnableJpaRepositories(basePackages = {"com.kbe5.domain","com.kbe5.infra"})
 class PubApplication {
 
     public static void main(String[] args) {

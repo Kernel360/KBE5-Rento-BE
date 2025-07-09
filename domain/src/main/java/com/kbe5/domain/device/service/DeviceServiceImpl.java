@@ -5,7 +5,6 @@ import com.kbe5.domain.device.dto.DeviceInfo;
 import com.kbe5.domain.device.dto.DeviceInfo.DeleteDevice;
 import com.kbe5.domain.device.dto.DeviceInfo.DeleteToken;
 import com.kbe5.domain.device.dto.DeviceInfo.DeviceControl;
-import com.kbe5.domain.device.dto.DeviceInfo.DeviceSettings;
 import com.kbe5.domain.device.dto.DeviceInfo.GeofenceControl;
 import com.kbe5.domain.device.entity.Device;
 import com.kbe5.domain.device.entity.DeviceControlInfo;
@@ -18,11 +17,11 @@ import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
-@Component
+@Service
 @RequiredArgsConstructor
 public class DeviceServiceImpl implements DeviceService {
 
@@ -45,11 +44,13 @@ public class DeviceServiceImpl implements DeviceService {
     }
 
     @Override
+    @Transactional
     public DeleteDevice deleteDevice(DeviceCommand.DeleteDevice command) {
         return null;
     }
 
     @Override
+    @Transactional(readOnly = true)
     public DeviceInfo.DeviceSettings getDeviceSetInfo(Long mdn) {
 
         //RESPONSE 로 만들어야할까?
@@ -94,5 +95,11 @@ public class DeviceServiceImpl implements DeviceService {
     public DeviceInfo.DeleteToken deleteToken(String token) {
         DeviceToken deletedToken = deviceStore.deleteToken(token);
         return DeleteToken.fromEntity(deletedToken);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public DeviceToken findDeviceToken(String token) {
+        return deviceStore.findDeviceToken(token);
     }
 }

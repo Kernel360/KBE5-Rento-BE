@@ -41,4 +41,10 @@ public class DeviceStoreImpl implements DeviceStore {
         deviceTokenRepository.deleteById(token);
         return deviceToken;
     }
+
+    @Override
+    public DeviceToken findDeviceToken(String deviceToken) {
+        return deviceTokenRepository.findById(deviceToken)
+            .orElseThrow(() -> new DeviceException(DeviceResultCode.INVALID_TOKEN));
+    }
 }

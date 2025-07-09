@@ -18,18 +18,4 @@ public record GeofenceControlInfoResponse(
         LocalDateTime offTime,
         short storeType
 ) {
-    public static GeofenceControlInfoResponse fromEntity(GeofenceControlInfo entity) {
-        return new GeofenceControlInfoResponse(
-                entity.getGeoCtrId(),
-                entity.getUpVal(),
-                entity.getGeoGrpId(),
-                entity.getGeoEvtTp(),
-                entity.getGeoRange(),
-                entity.getLat(),
-                entity.getLon(),
-                entity.getOnTime(),
-                entity.getOffTime(),
-                entity.getStoreTp()
-        );
-    }
 }

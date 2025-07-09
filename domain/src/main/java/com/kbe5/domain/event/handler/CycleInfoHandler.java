@@ -1,12 +1,11 @@
-package com.kbe5.sub.handler;
+package com.kbe5.domain.event.handler;
 
 
 import com.kbe5.domain.event.entity.CycleEvent;
 import com.kbe5.domain.event.entity.CycleInfo;
 import com.kbe5.domain.event.entity.Event;
 import com.kbe5.domain.event.enums.EventType;
-import com.kbe5.domain.event.repository.EventRepository;
-import com.kbe5.infra.infrastructure.event.repository.CycleInfoRepository;
+import com.kbe5.domain.event.service.EventStore;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -19,9 +18,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CycleInfoHandler implements EventHandler {
 
-    private final EventRepository eventRepository;
-
-    private final CycleInfoRepository cycleInfoRepository;
+    private final EventStore eventStore;
 
     @Override
     public EventType getEventType() {
@@ -34,10 +31,10 @@ public class CycleInfoHandler implements EventHandler {
         CycleEvent cycleEvent = (CycleEvent) event;
         List<CycleInfo> cycleInfo = cycleEvent.getCycleInfos();
 
-        eventRepository.save(cycleEvent);
+        eventStore.store(cycleEvent);
 
         if (isNotNullAndNotEmpty(cycleInfo)){
-            cycleInfoRepository.bulkInsert(cycleInfo);
+            eventStore.bulkInsert(cycleInfo);
         }
     }
 
