@@ -1,14 +1,11 @@
-package com.kbe5.pub.service;
+package com.kbe5.domain.cycleinfosummary.service;
 
-
-
+import com.kbe5.domain.cycleinfosummary.dto.CycleInfoSummaryInfo;
 import com.kbe5.domain.cycleinfosummary.entity.CycleInfoSummary;
 import com.kbe5.domain.event.entity.CycleInfo;
+import com.kbe5.domain.event.service.CycleInfoReader;
 import com.kbe5.domain.exception.DomainException;
 import com.kbe5.domain.exception.ErrorType;
-import com.kbe5.infra.infrastructure.cycleInfoSummary.repository.CycleInfoSummaryRepository;
-import com.kbe5.infra.infrastructure.event.repository.CycleInfoRepository;
-import com.kbe5.pub.dto.response.CycleInfoSummaryResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,16 +14,18 @@ import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 
-@Service("commonCycleInfoSummaryService")
+@Service
 @RequiredArgsConstructor
-public class CycleInfoSummaryService {
+public class CycleInfoSummaryServiceImpl implements CycleInfoSummaryService {
 
-    private final CycleInfoRepository cycleInfoRepository;
-    private final CycleInfoSummaryRepository cycleInfoSummaryRepository;
+    private final CycleInfoReader cycleInfoReader;
+    private final CycleInfoSummaryStore cycleInfoSummaryStore;
+    private final CycleInfoSummaryReader cycleInfoSummaryReader;
 
+    @Override
     public void create(Long driveId) {
         // 해당 운행의 주기 정보 들고옴
-        List<CycleInfo> info = cycleInfoRepository.findAllByDriveId(driveId);
+        List<CycleInfo> info = cycleInfoReader.getCycleInfoListWithDrive(driveId);
 
         // 제일 이른 시간 찾기
         LocalDateTime baseTime = info.stream()
@@ -34,7 +33,6 @@ public class CycleInfoSummaryService {
                 .min(LocalDateTime::compareTo)
                 .orElseThrow(() -> new DomainException(ErrorType.CYCLEINFO_NOT_FOUND) );
 
-        // 걍 인포 찾고 5초 뒤에거 찾고 찾고 찾고 하면되는거 아닌가?
         List<CycleInfo> cycleInfo = info.stream()
                 .filter(ci -> {
                     long diff = Duration.between(baseTime, ci.getCycleInfoTime()).getSeconds();
@@ -47,22 +45,14 @@ public class CycleInfoSummaryService {
                 .map(CycleInfoSummary::new)
                 .toList();
 
-        cycleInfoSummaryRepository.saveAll(summary);
+        cycleInfoSummaryStore.saveAllCycleInfoSummary(summary);
     }
 
-    public List<CycleInfoSummaryResponse> getList(Long driveId) {
-        return cycleInfoSummaryRepository.findAllByDriveId(driveId)
+    @Override
+    public List<CycleInfoSummaryInfo> getList(Long driveId) {
+        return cycleInfoSummaryReader.getCycleInfoLSummaryListWithDrive(driveId)
                 .stream()
-                .map(summary -> {
-                    try {
-                        return new CycleInfoSummaryResponse(
-                                summary.getLatitude(),
-                                summary.getLongitude()
-                        );
-                    } catch (Exception e) {
-                        throw new DomainException(ErrorType.CYCLEINFO_NOT_FOUND);
-                    }
-                })
+                .map(CycleInfoSummaryInfo::fromEntity)
                 .toList();
     }
 }
