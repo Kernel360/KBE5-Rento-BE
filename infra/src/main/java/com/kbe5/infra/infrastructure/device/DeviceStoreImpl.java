@@ -1,9 +1,8 @@
 package com.kbe5.infra.infrastructure.device;
 
 import com.kbe5.domain.device.entity.Device;
-import com.kbe5.domain.device.repository.DeviceRepository;
-import com.kbe5.domain.device.repository.DeviceTokenRepository;
 import com.kbe5.domain.device.service.DeviceStore;
+import com.kbe5.infra.infrastructure.device.repository.DeviceRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;

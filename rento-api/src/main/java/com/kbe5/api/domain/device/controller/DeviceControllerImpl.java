@@ -12,6 +12,7 @@ import com.kbe5.api.domain.device.mapper.DeviceRequestMapper;
 import com.kbe5.api.domain.device.mapper.DeviceResponseMapper;
 import com.kbe5.domain.device.dto.DeviceCommand;
 import com.kbe5.domain.device.dto.DeviceInfo;
+import com.kbe5.domain.device.dto.DeviceInfo.DeviceSettings;
 import com.kbe5.domain.device.service.DeviceService;
 import com.kbe5.domain.exception.DeviceResultCode;
 import lombok.RequiredArgsConstructor;
@@ -69,11 +70,15 @@ public class DeviceControllerImpl implements DeviceController{
         return ResponseEntity.ok(response);
     }
 
-//    @PostMapping("/get-set-info")
-//    public ResponseEntity<DeviceSettingResponse> getSetInfo(@RequestBody @Validated
-//                                                            DeviceSettingRequest request) {
-//        log.info("디바이스 설정 정보: {}", request.toString());
-//
-//        return ResponseEntity.ok(deviceService.getDeviceSetInfo(request.mdn()));
-//    }
+    @PostMapping("/get-set-info")
+    public ResponseEntity<DeviceSettingResponse> getSetInfo(
+        @RequestBody @Validated DeviceSettingRequest request) {
+        log.info("디바이스 설정 정보: {}", request.toString());
+
+        DeviceSettings info = deviceService.getDeviceSetInfo(request.mdn());
+        DeviceSettingResponse response = DeviceResponseMapper.toDeviceSettingResponse(info, request.mdn(),
+            DeviceResultCode.SUCCESS);
+
+        return ResponseEntity.ok(response);
+    }
 }

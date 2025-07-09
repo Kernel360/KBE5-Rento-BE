@@ -4,11 +4,16 @@ import com.kbe5.domain.device.dto.DeviceCommand;
 import com.kbe5.domain.device.dto.DeviceInfo;
 import com.kbe5.domain.device.dto.DeviceInfo.DeleteDevice;
 import com.kbe5.domain.device.dto.DeviceInfo.DeleteToken;
+import com.kbe5.domain.device.dto.DeviceInfo.DeviceControl;
 import com.kbe5.domain.device.dto.DeviceInfo.DeviceSettings;
+import com.kbe5.domain.device.dto.DeviceInfo.GeofenceControl;
 import com.kbe5.domain.device.entity.Device;
 import com.kbe5.domain.device.entity.DeviceControlInfo;
 import com.kbe5.domain.device.entity.DeviceToken;
+import com.kbe5.domain.device.entity.GeofenceControlInfo;
 import com.kbe5.domain.drive.service.DriveService;
+import com.kbe5.domain.exception.DeviceException;
+import com.kbe5.domain.exception.DeviceResultCode;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -45,33 +50,28 @@ public class DeviceServiceImpl implements DeviceService {
         return null;
     }
 
-//    @Override
-//    public DeviceSettings getDeviceSetInfo(Long mdn) {
-////        List<DeviceControlInfoResponse> controlInfos = deviceControlInfoRepository.findAllByMdn(mdn).stream()
-////            .map(DeviceControlInfoResponse::fromEntity)
-////            .toList();
-//        List<DeviceControlInfo> deviceControlInfos = deviceReader.findAllDeviceControlInfoByMdn(mdn);
+    @Override
+    public DeviceInfo.DeviceSettings getDeviceSetInfo(Long mdn) {
 
-//        List<GeofenceControlInfoResponse> geoFenceInfos = geofenceControlInfoRepository.findAllByMdn(mdn).stream()
-//            .map(GeofenceControlInfoResponse::fromEntity)
-//            .toList();
-//
-//        if (controlInfos.isEmpty() || geoFenceInfos.isEmpty()) {
-//            throw new DeviceException(DeviceResultCode.NO_SEARCH_RESULTS);
-//        }
-//
-//        LocalDateTime oTime = LocalDateTime.now();
-//
-//        return DeviceSettingResponse.of(
-//            DeviceResultCode.SUCCESS,
-//            mdn,
-//            oTime,
-//            controlInfos.size(),
-//            geoFenceInfos.size(),
-//            controlInfos,
-//            geoFenceInfos
-//        );
-//    }
+        //RESPONSE 로 만들어야할까?
+        List<DeviceControlInfo> deviceControlInfos = deviceReader.findAllDeviceControlInfoByMdn(mdn);
+        List<GeofenceControlInfo> geofenceControlInfos = deviceReader.findAllGeofenceControlInfoByMdn(mdn);
+
+        if (isControlInfosEmpty(deviceControlInfos, geofenceControlInfos)) {
+            throw new DeviceException(DeviceResultCode.NO_SEARCH_RESULTS);
+        }
+
+        //DeviceInfo로 변환
+        List<DeviceControl> deviceControls = deviceControlInfos.stream().map(DeviceControl::fromEntity).toList();
+        List<GeofenceControl> geofenceControls = geofenceControlInfos.stream().map(GeofenceControl::fromEntity).toList();
+
+        return DeviceInfo.DeviceSettings.of(deviceControls, geofenceControls);
+    }
+
+    private boolean isControlInfosEmpty(
+        List<DeviceControlInfo> deviceControlInfos, List<GeofenceControlInfo> geofenceControlInfos) {
+        return deviceControlInfos.isEmpty() || geofenceControlInfos.isEmpty();
+    }
 
     @Override
     @Transactional
