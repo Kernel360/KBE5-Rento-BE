@@ -13,8 +13,8 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class EventStoreImpl implements EventStore {
 
-    EventRepository eventRepository;
-    CycleInfoRepository cycleInfoRepository;
+    private final EventRepository eventRepository;
+    private final CycleInfoRepository cycleInfoRepository;
 
     @Override
     public void store(Event event) {

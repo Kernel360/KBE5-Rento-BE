@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class EventServiceImpl {
+public class EventServiceImpl implements EventService{
     private final Map<EventType, EventHandler> eventHandlers;
 
     @Autowired

@@ -4,6 +4,8 @@ import com.kbe5.common.exception.DeviceResultCode;
 import com.kbe5.domain.device.entity.DeviceToken;
 import com.kbe5.domain.device.service.DeviceService;
 import com.kbe5.domain.event.dto.EventCommand;
+import com.kbe5.domain.event.dto.EventCommand.OffEventCommand;
+import com.kbe5.domain.event.dto.EventCommand.OnEventCommand;
 import com.kbe5.domain.event.entity.GeofenceEvent;
 import com.kbe5.domain.event.entity.OnOffEvent;
 import com.kbe5.pub.amqp.EventSender;
@@ -49,8 +51,8 @@ public class EventController {
 
         driveService.driveStart(deviceToken.getDriveId());
 
-        OnOffEvent onOffEvent = request.toEntity(deviceToken);
-//        eventSender.send(onOffEvent, mdn);
+        OnEventCommand command = EventRequestMapper.onEventCommand(request);
+        eventSender.send(command, mdn, deviceToken);
 
         //fcm 알림 발송 큐
         //notificationSender.send(deviceToken.getDriveId());
@@ -66,10 +68,10 @@ public class EventController {
         DeviceToken deviceToken = deviceService.findDeviceToken(token);
         Long mdn = request.mdn();
 
-        driveService.driveEnd(deviceToken.getDriveId(), request.currentAccumulatedDistance());
+        driveService.driveEnd(deviceToken.getDriveId(), request.sum());
 
-        OnOffEvent onOffEvent = request.toEntity(deviceToken);
-//        eventSender.send(onOffEvent, mdn);
+        OffEventCommand command = EventRequestMapper.offEventCommand(request);
+        eventSender.send(command, mdn, deviceToken);
 
         //fcm 알림 발송 큐
         //notificationSender.send(deviceToken.getDriveId());
@@ -82,10 +84,7 @@ public class EventController {
         @RequestHeader("X-Device-Token") String token,
         @RequestBody @Validated CycleEventRequest request
     ) {
-        log.info("emitCycleInfo");
-        log.info(token);
         DeviceToken deviceToken = deviceService.findDeviceToken(token);
-        log.info(deviceToken.getToken());
         Long mdn = request.mdn();
 
         EventCommand.CycleEventCommand command = EventRequestMapper.cycleEventCommand(request);

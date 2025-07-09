@@ -3,6 +3,7 @@ package com.kbe5.domain.event.dto;
 import com.kbe5.domain.device.entity.DeviceToken;
 import com.kbe5.domain.event.entity.CycleEvent;
 import com.kbe5.domain.event.entity.CycleInfo;
+import com.kbe5.domain.event.entity.OnOffEvent;
 import com.kbe5.domain.event.enums.EventType;
 import com.kbe5.domain.event.enums.GpsCondition;
 import com.kbe5.domain.exception.DeviceException;
@@ -114,10 +115,59 @@ public class EventCommand {
 
     @Getter
     @SuperBuilder
-    public static class OnOffEvent extends Event{
+    public static class OnEventCommand extends Event{
         private LocalDateTime onTime;
         private LocalDateTime offTime;
         private Integer batteryVolt;
+
+        public OnOffEvent toEntity(DeviceToken token) {
+            return OnOffEvent.builder()
+                .createdAt(LocalDateTime.now())
+                .oTime(this.onTime)
+                .mdn(super.mdn)
+                .terminalId(super.terminalId)
+                .makerId(super.makerId)
+                .packetVersion(super.packetVersion)
+                .deviceId(super.deviceId)
+                .gpsCondition(super.gpsCondition)
+                .latitude(super.latitude)
+                .longitude(super.longitude)
+                .angle(super.angle)
+                .speed(super.speed)
+                .currentAccumulatedDistance(super.currentAccumulatedDistance)
+                .onTime(this.onTime)
+                .offTime(this.offTime)
+                .eventType(EventType.ON)
+                .driveId(token.getDriveId())
+                .build();
+        }
+    }
+
+    @Getter
+    @SuperBuilder
+    public static class OffEventCommand extends Event{
+
+        private LocalDateTime onTime;
+        private LocalDateTime offTime;
+        private Integer batteryVolt;
+
+        public OnOffEvent toEntity(DeviceToken token) {
+            return OnOffEvent.builder()
+                .createdAt(LocalDateTime.now())
+                .oTime(this.offTime)
+                .mdn(super.mdn)
+                .gpsCondition(super.gpsCondition)
+                .latitude(super.latitude)
+                .longitude(super.longitude)
+                .angle(super.angle)
+                .speed(super.speed)
+                .currentAccumulatedDistance(super.currentAccumulatedDistance)
+                .onTime(this.onTime)
+                .offTime(this.offTime)
+                .eventType(EventType.OFF)
+                .driveId(token.getDriveId())
+                .build();
+        }
     }
 
 }
