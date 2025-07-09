@@ -1,4 +1,4 @@
-package com.kbe5.domain.drive.repository;
+package com.kbe5.infra.infrastructure.drive.repository;
 
 import com.kbe5.domain.company.entity.Company;
 import com.kbe5.domain.drive.entity.Drive;

@@ -2,7 +2,7 @@ package com.kbe5.domain.vehicle.service;
 
 import com.kbe5.domain.vehicle.dto.VehicleAddCommand;
 import com.kbe5.domain.vehicle.dto.VehicleUpdateCommand;
-import com.kbe5.domain.vehicle.entity.VehicleInfo;
+import com.kbe5.domain.vehicle.dto.VehicleInfo;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

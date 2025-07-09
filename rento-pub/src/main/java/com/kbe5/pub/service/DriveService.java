@@ -2,9 +2,9 @@ package com.kbe5.pub.service;
 
 
 import com.kbe5.domain.drive.entity.Drive;
-import com.kbe5.domain.drive.repository.DriveRepository;
 import com.kbe5.domain.exception.DomainException;
 import com.kbe5.domain.exception.ErrorType;
+import com.kbe5.infra.infrastructure.drive.repository.DriveRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

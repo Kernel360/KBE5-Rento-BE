@@ -1,7 +1,6 @@
 package com.kbe5.domain.vehicle.dto;
 
 import com.kbe5.domain.company.entity.Company;
-import com.kbe5.domain.department.entity.Department;
 import com.kbe5.domain.vehicle.entity.*;
 import lombok.Builder;
 import lombok.Getter;
