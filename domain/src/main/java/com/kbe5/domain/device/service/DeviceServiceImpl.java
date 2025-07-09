@@ -62,8 +62,10 @@ public class DeviceServiceImpl implements DeviceService {
         }
 
         //DeviceInfo로 변환
-        List<DeviceControl> deviceControls = deviceControlInfos.stream().map(DeviceControl::fromEntity).toList();
-        List<GeofenceControl> geofenceControls = geofenceControlInfos.stream().map(GeofenceControl::fromEntity).toList();
+        List<DeviceControl> deviceControls =
+            deviceControlInfos.stream().map(DeviceControl::fromEntity).toList();
+        List<GeofenceControl> geofenceControls =
+            geofenceControlInfos.stream().map(GeofenceControl::fromEntity).toList();
 
         return DeviceInfo.DeviceSettings.of(deviceControls, geofenceControls);
     }
