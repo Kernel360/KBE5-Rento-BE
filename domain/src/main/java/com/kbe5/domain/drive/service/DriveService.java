@@ -2,6 +2,9 @@ package com.kbe5.domain.drive.service;
 
 import com.kbe5.domain.drive.dto.DriveAddCommand;
 import com.kbe5.domain.drive.dto.DriveInfo;
+import com.kbe5.domain.drive.entity.Drive;
+import com.kbe5.domain.exception.DomainException;
+import com.kbe5.domain.exception.ErrorType;
 import com.kbe5.domain.manager.entity.Manager;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -27,4 +30,6 @@ public interface DriveService {
             Manager manager,
             String vehicleNumber
     );
+    void driveStart(Long driveId);
+    void driveEnd(Long driveId, Long distance);
 }

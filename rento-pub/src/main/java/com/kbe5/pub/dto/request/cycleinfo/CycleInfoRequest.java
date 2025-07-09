@@ -20,7 +20,7 @@ public record CycleInfoRequest(
 
     @JsonProperty("gcd")
     @NotNull(message = "{device.gpsCondition.notnull}")
-        GpsCondition gpsCondition, // GPS 상태
+    GpsCondition gpsCondition, // GPS 상태
 
     @DecimalMin("-90.0")
     @DecimalMax("90.0")
@@ -60,20 +60,4 @@ public record CycleInfoRequest(
     @NotNull(message = "bat(배터리 전압)은 필수입니다.")
     Integer battery
 ){
-
-    public CycleInfo of(LocalDateTime oTime, Long mdn, DeviceToken deviceToken) {
-        return CycleInfo.builder()
-            .cycleInfoTime(oTime.plusSeconds(this.sec()))
-            .mdn(mdn)
-            .driveId(deviceToken.getDriveId())
-            .sec(this.sec())
-            .gpsCondition(this.gpsCondition())
-            .longitude(this.longitude())
-            .latitude(this.latitude())
-            .angle(this.angle())
-            .speed(this.speed())
-            .sum(this.sum())
-            .battery(this.battery())
-            .build();
-    }
 }

@@ -33,16 +33,4 @@ public record DeviceRegisterRequest(
     @NotNull(message = "{device.companyCode.notnull}")
     String companyCode
 ) {
-
-    public Device toEntity() {
-        return Device.builder()
-            .mdn(this.mdn())
-            .terminalId(this.terminalId())
-            .makerId(this.makerId())
-            .packetVersion(this.packetVersion())
-            .deviceId(this.deviceId())
-            .deviceFirmWareVersion("LTE 1.2")
-            .companyCode(this.companyCode)
-            .build();
-    }
 }

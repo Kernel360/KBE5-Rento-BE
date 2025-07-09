@@ -20,7 +20,8 @@ dependencies {
 
     implementation 'org.springframework.boot:spring-boot-starter-web'
 
-
+    //tsid
+    implementation 'io.hypersistence:hypersistence-tsid:2.1.4'
     implementation 'io.github.cdimascio:java-dotenv:5.2.2'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 

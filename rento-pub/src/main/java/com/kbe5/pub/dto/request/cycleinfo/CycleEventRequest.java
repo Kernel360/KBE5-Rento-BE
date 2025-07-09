@@ -52,30 +52,4 @@ public record CycleEventRequest(
     @NotEmpty
     List<CycleInfoRequest> cycleInfoRequests
 ) {
-
-    public CycleEvent of(DeviceToken token, List<CycleInfo> cycleInfos) {
-        if (cycleInfos == null || cycleInfos.isEmpty()) {
-            throw new DeviceException(DeviceResultCode.REQUIRED_PARAMETER_ERROR);
-        }
-
-        return CycleEvent.builder()
-            .createdAt(LocalDateTime.now())
-            .oTime(cycleInfos.get(0).getCycleInfoTime())
-            .mdn(this.mdn())
-            .terminalId(this.terminalId())
-            .makerId(this.makerId())
-            .packetVersion(this.packetVersion())
-            .deviceId(this.deviceId())
-            .cycleCount(this.cycleCount())
-            .eventType(EventType.CYCLE_INFO)
-            .driveId(token.getDriveId())
-            .cycleInfos(cycleInfos)
-            .build();
-    }
-
-    public List<CycleInfo> toCycleInfoEntities(DeviceToken token) {
-        return this.cycleInfoRequests().stream()
-            .map(req -> req.of(this.oTime(), this.mdn(), token))
-            .toList();
-    }
 }
