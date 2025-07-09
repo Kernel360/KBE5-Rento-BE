@@ -33,7 +33,7 @@ public record DriveDetailResponse(
     public static DriveDetailResponse fromEntity(Drive drive){
         return DriveDetailResponse.builder()
                 .memberName(drive.getMember().getName())
-                .vehicleNumber(drive.getVehicle().getInfo().getVehicleNumber())
+                .vehicleNumber(drive.getVehicle().getInformation().getVehicleNumber())
                 .driveType(drive.getDriveType())
                 .startDate(drive.getStartDate())
                 .endDate(drive.getEndDate())

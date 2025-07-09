@@ -1,4 +1,4 @@
-package com.kbe5.domain.drive.repository;
+package com.kbe5.infra.infrastructure.drive.repository;
 
 import com.kbe5.domain.company.entity.Company;
 import com.kbe5.domain.drive.entity.Drive;
@@ -60,7 +60,7 @@ public interface DriveRepository extends JpaRepository<Drive, Long> {
       from Drive d
         where d.member.company = :company
             and d.driveStatus = :status
-              and (:vehNum is null or d.vehicle.info.vehicleNumber like concat('%', :vehNum, '%'))
+              and (:vehNum is null or d.vehicle.information.vehicleNumber like concat('%', :vehNum, '%'))
   """)
     List<Drive> findByCompanyAndStatusAndVehicleNumber(
             @Param("company") Company company,

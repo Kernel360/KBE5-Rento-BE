@@ -9,7 +9,7 @@ import org.springframework.data.domain.Pageable;
 
 public interface MemberService {
     MemberInfo registerMember(MemberCommand.Register command);
-    Page<MemberInfo> getMembers(Manager manager,
+    Page<MemberInfo> getMembers(Long companyId,
                                 Position position,
                                 Long departmentId,
                                 String search,

@@ -3,7 +3,6 @@ package com.kbe5.api.domain.device.service;
 import com.kbe5.api.domain.device.dto.resonse.DeviceControlInfoResponse;
 import com.kbe5.api.domain.device.dto.resonse.DeviceSettingResponse;
 import com.kbe5.api.domain.device.dto.resonse.GeofenceControlInfoResponse;
-import com.kbe5.api.domain.drive.service.DriveService;
 import com.kbe5.common.exception.DeviceException;
 
 import com.kbe5.common.exception.DeviceResultCode;
@@ -14,6 +13,7 @@ import com.kbe5.domain.device.repository.DeviceControlInfoRepository;
 import com.kbe5.domain.device.repository.DeviceRepository;
 import com.kbe5.domain.device.repository.DeviceTokenRepository;
 import com.kbe5.domain.device.repository.GeofenceControlInfoRepository;
+import com.kbe5.domain.drive.service.DriveService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -57,7 +57,6 @@ public class DeviceService {
         Device device = deviceRepository.findByMdn(mdn)
             .orElseThrow(() -> new DeviceException(DeviceResultCode.MISMATCHED_MDN));
 
-        // todo: 어떻게 수정해야하는가? -> 최종 코드는 그냥 LocalDate.now( )로 하면 서비스 흐름이 맞을듯 6.18
         Long driveId = driveService.findDriveForEvent(mdn, NOW);
 
         DeviceToken token = device.issueToken(EXPIRED_MS, driveId);

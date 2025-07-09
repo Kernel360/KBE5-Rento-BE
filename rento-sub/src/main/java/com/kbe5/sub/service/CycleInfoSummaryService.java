@@ -2,11 +2,11 @@ package com.kbe5.sub.service;
 
 
 import com.kbe5.domain.cycleinfosummary.entity.CycleInfoSummary;
-import com.kbe5.domain.cycleinfosummary.repository.CycleInfoSummaryRepository;
 import com.kbe5.domain.event.entity.CycleInfo;
-import com.kbe5.domain.event.repository.CycleInfoRepository;
 import com.kbe5.domain.exception.DomainException;
 import com.kbe5.domain.exception.ErrorType;
+import com.kbe5.infra.infrastructure.cycleInfoSummary.repository.CycleInfoSummaryRepository;
+import com.kbe5.infra.infrastructure.event.repository.CycleInfoRepository;
 import com.kbe5.sub.response.CycleInfoSummaryResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

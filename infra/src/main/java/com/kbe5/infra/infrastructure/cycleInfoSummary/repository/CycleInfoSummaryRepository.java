@@ -1,4 +1,4 @@
-package com.kbe5.domain.cycleinfosummary.repository;
+package com.kbe5.infra.infrastructure.cycleInfoSummary.repository;
 
 import com.kbe5.domain.cycleinfosummary.entity.CycleInfoSummary;
 import org.springframework.data.jpa.repository.JpaRepository;

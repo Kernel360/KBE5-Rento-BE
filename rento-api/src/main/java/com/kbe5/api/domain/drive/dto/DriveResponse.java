@@ -32,7 +32,7 @@ public record DriveResponse(
                 .id(drive.getId())
                 .mdn(drive.getMdn())
                 .memberName(drive.getMember().getName())
-                .vehicleNumber(drive.getVehicle().getInfo().getVehicleNumber())
+                .vehicleNumber(drive.getVehicle().getInformation().getVehicleNumber())
                 .startDate(drive.getStartDate())
                 .endDate(drive.getEndDate())
                 .startLocation(drive.getStartLocation())

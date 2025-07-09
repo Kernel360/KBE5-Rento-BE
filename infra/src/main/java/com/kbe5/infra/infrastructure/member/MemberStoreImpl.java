@@ -2,11 +2,11 @@ package com.kbe5.infra.infrastructure.member;
 
 import com.kbe5.domain.company.service.CompanyReader;
 import com.kbe5.domain.department.entity.Department;
-import com.kbe5.domain.drive.repository.DriveRepository;
 import com.kbe5.domain.exception.DomainException;
 import com.kbe5.domain.exception.ErrorType;
 import com.kbe5.domain.member.entity.Member;
 import com.kbe5.domain.member.service.MemberStore;
+import com.kbe5.infra.infrastructure.drive.repository.DriveRepository;
 import com.kbe5.infra.infrastructure.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

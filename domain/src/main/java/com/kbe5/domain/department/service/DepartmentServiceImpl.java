@@ -66,10 +66,6 @@ public class DepartmentServiceImpl implements DepartmentService {
     private DepartmentInfo createDepartment(Department department) {
         List<Member> members = memberReader.findAllByDepartmentId(department.getId());
 
-        return DepartmentInfo.builder()
-                .departmentId(department.getId())
-                .departmentName(department.getDepartmentName())
-                .numberOfEmployees(members.size())
-                .build();
+        return department.toDepartmentInfo(members.size());
     }
 }

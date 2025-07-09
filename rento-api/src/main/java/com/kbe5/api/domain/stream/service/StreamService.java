@@ -3,9 +3,8 @@ package com.kbe5.api.domain.stream.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.kbe5.api.domain.vehicle.service.VehicleService;
-import com.kbe5.domain.event.entity.CycleEvent;
 import com.kbe5.domain.event.entity.CycleInfo;
+import com.kbe5.domain.vehicle.service.VehicleService;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 import lombok.RequiredArgsConstructor;
@@ -30,12 +29,10 @@ public class StreamService {
 
     // 매니저별 리스너만 관리 (전체 리스트 제거)
     private final Map<Long, List<SseEmitter>> managerEmitters = new ConcurrentHashMap<>();
-
     private final Map<Long, Long> managerCompanyEmitters = new ConcurrentHashMap<>();
-
     // 캐싱 용도
     private final Map<Long, Long> vehicleCompanyCache = new ConcurrentHashMap<>();
-
+    private final VehicleService vehicleService;
 
     // Heartbeat을 위한 스케줄러 -> 살아있는지 확인용으로 쓰레드 하나 잡아야함?
     private final ScheduledExecutorService heartbeatScheduler = Executors.newScheduledThreadPool(1);
@@ -43,8 +40,6 @@ public class StreamService {
     private final ObjectMapper objectMapper = new ObjectMapper()
             .registerModule(new JavaTimeModule())
             .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-
-    private final VehicleService vehicleService;
 
     /**
      * 연결 유지를 위해 핑 보내기

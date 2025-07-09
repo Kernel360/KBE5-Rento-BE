@@ -2,10 +2,9 @@ package com.kbe5.pub.service;
 
 
 import com.kbe5.domain.drive.entity.Drive;
-import com.kbe5.domain.drive.repository.DriveRepository;
 import com.kbe5.domain.exception.DomainException;
 import com.kbe5.domain.exception.ErrorType;
-import com.kbe5.domain.vehicle.repository.VehicleRepository;
+import com.kbe5.infra.infrastructure.drive.repository.DriveRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,7 +15,6 @@ import org.springframework.stereotype.Service;
 public class DriveService {
 
     private final DriveRepository driveRepository;
-    private final VehicleRepository vehicleRepository;
 
     public void driveStart(Long driveId){
         Drive drive = driveRepository.findById(driveId).orElseThrow(
