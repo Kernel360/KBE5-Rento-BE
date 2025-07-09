@@ -1,4 +1,4 @@
-package com.kbe5.infra.firebase.config;
+package com.kbe5.infra.infrastructure.firebase.config;
 
 
 import com.google.auth.oauth2.GoogleCredentials;
