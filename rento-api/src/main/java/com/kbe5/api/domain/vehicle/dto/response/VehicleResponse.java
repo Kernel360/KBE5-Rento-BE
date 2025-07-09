@@ -16,9 +16,9 @@ public record VehicleResponse(
     public static VehicleResponse fromEntity(Vehicle vehicle) {
         return VehicleResponse.builder()
                 .id(vehicle.getId())
-                .vehicleNumber(vehicle.getInfo().getVehicleNumber())
-                .brand(vehicle.getInfo().getBrand())
-                .modelName(vehicle.getInfo().getModelName())
+                .vehicleNumber(vehicle.getInformation().getVehicleNumber())
+                .brand(vehicle.getInformation().getBrand())
+                .modelName(vehicle.getInformation().getModelName())
                 .status(vehicle.getStatus())
                 .totalDistanceKm(vehicle.getMileage().getTotalDistanceKm())
                 .build();

@@ -24,7 +24,7 @@ public class Vehicle extends BaseEntity {
     private Department department;
 
     @Embedded
-    private VehicleInfo info;
+    private VehicleInformation information;
 
     @Embedded
     private VehicleMilleage mileage;
@@ -33,9 +33,9 @@ public class Vehicle extends BaseEntity {
     private VehicleStatus status;
 
     @Builder
-    public Vehicle(Company company, VehicleInfo info, VehicleMilleage mileage) {
+    public Vehicle(Company company, VehicleInformation information, VehicleMilleage mileage) {
         this.company = company;
-        this.info = info;
+        this.information = information;
         this.mileage = mileage;
         this.status = VehicleStatus.READY;
     }
@@ -44,8 +44,8 @@ public class Vehicle extends BaseEntity {
         this.department = department;
     }
 
-    public static Vehicle of(Company company, VehicleInfo info, VehicleMilleage mileage) {
-        return new Vehicle(company, info, mileage);
+    public static Vehicle of(Company company, VehicleInformation information, VehicleMilleage mileage) {
+        return new Vehicle(company, information, mileage);
     }
 
     public void update(long totalDistanceKm, String batteryVoltage) {

@@ -8,7 +8,7 @@ import com.kbe5.domain.drive.entity.DriveStatus;
 import com.kbe5.domain.drive.repository.DriveRepository;
 import com.kbe5.domain.manager.entity.Manager;
 import com.kbe5.domain.vehicle.entity.Vehicle;
-import com.kbe5.domain.vehicle.repository.VehicleRepository;
+import com.kbe5.infra.infrastructure.vehicle.repository.VehicleRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
