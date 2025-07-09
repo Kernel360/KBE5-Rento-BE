@@ -1,4 +1,4 @@
-package com.kbe5.domain.event.repository;
+package com.kbe5.infra.infrastructure.event.repository;
 
 import com.kbe5.domain.event.entity.CycleInfo;
 import io.hypersistence.tsid.TSID;

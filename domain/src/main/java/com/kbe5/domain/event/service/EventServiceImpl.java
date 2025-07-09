@@ -1,35 +1,30 @@
-package com.kbe5.sub.service;
+package com.kbe5.domain.event.service;
 
-
-import com.kbe5.common.exception.DeviceException;
-import com.kbe5.common.exception.DeviceResultCode;
 import com.kbe5.domain.event.entity.Event;
 import com.kbe5.domain.event.enums.EventType;
-import com.kbe5.domain.event.repository.EventRepository;
-import com.kbe5.sub.handler.EventHandler;
+import com.kbe5.domain.event.handler.EventHandler;
+import com.kbe5.domain.exception.DeviceException;
+import com.kbe5.domain.exception.DeviceResultCode;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-
 @Slf4j
 @Service
-public class EventService {
-
+@RequiredArgsConstructor
+public class EventServiceImpl implements EventService{
     private final Map<EventType, EventHandler> eventHandlers;
 
-    private final EventRepository eventRepository;
-
     @Autowired
-    public EventService(List<EventHandler> handlers, EventRepository eventRepository) {
+    public EventServiceImpl(List<EventHandler> handlers) {
         this.eventHandlers = handlers.stream()
             .collect(Collectors.toMap(EventHandler::getEventType, Function.identity()));
-        this.eventRepository = eventRepository;
     }
 
     @Transactional
@@ -44,5 +39,4 @@ public class EventService {
             throw new DeviceException(DeviceResultCode.UNDEFINED_ERROR);
         }
     }
-
 }

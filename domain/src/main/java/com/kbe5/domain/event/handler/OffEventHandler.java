@@ -1,10 +1,9 @@
-package com.kbe5.sub.handler;
+package com.kbe5.domain.event.handler;
 
 
 import com.kbe5.domain.event.entity.Event;
 import com.kbe5.domain.event.enums.EventType;
-import com.kbe5.domain.event.repository.EventRepository;
-import com.kbe5.sub.service.CycleInfoSummaryService;
+import com.kbe5.domain.event.service.EventStore;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -12,8 +11,8 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class OffEventHandler implements EventHandler {
 
-    private final EventRepository eventRepository;
-    private final CycleInfoSummaryService cycleInfoSummaryService;
+    private final EventStore eventStore;
+//    private final CycleInfoSummaryService cycleInfoSummaryService;
 
     @Override
     public EventType getEventType() {
@@ -25,7 +24,7 @@ public class OffEventHandler implements EventHandler {
 
         //todo: 연동규격서 요구사항에 맞춰서 구현필요
 
-        eventRepository.save(event);
-        cycleInfoSummaryService.create(event.getDriveId());
+        eventStore.store(event);
+//        cycleInfoSummaryService.create(event.getDriveId());
     }
 }

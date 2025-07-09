@@ -1,4 +1,4 @@
-package com.kbe5.sub.handler;
+package com.kbe5.domain.event.handler;
 
 
 import com.kbe5.domain.event.entity.Event;

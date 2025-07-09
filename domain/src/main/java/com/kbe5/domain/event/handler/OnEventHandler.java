@@ -1,9 +1,9 @@
-package com.kbe5.sub.handler;
+package com.kbe5.domain.event.handler;
 
 
 import com.kbe5.domain.event.entity.Event;
 import com.kbe5.domain.event.enums.EventType;
-import com.kbe5.domain.event.repository.EventRepository;
+import com.kbe5.domain.event.service.EventStore;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -11,8 +11,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class OnEventHandler implements EventHandler {
 
-    private final EventRepository eventRepository;
-
+    private final EventStore eventStore;
     @Override
     public EventType getEventType() {
         return EventType.ON;
@@ -23,6 +22,6 @@ public class OnEventHandler implements EventHandler {
 
         //todo: 연동규격서 요구사항에 맞춰서 구현필요
 
-        eventRepository.save(event);
+        eventStore.store(event);
     }
 }

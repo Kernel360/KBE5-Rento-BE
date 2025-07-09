@@ -33,6 +33,7 @@ public class SecurityPermissionApiList {
             // device
             "/api/devices", //regiset
             "/api/devices/token", //token
+            "/api/events/**",
 
             //swagger
             "/swagger-ui/**",

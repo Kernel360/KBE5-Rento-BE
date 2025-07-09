@@ -9,4 +9,5 @@ public interface DeviceStore {
     void delete(Device device);
     DeviceToken storeToken(DeviceToken deviceToken);
     DeviceToken deleteToken(String token);
+    DeviceToken findDeviceToken(String token);
 }
