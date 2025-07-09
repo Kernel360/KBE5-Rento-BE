@@ -16,17 +16,16 @@ public record GeofenceUpdateRequest(
         @NotNull
         long latitude,
 
-        @NotBlank
+        @NotNull
         long longitude,
 
         @NotNull
         int radius,
 
-        @NotBlank
+        @NotNull
         @Enumerated(EnumType.STRING)
         EventType eventType,
         String description,
         boolean isActive
 ) {
-
 }
