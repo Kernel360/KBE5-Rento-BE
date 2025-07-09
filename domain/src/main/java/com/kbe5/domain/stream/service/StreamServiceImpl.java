@@ -1,8 +1,9 @@
-package com.kbe5.api.domain.stream.service;
+package com.kbe5.domain.stream.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.kbe5.domain.event.dto.CycleInfoCommand;
 import com.kbe5.domain.event.entity.CycleInfo;
 import com.kbe5.domain.vehicle.service.VehicleService;
 import jakarta.annotation.PostConstruct;
@@ -11,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.http.MediaType;
-import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
@@ -25,11 +25,12 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class StreamService {
+public class StreamServiceImpl implements StreamService {
 
     // 매니저별 리스너만 관리 (전체 리스트 제거)
     private final Map<Long, List<SseEmitter>> managerEmitters = new ConcurrentHashMap<>();
     private final Map<Long, Long> managerCompanyEmitters = new ConcurrentHashMap<>();
+
     // 캐싱 용도
     private final Map<Long, Long> vehicleCompanyCache = new ConcurrentHashMap<>();
     private final VehicleService vehicleService;
@@ -41,18 +42,14 @@ public class StreamService {
             .registerModule(new JavaTimeModule())
             .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
 
-    /**
-     * 연결 유지를 위해 핑 보내기
-     */
+    @Override
     @PostConstruct
     public void initHeartbeat() {
         // 30초마다 heartbeat 전송(일반적임 길면 안좋고, 짧아도 안좋음) -> 30초는 타임 아웃이랑 겹칠수도 있어서 15~20초가 적당하다는데?
         heartbeatScheduler.scheduleAtFixedRate(this::sendHeartbeat, 15, 15, TimeUnit.SECONDS);
     }
 
-    /**
-     * 핑을 위한 스레드 정리
-     */
+    @Override
     @PreDestroy
     public void cleanup() {
         heartbeatScheduler.shutdown();
@@ -66,9 +63,10 @@ public class StreamService {
         }
     }
 
+    @Override
     @RabbitListener(
             queues = "cycle-info-stream")
-    public void receiveAndPush(@Payload CycleInfo cycleInfo) {
+    public void receiveAndPush(CycleInfoCommand cycleInfo) {
         Long companyId = getCompanyIdByMdn(cycleInfo.getMdn());
 
         if (companyId != null) {
@@ -78,7 +76,8 @@ public class StreamService {
         }
     }
 
-    private Long getCompanyIdByMdn(Long mdn) {
+    @Override
+    public Long getCompanyIdByMdn(Long mdn) {
         return vehicleCompanyCache.computeIfAbsent(mdn, key -> {
             try {
                 Long companyId = vehicleService.getCompanyIdByMdn(key);
@@ -91,9 +90,7 @@ public class StreamService {
         });
     }
 
-    /**
-     * 매니저별 구독
-     */
+    @Override
     public SseEmitter subscribe(Long managerId, Long companyId) {
         SseEmitter emitter = new SseEmitter(0L);
 
@@ -127,10 +124,7 @@ public class StreamService {
         return emitter;
     }
 
-
-    /**
-     * 특정 업체의 매니저들에게만 브로드캐스트
-     */
+    @Override
     public void pushToCompanyManagers(CycleInfo cycleInfo, Long companyId) {
         log.debug("업체 {} CycleInfo 전송 시작", companyId);
         log.debug("현재 매니저-업체 매핑: {}", managerCompanyEmitters);
@@ -145,9 +139,7 @@ public class StreamService {
         targetManagers.forEach(managerId -> pushToManager(managerId, cycleInfo));
     }
 
-    /**
-     * 특정 매니저에게만 전송
-     */
+    @Override
     public void pushToManager(Long managerId, CycleInfo cycleInfo) {
         List<SseEmitter> emitters = managerEmitters.get(managerId);
         if (emitters == null || emitters.isEmpty()) {
@@ -181,10 +173,8 @@ public class StreamService {
         }
     }
 
-    /**
-     * 연결 끊긴 매니저 emitter 제거
-     */
-    private void removeManagerEmitter(SseEmitter emitter, Long managerId) {
+    @Override
+    public void removeManagerEmitter(SseEmitter emitter, Long managerId) {
         List<SseEmitter> emitters = managerEmitters.get(managerId);
         if (emitters != null) {
             emitters.remove(emitter);
@@ -195,17 +185,13 @@ public class StreamService {
         log.debug("연결 끊긴 매니저: {}", managerId);
     }
 
-    /**
-     * 모든 연결된 클라이언트에게 heartbeat 전송
-     */
-    private void sendHeartbeat() {
+    @Override
+    public void sendHeartbeat() {
         sendHeartbeatToManagers();
     }
 
-    /**
-     * 매니저들에게 heartbeat 전송
-     */
-    private void sendHeartbeatToManagers() {
+    @Override
+    public void sendHeartbeatToManagers() {
         List<Long> managersToRemove = new ArrayList<>();
 
         managerEmitters.forEach((managerId, emitters) -> {

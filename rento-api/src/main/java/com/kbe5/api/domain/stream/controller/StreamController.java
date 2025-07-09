@@ -3,8 +3,8 @@ package com.kbe5.api.domain.stream.controller;
 
 import com.kbe5.domain.exception.DomainException;
 import com.kbe5.domain.exception.ErrorType;
+import com.kbe5.domain.stream.service.StreamService;
 import com.kbe5.infra.jwt.util.JwtUtil;
-import com.kbe5.api.domain.stream.service.StreamService;
 import com.kbe5.infra.security.details.CustomManagerDetails;
 import com.kbe5.infra.security.details.CustomMangerDetailsService;
 import io.swagger.v3.oas.annotations.Hidden;
