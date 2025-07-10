@@ -1,4 +1,4 @@
-package com.kbe5.infra.infrastructure.firebase.dto;
+package com.kbe5.api.domain.manager.dto.request;
 
 import jakarta.validation.constraints.*;
 

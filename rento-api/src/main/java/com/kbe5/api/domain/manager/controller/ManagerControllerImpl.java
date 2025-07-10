@@ -16,7 +16,7 @@ import com.kbe5.domain.manager.dto.ManagerCommand;
 import com.kbe5.domain.manager.dto.ManagerInfo;
 import com.kbe5.domain.manager.entity.Manager;
 import com.kbe5.domain.manager.service.ManagerService;
-import com.kbe5.infra.infrastructure.firebase.dto.UpdateFcmTokenRequest;
+import com.kbe5.api.domain.manager.dto.request.UpdateFcmTokenRequest;
 import com.kbe5.infra.security.details.CustomManagerDetails;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
