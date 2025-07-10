@@ -8,7 +8,7 @@ import com.kbe5.api.domain.manager.dto.response.ManagerResponse;
 import com.kbe5.api.domain.manager.dto.response.ManagerSignUpResponse;
 import com.kbe5.api.domain.manager.dto.response.ManagerUpdateResponse;
 import com.kbe5.common.response.api.ApiResponse;
-import com.kbe5.infra.infrastructure.firebase.dto.UpdateFcmTokenRequest;
+import com.kbe5.api.domain.manager.dto.request.UpdateFcmTokenRequest;
 import com.kbe5.infra.security.details.CustomManagerDetails;
 import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;

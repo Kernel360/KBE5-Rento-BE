@@ -4,7 +4,7 @@ import com.kbe5.api.domain.manager.dto.request.ManagerDeleteRequest;
 import com.kbe5.api.domain.manager.dto.request.ManagerSignUpRequest;
 import com.kbe5.api.domain.manager.dto.request.ManagerUpdateRequest;
 import com.kbe5.domain.manager.dto.ManagerCommand;
-import com.kbe5.infra.infrastructure.firebase.dto.UpdateFcmTokenRequest;
+import com.kbe5.api.domain.manager.dto.request.UpdateFcmTokenRequest;
 
 public class ManagerRequestMapper {
 
