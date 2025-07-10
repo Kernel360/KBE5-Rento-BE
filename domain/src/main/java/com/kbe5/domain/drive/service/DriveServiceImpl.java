@@ -66,4 +66,24 @@ public class DriveServiceImpl implements DriveService {
         List<Drive> driveList = driveReader.getDrivingList(manager, vehicleNumber);
         return driveList.stream().map(DriveInfo::fromEntity).toList();
     }
+
+
+    @Override
+    @Transactional
+    public void driveStart(Long driveId) {
+        Drive drive = driveReader.getDrive(driveId);
+        drive.driveStart();
+    }
+
+    @Override
+    @Transactional
+    public void driveEnd(Long driveId, Long distance) {
+        Drive drive = driveReader.getDrive(driveId);
+
+        drive.driveEnd();
+
+        drive.getVehicle().cancel();
+        drive.getVehicle().addDistance(distance);
+        drive.addDistance(distance);
+    }
 }
