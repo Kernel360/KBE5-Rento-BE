@@ -31,7 +31,7 @@ public class DepartmentStoreImpl implements DepartmentStore {
     }
 
     public void update(DepartmentCommand.Update departmentUpdate, Long departmentId) {
-        Company company = companyReader.findById(departmentUpdate.getCompanyId());
+        Company company = companyReader.findByCompanyCode(departmentUpdate.getCompanyCode());
         validateDuplicateDepartmentName(departmentUpdate.getDepartmentName(), company.getId());
 
         Department existingDepartment = departmentReader.findById(departmentId);
