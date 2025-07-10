@@ -26,13 +26,10 @@ public class EventSender {
 
     private final Queue queue;
 
-    private final StreamSender streamSender;
-
     @Autowired
     public EventSender(RabbitTemplate template, @Qualifier("cycleInfo") Queue queue, StreamSender streamSender) {
         this.template = template;
         this.queue = queue;
-        this.streamSender = streamSender;
     }
 
     public void send(EventCommand.CycleEventCommand command,Long mdn, DeviceToken deviceToken) {
@@ -43,7 +40,6 @@ public class EventSender {
 
         log.info("sender : {}",event.getClass().getName());
         template.convertAndSend(queue.getName(), event);
-        cycleInfos.forEach(streamSender::send);
     }
 
     public void send(EventCommand.OnEventCommand command, Long mdn, DeviceToken deviceToken) {

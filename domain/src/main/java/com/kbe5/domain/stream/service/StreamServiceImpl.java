@@ -3,8 +3,8 @@ package com.kbe5.domain.stream.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.kbe5.domain.event.dto.CycleInfoCommand;
 import com.kbe5.domain.event.entity.CycleInfo;
+import com.kbe5.domain.stream.service.dto.CycleInfoInfo;
 import com.kbe5.domain.vehicle.service.VehicleService;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
@@ -42,6 +42,7 @@ public class StreamServiceImpl implements StreamService {
             .registerModule(new JavaTimeModule())
             .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
 
+
     @Override
     @PostConstruct
     public void initHeartbeat() {
@@ -66,7 +67,7 @@ public class StreamServiceImpl implements StreamService {
     @Override
     @RabbitListener(
             queues = "cycle-info-stream")
-    public void receiveAndPush(CycleInfoCommand cycleInfo) {
+    public void receiveAndPush(CycleInfo cycleInfo) {
         Long companyId = getCompanyIdByMdn(cycleInfo.getMdn());
 
         if (companyId != null) {
@@ -148,10 +149,12 @@ public class StreamServiceImpl implements StreamService {
 
         List<SseEmitter> deadEmitters = new ArrayList<>();
 
+        CycleInfoInfo cycleInfoInfo = CycleInfoInfo.fromCycleInfo(cycleInfo);
+
         for (SseEmitter emitter : emitters) {
             try {
                 // 명시적으로 JSON 직렬화
-                String jsonData = objectMapper.writeValueAsString(cycleInfo);
+                String jsonData = objectMapper.writeValueAsString(cycleInfoInfo);
 
                 emitter.send(SseEmitter.event()
                         .name("cycle-info")

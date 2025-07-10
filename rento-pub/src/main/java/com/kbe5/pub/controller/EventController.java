@@ -10,6 +10,7 @@ import com.kbe5.domain.event.dto.EventCommand.OnEventCommand;
 import com.kbe5.domain.event.entity.GeofenceEvent;
 import com.kbe5.pub.amqp.EventSender;
 import com.kbe5.pub.amqp.NotificationSender;
+import com.kbe5.pub.amqp.StreamSender;
 import com.kbe5.pub.dto.request.cycleinfo.CycleEventRequest;
 import com.kbe5.pub.dto.request.geofence.GeofenceEventRequest;
 import com.kbe5.pub.dto.request.onoff.OffEventRequest;
@@ -38,6 +39,7 @@ public class EventController {
     private final DriveService driveService;
     private final DeviceService deviceService;
     private final NotificationSender notificationSender;
+    private final StreamSender streamSender;
 
     @PostMapping("/on-off/on")
     public ResponseEntity<EventResponse> ignitionOn(
@@ -87,6 +89,7 @@ public class EventController {
 
         EventCommand.CycleEventCommand command = EventRequestMapper.cycleEventCommand(request);
         eventSender.send(command, mdn, deviceToken);
+        streamSender.send(command, deviceToken);
 
         return ResponseEntity.ok(EventResponse.fromEntity(DeviceResultCode.SUCCESS, mdn));
     }
