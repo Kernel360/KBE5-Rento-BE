@@ -5,6 +5,7 @@ import com.kbe5.domain.device.entity.DeviceToken;
 import com.kbe5.domain.device.service.DeviceService;
 import com.kbe5.domain.drive.service.DriveService;
 import com.kbe5.domain.event.dto.EventCommand;
+import com.kbe5.domain.event.dto.EventCommand.GeofenceEventCommand;
 import com.kbe5.domain.event.dto.EventCommand.OffEventCommand;
 import com.kbe5.domain.event.dto.EventCommand.OnEventCommand;
 import com.kbe5.domain.event.entity.GeofenceEvent;
@@ -99,9 +100,10 @@ public class EventController {
         @RequestHeader("X-Device-Token") String token,
         @RequestBody @Validated GeofenceEventRequest request) {
         DeviceToken deviceToken = deviceService.findDeviceToken(token);
+        Long mdn = request.mdn();
 
-        GeofenceEvent geofenceEvent = request.toEntity(deviceToken.getDriveId());
-//        eventSender.send(geofenceEvent, request.mdn());
+        GeofenceEventCommand command = EventRequestMapper.geofenceEventCommand(request);
+        eventSender.send(command, mdn, deviceToken);
 
         return ResponseEntity.ok(EventResponse.fromEntity(DeviceResultCode.SUCCESS, request.mdn()));
     }

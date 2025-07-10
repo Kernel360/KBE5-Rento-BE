@@ -92,26 +92,4 @@ public record GeofenceEventRequest(
         @NotNull(message = "{device.currentAccumulatedDistance.notnull}")
         Long sum
 ) {
-    public GeofenceEvent toEntity(Long driveId) {
-        return GeofenceEvent.builder()
-            .createdAt(LocalDateTime.now())
-            .oTime(this.oTime())
-            .mdn(this.mdn())
-            .terminalId(this.terminalId())
-            .makerId(this.makerId())
-            .packetVersion(this.packetVersion())
-            .deviceId(this.deviceId())
-            .geoGrpId(this.geofenceGroupId)
-            .geoPid(this.geofencePointId)
-            .evtVal(this.eventValue)
-            .gpsCondition(this.gpsCondition())
-            .latitude(this.latitude())
-            .longitude(this.longitude())
-            .angle(this.angle())
-            .speed(this.speed())
-            .currentAccumulatedDistance(this.sum())
-            .eventType(EventType.GEOFENCE)
-            .driveId(driveId)
-            .build();
-    }
 }

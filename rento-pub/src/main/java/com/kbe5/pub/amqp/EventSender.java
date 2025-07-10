@@ -2,17 +2,18 @@ package com.kbe5.pub.amqp;
 
 import com.kbe5.domain.device.entity.DeviceToken;
 import com.kbe5.domain.event.dto.EventCommand;
-import com.kbe5.domain.event.entity.CycleEvent;
 import com.kbe5.domain.event.entity.CycleData;
+import com.kbe5.domain.event.entity.CycleEvent;
+import com.kbe5.domain.event.entity.GeofenceEvent;
 import com.kbe5.domain.event.entity.OnOffEvent;
-import java.util.List;
-
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @Slf4j
 @Component
@@ -48,6 +49,14 @@ public class EventSender {
 
     public void send(EventCommand.OffEventCommand command, Long mdn, DeviceToken deviceToken) {
         OnOffEvent event = command.toEntity(deviceToken);
+        event.validateMdnMatch(mdn);
+
+        log.info("sender : {}",event.getClass().getName());
+        template.convertAndSend(queue.getName(), event);
+    }
+
+    public void send(EventCommand.GeofenceEventCommand command, Long mdn, DeviceToken deviceToken) {
+        GeofenceEvent event = command.toEntity(deviceToken);
         event.validateMdnMatch(mdn);
 
         log.info("sender : {}",event.getClass().getName());

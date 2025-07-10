@@ -3,6 +3,7 @@ package com.kbe5.domain.event.dto;
 import com.kbe5.domain.device.entity.DeviceToken;
 import com.kbe5.domain.event.entity.CycleData;
 import com.kbe5.domain.event.entity.CycleEvent;
+import com.kbe5.domain.event.entity.GeofenceEvent;
 import com.kbe5.domain.event.entity.OnOffEvent;
 import com.kbe5.domain.event.enums.EventType;
 import com.kbe5.domain.event.enums.GpsCondition;
@@ -88,7 +89,7 @@ public class EventCommand {
                 .packetVersion(super.packetVersion)
                 .deviceId(super.deviceId)
                 .cycleCount(this.cycleCount)
-                .eventType(EventType.CYCLE_INFO)
+                .eventType(EventType.CYCLE_DATA)
                 .driveId(token.getDriveId())
                 .cycleData(cycleData)
                 .build();
@@ -103,10 +104,33 @@ public class EventCommand {
 
     @Getter
     @SuperBuilder
-    public static class GeofenceEvent extends Event{
+    public static class GeofenceEventCommand extends Event{
         private Integer geoGrpId;
         private Integer geoPid;
         private Integer evtVal;
+
+        public GeofenceEvent toEntity(DeviceToken token) {
+            return GeofenceEvent.builder()
+                .createdAt(LocalDateTime.now())
+                .oTime(super.oTime)
+                .mdn(super.mdn)
+                .terminalId(super.terminalId)
+                .makerId(super.makerId)
+                .packetVersion(super.packetVersion)
+                .deviceId(super.deviceId)
+                .geoGrpId(this.geoGrpId)
+                .geoPid(this.geoPid)
+                .evtVal(this.evtVal)
+                .gpsCondition(super.gpsCondition)
+                .latitude(super.latitude)
+                .longitude(super.longitude)
+                .angle(super.angle)
+                .speed(super.speed)
+                .currentAccumulatedDistance(super.currentAccumulatedDistance)
+                .eventType(EventType.GEOFENCE)
+                .driveId(token.getDriveId())
+                .build();
+        }
     }
 
     @Getter
