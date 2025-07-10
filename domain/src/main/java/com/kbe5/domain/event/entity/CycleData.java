@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @Entity
-@Table(name = "cycle_info")
+@Table(name = "cycle_data")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CycleData {
 

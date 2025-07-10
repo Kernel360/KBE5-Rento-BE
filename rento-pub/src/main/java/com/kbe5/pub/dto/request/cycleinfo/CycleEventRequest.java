@@ -43,6 +43,6 @@ public record CycleEventRequest(
 
     @JsonProperty("cList")
     @NotEmpty
-    List<CycleInfoRequest> cycleInfoRequests
+    List<CycleDataRequest> cycleDataRequests
 ) {
 }

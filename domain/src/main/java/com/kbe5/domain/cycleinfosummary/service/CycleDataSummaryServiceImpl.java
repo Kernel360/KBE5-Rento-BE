@@ -1,9 +1,9 @@
 package com.kbe5.domain.cycleinfosummary.service;
 
-import com.kbe5.domain.cycleinfosummary.dto.CycleInfoSummaryInfo;
-import com.kbe5.domain.cycleinfosummary.entity.CycleInfoSummary;
+import com.kbe5.domain.cycleinfosummary.dto.CycleDataSummaryInfo;
+import com.kbe5.domain.cycleinfosummary.entity.CycleDataSummary;
 import com.kbe5.domain.event.entity.CycleData;
-import com.kbe5.domain.event.service.CycleInfoReader;
+import com.kbe5.domain.event.service.CycleDataReader;
 import com.kbe5.domain.exception.DomainException;
 import com.kbe5.domain.exception.ErrorType;
 import lombok.RequiredArgsConstructor;
@@ -16,16 +16,16 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class CycleInfoSummaryServiceImpl implements CycleInfoSummaryService {
+public class CycleDataSummaryServiceImpl implements CycleDataSummaryService {
 
-    private final CycleInfoReader cycleInfoReader;
-    private final CycleInfoSummaryStore cycleInfoSummaryStore;
-    private final CycleInfoSummaryReader cycleInfoSummaryReader;
+    private final CycleDataReader cycleDataReader;
+    private final CycleDataSummaryStore cycleDataSummaryStore;
+    private final CycleDataSummaryReader cycleDataSummaryReader;
 
     @Override
     public void create(Long driveId) {
         // 해당 운행의 주기 정보 들고옴
-        List<CycleData> info = cycleInfoReader.getCycleInfoListWithDrive(driveId);
+        List<CycleData> info = cycleDataReader.getCycleInfoListWithDrive(driveId);
 
         // 제일 이른 시간 찾기
         LocalDateTime baseTime = info.stream()
@@ -41,18 +41,18 @@ public class CycleInfoSummaryServiceImpl implements CycleInfoSummaryService {
                 .sorted(Comparator.comparing(CycleData::getCycleInfoTime))
                 .toList();
 
-        List<CycleInfoSummary> summary = cycleData.stream()
-                .map(CycleInfoSummary::new)
+        List<CycleDataSummary> summary = cycleData.stream()
+                .map(CycleDataSummary::new)
                 .toList();
 
-        cycleInfoSummaryStore.saveAllCycleInfoSummary(summary);
+        cycleDataSummaryStore.saveAllCycleInfoSummary(summary);
     }
 
     @Override
-    public List<CycleInfoSummaryInfo> getList(Long driveId) {
-        return cycleInfoSummaryReader.getCycleInfoLSummaryListWithDrive(driveId)
+    public List<CycleDataSummaryInfo> getList(Long driveId) {
+        return cycleDataSummaryReader.getCycleInfoLSummaryListWithDrive(driveId)
                 .stream()
-                .map(CycleInfoSummaryInfo::fromEntity)
+                .map(CycleDataSummaryInfo::fromEntity)
                 .toList();
     }
 }

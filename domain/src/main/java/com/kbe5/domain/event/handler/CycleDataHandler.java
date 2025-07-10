@@ -16,13 +16,13 @@ import java.util.List;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class CycleInfoHandler implements EventHandler {
+public class CycleDataHandler implements EventHandler {
 
     private final EventStore eventStore;
 
     @Override
     public EventType getEventType() {
-        return EventType.CYCLE_INFO;
+        return EventType.CYCLE_DATA;
     }
 
     @Override

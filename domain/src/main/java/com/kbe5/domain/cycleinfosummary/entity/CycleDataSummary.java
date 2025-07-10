@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class CycleInfoSummary {
+public class CycleDataSummary {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -47,7 +47,7 @@ public class CycleInfoSummary {
     private Integer battery;
 
     // todo: request가 필요한가?
-    public CycleInfoSummary(CycleData cycleData) {
+    public CycleDataSummary(CycleData cycleData) {
         this.mdn = cycleData.getMdn();
         this.cycleInfoTime = cycleData.getCycleInfoTime();
         this.driveId = cycleData.getDriveId();

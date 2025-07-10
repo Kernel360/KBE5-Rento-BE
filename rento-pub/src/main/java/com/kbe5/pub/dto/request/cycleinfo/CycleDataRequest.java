@@ -8,7 +8,7 @@ import jakarta.validation.constraints.*;
 
 import java.math.BigDecimal;
 
-public record CycleInfoRequest(
+public record CycleDataRequest(
 
     @NotNull
     @Min(value = 0, message = "sec(발생시간)은 0 이상이어야 합니다.")

@@ -1,8 +1,8 @@
 package com.kbe5.infra.infrastructure.event;
 
 import com.kbe5.domain.event.entity.CycleData;
-import com.kbe5.domain.event.service.CycleInfoReader;
-import com.kbe5.infra.infrastructure.event.repository.CycleInfoRepository;
+import com.kbe5.domain.event.service.CycleDataReader;
+import com.kbe5.infra.infrastructure.event.repository.CycleDataRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -10,9 +10,9 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
-public class CycleInfoReaderImpl implements CycleInfoReader {
+public class CycleDataReaderImpl implements CycleDataReader {
 
-    private final CycleInfoRepository cycleInfoRepository;
+    private final CycleDataRepository cycleInfoRepository;
 
     @Override
     public List<CycleData> getCycleInfoListWithDrive(Long driveId) {

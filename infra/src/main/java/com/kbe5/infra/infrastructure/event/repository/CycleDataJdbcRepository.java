@@ -5,7 +5,7 @@ import com.kbe5.domain.event.entity.CycleData;
 
 import java.util.List;
 
-public interface CycleInfoJdbcRepository {
+public interface CycleDataJdbcRepository {
 
     void bulkInsert(List<CycleData> cycleData);
 }

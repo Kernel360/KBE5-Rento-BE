@@ -12,11 +12,11 @@ import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
-public class CycleInfoJdbcRepositoryImpl implements CycleInfoJdbcRepository {
+public class CycleDataJdbcRepositoryImpl implements CycleDataJdbcRepository {
 
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    private static final String CYCLE_INFO_BULK_INSERT_SQL = "INSERT INTO cycle_info " +
+    private static final String CYCLE_DATA_BULK_INSERT_SQL = "INSERT INTO cycle_data " +
         "(tsid, cycle_info_time, mdn, drive_id, sec, gps_condition, latitude, longitude, angle, speed, sum, battery) " +
         "VALUES (:tsid, :cycleInfoTime, :mdn, :driveId,:sec, :gpsCondition, :latitude, :longitude, :angle, :speed, "
         + ":sum, :battery)";
@@ -30,7 +30,7 @@ public class CycleInfoJdbcRepositoryImpl implements CycleInfoJdbcRepository {
             .toArray(SqlParameterSource[]::new);
 
         namedParameterJdbcTemplate.batchUpdate(
-            CYCLE_INFO_BULK_INSERT_SQL,
+            CYCLE_DATA_BULK_INSERT_SQL,
             sqlParameterSources
             );
     }

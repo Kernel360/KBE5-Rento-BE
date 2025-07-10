@@ -5,7 +5,7 @@ import com.kbe5.domain.event.dto.EventCommand.GeofenceEventCommand;
 import com.kbe5.domain.event.dto.EventCommand.OffEventCommand;
 import com.kbe5.domain.event.dto.EventCommand.OnEventCommand;
 import com.kbe5.pub.dto.request.cycleinfo.CycleEventRequest;
-import com.kbe5.pub.dto.request.cycleinfo.CycleInfoRequest;
+import com.kbe5.pub.dto.request.cycleinfo.CycleDataRequest;
 import com.kbe5.pub.dto.request.geofence.GeofenceEventRequest;
 import com.kbe5.pub.dto.request.onoff.OffEventRequest;
 import com.kbe5.pub.dto.request.onoff.OnEventRequest;
@@ -20,7 +20,7 @@ public class EventRequestMapper {
      * .companyCode(request.companyCode()) .deviceFirmWareVersion("LTE 1.2") .build(); },
      */
     public static EventCommand.CycleEventCommand cycleEventCommand(CycleEventRequest request) {
-        List<EventCommand.CycleInfoCommand> cycleInfoCommands = request.cycleInfoRequests().stream()
+        List<EventCommand.CycleInfoCommand> cycleInfoCommands = request.cycleDataRequests().stream()
             .map(EventRequestMapper::cycleInfoCommand)
             .toList();
 
@@ -36,7 +36,7 @@ public class EventRequestMapper {
             .build();
     }
 
-    public static EventCommand.CycleInfoCommand cycleInfoCommand(CycleInfoRequest request) {
+    public static EventCommand.CycleInfoCommand cycleInfoCommand(CycleDataRequest request) {
         return EventCommand.CycleInfoCommand.builder()
             .sec(request.sec())
             .gpsCondition(request.gpsCondition())

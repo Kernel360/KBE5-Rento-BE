@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface CycleInfoRepository extends JpaRepository<CycleData, Long>, CycleInfoJdbcRepository {
+public interface CycleDataRepository extends JpaRepository<CycleData, Long>, CycleDataJdbcRepository {
 
     List<CycleData> findAllByDriveId(Long driveId);
 
