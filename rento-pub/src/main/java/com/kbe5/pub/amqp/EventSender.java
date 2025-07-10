@@ -3,11 +3,13 @@ package com.kbe5.pub.amqp;
 import com.kbe5.domain.device.entity.DeviceToken;
 import com.kbe5.domain.event.dto.EventCommand;
 import com.kbe5.domain.event.dto.EventCommand.CycleInfoCommand;
+import com.kbe5.domain.event.dto.EventCommand.GeofenceEventCommand;
 import com.kbe5.domain.event.dto.EventCommand.OffEventCommand;
 import com.kbe5.domain.event.dto.EventCommand.OnEventCommand;
 import com.kbe5.domain.event.entity.CycleEvent;
 import com.kbe5.domain.event.entity.CycleInfo;
 import com.kbe5.domain.event.entity.Event;
+import com.kbe5.domain.event.entity.GeofenceEvent;
 import com.kbe5.domain.event.entity.OnOffEvent;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -56,6 +58,14 @@ public class EventSender {
 
     public void send(EventCommand.OffEventCommand command, Long mdn, DeviceToken deviceToken) {
         OnOffEvent event = command.toEntity(deviceToken);
+        event.validateMdnMatch(mdn);
+
+        log.info("sender : {}",event.getClass().getName());
+        template.convertAndSend(queue.getName(), event);
+    }
+
+    public void send(GeofenceEventCommand command, Long mdn, DeviceToken deviceToken) {
+        GeofenceEvent event = command.toEntity(deviceToken);
         event.validateMdnMatch(mdn);
 
         log.info("sender : {}",event.getClass().getName());
