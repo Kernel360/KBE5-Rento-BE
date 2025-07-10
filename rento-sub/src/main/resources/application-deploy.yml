@@ -1,7 +1,7 @@
 
 logging:
   level:
-    root: ERROR
+    root: INFO
     com.kbe5.api: INFO
 
 spring:
