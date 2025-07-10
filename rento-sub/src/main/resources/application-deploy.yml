@@ -38,6 +38,9 @@ spring:
     virtual-host: /
     ssl:
       enabled: true
+    listener:
+      simple:
+        concurrency: 6
 
 fcm:
   firebase_config_path: ${FIREBASE_PATH}
