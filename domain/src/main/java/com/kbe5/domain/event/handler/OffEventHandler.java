@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 public class OffEventHandler implements EventHandler {
 
     private final EventStore eventStore;
-//    private final CycleInfoSummaryService cycleInfoSummaryService;
+//    private final CycleDataSummaryService cycleInfoSummaryService;
 
     @Override
     public EventType getEventType() {

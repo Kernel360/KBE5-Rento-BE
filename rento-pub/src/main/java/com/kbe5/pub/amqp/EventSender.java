@@ -2,23 +2,24 @@ package com.kbe5.pub.amqp;
 
 import com.kbe5.domain.device.entity.DeviceToken;
 import com.kbe5.domain.event.dto.EventCommand;
-import com.kbe5.domain.event.dto.EventCommand.CycleInfoCommand;
+import com.kbe5.domain.event.entity.CycleData;
+import com.kbe5.domain.event.entity.CycleEvent;
+
 import com.kbe5.domain.event.dto.EventCommand.GeofenceEventCommand;
 import com.kbe5.domain.event.dto.EventCommand.OffEventCommand;
 import com.kbe5.domain.event.dto.EventCommand.OnEventCommand;
 import com.kbe5.domain.event.entity.CycleEvent;
-import com.kbe5.domain.event.entity.CycleInfo;
 import com.kbe5.domain.event.entity.Event;
 import com.kbe5.domain.event.entity.GeofenceEvent;
 import com.kbe5.domain.event.entity.OnOffEvent;
-import java.util.List;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @Slf4j
 @Component
@@ -28,24 +29,20 @@ public class EventSender {
 
     private final Queue queue;
 
-    private final StreamSender streamSender;
-
     @Autowired
     public EventSender(RabbitTemplate template, @Qualifier("cycleInfo") Queue queue, StreamSender streamSender) {
         this.template = template;
         this.queue = queue;
-        this.streamSender = streamSender;
     }
 
     public void send(EventCommand.CycleEventCommand command,Long mdn, DeviceToken deviceToken) {
-        List<CycleInfo> cycleInfos = command.toCycleInfoEntities(deviceToken);
-        CycleEvent event = command.of(deviceToken, mdn, cycleInfos);
+        List<CycleData> cycleData = command.toCycleInfoEntities(deviceToken);
+        CycleEvent event = command.of(deviceToken, mdn, cycleData);
 
         event.validateMdnMatch(mdn);
 
         log.info("sender : {}",event.getClass().getName());
         template.convertAndSend(queue.getName(), event);
-        cycleInfos.forEach(streamSender::send);
     }
 
     public void send(EventCommand.OnEventCommand command, Long mdn, DeviceToken deviceToken) {
@@ -63,6 +60,7 @@ public class EventSender {
         log.info("sender : {}",event.getClass().getName());
         template.convertAndSend(queue.getName(), event);
     }
+
 
     public void send(GeofenceEventCommand command, Long mdn, DeviceToken deviceToken) {
         GeofenceEvent event = command.toEntity(deviceToken);
