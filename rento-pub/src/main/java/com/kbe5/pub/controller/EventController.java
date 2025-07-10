@@ -8,6 +8,7 @@ import com.kbe5.domain.event.dto.EventCommand;
 import com.kbe5.domain.event.dto.EventCommand.GeofenceEventCommand;
 import com.kbe5.domain.event.dto.EventCommand.OffEventCommand;
 import com.kbe5.domain.event.dto.EventCommand.OnEventCommand;
+import com.kbe5.domain.event.entity.CycleData;
 import com.kbe5.domain.event.entity.GeofenceEvent;
 import com.kbe5.pub.amqp.EventSender;
 import com.kbe5.pub.amqp.NotificationSender;
@@ -28,6 +29,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @Hidden
 @Slf4j
@@ -90,7 +93,9 @@ public class EventController {
 
         EventCommand.CycleEventCommand command = EventRequestMapper.cycleEventCommand(request);
         eventSender.send(command, mdn, deviceToken);
-        streamSender.send(command, deviceToken);
+
+        List<CycleData> cycleData = command.toCycleInfoEntities(deviceToken);
+        cycleData.forEach(streamSender::send);
 
         return ResponseEntity.ok(EventResponse.fromEntity(DeviceResultCode.SUCCESS, mdn));
     }
