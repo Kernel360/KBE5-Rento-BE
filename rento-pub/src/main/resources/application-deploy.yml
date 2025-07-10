@@ -44,3 +44,9 @@ fcm:
 
 server:
   port: 8080
+  tomcat:
+    threads:
+      max: 400
+      min-spare: 20
+    accept-count: 200 # 대기 큐
+    connection-timeout: 20000 # 타임아웃
