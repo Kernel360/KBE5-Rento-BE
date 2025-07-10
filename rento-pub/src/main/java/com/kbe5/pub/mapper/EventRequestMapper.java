@@ -1,10 +1,12 @@
 package com.kbe5.pub.mapper;
 
 import com.kbe5.domain.event.dto.EventCommand;
+import com.kbe5.domain.event.dto.EventCommand.GeofenceEventCommand;
 import com.kbe5.domain.event.dto.EventCommand.OffEventCommand;
 import com.kbe5.domain.event.dto.EventCommand.OnEventCommand;
 import com.kbe5.pub.dto.request.cycleinfo.CycleEventRequest;
 import com.kbe5.pub.dto.request.cycleinfo.CycleInfoRequest;
+import com.kbe5.pub.dto.request.geofence.GeofenceEventRequest;
 import com.kbe5.pub.dto.request.onoff.OffEventRequest;
 import com.kbe5.pub.dto.request.onoff.OnEventRequest;
 import java.util.List;
@@ -74,6 +76,26 @@ public class EventRequestMapper {
             .deviceId(request.deviceId())
             .onTime(request.onTime())
             .offTime(request.offTime())
+            .gpsCondition(request.gpsCondition())
+            .latitude(request.latitude())
+            .longitude(request.longitude())
+            .angle(request.angle())
+            .speed(request.speed())
+            .currentAccumulatedDistance(request.sum())
+            .build();
+    }
+
+    public static EventCommand.GeofenceEventCommand geofenceEventCommand(GeofenceEventRequest request) {
+        return GeofenceEventCommand.builder()
+            .mdn(request.mdn())
+            .terminalId(request.terminalId())
+            .makerId(request.makerId())
+            .packetVersion(request.packetVersion())
+            .deviceId(request.deviceId())
+            .oTime(request.oTime())
+            .geoGrpId(request.geofenceGroupId())
+            .geoPid(request.geofencePointId())
+            .evtVal(request.eventValue())
             .gpsCondition(request.gpsCondition())
             .latitude(request.latitude())
             .longitude(request.longitude())

@@ -82,22 +82,4 @@ public record OffEventRequest(
     @JsonProperty("sum")
     @NotNull(message = "{device.currentAccumulatedDistance.notnull}")
     Long sum) {
-//
-//    public OnOffEvent toEntity(DeviceToken token) {
-//        return OnOffEvent.builder()
-//            .createdAt(LocalDateTime.now())
-//            .oTime(this.offTime())
-//            .mdn(this.mdn())
-//            .gpsCondition(this.gpsCondition())
-//            .latitude(this.latitude())
-//            .longitude(this.longitude())
-//            .angle(this.angle())
-//            .speed(this.speed())
-//            .currentAccumulatedDistance(this.currentAccumulatedDistance())
-//            .onTime(this.onTime())
-//            .offTime(this.offTime())
-//            .eventType(EventType.OFF)
-//            .driveId(token.getDriveId())
-//            .build();
-//    }
 }
