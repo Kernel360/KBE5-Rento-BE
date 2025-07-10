@@ -1,8 +1,8 @@
 package com.kbe5.domain.event.handler;
 
 
+import com.kbe5.domain.event.entity.CycleData;
 import com.kbe5.domain.event.entity.CycleEvent;
-import com.kbe5.domain.event.entity.CycleInfo;
 import com.kbe5.domain.event.entity.Event;
 import com.kbe5.domain.event.enums.EventType;
 import com.kbe5.domain.event.service.EventStore;
@@ -29,16 +29,16 @@ public class CycleInfoHandler implements EventHandler {
     public void handle(Event event) {
 
         CycleEvent cycleEvent = (CycleEvent) event;
-        List<CycleInfo> cycleInfo = cycleEvent.getCycleInfos();
+        List<CycleData> cycleData = cycleEvent.getCycleData();
 
         eventStore.store(cycleEvent);
 
-        if (isNotNullAndNotEmpty(cycleInfo)){
-            eventStore.bulkInsert(cycleInfo);
+        if (isNotNullAndNotEmpty(cycleData)){
+            eventStore.bulkInsert(cycleData);
         }
     }
 
-    private boolean isNotNullAndNotEmpty(List<CycleInfo> cycleInfo) {
-        return cycleInfo != null && !cycleInfo.isEmpty();
+    private boolean isNotNullAndNotEmpty(List<CycleData> cycleData) {
+        return cycleData != null && !cycleData.isEmpty();
     }
 }

@@ -3,18 +3,11 @@ package com.kbe5.pub.dto.request.cycleinfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.kbe5.common.exception.DeviceException;
-import com.kbe5.common.exception.DeviceResultCode;
 import com.kbe5.common.util.EventLocalDateTimeDeserializer;
-import com.kbe5.domain.device.entity.DeviceToken;
-import com.kbe5.domain.event.entity.CycleEvent;
-import com.kbe5.domain.event.entity.CycleInfo;
-import com.kbe5.domain.event.enums.EventType;
 import jakarta.validation.constraints.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
 
 public record CycleEventRequest(
     @JsonProperty("mdn")

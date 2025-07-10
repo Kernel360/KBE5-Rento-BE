@@ -1,7 +1,7 @@
 package com.kbe5.domain.cycleinfosummary.entity;
 
 
-import com.kbe5.domain.event.entity.CycleInfo;
+import com.kbe5.domain.event.entity.CycleData;
 import com.kbe5.domain.event.enums.GpsCondition;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -47,18 +47,18 @@ public class CycleInfoSummary {
     private Integer battery;
 
     // todo: request가 필요한가?
-    public CycleInfoSummary(CycleInfo cycleInfo) {
-        this.mdn = cycleInfo.getMdn();
-        this.cycleInfoTime = cycleInfo.getCycleInfoTime();
-        this.driveId = cycleInfo.getDriveId();
-        this.sec = cycleInfo.getSec();
-        this.gpsCondition = cycleInfo.getGpsCondition();
-        this.latitude = cycleInfo.getLatitude();
-        this.longitude = cycleInfo.getLongitude();
-        this.angle = cycleInfo.getAngle();
-        this.speed = cycleInfo.getSpeed();
-        this.sum = cycleInfo.getSum();
-        this.battery = cycleInfo.getBattery();
+    public CycleInfoSummary(CycleData cycleData) {
+        this.mdn = cycleData.getMdn();
+        this.cycleInfoTime = cycleData.getCycleInfoTime();
+        this.driveId = cycleData.getDriveId();
+        this.sec = cycleData.getSec();
+        this.gpsCondition = cycleData.getGpsCondition();
+        this.latitude = cycleData.getLatitude();
+        this.longitude = cycleData.getLongitude();
+        this.angle = cycleData.getAngle();
+        this.speed = cycleData.getSpeed();
+        this.sum = cycleData.getSum();
+        this.battery = cycleData.getBattery();
     }
 
 }

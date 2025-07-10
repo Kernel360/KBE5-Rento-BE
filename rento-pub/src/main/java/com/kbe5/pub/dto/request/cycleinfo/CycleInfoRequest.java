@@ -3,13 +3,10 @@ package com.kbe5.pub.dto.request.cycleinfo;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import com.kbe5.domain.device.entity.DeviceToken;
-import com.kbe5.domain.event.entity.CycleInfo;
 import com.kbe5.domain.event.enums.GpsCondition;
 import jakarta.validation.constraints.*;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 
 public record CycleInfoRequest(
 

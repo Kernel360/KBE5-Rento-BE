@@ -1,6 +1,6 @@
 package com.kbe5.infra.infrastructure.event.repository;
 
-import com.kbe5.domain.event.entity.CycleInfo;
+import com.kbe5.domain.event.entity.CycleData;
 import io.hypersistence.tsid.TSID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -23,9 +23,9 @@ public class CycleInfoJdbcRepositoryImpl implements CycleInfoJdbcRepository {
 
 
     @Override
-    public void bulkInsert(List<CycleInfo> cycleInfoList) {
+    public void bulkInsert(List<CycleData> cycleDataList) {
 
-        SqlParameterSource[] sqlParameterSources = cycleInfoList.stream()
+        SqlParameterSource[] sqlParameterSources = cycleDataList.stream()
             .map(this::makeCycleInfoParameterSource)
             .toArray(SqlParameterSource[]::new);
 
@@ -35,19 +35,19 @@ public class CycleInfoJdbcRepositoryImpl implements CycleInfoJdbcRepository {
             );
     }
 
-    private SqlParameterSource makeCycleInfoParameterSource(CycleInfo cycleInfo) {
+    private SqlParameterSource makeCycleInfoParameterSource(CycleData cycleData) {
         return new MapSqlParameterSource()
             .addValue("tsid", TSID.Factory.getTsid().toLong())
-            .addValue("cycleInfoTime", cycleInfo.getCycleInfoTime())
-            .addValue("mdn", cycleInfo.getMdn())
-            .addValue("driveId", cycleInfo.getDriveId())
-            .addValue("sec", cycleInfo.getSec())
-            .addValue("gpsCondition", cycleInfo.getGpsCondition().name())
-            .addValue("latitude", cycleInfo.getLatitude())
-            .addValue("longitude", cycleInfo.getLongitude())
-            .addValue("angle", cycleInfo.getAngle())
-            .addValue("speed", cycleInfo.getSpeed())
-            .addValue("sum", cycleInfo.getSum())
-            .addValue("battery", cycleInfo.getBattery());
+            .addValue("cycleInfoTime", cycleData.getCycleInfoTime())
+            .addValue("mdn", cycleData.getMdn())
+            .addValue("driveId", cycleData.getDriveId())
+            .addValue("sec", cycleData.getSec())
+            .addValue("gpsCondition", cycleData.getGpsCondition().name())
+            .addValue("latitude", cycleData.getLatitude())
+            .addValue("longitude", cycleData.getLongitude())
+            .addValue("angle", cycleData.getAngle())
+            .addValue("speed", cycleData.getSpeed())
+            .addValue("sum", cycleData.getSum())
+            .addValue("battery", cycleData.getBattery());
     }
 }

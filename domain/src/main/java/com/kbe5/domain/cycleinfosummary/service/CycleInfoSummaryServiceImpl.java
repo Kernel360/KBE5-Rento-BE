@@ -2,7 +2,7 @@ package com.kbe5.domain.cycleinfosummary.service;
 
 import com.kbe5.domain.cycleinfosummary.dto.CycleInfoSummaryInfo;
 import com.kbe5.domain.cycleinfosummary.entity.CycleInfoSummary;
-import com.kbe5.domain.event.entity.CycleInfo;
+import com.kbe5.domain.event.entity.CycleData;
 import com.kbe5.domain.event.service.CycleInfoReader;
 import com.kbe5.domain.exception.DomainException;
 import com.kbe5.domain.exception.ErrorType;
@@ -25,23 +25,23 @@ public class CycleInfoSummaryServiceImpl implements CycleInfoSummaryService {
     @Override
     public void create(Long driveId) {
         // 해당 운행의 주기 정보 들고옴
-        List<CycleInfo> info = cycleInfoReader.getCycleInfoListWithDrive(driveId);
+        List<CycleData> info = cycleInfoReader.getCycleInfoListWithDrive(driveId);
 
         // 제일 이른 시간 찾기
         LocalDateTime baseTime = info.stream()
-                .map(CycleInfo::getCycleInfoTime)
+                .map(CycleData::getCycleInfoTime)
                 .min(LocalDateTime::compareTo)
                 .orElseThrow(() -> new DomainException(ErrorType.CYCLEINFO_NOT_FOUND) );
 
-        List<CycleInfo> cycleInfo = info.stream()
+        List<CycleData> cycleData = info.stream()
                 .filter(ci -> {
                     long diff = Duration.between(baseTime, ci.getCycleInfoTime()).getSeconds();
                     return diff >= 0 && diff % 5 == 0;
                 })
-                .sorted(Comparator.comparing(CycleInfo::getCycleInfoTime))
+                .sorted(Comparator.comparing(CycleData::getCycleInfoTime))
                 .toList();
 
-        List<CycleInfoSummary> summary = cycleInfo.stream()
+        List<CycleInfoSummary> summary = cycleData.stream()
                 .map(CycleInfoSummary::new)
                 .toList();
 

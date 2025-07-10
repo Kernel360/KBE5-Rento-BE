@@ -1,9 +1,7 @@
 package com.kbe5.domain.event.entity;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.kbe5.domain.event.enums.GpsCondition;
 import jakarta.persistence.*;
-import java.util.UUID;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,7 +14,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "cycle_info")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class CycleInfo {
+public class CycleData {
 
     @Id
     private Long tsid;
@@ -47,9 +45,9 @@ public class CycleInfo {
     private Integer battery;
 
     @Builder
-    public CycleInfo(Long tsid, LocalDateTime cycleInfoTime, Long mdn, Long driveId, Integer sec,
-        GpsCondition gpsCondition, BigDecimal latitude, BigDecimal longitude, Integer angle, Integer speed, Long sum,
-        Integer battery) {
+    public CycleData(Long tsid, LocalDateTime cycleInfoTime, Long mdn, Long driveId, Integer sec,
+                     GpsCondition gpsCondition, BigDecimal latitude, BigDecimal longitude, Integer angle, Integer speed, Long sum,
+                     Integer battery) {
         this.tsid = tsid;
         this.cycleInfoTime = cycleInfoTime;
         this.mdn = mdn;

@@ -1,22 +1,18 @@
 package com.kbe5.domain.event.dto;
 
 import com.kbe5.domain.device.entity.DeviceToken;
+import com.kbe5.domain.event.entity.CycleData;
 import com.kbe5.domain.event.entity.CycleEvent;
-import com.kbe5.domain.event.entity.CycleInfo;
 import com.kbe5.domain.event.entity.OnOffEvent;
 import com.kbe5.domain.event.enums.EventType;
 import com.kbe5.domain.event.enums.GpsCondition;
 import com.kbe5.domain.exception.DeviceException;
 import com.kbe5.domain.exception.DeviceResultCode;
-import jakarta.persistence.Column;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.Id;
-import jakarta.persistence.Transient;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
+
 import lombok.Builder;
 import lombok.Getter;
 import lombok.experimental.SuperBuilder;
@@ -55,8 +51,8 @@ public class EventCommand {
         private Long sum;
         private Integer battery;
 
-        public CycleInfo of(LocalDateTime oTime, Long mdn, DeviceToken deviceToken) {
-            return CycleInfo.builder()
+        public CycleData of(LocalDateTime oTime, Long mdn, DeviceToken deviceToken) {
+            return CycleData.builder()
                 .cycleInfoTime(oTime.plusSeconds(this.sec))
                 .mdn(mdn)
                 .driveId(deviceToken.getDriveId())
@@ -78,14 +74,14 @@ public class EventCommand {
         private Integer cycleCount;
         private List<EventCommand.CycleInfoCommand> cycleInfoCommands;
 
-        public CycleEvent of(DeviceToken token, Long mdn, List<CycleInfo> cycleInfos) {
-            if (cycleInfos == null || cycleInfos.isEmpty()) {
+        public CycleEvent of(DeviceToken token, Long mdn, List<CycleData> cycleData) {
+            if (cycleData == null || cycleData.isEmpty()) {
                 throw new DeviceException(DeviceResultCode.REQUIRED_PARAMETER_ERROR);
             }
 
             return CycleEvent.builder()
                 .createdAt(LocalDateTime.now())
-                .oTime(cycleInfos.get(0).getCycleInfoTime())
+                .oTime(cycleData.get(0).getCycleInfoTime())
                 .mdn(mdn)
                 .terminalId(super.terminalId)
                 .makerId(super.makerId)
@@ -94,11 +90,11 @@ public class EventCommand {
                 .cycleCount(this.cycleCount)
                 .eventType(EventType.CYCLE_INFO)
                 .driveId(token.getDriveId())
-                .cycleInfos(cycleInfos)
+                .cycleData(cycleData)
                 .build();
         }
 
-        public List<CycleInfo> toCycleInfoEntities(DeviceToken token) {
+        public List<CycleData> toCycleInfoEntities(DeviceToken token) {
             return this.cycleInfoCommands.stream()
                 .map(req -> req.of(super.oTime, super.mdn, token))
                 .toList();

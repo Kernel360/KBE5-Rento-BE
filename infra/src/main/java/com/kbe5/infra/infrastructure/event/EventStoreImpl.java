@@ -1,6 +1,6 @@
 package com.kbe5.infra.infrastructure.event;
 
-import com.kbe5.domain.event.entity.CycleInfo;
+import com.kbe5.domain.event.entity.CycleData;
 import com.kbe5.domain.event.entity.Event;
 import com.kbe5.domain.event.service.EventStore;
 import com.kbe5.infra.infrastructure.event.repository.CycleInfoRepository;
@@ -22,7 +22,7 @@ public class EventStoreImpl implements EventStore {
     }
 
     @Override
-    public void bulkInsert(List<CycleInfo> cycleInfo) {
-        cycleInfoRepository.bulkInsert(cycleInfo);
+    public void bulkInsert(List<CycleData> cycleData) {
+        cycleInfoRepository.bulkInsert(cycleData);
     }
 }
