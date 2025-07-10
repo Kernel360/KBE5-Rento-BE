@@ -22,9 +22,9 @@ public class CycleEvent extends Event{
     private Integer cycleCount;
 
     @Transient
-    List<CycleInfo> cycleInfos;
+    List<CycleData> cycleData;
 
-    public void setCycleInfos(List<CycleInfo> cycleInfos) {
-        this.cycleInfos = cycleInfos;
+    public void setCycleData(List<CycleData> cycleData) {
+        this.cycleData = cycleData;
     }
 }

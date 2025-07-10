@@ -1,13 +1,12 @@
 package com.kbe5.api.domain.stream.controller;
 
 
-import com.kbe5.api.domain.jwt.util.JwtUtil;
-import com.kbe5.api.domain.manager.dto.details.CustomManagerDetails;
-import com.kbe5.api.domain.manager.service.CustomMangerDetailsService;
-import com.kbe5.api.domain.stream.service.StreamService;
-import com.kbe5.common.exception.DomainException;
-import com.kbe5.common.exception.ErrorType;
-import com.kbe5.common.util.Aes256Util;
+import com.kbe5.domain.exception.DomainException;
+import com.kbe5.domain.exception.ErrorType;
+import com.kbe5.domain.stream.service.StreamService;
+import com.kbe5.infra.jwt.util.JwtUtil;
+import com.kbe5.infra.security.details.CustomManagerDetails;
+import com.kbe5.infra.security.details.CustomMangerDetailsService;
 import io.swagger.v3.oas.annotations.Hidden;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

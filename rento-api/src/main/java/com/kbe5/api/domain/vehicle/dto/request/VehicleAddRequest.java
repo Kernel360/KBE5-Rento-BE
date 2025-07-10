@@ -25,10 +25,6 @@ public record VehicleAddRequest(
         Long totalDistanceKm,
         @NotBlank(message = "배터리 전압는 null일수 없습니다")
         String batteryVoltage
-) {
-    public Vehicle toEntity(Company company) {
-        VehicleInfo info = new VehicleInfo(vehicleNumber, brand, modelName, vehicleType, fuelType);
-        VehicleMilleage milleage = new VehicleMilleage(totalDistanceKm, batteryVoltage);
-        return Vehicle.of(company, info, milleage);
-    }
+){
+
 }

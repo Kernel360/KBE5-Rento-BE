@@ -15,8 +15,4 @@ public record DeviceRegisterResponse(
     @JsonProperty("mdn")
     Long mdn
 ){
-
-    public static DeviceRegisterResponse of(DeviceResultCode resultCode, Device device) {
-        return new DeviceRegisterResponse(resultCode.getCode(), resultCode.getMessage(), device.getMdn());
-    }
 }

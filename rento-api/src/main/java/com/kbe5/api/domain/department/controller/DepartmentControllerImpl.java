@@ -4,13 +4,16 @@ package com.kbe5.api.domain.department.controller;
 import com.kbe5.api.domain.department.dto.request.DepartmentRegisterRequest;
 import com.kbe5.api.domain.department.dto.request.DepartmentUpdateRequest;
 import com.kbe5.api.domain.department.dto.response.DepartmentInfoResponse;
-import com.kbe5.api.domain.department.service.DepartmentService;
-import com.kbe5.api.domain.manager.dto.details.CustomManagerDetails;
+import com.kbe5.api.domain.department.mapper.DepartmentRequestMapper;
+import com.kbe5.api.domain.department.mapper.DepartmentResponseMapper;
 import com.kbe5.common.apiresponse.ResEntityFactory;
 import com.kbe5.common.response.api.ApiResponse;
 import com.kbe5.common.response.api.ApiResultCode;
-import com.kbe5.domain.department.entity.Department;
-import com.kbe5.domain.manager.entity.Manager;
+import com.kbe5.domain.department.dto.DepartmentInfo;
+import com.kbe5.domain.department.service.DepartmentService;
+import com.kbe5.domain.manager.dto.ManagerInfo;
+import com.kbe5.domain.manager.service.ManagerService;
+import com.kbe5.infra.security.details.CustomManagerDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -25,22 +28,25 @@ import java.util.List;
 public class DepartmentControllerImpl implements DepartmentController {
 
     private final DepartmentService departmentService;
+    private final DepartmentRequestMapper requestMapper;
+    private final DepartmentResponseMapper responseMapper;
+    private final ManagerService managerService;
 
-    //부서 등록
     @Override
     @PostMapping
     public ResponseEntity<ApiResponse<String>> registerDepartment(
             @AuthenticationPrincipal CustomManagerDetails customManagerDetails,
             @RequestBody @Validated DepartmentRegisterRequest departmentRegisterRequest
     ) {
-        Manager manager = customManagerDetails.getManager();
+        Long managerId = customManagerDetails.getManager().getId();
+        ManagerInfo info = managerService.getManagerInfo(managerId);
 
-        Department createdDepartment = departmentService.register(
-                DepartmentRegisterRequest.of(departmentRegisterRequest, manager.getCompany())
+        DepartmentInfo departmentInfo = departmentService.registerDepartment(
+                requestMapper.toRegisterCommand(departmentRegisterRequest, info.getCompanyId())
         );
 
         return ResEntityFactory.toResponse(
-                ApiResultCode.SUCCESS, createdDepartment.getDepartmentName() + "성공적으로 등록되었습니다."
+                ApiResultCode.SUCCESS, departmentInfo.getDepartmentName() + "성공적으로 등록되었습니다."
         );
     }
 
@@ -50,11 +56,13 @@ public class DepartmentControllerImpl implements DepartmentController {
     public ResponseEntity<ApiResponse<List<DepartmentInfoResponse>>> getAllDepartments(
             @AuthenticationPrincipal CustomManagerDetails customManagerDetails
     ) {
-        List<DepartmentInfoResponse> departments = departmentService.getDepartments(
-                customManagerDetails.getManager().getCompanyCode()
-        );
+        Long managerId = customManagerDetails.getManager().getId();
+        ManagerInfo info = managerService.getManagerInfo(managerId);
 
-        return ResEntityFactory.toResponse(ApiResultCode.SUCCESS, departments);
+        List<DepartmentInfo> departmentInfos = departmentService.getDepartments(
+                info.getCompanyId());
+
+        return ResEntityFactory.toResponse(ApiResultCode.SUCCESS, responseMapper.toResponseList(departmentInfos));
     }
 
     //부서 수정
@@ -65,9 +73,15 @@ public class DepartmentControllerImpl implements DepartmentController {
             @PathVariable Long departmentId,
             @Validated @RequestBody DepartmentUpdateRequest departmentUpdateRequest
     ) {
-        DepartmentInfoResponse response = departmentService.updateDepartment(departmentId, departmentUpdateRequest);
+        Long managerId = customManagerDetails.getManager().getId();
+        ManagerInfo info = managerService.getManagerInfo(managerId);
 
-        return ResEntityFactory.toResponse(ApiResultCode.SUCCESS, response);
+        DepartmentInfo departmentInfo = departmentService.updateDepartment(
+                departmentId,
+                requestMapper.toUpdateCommand(departmentUpdateRequest, info.getCompanyId())
+        );
+
+        return ResEntityFactory.toResponse(ApiResultCode.SUCCESS, responseMapper.toResponse(departmentInfo));
     }
 
     //부서 삭제

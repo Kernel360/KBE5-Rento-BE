@@ -49,7 +49,7 @@ public record OffEventRequest(
 
     @JsonProperty("gcd")
     @NotNull(message = "{device.gpsCondition.notnull}")
-        GpsCondition gpsCondition, // GPS 상태
+    GpsCondition gpsCondition, // GPS 상태
 
     @DecimalMin("-90.0")
     @DecimalMax("90.0")
@@ -81,23 +81,5 @@ public record OffEventRequest(
     @Max(9999999)
     @JsonProperty("sum")
     @NotNull(message = "{device.currentAccumulatedDistance.notnull}")
-    Long currentAccumulatedDistance) {
-
-    public OnOffEvent toEntity(DeviceToken token) {
-        return OnOffEvent.builder()
-            .createdAt(LocalDateTime.now())
-            .oTime(this.offTime())
-            .mdn(this.mdn())
-            .gpsCondition(this.gpsCondition())
-            .latitude(this.latitude())
-            .longitude(this.longitude())
-            .angle(this.angle())
-            .speed(this.speed())
-            .currentAccumulatedDistance(this.currentAccumulatedDistance())
-            .onTime(this.onTime())
-            .offTime(this.offTime())
-            .eventType(EventType.OFF)
-            .driveId(token.getDriveId())
-            .build();
-    }
+    Long sum) {
 }

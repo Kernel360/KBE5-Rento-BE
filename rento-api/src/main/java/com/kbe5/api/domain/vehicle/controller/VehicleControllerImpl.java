@@ -1,14 +1,18 @@
 package com.kbe5.api.domain.vehicle.controller;
 
-import com.kbe5.api.domain.manager.dto.details.CustomManagerDetails;
 import com.kbe5.api.domain.vehicle.dto.request.VehicleAddRequest;
 import com.kbe5.api.domain.vehicle.dto.request.VehicleUpdateRequest;
 import com.kbe5.api.domain.vehicle.dto.response.VehicleDetailResponse;
 import com.kbe5.api.domain.vehicle.dto.response.VehicleResponse;
-import com.kbe5.api.domain.vehicle.service.VehicleService;
+import com.kbe5.api.domain.vehicle.mapper.VehicleRequestMapper;
+import com.kbe5.api.domain.vehicle.mapper.VehicleResponseMapper;
 import com.kbe5.common.apiresponse.ResEntityFactory;
 import com.kbe5.common.response.api.ApiResponse;
 import com.kbe5.common.response.api.ApiResultCode;
+import com.kbe5.domain.vehicle.dto.VehicleAddCommand;
+import com.kbe5.domain.vehicle.dto.VehicleUpdateCommand;
+import com.kbe5.domain.vehicle.service.VehicleService;
+import com.kbe5.infra.security.details.CustomManagerDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedModel;
@@ -23,14 +27,23 @@ import org.springframework.web.bind.annotation.*;
 public class VehicleControllerImpl implements VehicleController{
 
     private final VehicleService vehicleService;
+    private final VehicleRequestMapper vehicleRequestMapper;
+    private final VehicleResponseMapper vehicleResponseMapper;
 
     @Override
     @PostMapping()
     public ResponseEntity<ApiResponse<String>> addVehicle(
             @AuthenticationPrincipal CustomManagerDetails customManagerDetails,
             @RequestBody @Validated VehicleAddRequest request) {
-            vehicleService.addVehicle(request.toEntity(customManagerDetails.getManager()
-                .getCompany()), request.departmentId());
+
+        VehicleAddCommand command = vehicleRequestMapper.toAddCommand(request);
+        Long companyId = customManagerDetails.getManager().getCompany().getId();
+
+        vehicleService.addVehicle(
+                command,
+                request.departmentId(),
+                companyId
+        );
 
         return ResEntityFactory.toResponse(ApiResultCode.SUCCESS, "차량 등록 완료");
     }
@@ -39,7 +52,8 @@ public class VehicleControllerImpl implements VehicleController{
     @PutMapping("/{vehicleId}")
     public ResponseEntity<ApiResponse<String>> updateVehicle(@PathVariable Long vehicleId,
                               @RequestBody @Validated VehicleUpdateRequest request) {
-        vehicleService.updateVehicle(vehicleId, request);
+        VehicleUpdateCommand command = vehicleRequestMapper.toUpdateCommand(request);
+        vehicleService.updateVehicle(vehicleId, command);
 
         return ResEntityFactory.toResponse(ApiResultCode.SUCCESS, "차량 정보 변경이 완료되었습니다!");
     }
@@ -58,27 +72,34 @@ public class VehicleControllerImpl implements VehicleController{
     public ResponseEntity<ApiResponse<PagedModel<VehicleResponse>>> getVehicleList(
             @AuthenticationPrincipal CustomManagerDetails customManagerDetails, Long departmentId,
             boolean onlyFree, Pageable pageable) {
+        Long companyId = customManagerDetails.getManager().getCompany().getId();
 
         return ResEntityFactory.toResponse(ApiResultCode.SUCCESS,
-                new PagedModel<>(vehicleService.getVehicleList(customManagerDetails.getManager(), departmentId,
+                new PagedModel<>(vehicleService.getVehicleList(companyId, departmentId,
                                 onlyFree, pageable)
-                        .map(VehicleResponse::fromEntity)));
+                        .map(vehicleResponseMapper::toVehicleResponse)));
     }
 
     @GetMapping("/search")
     public ResponseEntity<ApiResponse<PagedModel<VehicleResponse>>> search(
             @AuthenticationPrincipal CustomManagerDetails customManagerDetails,
             @RequestParam String vehicleNumber,
-            Pageable pageable) {
+            Pageable pageable
+    ) {
+        Long companyId = customManagerDetails.getManager().getCompany().getId();
+
         return ResEntityFactory.toResponse(ApiResultCode.SUCCESS,
-                new PagedModel<>(vehicleService.searchVehicle(customManagerDetails.getManager(),
-                        vehicleNumber, pageable).map(VehicleResponse::fromEntity)));
+                new PagedModel<>(vehicleService.searchVehicle(
+                        companyId,
+                        vehicleNumber,
+                        pageable
+                ).map(vehicleResponseMapper::toVehicleResponse)));
     }
 
     @Override
     @GetMapping("/{vehicleId}")
     public ResponseEntity<ApiResponse<VehicleDetailResponse>> getVehicle(@PathVariable Long vehicleId) {
         return ResEntityFactory.toResponse(ApiResultCode.SUCCESS,
-                VehicleDetailResponse.fromEntity(vehicleService.getVehicle(vehicleId)));
+                vehicleResponseMapper.toVehicleDetailResponse(vehicleService.getVehicle(vehicleId)));
     }
 }

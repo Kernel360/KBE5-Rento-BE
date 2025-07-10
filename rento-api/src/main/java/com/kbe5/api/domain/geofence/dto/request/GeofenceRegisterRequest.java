@@ -1,7 +1,5 @@
 package com.kbe5.api.domain.geofence.dto.request;
 
-import com.kbe5.domain.geofence.entity.Geofence;
-import com.kbe5.domain.geofence.enums.EventType;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
@@ -15,23 +13,11 @@ public record GeofenceRegisterRequest(
         @NotNull
         long latitude,
 
-        @NotBlank
+        @NotNull
         long longitude,
 
         @NotNull
         int radius,
         String description
 ) {
-    public static Geofence toEntity(GeofenceRegisterRequest request) {
-        return Geofence.builder()
-                .companyCode(request.companyCode)
-                .name(request.name)
-                .latitude(request.latitude)
-                .longitude(request.longitude)
-                .radius(request.radius)
-                .eventType(EventType.OFF)
-                .description(request.description)
-                .isActive(false)
-                .build();
-    }
 }

@@ -6,5 +6,5 @@ public enum EventType {
     OFF,
     ON_OFF,
     GEOFENCE,
-    CYCLE_INFO
+    CYCLE_DATA
 }

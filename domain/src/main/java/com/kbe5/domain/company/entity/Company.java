@@ -31,9 +31,9 @@ public class Company extends BaseEntity {
         this.name = name;
     }
 
-    public void update(int bizNumber, String name) {
-        this.bizNumber = bizNumber;
+    public void update(String name, int bizNumber) {
         this.name = name;
+        this.bizNumber = bizNumber;
     }
 
     public void assignCompanyCode(String code) {

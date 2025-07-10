@@ -1,17 +1,19 @@
 package com.kbe5.api.domain.member.controller;
 
-
-import com.kbe5.api.domain.manager.dto.details.CustomManagerDetails;
 import com.kbe5.api.domain.member.dto.request.MemberRegisterRequest;
 import com.kbe5.api.domain.member.dto.request.MemberUpdateRequest;
 import com.kbe5.api.domain.member.dto.response.MemberInfoResponse;
-import com.kbe5.api.domain.member.service.MemberService;
+import com.kbe5.api.domain.member.mapper.MemberRequestMapper;
+import com.kbe5.api.domain.member.mapper.MemberResponseMapper;
 import com.kbe5.common.apiresponse.ResEntityFactory;
 import com.kbe5.common.response.api.ApiResponse;
 import com.kbe5.common.response.api.ApiResultCode;
-import com.kbe5.domain.manager.entity.Manager;
-import com.kbe5.domain.member.entity.Member;
+import com.kbe5.domain.manager.dto.ManagerInfo;
+import com.kbe5.domain.manager.service.ManagerService;
+import com.kbe5.domain.member.dto.MemberInfo;
 import com.kbe5.domain.member.entity.Position;
+import com.kbe5.domain.member.service.MemberService;
+import com.kbe5.infra.security.details.CustomManagerDetails;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
@@ -30,14 +32,18 @@ import java.util.List;
 public class MemberControllerImpl implements MemberController {
 
     private final MemberService memberService;
-
+    private final MemberRequestMapper requestMapper;
+    private final MemberResponseMapper responseMapper;
+    private final ManagerService managerService;
 
     @Override
     @PostMapping
-    public ResponseEntity<ApiResponse<String>> register(@RequestBody @Validated MemberRegisterRequest request) {
-        Member member = memberService.register(MemberRegisterRequest.toEntity(request),request.departmentId());
+    public ResponseEntity<ApiResponse<String>> register(
+            @AuthenticationPrincipal CustomManagerDetails customManagerDetails,
+            @RequestBody @Validated MemberRegisterRequest request) {
+        MemberInfo info = memberService.registerMember(requestMapper.toRegisterCommand(request));
 
-        return ResEntityFactory.toResponse(ApiResultCode.SUCCESS, member.getName()+ " 성공적으로 등록되었습니다.");
+        return ResEntityFactory.toResponse(ApiResultCode.SUCCESS, info.getName()+ " 성공적으로 등록되었습니다.");
     }
 
     @Override
@@ -47,8 +53,9 @@ public class MemberControllerImpl implements MemberController {
             @PathVariable Long memberId,
             @RequestBody @Validated MemberUpdateRequest request
     ) {
+        MemberInfo info = memberService.updateMember(memberId, requestMapper.toUpdateCommand(request));
 
-        return ResEntityFactory.toResponse(ApiResultCode.SUCCESS, memberService.update(request ,memberId));
+        return ResEntityFactory.toResponse(ApiResultCode.SUCCESS, responseMapper.toResponse(info));
     }
 
     @Override
@@ -57,8 +64,6 @@ public class MemberControllerImpl implements MemberController {
             @AuthenticationPrincipal CustomManagerDetails customManagerDetails,
             @PathVariable Long memberId
     ) {
-        Manager manager = customManagerDetails.getManager();
-
         memberService.delete(memberId);
 
         return ResEntityFactory.toResponse(ApiResultCode.SUCCESS, "성공적으로 삭제되었습니다.");
@@ -73,20 +78,23 @@ public class MemberControllerImpl implements MemberController {
             @RequestParam(required = false) String keyword,
             Pageable pageable) {
 
-        Manager manager = customManagerDetails.getManager();
+        Long managerId = customManagerDetails.getManager().getId();
+        ManagerInfo info = managerService.getManagerInfo(managerId);
+
         Position newPosition = position != null ? Position.fromValue(position) : null;
 
         return ResEntityFactory.toResponse(ApiResultCode.SUCCESS,
-                new PagedModel<>(memberService.getMemberList(manager, newPosition, departmentId, keyword , pageable)
-                .map(MemberInfoResponse::from)));
+                new PagedModel<>(responseMapper.toResponseList(
+                        memberService.getMembers(info.getCompanyId(), newPosition, departmentId, keyword, pageable))
+                )
+        );
     }
 
     @Override
     @GetMapping("/{memberId}")
     public ResponseEntity<ApiResponse<MemberInfoResponse>> getUser(@PathVariable Long memberId) {
         return ResEntityFactory.toResponse(
-                ApiResultCode.SUCCESS, MemberInfoResponse.from(memberService.getMember(memberId)
-                )
+                ApiResultCode.SUCCESS, responseMapper.toResponse(memberService.getMember(memberId))
         );
     }
 
@@ -100,7 +108,9 @@ public class MemberControllerImpl implements MemberController {
     public ResponseEntity<ApiResponse<Boolean>> checkId(
             @AuthenticationPrincipal CustomManagerDetails customManagerDetails,
             @PathVariable String loginId) {
-        String companyCode = customManagerDetails.getManager().getCompanyCode();
+        Long managerId = customManagerDetails.getManager().getId();
+        ManagerInfo info = managerService.getManagerInfo(managerId);
+        String companyCode = info.getCompanyCode();
 
         return ResEntityFactory.toResponse(ApiResultCode.SUCCESS, !memberService.isExistLoginId(companyCode, loginId));
     }
@@ -110,7 +120,9 @@ public class MemberControllerImpl implements MemberController {
     public ResponseEntity<ApiResponse<Boolean>> checkEmail(
             @AuthenticationPrincipal CustomManagerDetails customManagerDetails,
             @PathVariable String email) {
-        String companyCode = customManagerDetails.getManager().getCompanyCode();
+        Long managerId = customManagerDetails.getManager().getId();
+        ManagerInfo info = managerService.getManagerInfo(managerId);
+        String companyCode = info.getCompanyCode();
 
         return ResEntityFactory.toResponse(ApiResultCode.SUCCESS, !memberService.isExistEmail(companyCode, email));
     }
@@ -120,7 +132,9 @@ public class MemberControllerImpl implements MemberController {
     public ResponseEntity<ApiResponse<Boolean>> checkPhoneNumber(
             @AuthenticationPrincipal CustomManagerDetails customManagerDetails,
             @PathVariable String phoneNumber) {
-        String companyCode = customManagerDetails.getManager().getCompanyCode();
+        Long managerId = customManagerDetails.getManager().getId();
+        ManagerInfo info = managerService.getManagerInfo(managerId);
+        String companyCode = info.getCompanyCode();
 
         return ResEntityFactory.toResponse(ApiResultCode.SUCCESS, !memberService.isExistPhoneNumber(companyCode, phoneNumber));
     }

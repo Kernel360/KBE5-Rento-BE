@@ -1,0 +1,47 @@
+package com.kbe5.infra.security.util;
+
+public class SecurityPermissionApiList {
+
+    private SecurityPermissionApiList() {
+    }
+
+    public static final String[] PUBLIC_URLS = {
+
+            "/health",
+            "/actuator/**",
+
+            // Reservation APIs
+            "/api/reservations",
+            "/api/reservations/{reservationId}",
+
+            // Company APIs
+            "/api/companies/**",
+
+            // h2
+            "/h2-console/**",
+
+            // login && signUp
+            "/api/managers/login",
+            "/api/managers/sign-up",
+            "/api/managers/check-loginId/{loginId}",
+            "/api/managers/check-email/{email}",
+            "/api/managers/logout",
+
+            // refresh
+            "/api/tokens/refresh",
+
+            // device
+            "/api/devices/**", //regiset
+            "/api/events/**",
+
+            //swagger
+            "/swagger-ui/**",
+            "/swagger-ui.html",
+            "/swagger-ui/index.html",
+            "/v3/api-docs",
+            "/v3/api-docs/**",
+
+            // stream
+            "/api/stream/**"
+    };
+}

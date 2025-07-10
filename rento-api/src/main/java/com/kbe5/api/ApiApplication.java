@@ -16,7 +16,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
         "com.kbe5.api"
 })
 @EntityScan(basePackages = "com.kbe5.domain")
-@EnableJpaRepositories(basePackages = "com.kbe5.domain")
+//todo: domain에서 repo 모두 infra에 옮기면 domain basePackages에서 삭제하기
+@EnableJpaRepositories(basePackages = { "com.kbe5.domain", "com.kbe5.infra"})
 public class ApiApplication {
     public static void main(String[] args) {
         SpringApplication.run(ApiApplication.class, args);

@@ -2,7 +2,7 @@ package com.kbe5.sub.amqp;
 
 
 import com.kbe5.domain.event.entity.Event;
-import com.kbe5.sub.service.EventService;
+import com.kbe5.domain.event.service.EventService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.RabbitHandler;

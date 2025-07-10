@@ -8,10 +8,4 @@ public record DeviceControlInfoResponse(
         String controlCode,
         String controlValue
 ) {
-    public static DeviceControlInfoResponse fromEntity(DeviceControlInfo entity) {
-        return new DeviceControlInfoResponse(
-                entity.getId(),
-                entity.getCtrCd(),
-                entity.getCtrVal());
-    }
 }

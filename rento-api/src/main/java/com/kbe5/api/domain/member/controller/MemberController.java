@@ -1,10 +1,10 @@
 package com.kbe5.api.domain.member.controller;
 
-import com.kbe5.api.domain.manager.dto.details.CustomManagerDetails;
 import com.kbe5.api.domain.member.dto.request.MemberRegisterRequest;
 import com.kbe5.api.domain.member.dto.request.MemberUpdateRequest;
 import com.kbe5.api.domain.member.dto.response.MemberInfoResponse;
 import com.kbe5.common.response.api.ApiResponse;
+import com.kbe5.infra.security.details.CustomManagerDetails;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
@@ -21,7 +21,9 @@ public interface MemberController {
     //사용자 추가
     @Operation(summary = "회원 등록", description = "새로운 회원을 등록합니다")
     @RequestBody(description = "회원 등록 요청 정보", required = true)
-    ResponseEntity<ApiResponse<String>> register(MemberRegisterRequest request);
+    ResponseEntity<ApiResponse<String>> register(
+            CustomManagerDetails customManagerDetails,
+            MemberRegisterRequest request);
 
     //사용자 수정
     @Operation(summary = "회원 수정", description = "기존 회원을 수정합니다")
