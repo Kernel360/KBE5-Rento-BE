@@ -31,8 +31,7 @@ public class SecurityPermissionApiList {
             "/api/tokens/refresh",
 
             // device
-            "/api/devices", //regiset
-            "/api/devices/token", //token
+            "/api/devices/**", //regiset
             "/api/events/**",
 
             //swagger
