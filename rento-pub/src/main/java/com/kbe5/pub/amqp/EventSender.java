@@ -4,6 +4,12 @@ import com.kbe5.domain.device.entity.DeviceToken;
 import com.kbe5.domain.event.dto.EventCommand;
 import com.kbe5.domain.event.entity.CycleData;
 import com.kbe5.domain.event.entity.CycleEvent;
+
+import com.kbe5.domain.event.dto.EventCommand.GeofenceEventCommand;
+import com.kbe5.domain.event.dto.EventCommand.OffEventCommand;
+import com.kbe5.domain.event.dto.EventCommand.OnEventCommand;
+import com.kbe5.domain.event.entity.CycleEvent;
+import com.kbe5.domain.event.entity.Event;
 import com.kbe5.domain.event.entity.GeofenceEvent;
 import com.kbe5.domain.event.entity.OnOffEvent;
 import lombok.extern.slf4j.Slf4j;
@@ -55,7 +61,8 @@ public class EventSender {
         template.convertAndSend(queue.getName(), event);
     }
 
-    public void send(EventCommand.GeofenceEventCommand command, Long mdn, DeviceToken deviceToken) {
+
+    public void send(GeofenceEventCommand command, Long mdn, DeviceToken deviceToken) {
         GeofenceEvent event = command.toEntity(deviceToken);
         event.validateMdnMatch(mdn);
 
