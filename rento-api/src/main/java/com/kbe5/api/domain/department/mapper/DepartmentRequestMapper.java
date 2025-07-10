@@ -15,10 +15,10 @@ public class DepartmentRequestMapper {
                 .build();
     }
 
-    public DepartmentCommand.Update toUpdateCommand(DepartmentUpdateRequest request, Long companyId) {
+    public DepartmentCommand.Update toUpdateCommand(DepartmentUpdateRequest request) {
         return DepartmentCommand.Update.builder()
                 .departmentName(request.departmentName())
-                .companyId(companyId)
+                .companyCode(request.companyCode())
                 .build();
     }
 }
