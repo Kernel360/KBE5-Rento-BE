@@ -24,7 +24,7 @@ public class DepartmentCommand {
     @Getter
     @Builder
     public static class Update {
-        private final Long companyId;
+        private final String companyCode;
         private final String departmentName;
     }
 }

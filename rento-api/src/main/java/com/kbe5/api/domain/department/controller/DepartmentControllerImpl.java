@@ -73,12 +73,9 @@ public class DepartmentControllerImpl implements DepartmentController {
             @PathVariable Long departmentId,
             @Validated @RequestBody DepartmentUpdateRequest departmentUpdateRequest
     ) {
-        Long managerId = customManagerDetails.getManager().getId();
-        ManagerInfo info = managerService.getManagerInfo(managerId);
-
         DepartmentInfo departmentInfo = departmentService.updateDepartment(
                 departmentId,
-                requestMapper.toUpdateCommand(departmentUpdateRequest, info.getCompanyId())
+                requestMapper.toUpdateCommand(departmentUpdateRequest)
         );
 
         return ResEntityFactory.toResponse(ApiResultCode.SUCCESS, responseMapper.toResponse(departmentInfo));
