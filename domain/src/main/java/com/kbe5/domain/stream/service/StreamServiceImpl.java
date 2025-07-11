@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.kbe5.domain.event.entity.CycleData;
+import com.kbe5.domain.event.entity.CycleEvent;
+import com.kbe5.domain.event.entity.Event;
 import com.kbe5.domain.stream.service.dto.CycleInfo;
 import com.kbe5.domain.vehicle.service.VehicleService;
 import jakarta.annotation.PostConstruct;
@@ -67,13 +69,18 @@ public class StreamServiceImpl implements StreamService {
     @Override
     @RabbitListener(
             queues = "cycle-info-stream")
-    public void receiveAndPush(CycleData cycleData) {
-        Long companyId = getCompanyIdByMdn(cycleData.getMdn());
+    public void receiveAndPush(Event event) {
+
+        CycleEvent cycleEvent = (CycleEvent) event;
+
+        List<CycleData> cycleDataList = cycleEvent.getCycleData();
+
+        Long companyId = getCompanyIdByMdn(cycleEvent.getMdn());
 
         if (companyId != null) {
-            pushToCompanyManagers(cycleData, companyId);
+            pushToCompanyManagers(cycleDataList, companyId);
         } else {
-            log.warn("업체를 찾을 수 없는 차량 mdn: {}", cycleData.getMdn());
+            log.warn("업체를 찾을 수 없는 차량 mdn: {}", cycleEvent.getMdn());
         }
     }
 
@@ -126,7 +133,7 @@ public class StreamServiceImpl implements StreamService {
     }
 
     @Override
-    public void pushToCompanyManagers(CycleData cycleData, Long companyId) {
+    public void pushToCompanyManagers(List<CycleData> cycleDataList, Long companyId) {
         log.debug("업체 {} CycleData 전송 시작", companyId);
         log.debug("현재 매니저-업체 매핑: {}", managerCompanyEmitters);
 
@@ -137,11 +144,11 @@ public class StreamServiceImpl implements StreamService {
 
         log.debug("대상 매니저들: {}", targetManagers);
 
-        targetManagers.forEach(managerId -> pushToManager(managerId, cycleData));
+        targetManagers.forEach(managerId -> pushToManager(managerId, cycleDataList));
     }
 
     @Override
-    public void pushToManager(Long managerId, CycleData cycleData) {
+    public void pushToManager(Long managerId, List<CycleData> cycleDataList) {
         List<SseEmitter> emitters = managerEmitters.get(managerId);
         if (emitters == null || emitters.isEmpty()) {
             return;
@@ -149,12 +156,12 @@ public class StreamServiceImpl implements StreamService {
 
         List<SseEmitter> deadEmitters = new ArrayList<>();
 
-        CycleInfo cycleInfo = CycleInfo.fromCycleInfo(cycleData);
+       // CycleInfo cycleInfo = CycleInfo.fromCycleInfo(cycleData);
 
         for (SseEmitter emitter : emitters) {
             try {
                 // 명시적으로 JSON 직렬화
-                String jsonData = objectMapper.writeValueAsString(cycleInfo);
+                String jsonData = objectMapper.writeValueAsString(cycleDataList);
 
                 emitter.send(SseEmitter.event()
                         .name("cycle-info")

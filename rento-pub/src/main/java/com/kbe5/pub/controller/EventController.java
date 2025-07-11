@@ -97,9 +97,13 @@ public class EventController {
         EventCommand.CycleEventCommand command = EventRequestMapper.cycleEventCommand(request);
         eventSender.send(command, mdn, deviceToken);
 
+<<<<<<< HEAD
         //stream 큐 여기서 실패를 해서 누락된듯? //200요청이안가잖아요 여기서발생하면
         List<CycleData> cycleData = command.toCycleInfoEntities(deviceToken);
         cycleData.forEach(streamSender::send);
+=======
+        streamSender.send(command, mdn, deviceToken);
+>>>>>>> dev
 
         //ok 요청이 4300
         return ResponseEntity.ok(EventResponse.fromEntity(DeviceResultCode.SUCCESS, mdn));
