@@ -94,8 +94,7 @@ public class EventController {
         EventCommand.CycleEventCommand command = EventRequestMapper.cycleEventCommand(request);
         eventSender.send(command, mdn, deviceToken);
 
-        List<CycleData> cycleData = command.toCycleInfoEntities(deviceToken);
-        cycleData.forEach(streamSender::send);
+        streamSender.send(command, mdn, deviceToken);
 
         return ResponseEntity.ok(EventResponse.fromEntity(DeviceResultCode.SUCCESS, mdn));
     }
