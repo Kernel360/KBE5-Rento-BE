@@ -91,11 +91,14 @@ public class EventController {
         DeviceToken deviceToken = deviceService.findDeviceToken(token);
         Long mdn = request.mdn();
 
+        //6000 -> 5200 스레드 타고 들어옴
+
+        //cycle-info 큐 5221
         EventCommand.CycleEventCommand command = EventRequestMapper.cycleEventCommand(request);
         eventSender.send(command, mdn, deviceToken);
-
         streamSender.send(command, mdn, deviceToken);
 
+        //ok 요청이 4300
         return ResponseEntity.ok(EventResponse.fromEntity(DeviceResultCode.SUCCESS, mdn));
     }
 
