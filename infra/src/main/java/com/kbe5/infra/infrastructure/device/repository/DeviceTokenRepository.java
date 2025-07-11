@@ -4,7 +4,9 @@ import com.kbe5.domain.device.entity.DeviceToken;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface DeviceTokenRepository extends JpaRepository<DeviceToken, String> {
+public interface DeviceTokenRepository {
 
-    Optional<DeviceToken> findByToken(String token);
+    DeviceToken save(DeviceToken deviceToken);
+    Optional<DeviceToken> findById(String token);
+    void deleteById(String token);
 }

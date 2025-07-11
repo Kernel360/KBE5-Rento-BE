@@ -29,8 +29,10 @@ public class DeviceStoreImpl implements DeviceStore {
 
     }
 
+    //todo: redis 기반으로 변경 예정 입니다.
     @Override
     public DeviceToken storeToken(DeviceToken deviceToken) {
+
         return deviceTokenRepository.save(deviceToken);
     }
 
