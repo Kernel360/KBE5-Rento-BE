@@ -5,9 +5,35 @@ on:
     branches: [ "dev" ]
 
 jobs:
-  build-and-deploy:
+  changes:
     runs-on: ubuntu-latest
+    outputs:
+      api: ${{ steps.filter.outputs.api }}
+      pub: ${{ steps.filter.outputs.pub }}
+      sub: ${{ steps.filter.outputs.sub }}
+      all: ${{ steps.filter.outputs.all }}
 
+    steps:
+      - uses: actions/checkout@v3
+      - uses: dorny/paths-filter@v2
+        id: filter
+        with:
+          filters: |
+            api:
+              - 'rento-api/**'
+            pub:
+              - 'rento-pub/**'
+            sub:
+              - 'rento-sub/**'
+            all:
+              - '**'
+              - '!rento-api/**'
+              - '!rento-pub/**'
+              - '!rento-sub/**'
+
+  build-and-deploy:
+    needs: changes
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -36,40 +62,21 @@ jobs:
           aws ecr get-login-password --region ap-northeast-2 | \
             docker login --username AWS --password-stdin 528782700548.dkr.ecr.ap-northeast-2.amazonaws.com
 
-      # ───── Build and Push rento-api ─────
-      - name: Build Docker image for rento-api
-        run: docker build -t rento-api ./rento-api
-
-      - name: Tag and Push rento-api
-        run: |
+      # ───── Build and Deploy rento-api ─────
+      - name: Build and Deploy rento-api
+        if: needs.changes.outputs.api == 'true' || needs.changes.outputs.all == 'true'
+        run:
+          # build docker image
+          docker build -t rento-api ./rento-api
+          
+          # tag and push 
           docker tag rento-api:latest ${{ secrets.ECR_REPOSITORY_API }}:latest
           docker push ${{ secrets.ECR_REPOSITORY_API }}:latest
-
-      # ───── Build and Push rento-pub ─────
-      - name: Build Docker image for rento-pub
-        run: docker build -t rento-pub ./rento-pub
-
-      - name: Tag and Push rento-pub
-        run: |
-          docker tag rento-pub:latest ${{ secrets.ECR_REPOSITORY_PUB }}:latest
-          docker push ${{ secrets.ECR_REPOSITORY_PUB }}:latest
-
-      # ───── Build and Push rento-sub ─────
-      - name: Build Docker image for rento-sub
-        run: docker build -t rento-sub ./rento-sub
-
-      - name: Tag and Push rento-sub
-        run: |
-          docker tag rento-sub:latest ${{ secrets.ECR_REPOSITORY_SUB }}:latest
-          docker push ${{ secrets.ECR_REPOSITORY_SUB }}:latest
-
-
-      # ───── Deploy rento-api on EC2 (Instance 1) ─────
-      - name: Deploy rento-api on EC2
-        run: |
+          
+          # pull and deploy
           echo "${{ secrets.EC2_KEY }}" | base64 -d > ec2.pem
           chmod 600 ec2.pem
-      
+          
           ssh -o StrictHostKeyChecking=no -i ec2.pem ubuntu@${{ secrets.EC2_HOST_API }} << EOF
             export DB_HOST="${{ secrets.DB_HOST }}"
             export DB_PORT="${{ secrets.DB_PORT }}"
@@ -86,13 +93,13 @@ jobs:
             export RABBITMQ_PASSWORD="${{ secrets.RABBITMQ_PASSWORD }}"
             export AWS_ACCESS_KEY_ID="${{ secrets.AWS_ACCESS_KEY_ID }}"
             export AWS_SECRET_ACCESS_KEY="${{ secrets.AWS_SECRET_ACCESS_KEY }}"
-      
+          
             mkdir -p /home/ubuntu/firebase
             echo '${{ secrets.FIREBASE_CONFIG }}' > /home/ubuntu/firebase/rento-firebase.json
-      
+          
             aws ecr get-login-password --region ap-northeast-2 | \
               docker login --username AWS --password-stdin 528782700548.dkr.ecr.ap-northeast-2.amazonaws.com
-      
+          
             docker stop rento-api || true
             docker rm rento-api || true
             docker pull ${{ secrets.ECR_REPOSITORY_API }}:latest
@@ -120,121 +127,136 @@ jobs:
               -e JWT_KEY="${{ secrets.JWT_KEY }}" \
               -e JAVA_TOOL_OPTIONS="-javaagent:/pinpoint-agent/pinpoint-bootstrap-3.0.3.jar -Dpinpoint.agentId=agent-api -Dpinpoint.applicationName=rento-api" \
               ${{ secrets.ECR_REPOSITORY_API }}:latest
-      
+          
             docker image prune -f
 
-      # ───── Deploy rento-pub on EC2 (Instance 2) ─────
-      - name: Deploy rento-pub on second EC2
-        run: |
+      # ───── Build and Deploy rento-pub ─────
+      - name: Build and Deploy rento-pub
+        if: needs.changes.outputs.pub == 'true' || needs.changes.outputs.all == 'true'
+        run:
+          # build docker image
+          docker build -t rento-pub ./rento-pub
+          
+          # tag and push
+          docker tag rento-pub:latest ${{ secrets.ECR_REPOSITORY_PUB }}:latest
+          docker push ${{ secrets.ECR_REPOSITORY_PUB }}:latest
+          
+          # pull and deploy
           echo "${{ secrets.EC2_KEY }}" | base64 -d > ec2.pem
           chmod 600 ec2.pem
           
           ssh -o StrictHostKeyChecking=no -i ec2.pem ubuntu@${{ secrets.EC2_HOST_PUB }} << EOF
-            export DB_HOST="${{ secrets.DB_HOST }}"
-            export DB_PORT="${{ secrets.DB_PORT }}"
-            export DB_NAME="${{ secrets.DB_NAME }}"
-            export DB_USER="${{ secrets.DB_USER }}"
-            export DB_PASS="${{ secrets.DB_PASS }}"
-            export AES_KEY="${{ secrets.AES_KEY }}"
-            export JWT_KEY="${{ secrets.JWT_KEY }}"
-            export REDIS_HOST="${{ secrets.REDIS_HOST }}"
-            export REDIS_PORT="${{ secrets.REDIS_PORT }}"
-            export RABBITMQ_HOST="${{ secrets.RABBITMQ_HOST }}"
-            export RABBITMQ_PORT="${{ secrets.RABBITMQ_PORT }}"
-            export RABBITMQ_USER_NAME="${{ secrets.RABBITMQ_USER_NAME }}"
-            export RABBITMQ_PASSWORD="${{ secrets.RABBITMQ_PASSWORD }}"
-            export AWS_ACCESS_KEY_ID="${{ secrets.AWS_ACCESS_KEY_ID }}"
-            export AWS_SECRET_ACCESS_KEY="${{ secrets.AWS_SECRET_ACCESS_KEY }}"
+          export DB_HOST="${{ secrets.DB_HOST }}"
+          export DB_PORT="${{ secrets.DB_PORT }}"
+          export DB_NAME="${{ secrets.DB_NAME }}"
+          export DB_USER="${{ secrets.DB_USER }}"
+          export DB_PASS="${{ secrets.DB_PASS }}"
+          export AES_KEY="${{ secrets.AES_KEY }}"
+          export JWT_KEY="${{ secrets.JWT_KEY }}"
+          export REDIS_HOST="${{ secrets.REDIS_HOST }}"
+          export REDIS_PORT="${{ secrets.REDIS_PORT }}"
+          export RABBITMQ_HOST="${{ secrets.RABBITMQ_HOST }}"
+          export RABBITMQ_PORT="${{ secrets.RABBITMQ_PORT }}"
+          export RABBITMQ_USER_NAME="${{ secrets.RABBITMQ_USER_NAME }}"
+          export RABBITMQ_PASSWORD="${{ secrets.RABBITMQ_PASSWORD }}"
+          export AWS_ACCESS_KEY_ID="${{ secrets.AWS_ACCESS_KEY_ID }}"
+          export AWS_SECRET_ACCESS_KEY="${{ secrets.AWS_SECRET_ACCESS_KEY }}"
           
-            mkdir -p /home/ubuntu/firebase
-            echo '${{ secrets.FIREBASE_CONFIG }}' > /home/ubuntu/firebase/rento-firebase.json
+          mkdir -p /home/ubuntu/firebase
+          echo '${{ secrets.FIREBASE_CONFIG }}' > /home/ubuntu/firebase/rento-firebase.json
           
-            aws ecr get-login-password --region ap-northeast-2 | \
-              docker login --username AWS --password-stdin 528782700548.dkr.ecr.ap-northeast-2.amazonaws.com
+          aws ecr get-login-password --region ap-northeast-2 | \
+          docker login --username AWS --password-stdin 528782700548.dkr.ecr.ap-northeast-2.amazonaws.com
           
-            docker stop rento-pub || true
-            docker rm rento-pub || true
-            docker pull ${{ secrets.ECR_REPOSITORY_PUB }}:latest
-            docker run -d \
-              --name rento-pub \
-              --network mynet \
-              --log-driver json-file \
-              --log-opt max-size=10m \
-              --log-opt max-file=3 \
-              -p 8080:8080 \
-              -v /home/ubuntu/firebase:/app/firebase \
-              -v /home/ubuntu/log:/app/log \
-              -v /home/ubuntu/pinpoint-agent-3.0.3:/pinpoint-agent \
-              -e SPRING_PROFILES_ACTIVE=deploy \
-              -e FIREBASE_PATH="/app/firebase/rento-firebase.json" \
-              -e DB_HOST="\$DB_HOST" -e DB_PORT="\$DB_PORT" \
-              -e DB_NAME="\$DB_NAME" -e DB_USER="\$DB_USER" -e DB_PASS="\$DB_PASS" \
-              -e REDIS_HOST="\$REDIS_HOST" -e REDIS_PORT="\$REDIS_PORT" \
-              -e RABBITMQ_HOST="${{ secrets.RABBITMQ_HOST }}" \
-              -e RABBITMQ_PORT="${{ secrets.RABBITMQ_PORT }}" \
-              -e RABBITMQ_USER_NAME="${{ secrets.RABBITMQ_USER_NAME }}" \
-              -e RABBITMQ_PASSWORD="${{ secrets.RABBITMQ_PASSWORD }}" \
-              -e AES_KEY="${{ secrets.AES_KEY }}" \
-              -e JWT_KEY="${{ secrets.JWT_KEY }}" \
-              -e JAVA_TOOL_OPTIONS="-javaagent:/pinpoint-agent/pinpoint-bootstrap-3.0.3.jar -Dpinpoint.agentId=agent-pub -Dpinpoint.applicationName=rento-pub" \
-              ${{ secrets.ECR_REPOSITORY_PUB }}:latest
+          docker stop rento-pub || true
+          docker rm rento-pub || true
+          docker pull ${{ secrets.ECR_REPOSITORY_PUB }}:latest
+          docker run -d \
+          --name rento-pub \
+          --network mynet \
+          --log-driver json-file \
+          --log-opt max-size=10m \
+          --log-opt max-file=3 \
+          -p 8080:8080 \
+          -v /home/ubuntu/firebase:/app/firebase \
+          -v /home/ubuntu/log:/app/log \
+          -v /home/ubuntu/pinpoint-agent-3.0.3:/pinpoint-agent \
+          -e SPRING_PROFILES_ACTIVE=deploy \
+          -e FIREBASE_PATH="/app/firebase/rento-firebase.json" \
+          -e DB_HOST="\$DB_HOST" -e DB_PORT="\$DB_PORT" \
+          -e DB_NAME="\$DB_NAME" -e DB_USER="\$DB_USER" -e DB_PASS="\$DB_PASS" \
+          -e REDIS_HOST="\$REDIS_HOST" -e REDIS_PORT="\$REDIS_PORT" \
+          -e RABBITMQ_HOST="${{ secrets.RABBITMQ_HOST }}" \
+          -e RABBITMQ_PORT="${{ secrets.RABBITMQ_PORT }}" \
+          -e RABBITMQ_USER_NAME="${{ secrets.RABBITMQ_USER_NAME }}" \
+          -e RABBITMQ_PASSWORD="${{ secrets.RABBITMQ_PASSWORD }}" \
+          -e AES_KEY="${{ secrets.AES_KEY }}" \
+          -e JWT_KEY="${{ secrets.JWT_KEY }}" \
+          -e JAVA_TOOL_OPTIONS="-javaagent:/pinpoint-agent/pinpoint-bootstrap-3.0.3.jar -Dpinpoint.agentId=agent-pub -Dpinpoint.applicationName=rento-pub" \
+          ${{ secrets.ECR_REPOSITORY_PUB }}:latest
           
-            docker image prune -f          
+          docker image prune -f
 
-      # ───── Deploy rento-sub on EC2 (Instance 3) ─────
-      - name: Deploy rento-sub on third EC2
-        run: |
+
+      # ───── Build and Deploy rento-sub ─────
+      - name: Build and Deploy rento-sub
+        if: needs.changes.outputs.sub == 'true' || needs.changes.outputs.all == 'true'
+        run:
+          docker build -t rento-sub ./rento-sub
+
+          docker tag rento-sub:latest ${{ secrets.ECR_REPOSITORY_SUB }}:latest
+          docker push ${{ secrets.ECR_REPOSITORY_SUB }}:latest
           echo "${{ secrets.EC2_KEY }}" | base64 -d > ec2.pem
           chmod 600 ec2.pem
           
           ssh -o StrictHostKeyChecking=no -i ec2.pem ubuntu@${{ secrets.EC2_HOST_SUB }} << EOF
-            export DB_HOST="${{ secrets.DB_HOST }}"
-            export DB_PORT="${{ secrets.DB_PORT }}"
-            export DB_NAME="${{ secrets.DB_NAME }}"
-            export DB_USER="${{ secrets.DB_USER }}"
-            export DB_PASS="${{ secrets.DB_PASS }}"
-            export AES_KEY="${{ secrets.AES_KEY }}"
-            export JWT_KEY="${{ secrets.JWT_KEY }}"
-            export REDIS_HOST="${{ secrets.REDIS_HOST }}"
-            export REDIS_PORT="${{ secrets.REDIS_PORT }}"
-            export RABBITMQ_HOST="${{ secrets.RABBITMQ_HOST }}"
-            export RABBITMQ_PORT="${{ secrets.RABBITMQ_PORT }}"
-            export RABBITMQ_USER_NAME="${{ secrets.RABBITMQ_USER_NAME }}"
-            export RABBITMQ_PASSWORD="${{ secrets.RABBITMQ_PASSWORD }}"
-            export AWS_ACCESS_KEY_ID="${{ secrets.AWS_ACCESS_KEY_ID }}"
-            export AWS_SECRET_ACCESS_KEY="${{ secrets.AWS_SECRET_ACCESS_KEY }}"
+          export DB_HOST="${{ secrets.DB_HOST }}"
+          export DB_PORT="${{ secrets.DB_PORT }}"
+          export DB_NAME="${{ secrets.DB_NAME }}"
+          export DB_USER="${{ secrets.DB_USER }}"
+          export DB_PASS="${{ secrets.DB_PASS }}"
+          export AES_KEY="${{ secrets.AES_KEY }}"
+          export JWT_KEY="${{ secrets.JWT_KEY }}"
+          export REDIS_HOST="${{ secrets.REDIS_HOST }}"
+          export REDIS_PORT="${{ secrets.REDIS_PORT }}"
+          export RABBITMQ_HOST="${{ secrets.RABBITMQ_HOST }}"
+          export RABBITMQ_PORT="${{ secrets.RABBITMQ_PORT }}"
+          export RABBITMQ_USER_NAME="${{ secrets.RABBITMQ_USER_NAME }}"
+          export RABBITMQ_PASSWORD="${{ secrets.RABBITMQ_PASSWORD }}"
+          export AWS_ACCESS_KEY_ID="${{ secrets.AWS_ACCESS_KEY_ID }}"
+          export AWS_SECRET_ACCESS_KEY="${{ secrets.AWS_SECRET_ACCESS_KEY }}"
           
-            mkdir -p /home/ubuntu/firebase
-            echo '${{ secrets.FIREBASE_CONFIG }}' > /home/ubuntu/firebase/rento-firebase.json
+          mkdir -p /home/ubuntu/firebase
+          echo '${{ secrets.FIREBASE_CONFIG }}' > /home/ubuntu/firebase/rento-firebase.json
           
-            aws ecr get-login-password --region ap-northeast-2 | \
-              docker login --username AWS --password-stdin 528782700548.dkr.ecr.ap-northeast-2.amazonaws.com
+          aws ecr get-login-password --region ap-northeast-2 | \
+          docker login --username AWS --password-stdin 528782700548.dkr.ecr.ap-northeast-2.amazonaws.com
           
-            docker stop rento-sub || true
-            docker rm rento-sub || true
-            docker pull ${{ secrets.ECR_REPOSITORY_SUB }}:latest
-            docker run -d \
-              --name rento-sub \
-              --network mynet \
-              --log-driver json-file \
-              --log-opt max-size=10m \
-              --log-opt max-file=3 \
-              -p 8080:8080 \
-              -v /home/ubuntu/firebase:/app/firebase \
-              -v /home/ubuntu/log:/app/log \
-              -v /home/ubuntu/pinpoint-agent-3.0.3:/pinpoint-agent \
-              -e SPRING_PROFILES_ACTIVE=deploy \
-              -e FIREBASE_PATH="/app/firebase/rento-firebase.json" \
-              -e DB_HOST="\$DB_HOST" -e DB_PORT="\$DB_PORT" \
-              -e DB_NAME="\$DB_NAME" -e DB_USER="\$DB_USER" -e DB_PASS="\$DB_PASS" \
-              -e REDIS_HOST="\$REDIS_HOST" -e REDIS_PORT="\$REDIS_PORT" \
-              -e RABBITMQ_HOST="${{ secrets.RABBITMQ_HOST }}" \
-              -e RABBITMQ_PORT="${{ secrets.RABBITMQ_PORT }}" \
-              -e RABBITMQ_USER_NAME="${{ secrets.RABBITMQ_USER_NAME }}" \
-              -e RABBITMQ_PASSWORD="${{ secrets.RABBITMQ_PASSWORD }}" \
-              -e AES_KEY="${{ secrets.AES_KEY }}" \
-              -e JWT_KEY="${{ secrets.JWT_KEY }}" \
-              -e JAVA_TOOL_OPTIONS="-javaagent:/pinpoint-agent/pinpoint-bootstrap-3.0.3.jar -Dpinpoint.agentId=agent-sub -Dpinpoint.applicationName=rento-sub" \
-              ${{ secrets.ECR_REPOSITORY_SUB }}:latest
+          docker stop rento-sub || true
+          docker rm rento-sub || true
+          docker pull ${{ secrets.ECR_REPOSITORY_SUB }}:latest
+          docker run -d \
+          --name rento-sub \
+          --network mynet \
+          --log-driver json-file \
+          --log-opt max-size=10m \
+          --log-opt max-file=3 \
+          -p 8080:8080 \
+          -v /home/ubuntu/firebase:/app/firebase \
+          -v /home/ubuntu/log:/app/log \
+          -v /home/ubuntu/pinpoint-agent-3.0.3:/pinpoint-agent \
+          -e SPRING_PROFILES_ACTIVE=deploy \
+          -e FIREBASE_PATH="/app/firebase/rento-firebase.json" \
+          -e DB_HOST="\$DB_HOST" -e DB_PORT="\$DB_PORT" \
+          -e DB_NAME="\$DB_NAME" -e DB_USER="\$DB_USER" -e DB_PASS="\$DB_PASS" \
+          -e REDIS_HOST="\$REDIS_HOST" -e REDIS_PORT="\$REDIS_PORT" \
+          -e RABBITMQ_HOST="${{ secrets.RABBITMQ_HOST }}" \
+          -e RABBITMQ_PORT="${{ secrets.RABBITMQ_PORT }}" \
+          -e RABBITMQ_USER_NAME="${{ secrets.RABBITMQ_USER_NAME }}" \
+          -e RABBITMQ_PASSWORD="${{ secrets.RABBITMQ_PASSWORD }}" \
+          -e AES_KEY="${{ secrets.AES_KEY }}" \
+          -e JWT_KEY="${{ secrets.JWT_KEY }}" \
+          -e JAVA_TOOL_OPTIONS="-javaagent:/pinpoint-agent/pinpoint-bootstrap-3.0.3.jar -Dpinpoint.agentId=agent-sub -Dpinpoint.applicationName=rento-sub" \
+          ${{ secrets.ECR_REPOSITORY_SUB }}:latest
           
-            docker image prune -f
+          docker image prune -f
