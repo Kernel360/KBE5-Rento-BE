@@ -60,5 +60,4 @@ public class CycleDataSummary {
         this.sum = cycleData.getSum();
         this.battery = cycleData.getBattery();
     }
-
 }
