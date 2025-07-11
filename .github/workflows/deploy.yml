@@ -65,7 +65,7 @@ jobs:
       # ───── Build and Deploy rento-api ─────
       - name: Build and Deploy rento-api
         if: needs.changes.outputs.api == 'true' || needs.changes.outputs.all == 'true'
-        run:
+        run: |
           # build docker image
           docker build -t rento-api ./rento-api
           
@@ -133,7 +133,7 @@ jobs:
       # ───── Build and Deploy rento-pub ─────
       - name: Build and Deploy rento-pub
         if: needs.changes.outputs.pub == 'true' || needs.changes.outputs.all == 'true'
-        run:
+        run: |
           # build docker image
           docker build -t rento-pub ./rento-pub
           
@@ -201,7 +201,7 @@ jobs:
       # ───── Build and Deploy rento-sub ─────
       - name: Build and Deploy rento-sub
         if: needs.changes.outputs.sub == 'true' || needs.changes.outputs.all == 'true'
-        run:
+        run: |
           docker build -t rento-sub ./rento-sub
 
           docker tag rento-sub:latest ${{ secrets.ECR_REPOSITORY_SUB }}:latest
