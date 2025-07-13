@@ -65,7 +65,7 @@ public class CompanyControllerImpl implements CompanyController {
     @PostMapping("/check-bizNumber")
     public ResponseEntity<ApiResponse<Boolean>> checkAvailableBizNumber(@RequestBody @Valid companyBizNumberRequest request) {
         CompanyCommand.CheckBizNumber command = CompanyRequestMapper.toCommand(request);
-        boolean available = !companyService.isExistsBizNumber(command.getBizNumber());
+        boolean available = !companyService.isAvailableBizNumber(command.getBizNumber());
         return ResEntityFactory.toResponse(ApiResultCode.SUCCESS, available);
     }
 
