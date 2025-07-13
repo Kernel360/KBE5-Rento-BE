@@ -62,7 +62,7 @@ public class CompanyServiceImpl implements CompanyService {
     }
 
     @Override
-    public boolean isExistsBizNumber(int bizNumber) {
+    public boolean isAvailableBizNumber(int bizNumber) {
         return !companyReader.existsByBizNumber(bizNumber);
     }
 

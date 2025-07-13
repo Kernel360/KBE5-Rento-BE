@@ -12,6 +12,6 @@ public interface CompanyService {
     boolean delete(Long id);
     CompanyInfo getCompanyDetail(Long id);
     List<CompanyInfo> getCompanyList();
-    boolean isExistsBizNumber(int bizNumber);
+    boolean isAvailableBizNumber(int bizNumber);
     CompanyInfo findByCompanyCode(String code);
 }
