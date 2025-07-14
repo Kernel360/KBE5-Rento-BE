@@ -43,6 +43,8 @@ spring:
     listener:
       simple:
         concurrency: 6
+        max-concurrency: 12
+        prefetch: 500
 
 fcm:
   firebase_config_path: ${FIREBASE_PATH}
