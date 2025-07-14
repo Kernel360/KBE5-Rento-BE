@@ -8,6 +8,7 @@ import com.kbe5.domain.stream.service.dto.CycleInfo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -19,6 +20,7 @@ public class StreamSender {
 
     private final RabbitTemplate rabbitTemplate;
 
+    @Async
     public void send(EventCommand.CycleEventCommand command,Long mdn, DeviceToken deviceToken) {
 
         List<CycleData> cycleData = command.toCycleInfoEntities(deviceToken);
