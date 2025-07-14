@@ -17,6 +17,7 @@ import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -35,6 +36,7 @@ public class EventSender {
         this.queue = queue;
     }
 
+    @Async
     public void send(EventCommand.CycleEventCommand command,Long mdn, DeviceToken deviceToken) {
         List<CycleData> cycleData = command.toCycleInfoEntities(deviceToken);
         CycleEvent event = command.of(deviceToken, mdn, cycleData);
