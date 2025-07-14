@@ -15,7 +15,7 @@ spring:
     username: ${DB_USER}
     password: ${DB_PASS}
     hikari:
-      maximum-pool-size: 40
+      maximum-pool-size: 20
 
   jackson:
     time-zone: Asia/Seoul
