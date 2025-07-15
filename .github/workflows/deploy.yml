@@ -262,6 +262,71 @@ jobs:
           ${{ secrets.ECR_REPOSITORY_PUB }}:latest
           
           docker image prune -f
+
+      # ───── Build and Deploy rento-pub-3 ─────
+      - name: Build and Deploy rento-pub-3
+        if: needs.changes.outputs.pub == 'true' || needs.changes.outputs.all == 'true'
+        run: |
+          # build docker image
+          docker build -t rento-pub ./rento-pub
+          
+          # tag and push
+          docker tag rento-pub:latest ${{ secrets.ECR_REPOSITORY_PUB }}:latest
+          docker push ${{ secrets.ECR_REPOSITORY_PUB }}:latest
+          
+          # pull and deploy
+          echo "${{ secrets.EC2_KEY }}" | base64 -d > ec2.pem
+          chmod 600 ec2.pem
+          
+          ssh -o StrictHostKeyChecking=no -i ec2.pem ubuntu@${{ secrets.EC2_HOST_PUB_3 }} << EOF
+          export DB_HOST="${{ secrets.DB_HOST }}"
+          export DB_PORT="${{ secrets.DB_PORT }}"
+          export DB_NAME="${{ secrets.DB_NAME }}"
+          export DB_USER="${{ secrets.DB_USER }}"
+          export DB_PASS="${{ secrets.DB_PASS }}"
+          export AES_KEY="${{ secrets.AES_KEY }}"
+          export JWT_KEY="${{ secrets.JWT_KEY }}"
+          export REDIS_HOST="${{ secrets.REDIS_HOST }}"
+          export REDIS_PORT="${{ secrets.REDIS_PORT }}"
+          export RABBITMQ_HOST="${{ secrets.RABBITMQ_HOST }}"
+          export RABBITMQ_PORT="${{ secrets.RABBITMQ_PORT }}"
+          export RABBITMQ_USER_NAME="${{ secrets.RABBITMQ_USER_NAME }}"
+          export RABBITMQ_PASSWORD="${{ secrets.RABBITMQ_PASSWORD }}"
+          export AWS_ACCESS_KEY_ID="${{ secrets.AWS_ACCESS_KEY_ID }}"
+          export AWS_SECRET_ACCESS_KEY="${{ secrets.AWS_SECRET_ACCESS_KEY }}"
+          
+          mkdir -p /home/ubuntu/firebase
+          echo '${{ secrets.FIREBASE_CONFIG }}' > /home/ubuntu/firebase/rento-firebase.json
+          
+          aws ecr get-login-password --region ap-northeast-2 | \
+          docker login --username AWS --password-stdin 528782700548.dkr.ecr.ap-northeast-2.amazonaws.com
+          
+          docker stop rento-pub || true
+          docker rm rento-pub || true
+          docker pull ${{ secrets.ECR_REPOSITORY_PUB }}:latest
+          docker run -d \
+          --name rento-pub \
+          --network mynet \
+          --log-driver json-file \
+          --log-opt max-size=10m \
+          --log-opt max-file=3 \
+          -p 8080:8080 \
+          -v /home/ubuntu/firebase:/app/firebase \
+          -v /home/ubuntu/log:/app/log \
+          -e SPRING_PROFILES_ACTIVE=deploy \
+          -e FIREBASE_PATH="/app/firebase/rento-firebase.json" \
+          -e DB_HOST="\$DB_HOST" -e DB_PORT="\$DB_PORT" \
+          -e DB_NAME="\$DB_NAME" -e DB_USER="\$DB_USER" -e DB_PASS="\$DB_PASS" \
+          -e REDIS_HOST="\$REDIS_HOST" -e REDIS_PORT="\$REDIS_PORT" \
+          -e RABBITMQ_HOST="${{ secrets.RABBITMQ_HOST }}" \
+          -e RABBITMQ_PORT="${{ secrets.RABBITMQ_PORT }}" \
+          -e RABBITMQ_USER_NAME="${{ secrets.RABBITMQ_USER_NAME }}" \
+          -e RABBITMQ_PASSWORD="${{ secrets.RABBITMQ_PASSWORD }}" \
+          -e AES_KEY="${{ secrets.AES_KEY }}" \
+          -e JWT_KEY="${{ secrets.JWT_KEY }}" \
+          ${{ secrets.ECR_REPOSITORY_PUB }}:latest
+          
+          docker image prune -f
           
 
       # ───── Build and Deploy rento-sub ─────
