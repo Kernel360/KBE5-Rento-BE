@@ -14,6 +14,7 @@ import com.kbe5.domain.event.entity.GeofenceEvent;
 import com.kbe5.pub.amqp.EventSender;
 import com.kbe5.pub.amqp.NotificationSender;
 import com.kbe5.pub.amqp.StreamSender;
+import com.kbe5.pub.cache.CacheManager;
 import com.kbe5.pub.dto.request.cycleinfo.CycleEventRequest;
 import com.kbe5.pub.dto.request.geofence.GeofenceEventRequest;
 import com.kbe5.pub.dto.request.onoff.OffEventRequest;
@@ -97,9 +98,14 @@ public class EventController {
     ) {
         long start = System.currentTimeMillis();
 
-        log.info("count : {}", count++);
         long t1 = System.currentTimeMillis();
-        DeviceToken deviceToken = deviceService.findDeviceToken(token);
+        DeviceToken deviceToken = CacheManager.getTokenCache().get(token, t -> {
+            log.info("DB loading for token {}", t);
+            count++;
+            return deviceService.findDeviceToken(t);
+        });
+
+        log.info("count : {}", count);
         long t2 = System.currentTimeMillis();
         log.info("find token {} ms", t2 - t1);
         Long mdn = request.mdn();
