@@ -195,6 +195,21 @@ jobs:
           ${{ secrets.ECR_REPOSITORY_PUB }}:latest
           
           docker image prune -f
+
+      # ───── Build and Deploy rento-pub-2 ─────
+      - name: Build and Deploy rento-pub-2
+        if: needs.changes.outputs.pub == 'true' || needs.changes.outputs.all == 'true'
+        run: |
+          # build docker image
+          docker build -t rento-pub ./rento-pub
+          
+          # tag and push
+          docker tag rento-pub:latest ${{ secrets.ECR_REPOSITORY_PUB }}:latest
+          docker push ${{ secrets.ECR_REPOSITORY_PUB }}:latest
+          
+          # pull and deploy
+          echo "${{ secrets.EC2_KEY }}" | base64 -d > ec2.pem
+          chmod 600 ec2.pem
           
           ssh -o StrictHostKeyChecking=no -i ec2.pem ubuntu@${{ secrets.EC2_HOST_PUB_2 }} << EOF
           export DB_HOST="${{ secrets.DB_HOST }}"
@@ -247,7 +262,7 @@ jobs:
           ${{ secrets.ECR_REPOSITORY_PUB }}:latest
           
           docker image prune -f
-
+          
 
       # ───── Build and Deploy rento-sub ─────
       - name: Build and Deploy rento-sub
