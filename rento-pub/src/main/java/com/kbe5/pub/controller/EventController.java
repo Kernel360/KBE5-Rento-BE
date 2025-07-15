@@ -98,16 +98,21 @@ public class EventController {
         long start = System.currentTimeMillis();
 
         log.info("count : {}", count++);
+        long t1 = System.currentTimeMillis();
         DeviceToken deviceToken = deviceService.findDeviceToken(token);
+        long t2 = System.currentTimeMillis();
+        log.info("find token {} ms", t2 - t1);
         Long mdn = request.mdn();
 
         //cycle-info 큐 5221
         EventCommand.CycleEventCommand command = EventRequestMapper.cycleEventCommand(request);
         eventSender.send(command, mdn, deviceToken);
+        long t3 = System.currentTimeMillis();
+        log.info("Event send took {} ms", t3 - t2);
         streamSender.send(command, mdn, deviceToken);
 
-
         long end = System.currentTimeMillis();
+        log.info("Event send stream took {} ms", end - t3);
         log.info("END /cycle-info mdn: {}, elapsed={} ms", request.mdn(), (end - start));
 
         //ok 요청이 4300
