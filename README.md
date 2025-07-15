@@ -1,6 +1,7 @@
 # 렌토(RENTO) ✨
 
 <br>
+
 ## 🎀 프로젝트 소개
 
 🏷 **프로젝트 명 : 렌토(RENTO)**
@@ -47,12 +48,14 @@
 -  차셰어링 서비스 운영 기업
 
 
+<br>
 
 ## 💌 서비스 화면 및 기능 소개
 
 
 
 <br>
+
 ## 🛠 기술 스택
 
 ### 🌐 WEB
@@ -81,6 +84,7 @@
 ![GitHub](https://img.shields.io/badge/GitHub-181717?style=flat&logo=github&logoColor=white)
 
 <br>
+
 ## 🗂 프로젝트 구조 (멀티 모듈)
 <details>
   <summary>프로젝트 구조를 보시려면 클릭해주세요!</summary>
@@ -307,6 +311,7 @@
 
 
 <br>
+
 ## 📜 프로젝트 산출물
 
 ### 시스템 아키텍쳐
@@ -324,6 +329,7 @@
 
 
 <br>
+
 ## 💙 팀원 소개
 | ![](https://avatars.githubusercontent.com/u/125844213?v=4) | ![](https://avatars.githubusercontent.com/u/67327887?v=4) | ![](https://avatars.githubusercontent.com/u/97105216?v=4) | ![](https://avatars.githubusercontent.com/u/110446078?v=4) | ![](https://avatars.githubusercontent.com/u/61807816?v=4) |
 |:--:|:--:|:--:|:--:|:--:|
