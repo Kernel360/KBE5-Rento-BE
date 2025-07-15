@@ -38,8 +38,8 @@ public class EventSender {
 
         int index = roundRobinIndex.getAndUpdate(i -> (i + 1) % queueNames.size());
         String queueName = queueNames.get(index);
-        log.info("Sending cycle event to queue: {}", queueName);
-        log.info("sender : {}",command.getClass().getName());
+//        log.info("Sending cycle event to queue: {}", queueName);
+//        log.info("sender : {}",command.getClass().getName());
         List<CycleData> cycleInfoEntities = command.toCycleInfoEntities(deviceToken);
         CycleEvent cycleEvent = command.of(deviceToken, mdn, cycleInfoEntities);
         template.convertAndSend(queueName, cycleEvent);
