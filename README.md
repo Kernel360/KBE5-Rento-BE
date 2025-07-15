@@ -82,7 +82,6 @@
   <summary>프로젝트 구조를 보시려면 클릭해주세요!</summary>
 
   ```markdown
-.
 ├── build
 │   └── reports
 │       └── problems
