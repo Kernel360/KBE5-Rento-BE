@@ -80,10 +80,10 @@
 
 
 ## 🗂 프로젝트 구조 (멀티 모듈)
+<details>
+  <summary>프로젝트 구조를 보시려면 클릭해주세요!</summary>
 
-### BE
-
-```markdown
+  ```markdown
 .
 ├── build
 │   └── reports
@@ -300,6 +300,10 @@
             └── resources
 
 ```
+
+</details>
+
+
 
 
 ## 📜 프로젝트 산출물
