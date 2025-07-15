@@ -40,6 +40,8 @@ import java.util.List;
 @RequestMapping("/api/events")
 public class EventController {
 
+    public static int count = 0;
+
     private final EventSender eventSender;
     private final DriveService driveService;
     private final DeviceService deviceService;
@@ -93,10 +95,9 @@ public class EventController {
         @RequestHeader("X-Device-Token") String token,
         @RequestBody @Validated CycleEventRequest request
     ) {
+        log.info("count : {}", count++);
         DeviceToken deviceToken = deviceService.findDeviceToken(token);
         Long mdn = request.mdn();
-
-        //6000 -> 5200 스레드 타고 들어옴
 
         //cycle-info 큐 5221
         EventCommand.CycleEventCommand command = EventRequestMapper.cycleEventCommand(request);
