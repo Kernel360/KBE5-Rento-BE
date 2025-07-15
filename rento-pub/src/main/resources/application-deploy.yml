@@ -31,7 +31,7 @@ spring:
       port: ${REDIS_PORT}
       lettuce:
         pool:
-          max-active: 100
+          max-active: 50
           max-idle: 10
           min-idle: 5
 
@@ -54,8 +54,8 @@ server:
   port: 8080
   tomcat:
     threads:
-      max: 1200
+      max: 800
       min-spare: 200
-    accept-count: 600 # 대기 큐
+    accept-count: 400 # 대기 큐
     connection-timeout: 50000 # 타임아웃x
     max-connections: 8192 #서버가 수락하고 처리할 수 있는 최대 연결수
