@@ -95,6 +95,8 @@ public class EventController {
         @RequestHeader("X-Device-Token") String token,
         @RequestBody @Validated CycleEventRequest request
     ) {
+        long start = System.currentTimeMillis();
+
         log.info("count : {}", count++);
         DeviceToken deviceToken = deviceService.findDeviceToken(token);
         Long mdn = request.mdn();
@@ -103,6 +105,10 @@ public class EventController {
         EventCommand.CycleEventCommand command = EventRequestMapper.cycleEventCommand(request);
         eventSender.send(command, mdn, deviceToken);
         streamSender.send(command, mdn, deviceToken);
+
+
+        long end = System.currentTimeMillis();
+        log.info("END /cycle-info mdn: {}, elapsed={} ms", request.mdn(), (end - start));
 
         //ok 요청이 4300
         return ResponseEntity.ok(EventResponse.fromEntity(DeviceResultCode.SUCCESS, mdn));
