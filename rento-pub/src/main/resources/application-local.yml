@@ -39,9 +39,9 @@ server:
   port: 8081
   tomcat:
     threads:
-      max: 200
+      max: 800
       min-spare: 10
-    accept-count: 100
+    accept-count: 400
 
 fcm:
   firebase_config_path: firebase/rento-f1d61-firebase-adminsdk-fbsvc-bd76cc388d.json
