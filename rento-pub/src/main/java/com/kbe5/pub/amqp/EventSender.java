@@ -12,6 +12,7 @@ import com.kbe5.domain.event.entity.CycleEvent;
 import com.kbe5.domain.event.entity.Event;
 import com.kbe5.domain.event.entity.GeofenceEvent;
 import com.kbe5.domain.event.entity.OnOffEvent;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -21,54 +22,46 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class EventSender {
 
     private final RabbitTemplate template;
-
-    private final Queue queue;
-
-    @Autowired
-    public EventSender(RabbitTemplate template, @Qualifier("cycleInfo") Queue queue, StreamSender streamSender) {
-        this.template = template;
-        this.queue = queue;
-    }
+    private final List<String> queueNames = List.of("cycle-info-1", "cycle-info-2", "cycle-info-3");
+    private final AtomicInteger roundRobinIndex = new AtomicInteger(0);
 
     @Async
-    public void send(EventCommand.CycleEventCommand command,Long mdn, DeviceToken deviceToken) {
-        List<CycleData> cycleData = command.toCycleInfoEntities(deviceToken);
-        CycleEvent event = command.of(deviceToken, mdn, cycleData);
+    public void send(EventCommand.CycleEventCommand command, Long mdn, DeviceToken deviceToken) {
 
-        event.validateMdnMatch(mdn);
-
-        log.info("sender : {}",event.getClass().getName());
-        template.convertAndSend(queue.getName(), event);
+        int index = roundRobinIndex.getAndUpdate(i -> (i + 1) % queueNames.size());
+        String queueName = queueNames.get(index);
+        log.info("Sending cycle event to queue: {}", queueName);
+        log.info("sender : {}",command.getClass().getName());
+        List<CycleData> cycleInfoEntities = command.toCycleInfoEntities(deviceToken);
+        CycleEvent cycleEvent = command.of(deviceToken, mdn, cycleInfoEntities);
+        template.convertAndSend(queueName, cycleEvent);
     }
 
     public void send(EventCommand.OnEventCommand command, Long mdn, DeviceToken deviceToken) {
+        log.info("sender : {}", command.getClass().getName());
         OnOffEvent event = command.toEntity(deviceToken);
-        event.validateMdnMatch(mdn);
-
-        log.info("sender : {}",event.getClass().getName());
-        template.convertAndSend(queue.getName(), event);
+        template.convertAndSend("cycle-info-1", event);
     }
 
     public void send(EventCommand.OffEventCommand command, Long mdn, DeviceToken deviceToken) {
+        log.info("sender : {}",command.getClass().getName());
         OnOffEvent event = command.toEntity(deviceToken);
-        event.validateMdnMatch(mdn);
-
-        log.info("sender : {}",event.getClass().getName());
-        template.convertAndSend(queue.getName(), event);
+        template.convertAndSend("cycle-info-1", event);
     }
 
 
     public void send(GeofenceEventCommand command, Long mdn, DeviceToken deviceToken) {
+        log.info("sender : {}",command.getClass().getName());
         GeofenceEvent event = command.toEntity(deviceToken);
-        event.validateMdnMatch(mdn);
-
-        log.info("sender : {}",event.getClass().getName());
-        template.convertAndSend(queue.getName(), event);
+        template.convertAndSend("cycle-info-1", event);
     }
 }
+

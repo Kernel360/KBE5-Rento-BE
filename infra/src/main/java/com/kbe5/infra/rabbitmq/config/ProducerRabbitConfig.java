@@ -18,8 +18,18 @@ public class ProducerRabbitConfig {
 
     //큐 정의
     @Bean
-    public Queue cycleInfo() {
-        return new Queue("cycle-info");
+    public Queue cycleInfo1() {
+        return new Queue("cycle-info-1");
+    }
+    //큐 정의
+    @Bean
+    public Queue cycleInfo2() {
+        return new Queue("cycle-info-2");
+    }
+    //큐 정의
+    @Bean
+    public Queue cycleInfo3() {
+        return new Queue("cycle-info-3");
     }
 
     //알림 큐 정의
