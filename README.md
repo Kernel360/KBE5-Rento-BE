@@ -1,6 +1,6 @@
 # KBE5-Rento-BE
 
-# 동감(Ditto) ✨
+# 렌토(RENTO) ✨
 
 ## 🎀 프로젝트 소개
 
