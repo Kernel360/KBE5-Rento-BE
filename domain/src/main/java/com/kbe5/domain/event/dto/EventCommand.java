@@ -1,5 +1,6 @@
 package com.kbe5.domain.event.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.kbe5.domain.device.entity.DeviceToken;
 import com.kbe5.domain.event.entity.CycleData;
 import com.kbe5.domain.event.entity.CycleEvent;
@@ -14,15 +15,21 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 public class EventCommand {
     @Getter
     @SuperBuilder
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
     public static abstract class Event{
         private Long mdn;
+        @JsonProperty("oTime")
         private LocalDateTime oTime;
         private Long driveId;
         private String terminalId;
@@ -36,11 +43,13 @@ public class EventCommand {
         private Integer speed;
         private Long currentAccumulatedDistance;
         private EventType eventType;
-
+        private String token;
     }
 
     @Getter
     @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
     public static class CycleInfoCommand{
         private Long driveId;
         private Integer sec;
@@ -71,6 +80,7 @@ public class EventCommand {
 
     @Getter
     @SuperBuilder
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
     public static class CycleEventCommand extends Event{
         private Integer cycleCount;
         private List<EventCommand.CycleInfoCommand> cycleInfoCommands;
@@ -104,6 +114,7 @@ public class EventCommand {
 
     @Getter
     @SuperBuilder
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
     public static class GeofenceEventCommand extends Event{
         private Integer geoGrpId;
         private Integer geoPid;
@@ -135,6 +146,7 @@ public class EventCommand {
 
     @Getter
     @SuperBuilder
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
     public static class OnEventCommand extends Event{
         private LocalDateTime onTime;
         private LocalDateTime offTime;
@@ -165,6 +177,7 @@ public class EventCommand {
 
     @Getter
     @SuperBuilder
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
     public static class OffEventCommand extends Event{
 
         private LocalDateTime onTime;

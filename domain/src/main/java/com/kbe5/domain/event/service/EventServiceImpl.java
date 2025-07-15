@@ -1,5 +1,8 @@
 package com.kbe5.domain.event.service;
 
+import com.kbe5.domain.device.entity.DeviceToken;
+import com.kbe5.domain.device.service.DeviceStore;
+import com.kbe5.domain.event.dto.EventCommand;
 import com.kbe5.domain.event.entity.Event;
 import com.kbe5.domain.event.enums.EventType;
 import com.kbe5.domain.event.handler.EventHandler;
@@ -20,21 +23,28 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class EventServiceImpl implements EventService{
     private final Map<EventType, EventHandler> eventHandlers;
+    private final DeviceStore deviceStore;
 
     @Autowired
-    public EventServiceImpl(List<EventHandler> handlers) {
+    public EventServiceImpl(List<EventHandler> handlers, DeviceStore deviceStore) {
         this.eventHandlers = handlers.stream()
             .collect(Collectors.toMap(EventHandler::getEventType, Function.identity()));
+        this.deviceStore = deviceStore;
     }
 
     @Transactional
-    public void processEvent(Event event) {
+    public void processCommand(EventCommand.Event command) {
+        String token = command.getToken();
+        DeviceToken deviceToken = deviceStore.findDeviceToken(token);
+        EventHandler handler = eventHandlers.get(command.getEventType());
 
-        log.info("processEvent receive {}", event.getClass().getName());
+        log.info("processEvent receive {}", command.getClass().getName());
+        log.info("processEvent Token {}", deviceToken);
+        log.info("processEvent eventType {}", command.getEventType());
+        log.info("processEvent handler{}", handler.getClass().getName());
 
-        EventHandler handler = eventHandlers.get(event.getEventType());
         if (handler != null) {
-            handler.handle(event);
+            handler.handle(command, deviceToken);
         }else {
             throw new DeviceException(DeviceResultCode.UNDEFINED_ERROR);
         }

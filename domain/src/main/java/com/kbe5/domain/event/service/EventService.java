@@ -1,8 +1,10 @@
 package com.kbe5.domain.event.service;
 
-import com.kbe5.domain.event.entity.Event;
+import com.kbe5.domain.event.dto.EventCommand;
+import com.kbe5.domain.event.dto.EventCommand.Event;
 import java.util.List;
 
 public interface EventService {
-    void processEvent(Event event);
+
+    void processCommand(EventCommand.Event command);
 }

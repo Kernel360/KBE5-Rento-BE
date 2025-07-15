@@ -37,38 +37,36 @@ public class EventSender {
     }
 
     @Async
-    public void send(EventCommand.CycleEventCommand command,Long mdn, DeviceToken deviceToken) {
-        List<CycleData> cycleData = command.toCycleInfoEntities(deviceToken);
-        CycleEvent event = command.of(deviceToken, mdn, cycleData);
+    public void send(EventCommand.CycleEventCommand command) {
+//        List<CycleData> cycleData = command.toCycleInfoEntities(deviceToken);
+//        CycleEvent event = command.of(deviceToken, mdn, cycleData);
 
-        event.validateMdnMatch(mdn);
+//        event.validateMdnMatch(mdn);
+//        log.info("send json : {}", command.getOTime());
 
-        log.info("sender : {}",event.getClass().getName());
-        template.convertAndSend(queue.getName(), event);
+        log.info("sender : {}",command.getClass().getName());
+        template.convertAndSend(queue.getName(), command);
     }
 
-    public void send(EventCommand.OnEventCommand command, Long mdn, DeviceToken deviceToken) {
-        OnOffEvent event = command.toEntity(deviceToken);
-        event.validateMdnMatch(mdn);
-
-        log.info("sender : {}",event.getClass().getName());
-        template.convertAndSend(queue.getName(), event);
+    public void send(EventCommand.OnEventCommand command) {
+//        OnOffEvent event = command.toEntity(deviceToken);
+//        event.validateMdnMatch(mdn);
+        log.info("sender : {}",command.getClass().getName());
+        template.convertAndSend(queue.getName(), command);
     }
 
-    public void send(EventCommand.OffEventCommand command, Long mdn, DeviceToken deviceToken) {
-        OnOffEvent event = command.toEntity(deviceToken);
-        event.validateMdnMatch(mdn);
-
-        log.info("sender : {}",event.getClass().getName());
-        template.convertAndSend(queue.getName(), event);
+    public void send(EventCommand.OffEventCommand command) {
+//        OnOffEvent event = command.toEntity(deviceToken);
+//        event.validateMdnMatch(mdn);
+        log.info("sender : {}",command.getClass().getName());
+        template.convertAndSend(queue.getName(), command);
     }
 
 
-    public void send(GeofenceEventCommand command, Long mdn, DeviceToken deviceToken) {
-        GeofenceEvent event = command.toEntity(deviceToken);
-        event.validateMdnMatch(mdn);
-
-        log.info("sender : {}",event.getClass().getName());
-        template.convertAndSend(queue.getName(), event);
+    public void send(GeofenceEventCommand command) {
+//        GeofenceEvent event = command.toEntity(deviceToken);
+//        event.validateMdnMatch(mdn);
+        log.info("sender : {}",command.getClass().getName());
+        template.convertAndSend(queue.getName(), command);
     }
 }

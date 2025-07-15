@@ -20,13 +20,13 @@ public class StreamSender {
 
     private final RabbitTemplate rabbitTemplate;
 
-    @Async
-    public void send(EventCommand.CycleEventCommand command,Long mdn, DeviceToken deviceToken) {
-
-        List<CycleData> cycleData = command.toCycleInfoEntities(deviceToken);
-        CycleEvent cycle = command.of(deviceToken, mdn, cycleData);
-
-        rabbitTemplate.convertAndSend("", "cycle-info-stream", cycle);
-        log.debug("실시간 관제 데이터 보내기: {}", cycle);
-    }
+//    @Async
+//    public void send(EventCommand.CycleEventCommand command,Long mdn) {
+//
+//        List<CycleData> cycleData = command.toCycleInfoEntities(deviceToken);
+//        CycleEvent cycle = command.of(deviceToken, mdn, cycleData);
+//
+//        rabbitTemplate.convertAndSend("", "cycle-info-stream", cycle);
+//        log.debug("실시간 관제 데이터 보내기: {}", cycle);
+//    }
 }

@@ -4,6 +4,7 @@ import com.kbe5.domain.event.dto.EventCommand;
 import com.kbe5.domain.event.dto.EventCommand.GeofenceEventCommand;
 import com.kbe5.domain.event.dto.EventCommand.OffEventCommand;
 import com.kbe5.domain.event.dto.EventCommand.OnEventCommand;
+import com.kbe5.domain.event.enums.EventType;
 import com.kbe5.pub.dto.request.cycleinfo.CycleEventRequest;
 import com.kbe5.pub.dto.request.cycleinfo.CycleDataRequest;
 import com.kbe5.pub.dto.request.geofence.GeofenceEventRequest;
@@ -19,7 +20,7 @@ public class EventRequestMapper {
      * .makerId(request.makerId()) .packetVersion(request.packetVersion()) .deviceId(request.deviceId())
      * .companyCode(request.companyCode()) .deviceFirmWareVersion("LTE 1.2") .build(); },
      */
-    public static EventCommand.CycleEventCommand cycleEventCommand(CycleEventRequest request) {
+    public static EventCommand.CycleEventCommand cycleEventCommand(CycleEventRequest request, String token) {
         List<EventCommand.CycleInfoCommand> cycleInfoCommands = request.cycleDataRequests().stream()
             .map(EventRequestMapper::cycleInfoCommand)
             .toList();
@@ -33,6 +34,8 @@ public class EventRequestMapper {
             .oTime(request.oTime())
             .cycleCount(request.cycleCount())
             .cycleInfoCommands(cycleInfoCommands)
+            .eventType(EventType.CYCLE_DATA)
+            .token(token)
             .build();
     }
 
@@ -49,7 +52,7 @@ public class EventRequestMapper {
             .build();
     }
 
-    public static EventCommand.OnEventCommand onEventCommand(OnEventRequest request) {
+    public static EventCommand.OnEventCommand onEventCommand(OnEventRequest request, String token) {
         return OnEventCommand.builder()
             .mdn(request.mdn())
             .terminalId(request.terminalId())
@@ -64,10 +67,12 @@ public class EventRequestMapper {
             .angle(request.angle())
             .speed(request.speed())
             .currentAccumulatedDistance(request.sum())
+            .eventType(EventType.ON)
+            .token(token)
             .build();
     }
 
-    public static EventCommand.OffEventCommand offEventCommand(OffEventRequest request) {
+    public static EventCommand.OffEventCommand offEventCommand(OffEventRequest request, String token) {
         return OffEventCommand.builder()
             .mdn(request.mdn())
             .terminalId(request.terminalId())
@@ -82,10 +87,12 @@ public class EventRequestMapper {
             .angle(request.angle())
             .speed(request.speed())
             .currentAccumulatedDistance(request.sum())
+            .eventType(EventType.OFF)
+            .token(token)
             .build();
     }
 
-    public static EventCommand.GeofenceEventCommand geofenceEventCommand(GeofenceEventRequest request) {
+    public static EventCommand.GeofenceEventCommand geofenceEventCommand(GeofenceEventRequest request, String token) {
         return GeofenceEventCommand.builder()
             .mdn(request.mdn())
             .terminalId(request.terminalId())
@@ -102,6 +109,8 @@ public class EventRequestMapper {
             .angle(request.angle())
             .speed(request.speed())
             .currentAccumulatedDistance(request.sum())
+            .eventType(EventType.GEOFENCE)
+            .token(token)
             .build();
     }
 }

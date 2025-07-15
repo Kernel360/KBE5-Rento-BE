@@ -30,7 +30,8 @@ public class ConsumerRabbitConfig {
         typeMapper.setTrustedPackages(
                 "com.kbe5.sub.amqp",
                 "com.kbe5.api.domain.stream",
-                "com.kbe5.domain.event.entity"
+                "com.kbe5.domain.event.entity",
+                "com.kbe5.domain.event.dto"
         );
         converter.setClassMapper(typeMapper);
 

@@ -1,6 +1,10 @@
 package com.kbe5.domain.event.handler;
 
 
+import com.kbe5.domain.device.entity.DeviceToken;
+import com.kbe5.domain.event.dto.EventCommand;
+import com.kbe5.domain.event.dto.EventCommand.CycleEventCommand;
+import com.kbe5.domain.event.dto.EventCommand.CycleInfoCommand;
 import com.kbe5.domain.event.entity.CycleData;
 import com.kbe5.domain.event.entity.CycleEvent;
 import com.kbe5.domain.event.entity.Event;
@@ -26,12 +30,15 @@ public class CycleDataHandler implements EventHandler {
     }
 
     @Override
-    public void handle(Event event) {
+    public void handle(EventCommand.Event command, DeviceToken deviceToken) {
+        CycleEventCommand cycleEventCommand = (CycleEventCommand) command;
 
-        CycleEvent cycleEvent = (CycleEvent) event;
-        List<CycleData> cycleData = cycleEvent.getCycleData();
+        List<CycleData> cycleData = cycleEventCommand.toCycleInfoEntities(deviceToken);
+        CycleEvent event = cycleEventCommand.of(deviceToken, deviceToken.getMdn(), cycleData);
 
-        eventStore.store(cycleEvent);
+        log.info("CycleDataHandler : {}", event.getClass().getName());
+        log.info("CycleDataCount : {}", cycleData.size());
+        eventStore.store(event);
 
         if (isNotNullAndNotEmpty(cycleData)){
             eventStore.bulkInsert(cycleData);

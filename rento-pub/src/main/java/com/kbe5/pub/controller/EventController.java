@@ -45,18 +45,34 @@ public class EventController {
     private final NotificationSender notificationSender;
     private final StreamSender streamSender;
 
+    @PostMapping("/cycle-info")
+    public ResponseEntity<EventResponse> emitCycleInfo(
+        @RequestHeader("X-Device-Token") String token,
+        @RequestBody @Validated CycleEventRequest request
+    ) {
+//        DeviceToken deviceToken = deviceService.findDeviceToken(token);
+        Long mdn = request.mdn();
+
+        EventCommand.CycleEventCommand command = EventRequestMapper.cycleEventCommand(request, token);
+        eventSender.send(command);
+//        streamSender.send(command, mdn);
+
+        return ResponseEntity.ok(EventResponse.fromEntity(DeviceResultCode.SUCCESS, mdn));
+    }
+
+
     @PostMapping("/on-off/on")
     public ResponseEntity<EventResponse> ignitionOn(
         @RequestHeader("X-Device-Token") String token,
         @RequestBody @Validated OnEventRequest request
     ){
-        DeviceToken deviceToken = deviceService.findDeviceToken(token);
+//        DeviceToken deviceToken = deviceService.findDeviceToken(token);
         Long mdn = request.mdn();
+//
+//        driveService.driveStart(deviceToken.getDriveId());
 
-        driveService.driveStart(deviceToken.getDriveId());
-
-        OnEventCommand command = EventRequestMapper.onEventCommand(request);
-        eventSender.send(command, mdn, deviceToken);
+        OnEventCommand command = EventRequestMapper.onEventCommand(request, token);
+        eventSender.send(command);
 
         //fcm 알림 발송 큐
         //notificationSender.send(deviceToken.getDriveId());
@@ -74,8 +90,8 @@ public class EventController {
 
         driveService.driveEnd(deviceToken.getDriveId(), request.sum());
 
-        OffEventCommand command = EventRequestMapper.offEventCommand(request);
-        eventSender.send(command, mdn, deviceToken);
+        OffEventCommand command = EventRequestMapper.offEventCommand(request, token);
+        eventSender.send(command);
 
         //fcm 알림 발송 큐
         //notificationSender.send(deviceToken.getDriveId());
@@ -83,34 +99,15 @@ public class EventController {
         return ResponseEntity.ok(EventResponse.fromEntity(DeviceResultCode.SUCCESS, mdn));
     }
 
-    @PostMapping("/cycle-info")
-    public ResponseEntity<EventResponse> emitCycleInfo(
-        @RequestHeader("X-Device-Token") String token,
-        @RequestBody @Validated CycleEventRequest request
-    ) {
-        DeviceToken deviceToken = deviceService.findDeviceToken(token);
-        Long mdn = request.mdn();
-
-        //6000 -> 5200 스레드 타고 들어옴
-
-        //cycle-info 큐 5221
-        EventCommand.CycleEventCommand command = EventRequestMapper.cycleEventCommand(request);
-        eventSender.send(command, mdn, deviceToken);
-        streamSender.send(command, mdn, deviceToken);
-
-        //ok 요청이 4300
-        return ResponseEntity.ok(EventResponse.fromEntity(DeviceResultCode.SUCCESS, mdn));
-    }
-
     @PostMapping("/geofences")
     public ResponseEntity<EventResponse> receiveGeofenceEvent (
         @RequestHeader("X-Device-Token") String token,
         @RequestBody @Validated GeofenceEventRequest request) {
-        DeviceToken deviceToken = deviceService.findDeviceToken(token);
+//        DeviceToken deviceToken = deviceService.findDeviceToken(token);
         Long mdn = request.mdn();
 
-        GeofenceEventCommand command = EventRequestMapper.geofenceEventCommand(request);
-        eventSender.send(command, mdn, deviceToken);
+        GeofenceEventCommand command = EventRequestMapper.geofenceEventCommand(request, token);
+        eventSender.send(command);
 
         return ResponseEntity.ok(EventResponse.fromEntity(DeviceResultCode.SUCCESS, request.mdn()));
     }
