@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.RabbitHandler;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.amqp.support.AmqpHeaders;
+import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -14,15 +16,14 @@ import java.io.IOException;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-@RabbitListener(queues = "cycle-info")
+@RabbitListener(queues = {"cycle-info-1", "cycle-info-2", "cycle-info-3"}, concurrency = "6")
 public class EventReceiver {
 
     private final EventService eventService;
 
     @RabbitHandler
-    public void receive(Event event) throws IOException {
-        log.info("Received : {}", event.getClass().getName());
+    public void receive(Event event, @Header(AmqpHeaders.CONSUMER_QUEUE) String queueName) throws IOException {
+        log.info("Received event from queue {}: {}", queueName, event);
         eventService.processEvent(event);
     }
-
 }
