@@ -54,8 +54,8 @@ server:
   port: 8080
   tomcat:
     threads:
-      max: 800
+      max: 1600
       min-spare: 200
-    accept-count: 400 # 대기 큐
+    accept-count: 800 # 대기 큐
     connection-timeout: 20000 # 타임아웃x
     max-connections: 8192 #서버가 수락하고 처리할 수 있는 최대 연결수
