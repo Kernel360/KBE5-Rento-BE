@@ -164,6 +164,7 @@ C:.
 
 ### ERD
 
+![ERD](https://github.com/user-attachments/assets/e1a852c8-15c0-4d5f-a80b-1430ac10c1da)
 
 ---
 
