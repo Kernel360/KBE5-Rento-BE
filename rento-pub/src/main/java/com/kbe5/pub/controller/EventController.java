@@ -1,6 +1,7 @@
 package com.kbe5.pub.controller;
 
 import com.kbe5.common.exception.DeviceResultCode;
+import com.kbe5.domain.cycleinfosummary.service.CycleDataSummaryService;
 import com.kbe5.domain.device.entity.DeviceToken;
 import com.kbe5.domain.device.service.DeviceService;
 import com.kbe5.domain.drive.service.DriveService;
@@ -44,6 +45,7 @@ public class EventController {
     private final DeviceService deviceService;
     private final NotificationSender notificationSender;
     private final StreamSender streamSender;
+    private final CycleDataSummaryService cycleDataSummaryService;
 
     @PostMapping("/cycle-info")
     public ResponseEntity<EventResponse> emitCycleInfo(
@@ -88,11 +90,13 @@ public class EventController {
         DeviceToken deviceToken = deviceService.findDeviceToken(token);
         Long mdn = request.mdn();
 
+        log.info(request.sum().toString());
         driveService.driveEnd(deviceToken.getDriveId(), request.sum());
 
         OffEventCommand command = EventRequestMapper.offEventCommand(request, token);
         eventSender.send(command);
 
+        cycleDataSummaryService.create(deviceToken.getDriveId());
         //fcm 알림 발송 큐
         //notificationSender.send(deviceToken.getDriveId());
 

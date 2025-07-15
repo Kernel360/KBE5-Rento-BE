@@ -33,6 +33,7 @@ public interface DriveRepository extends JpaRepository<Drive, Long> {
       SELECT d.id
       FROM Drive d
       WHERE d.mdn = :mdn
+          AND d.driveStatus = 'READY'
         AND d.startDate <= :startDate
             ORDER BY d.startDate ASC LIMIT 1
     """)// 상태값 추가하기

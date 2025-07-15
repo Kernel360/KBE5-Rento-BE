@@ -14,8 +14,6 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: ${DB_USER}
     password: ${DB_PASS}
-    hikari:
-      maximum-pool-size: 20
 
   jackson:
     time-zone: Asia/Seoul
@@ -40,11 +38,7 @@ spring:
     virtual-host: /
     ssl:
       enabled: true
-    listener:
-      simple:
-        concurrency: 6
-        max-concurrency: 12
-        prefetch: 500
+
 
 fcm:
   firebase_config_path: ${FIREBASE_PATH}
