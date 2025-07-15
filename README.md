@@ -84,74 +84,221 @@
 ### BE
 
 ```markdown
-C:.
-├─📂 generated
-│  └─📂 com
-│      └─📂 example
-│          └─📂 backend
-│              └─📂 entity
-│                  ├─📂 mariaDB
-│                  │  ├─📂 chat
-│                  │  ├─📂 member
-│                  │  ├─📂 message
-│                  │  ├─📂 space
-│                  │  ├─📂 status
-│                  │  └─📂 time
-│                  └─📂 postgreSQL
-├─📂 java
-│  └─📂 com
-│      └─📂 example
-│          ├─📂 backend
-│          │  ├─📂 config
-│          │  │  └─📂 chat
-│          │  ├─📂 controller
-│          │  │  ├─📂 chat
-│          │  │  ├─📂 member
-│          │  │  ├─📂 message
-│          │  │  ├─📂 space
-│          │  │  ├─📂 time
-│          │  │  └─📂 web
-│          │  ├─📂 data
-│          │  ├─📂 dto
-│          │  │  ├─📂 chat
-│          │  │  ├─📂 image
-│          │  │  ├─📂 landmark
-│          │  │  ├─📂 memberUpdate
-│          │  │  ├─📂 message
-│          │  │  └─📂 record
-│          │  ├─📂 entity
-│          │  │  ├─📂 mariaDB
-│          │  │  │  ├─📂 chat
-│          │  │  │  ├─📂 member
-│          │  │  │  ├─📂 message
-│          │  │  │  ├─📂 space
-│          │  │  │  ├─📂 status
-│          │  │  │  └─📂 time
-│          │  │  └─📂 postgreSQL
-│          │  ├─📂 exception
-│          │  │  └─📂 type
-│          │  ├─📂 jwt
-│          │  ├─📂 repository
-│          │  │  ├─📂 mariaDB
-│          │  │  │  ├─📂 chat
-│          │  │  │  ├─📂 image
-│          │  │  │  ├─📂 landmark
-│          │  │  │  ├─📂 member
-│          │  │  │  ├─📂 message
-│          │  │  │  ├─📂 record
-│          │  │  │  └─📂 status
-│          │  │  └─📂 postgreSQL
-│          │  ├─📂 service
-│          │  │  ├─📂 chat
-│          │  │  ├─📂 Member
-│          │  │  └─📂 message
-│          │  ├─📂 type
-│          │  └─📂 util
-│          │      ├─📂 fcm
-│          │      └─📂 mattermost
-│          └─📂 scheduler
-└─📂 resources
-    └─📂 firebase
+.
+├── build
+│   └── reports
+│       └── problems
+├── common
+│   └── src
+│       └── main
+│           └── java
+│               └── com
+│                   └── kbe5
+│                       └── common
+│                           ├── annotation
+│                           ├── apiresponse
+│                           ├── exception
+│                           ├── response
+│                           │   └── api
+│                           └── util
+├── domain
+│   ├── build
+│   └── src
+│       └── main
+│           └── java
+│               └── com
+│                   └── kbe5
+│                       └── domain
+│                           ├── company
+│                           │   ├── dto
+│                           │   ├── entity
+│                           │   └── service
+│                           ├── cycleinfosummary
+│                           │   ├── dto
+│                           │   ├── entity
+│                           │   └── service
+│                           ├── department
+│                           │   ├── dto
+│                           │   ├── entity
+│                           │   └── service
+│                           ├── device
+│                           │   ├── dto
+│                           │   ├── entity
+│                           │   ├── enums
+│                           │   └── service
+│                           ├── drive
+│                           │   ├── dto
+│                           │   ├── entity
+│                           │   └── service
+│                           ├── event
+│                           │   ├── dto
+│                           │   ├── entity
+│                           │   ├── enums
+│                           │   ├── handler
+│                           │   └── service
+│                           ├── exception
+│                           ├── firebase
+│                           │   ├── dto
+│                           │   └── service
+│                           ├── geofence
+│                           │   ├── dto
+│                           │   ├── entity
+│                           │   ├── enums
+│                           │   └── service
+│                           ├── manager
+│                           │   ├── dto
+│                           │   ├── entity
+│                           │   ├── enums
+│                           │   └── service
+│                           ├── member
+│                           │   ├── dto
+│                           │   ├── entity
+│                           │   └── service
+│                           ├── statistics
+│                           │   ├── dto
+│                           │   ├── entity
+│                           │   └── service
+│                           ├── stream
+│                           │   └── service
+│                           │       └── dto
+│                           └── vehicle
+│                               ├── dto
+│                               ├── entity
+│                               └── service
+├── infra
+│   ├── build
+│   └── src
+│       └── main
+│           ├── java
+│           │   └── com
+│           │       └── kbe5
+│           │           └── infra
+│           │               ├── infrastructure
+│           │               │   ├── company
+│           │               │   │   └── repository
+│           │               │   ├── cycleDataSummary
+│           │               │   │   └── repository
+│           │               │   ├── department
+│           │               │   │   └── repository
+│           │               │   ├── device
+│           │               │   │   └── repository
+│           │               │   ├── drive
+│           │               │   │   └── repository
+│           │               │   ├── event
+│           │               │   │   └── repository
+│           │               │   ├── firebase
+│           │               │   │   ├── config
+│           │               │   │   └── service
+│           │               │   ├── geofence
+│           │               │   │   └── repository
+│           │               │   ├── manager
+│           │               │   │   └── respository
+│           │               │   ├── member
+│           │               │   │   └── repository
+│           │               │   ├── statistics
+│           │               │   │   └── repository
+│           │               │   └── vehicle
+│           │               │       └── repository
+│           │               ├── jwt
+│           │               │   ├── controller
+│           │               │   ├── dto
+│           │               │   │   ├── request
+│           │               │   │   └── response
+│           │               │   └── util
+│           │               ├── rabbitmq
+│           │               │   └── config
+│           │               ├── redis
+│           │               │   └── config
+│           │               └── security
+│           │                   ├── config
+│           │                   ├── details
+│           │                   ├── dto
+│           │                   ├── filter
+│           │                   └── util
+│           └── resources
+│               └── firebase
+├── rento-api
+│   └── src
+│       └── main
+│           ├── java
+│           │   └── com
+│           │       └── kbe5
+│           │           └── api
+│           │               ├── config
+│           │               └── domain
+│           │                   ├── company
+│           │                   │   ├── controller
+│           │                   │   ├── dto
+│           │                   │   └── mapper
+│           │                   ├── cycleDatasummary
+│           │                   │   ├── controller
+│           │                   │   ├── dto
+│           │                   │   └── mapper
+│           │                   ├── department
+│           │                   │   ├── controller
+│           │                   │   ├── dto
+│           │                   │   └── mapper
+│           │                   ├── device
+│           │                   │   ├── controller
+│           │                   │   ├── dto
+│           │                   │   └── mapper
+│           │                   ├── drive
+│           │                   │   ├── controller
+│           │                   │   ├── dto
+│           │                   │   └── mapper
+│           │                   ├── geofence
+│           │                   │   ├── controller
+│           │                   │   ├── dto
+│           │                   │   └── mapper
+│           │                   ├── manager
+│           │                   │   ├── controller
+│           │                   │   ├── dto
+│           │                   │   └── mapper
+│           │                   ├── member
+│           │                   │   ├── controller
+│           │                   │   ├── dto
+│           │                   │   └── mapper
+│           │                   ├── statistics
+│           │                   │   ├── controller
+│           │                   │   ├── dto
+│           │                   │   └── mapper
+│           │                   ├── stream
+│           │                   │   └── controller
+│           │                   └── vehicle
+│           │                       ├── controller
+│           │                       ├── dto
+│           │                       ├── mapper
+│           │                       └── vo
+│           └── resources
+│              └── firebase
+├── rento-pub
+│   ├── build
+│   └── src
+│       └── main
+│           ├── java
+│           │   └── com
+│           │       └── kbe5
+│           │           └── pub
+│           │               ├── amqp
+│           │               ├── controller
+│           │               ├── dto
+│           │               │   ├── request
+│           │               │   │   ├── cycleinfo
+│           │               │   │   ├── geofence
+│           │               │   │   └── onoff
+│           │               │   └── response
+│           │               └── mapper
+│           └── resources
+└── rento-sub
+    └── src
+        └── main
+            ├── java
+            │   └── com
+            │       └── kbe5
+            │           └── sub
+            │               └── amqp
+            └── resources
+
 ```
 
 
