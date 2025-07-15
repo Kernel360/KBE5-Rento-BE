@@ -1,5 +1,7 @@
 # 렌토(RENTO) ✨
 
+<img src="https://github.com/user-attachments/assets/f9443d7a-24a5-4415-8f65-407cc9d82a19" width="500"/>
+
 <br>
 
 ## 🎀 프로젝트 소개
