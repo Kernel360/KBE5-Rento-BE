@@ -172,3 +172,26 @@ C:.
 
 
 ## 💙 팀원 소개
+<table>
+  <tr>
+    <td><img src="https://avatars.githubusercontent.com/u/125844213?v=4" width="100"/></td>
+    <td><img src="https://avatars.githubusercontent.com/u/67327887?v=4" width="100"/></td>
+    <td><img src="https://avatars.githubusercontent.com/u/97105216?v=4" width="100"/></td>
+    <td><img src="https://avatars.githubusercontent.com/u/110446078?v=4" width="100"/></td>
+    <td><img src="https://avatars.githubusercontent.com/u/61807816?v=4" width="100"/></td>
+  </tr>
+  <tr>
+    <td align="center"><a href="https://github.com/SeungHun333">김승훈</a></td>
+    <td align="center"><a href="https://github.com/tmdgus717">이승현</a></td>
+    <td align="center"><a href="https://github.com/ugiuk00">권동욱</a></td>
+    <td align="center"><a href="https://github.com/JangBJ">장병중</a></td>
+    <td align="center"><a href="https://github.com/ehouse16">박소윤</a></td>
+  </tr>
+  <tr>
+    <th><br>팀장</br><br>회원가입, 로그인</br></th>
+    <th>Backend</th>
+    <th>Backend</th>
+    <th>Backend</th>
+    <th>Backend</th>
+  </tr>
+</table>
