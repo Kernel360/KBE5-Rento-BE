@@ -54,6 +54,8 @@
 
 ## 💌 서비스 화면 및 기능 소개
 
+### 로그인
+![Image](https://github.com/user-attachments/assets/02268656-f83d-47b5-97b9-9cc0b26f813a)
 
 
 <br>
