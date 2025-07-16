@@ -320,15 +320,34 @@
 
 ---
 
-### ERD
+### 🎨 ERD
 
 ![ERD](https://github.com/user-attachments/assets/e1a852c8-15c0-4d5f-a80b-1430ac10c1da)
 
 ---
 
-### API 명세서
+### 📄 API 명세서
 
+**부서**
+![Department](https://github.com/user-attachments/assets/0173570c-8b9a-46c5-997b-be9b3e75a0f6)
 
+**매니저**
+![Manager](https://github.com/user-attachments/assets/5ed3cda7-5d23-4938-8713-ffe6fbf7c187)
+
+**회원**
+![Member](https://github.com/user-attachments/assets/8bb6b9bc-fc85-4e1d-90af-faebf6786caf)
+
+**회사**
+![Company](https://github.com/user-attachments/assets/b1e603a6-772a-45be-93ce-efac18930d86)
+
+**운행**
+![Drive](https://github.com/user-attachments/assets/6f43a1f9-bf66-4859-a3d7-21197e0dbf84)
+
+**차량**
+![Vehicle](https://github.com/user-attachments/assets/13489771-ca17-42e2-b84a-7b7d1d1d666e)
+
+**실시간 관제**
+![Stream](https://github.com/user-attachments/assets/749ff668-d92a-47ff-9ae4-5848f0114b73)
 <br>
 
 ## 💙 팀원 소개
