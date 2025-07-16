@@ -1,7 +1,6 @@
 package com.kbe5.pub.controller;
 
 import com.kbe5.common.exception.DeviceResultCode;
-import com.kbe5.domain.cycleinfosummary.service.CycleDataSummaryService;
 import com.kbe5.domain.device.entity.DeviceToken;
 import com.kbe5.domain.device.service.DeviceService;
 import com.kbe5.domain.drive.service.DriveService;
@@ -9,8 +8,6 @@ import com.kbe5.domain.event.dto.EventCommand;
 import com.kbe5.domain.event.dto.EventCommand.GeofenceEventCommand;
 import com.kbe5.domain.event.dto.EventCommand.OffEventCommand;
 import com.kbe5.domain.event.dto.EventCommand.OnEventCommand;
-import com.kbe5.domain.event.entity.CycleData;
-import com.kbe5.domain.event.entity.GeofenceEvent;
 import com.kbe5.pub.amqp.EventSender;
 import com.kbe5.pub.amqp.NotificationSender;
 import com.kbe5.pub.amqp.StreamSender;
@@ -48,7 +45,6 @@ public class EventController {
     private final DeviceService deviceService;
     private final NotificationSender notificationSender;
     private final StreamSender streamSender;
-    private final CycleDataSummaryService cycleDataSummaryService;
 
     @PostMapping("/on-off/on")
     public ResponseEntity<EventResponse> ignitionOn(
@@ -80,11 +76,9 @@ public class EventController {
         log.info(request.sum().toString());
         driveService.driveEnd(deviceToken.getDriveId(), request.sum());
 
-
         OffEventCommand command = EventRequestMapper.offEventCommand(request);
         eventSender.send(command, mdn, deviceToken);
 
-        cycleDataSummaryService.create(deviceToken.getDriveId());
         //fcm 알림 발송 큐
         //notificationSender.send(deviceToken.getDriveId());
 
