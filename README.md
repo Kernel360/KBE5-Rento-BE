@@ -354,4 +354,4 @@
 | ![](https://avatars.githubusercontent.com/u/125844213?v=4) | ![](https://avatars.githubusercontent.com/u/67327887?v=4) | ![](https://avatars.githubusercontent.com/u/97105216?v=4) | ![](https://avatars.githubusercontent.com/u/110446078?v=4) | ![](https://avatars.githubusercontent.com/u/61807816?v=4) |
 |:--:|:--:|:--:|:--:|:--:|
 | [김승훈](https://github.com/SeungHun333) | [이승현](https://github.com/tmdgus717) | [권동욱](https://github.com/ugiuk00) | [장병중](https://github.com/JangBJ) | [박소윤](https://github.com/ehouse16) |
-| 팀장  <br> 회원가입, 로그인 | Backend | Backend | Backend | Backend |
+| 팀장  <br> 회원가입, 로그인 | 이벤트 저장 | 멀티모듈 | Backend | Backend |
