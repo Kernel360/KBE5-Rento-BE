@@ -199,7 +199,7 @@
 │           │               │   ├── geofence
 │           │               │   │   └── repository
 │           │               │   ├── manager
-│           │               │   │   └── respository
+│           │               │   │   └── repository
 │           │               │   ├── member
 │           │               │   │   └── repository
 │           │               │   ├── statistics
@@ -274,8 +274,7 @@
 │           │                   └── vehicle
 │           │                       ├── controller
 │           │                       ├── dto
-│           │                       ├── mapper
-│           │                       └── vo
+│           │                       └── mapper
 │           └── resources
 │              └── firebase
 ├── rento-pub
