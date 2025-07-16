@@ -316,7 +316,7 @@
 ## 📜 프로젝트 산출물
 
 ### 시스템 아키텍쳐
-
+![Architecture](https://github.com/user-attachments/assets/ff986472-b901-45cd-a7bc-b202e9780eda)
 
 ---
 
