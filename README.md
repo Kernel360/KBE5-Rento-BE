@@ -369,4 +369,4 @@
 | ![](https://avatars.githubusercontent.com/u/125844213?v=4) | ![](https://avatars.githubusercontent.com/u/67327887?v=4) | ![](https://avatars.githubusercontent.com/u/97105216?v=4) | ![](https://avatars.githubusercontent.com/u/110446078?v=4) | ![](https://avatars.githubusercontent.com/u/61807816?v=4) |
 |:--:|:--:|:--:|:--:|:--:|
 | [김승훈](https://github.com/SeungHun333) | [이승현](https://github.com/tmdgus717) | [권동욱](https://github.com/ugiuk00) | [장병중](https://github.com/JangBJ) | [박소윤](https://github.com/ehouse16) |
-| 팀장  <br> 회원가입, 로그인 | 이벤트 저장 | 멀티모듈 | 차량 <br> 운행 예약 및 관리 <br> 실시간 관제 | 사용자 및 부서<br>FCM기반 알림발송<br>월별 통계 |
+| 팀장  <br> 회원가입, 로그인 | 이벤트 저장 <br> 디바이스 crud <br> 트래픽 테스트  | 멀티모듈 <br> 로그백 <br> 트래픽 테스트 | 차량 <br> 운행 예약 및 관리 <br> 실시간 관제 | 사용자 및 부서<br>FCM기반 알림발송<br>월별 통계 |
