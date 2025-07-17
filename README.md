@@ -53,12 +53,24 @@
 <br>
 
 ## 💌 서비스 화면 및 기능 소개
-![Uploading 렌토2.5.gif…]()
 
 ### 로그인
-![Image](https://github.com/user-attachments/assets/02268656-f83d-47b5-97b9-9cc0b26f813a)
+![Image](https://github.com/user-attachments/assets/ea179539-6a79-45ad-bcc2-44ce60116e1c)
 
+### 통계 대시보드
+![Image](https://github.com/user-attachments/assets/1fb64b61-d856-4987-a2df-cd126b51ac8b)
 
+### 부서 및 사용자 등록
+![Image](https://github.com/user-attachments/assets/68447ee8-5900-4c4f-bd5c-9a1c6081b09b)
+
+### 차량 등록
+![Image](https://github.com/user-attachments/assets/f427be21-8a04-4204-ace6-42ea96a82565)
+
+### 운행 예약 및 상세 보기
+![Image](https://github.com/user-attachments/assets/1aa50ce7-0014-4e65-a777-d2f442e5ea5a)
+
+### 실시간 관제
+![Image](https://github.com/user-attachments/assets/bebc6b8e-a41d-4037-b5f7-b25b36203e43)
 <br>
 
 ## 🛠 기술 스택
@@ -357,4 +369,4 @@
 | ![](https://avatars.githubusercontent.com/u/125844213?v=4) | ![](https://avatars.githubusercontent.com/u/67327887?v=4) | ![](https://avatars.githubusercontent.com/u/97105216?v=4) | ![](https://avatars.githubusercontent.com/u/110446078?v=4) | ![](https://avatars.githubusercontent.com/u/61807816?v=4) |
 |:--:|:--:|:--:|:--:|:--:|
 | [김승훈](https://github.com/SeungHun333) | [이승현](https://github.com/tmdgus717) | [권동욱](https://github.com/ugiuk00) | [장병중](https://github.com/JangBJ) | [박소윤](https://github.com/ehouse16) |
-| 팀장  <br> 회원가입, 로그인 | 이벤트 저장 | 멀티모듈 | Backend | Backend |
+| 팀장  <br> 회원가입, 로그인 | 이벤트 저장 | 멀티모듈 | Backend | 사용자 및 부서<br>FCM기반 알림발송<br>월별 통계 |
